@@ -46,7 +46,7 @@ private:
     std::thread thrQuery;
     mwmp::PacketMasterAnnounce pma;
     RakNet::BitStream writeStream;
-    bool updated;
+    std::atomic<bool> updated;
 };
 
 
