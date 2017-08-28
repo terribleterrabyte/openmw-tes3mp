@@ -32,7 +32,7 @@ namespace mwmp
 
                 Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_ACTOR_CELL_CHANGE>(player, actors);
 
-                Networking::get().getState().getActorCtrl().sendActors(player, actors, true);
+                Networking::get().getState().getActorCtrl().sendActors(player, actors, actorList.cell, true);
 
                 // Send this to everyone
                 packet.Send(true);

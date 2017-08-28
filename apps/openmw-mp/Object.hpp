@@ -112,8 +112,8 @@ public:
     std::shared_ptr<std::vector<std::shared_ptr<Object>>> copyObjects(mwmp::BaseEvent &event);
     std::shared_ptr<std::vector<std::shared_ptr<Container>>> copyContainers(mwmp::BaseEvent &event);
 
-    void sendObjects(std::shared_ptr<Player> player, std::shared_ptr<std::vector<std::shared_ptr<Object>>> objects);
-    void sendContainers(std::shared_ptr<Player> player, std::shared_ptr<std::vector<std::shared_ptr<Container>>> objects);
+    void sendObjects(std::shared_ptr<Player> player, std::shared_ptr<std::vector<std::shared_ptr<Object>>> objects, const ESM::Cell &cell);
+    void sendContainers(std::shared_ptr<Player> player, std::shared_ptr<std::vector<std::shared_ptr<Container>>> objects, const ESM::Cell &cell);
 
     void requestContainers(std::shared_ptr<Player> player);
 };

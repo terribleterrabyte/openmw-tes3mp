@@ -38,7 +38,7 @@ namespace mwmp
 
             Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_CONTAINER>(player, containers);
 
-            Networking::get().getState().getObjectCtrl().sendContainers(player, containers);
+            Networking::get().getState().getObjectCtrl().sendContainers(player, containers, event.cell);
 
             LOG_APPEND(Log::LOG_INFO, "- Finished processing ID_CONTAINER");
         }

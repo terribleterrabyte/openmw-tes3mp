@@ -91,21 +91,21 @@ void ActorController::Init(LuaState &lua)
     });
 
     playersTable.set_function("sendActors", [&lua](shared_ptr<Player> player, vector<shared_ptr<Actor>> actors,
-                                               bool sendToAll) {
-        lua.getActorCtrl().sendActors(player, actors, sendToAll);
+                                                   const std::string &cellDescription, bool sendToAll) {
+        lua.getActorCtrl().sendActors(player, actors, Utils::getCellFromDescription(cellDescription), sendToAll);
     });
 
     playersTable.set_function("sendList", [&lua](shared_ptr<Player> player, vector<shared_ptr<Actor>> actors,
-                                                 bool sendToAll) {
-        lua.getActorCtrl().sendList(player, actors, sendToAll);
+                                                 const std::string &cellDescription, bool sendToAll) {
+        lua.getActorCtrl().sendList(player, actors, Utils::getCellFromDescription(cellDescription), sendToAll);
     });
 
-    playersTable.set_function("requestList", [&lua](shared_ptr<Player> player){
-        lua.getActorCtrl().requestList(player);
+    playersTable.set_function("requestList", [&lua](shared_ptr<Player> player, const std::string &cellDescription){
+        lua.getActorCtrl().requestList(player, Utils::getCellFromDescription(cellDescription));
     });
 
-    playersTable.set_function("getActors", [&lua](shared_ptr<Player> player){
-        lua.getActorCtrl().getActors(player);
+    playersTable.set_function("getActors", [&lua](shared_ptr<Player> player, const std::string &cellDescription){
+        lua.getActorCtrl().getActors(player, Utils::getCellFromDescription(cellDescription));
     });
 }
 
@@ -127,9 +127,10 @@ std::shared_ptr<Actor> ActorController::createActor()
     return shared_ptr<Actor>(actor);
 }
 
-void ActorController::sendActors(std::shared_ptr<Player> player, std::vector<std::shared_ptr<Actor>> actors, bool sendToAll)
+void ActorController::sendActors(std::shared_ptr<Player> player, std::vector<std::shared_ptr<Actor>> actors,
+                                 const ESM::Cell &cell, bool sendToAll)
 {
-    actorList.cell = player->cell;
+    actorList.cell = cell;
     actorList.guid = player->guid;
 
     bool positionChanged = false;
@@ -231,7 +232,8 @@ void ActorController::sendActors(std::shared_ptr<Player> player, std::vector<std
     }
 }
 
-void ActorController::sendList(std::shared_ptr<Player> player, std::vector<std::shared_ptr<Actor>> actors, bool sendToAll)
+void ActorController::sendList(std::shared_ptr<Player> player, std::vector<std::shared_ptr<Actor>> actors,
+                               const ESM::Cell &cell, bool sendToAll)
 {
     actorList.cell = player->cell;
     actorList.guid = player->guid;
@@ -242,7 +244,7 @@ void ActorController::sendList(std::shared_ptr<Player> player, std::vector<std::
     packet->Send(actorList.guid);
 }
 
-void ActorController::requestList(std::shared_ptr<Player> player)
+void ActorController::requestList(std::shared_ptr<Player> player, const ESM::Cell &cell)
 {
     actorList.cell = player->cell;
     actorList.guid = player->guid;
@@ -253,7 +255,7 @@ void ActorController::requestList(std::shared_ptr<Player> player)
     packet->Send(actorList.guid);
 }
 
-std::vector<std::shared_ptr<Actor>> ActorController::getActors(std::shared_ptr<Player> player)
+std::vector<std::shared_ptr<Actor>> ActorController::getActors(std::shared_ptr<Player> player, const ESM::Cell &cell)
 {
     Cell *serverCell = CellController::get()->getCell(&player->cell);
 

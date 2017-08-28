@@ -26,7 +26,7 @@ namespace mwmp
 
             Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_ACTOR_TEST>(player, actors);
 
-            Networking::get().getState().getActorCtrl().sendActors(player, actors, true);
+            Networking::get().getState().getActorCtrl().sendActors(player, actors, actorList.cell, true);
         }
     };
 }

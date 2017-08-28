@@ -257,12 +257,14 @@ void ObjectController::Init(LuaState &lua)
 {
     sol::table objectCtrl = lua.getState()->create_table("ObjectCtrl");
 
-    objectCtrl.set_function("sendObjects", [&lua](shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Object>>> objects) {
-        return lua.getObjectCtrl().sendObjects(player, objects);
+    objectCtrl.set_function("sendObjects", [&lua](shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Object>>> objects,
+                                                  const std::string &cellDescription) {
+        return lua.getObjectCtrl().sendObjects(player, objects, Utils::getCellFromDescription(cellDescription));
     });
 
-    objectCtrl.set_function("sendContainers", [&lua](shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Container>>> objects) {
-        return lua.getObjectCtrl().sendContainers(player, objects);
+    objectCtrl.set_function("sendContainers", [&lua](shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Container>>> objects,
+                                                     const std::string &cellDescription) {
+        return lua.getObjectCtrl().sendContainers(player, objects, Utils::getCellFromDescription(cellDescription));
     });
 
     objectCtrl.set_function("requestContainers", [&lua](shared_ptr<Player> player) {
@@ -300,7 +302,7 @@ shared_ptr<vector<shared_ptr<Container>>> ObjectController::copyContainers(mwmp:
     return containers;
 }
 
-void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Object>>> objects)
+void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Object>>> objects, const ESM::Cell &cell)
 {
     enum Type
     {
@@ -321,7 +323,7 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     {
         e.action = mwmp::BaseEvent::SET;
         e.guid = player->guid;
-        e.cell = player->cell;
+        e.cell = cell;
     }
 
 
@@ -433,11 +435,11 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     }
 }
 
-void ObjectController::sendContainers(shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Container>>> objects)
+void ObjectController::sendContainers(shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Container>>> objects, const ESM::Cell &cell)
 {
 
     mwmp::BaseEvent event;
-    event.cell = player->cell;
+    event.cell = cell;
     event.action = mwmp::BaseEvent::SET;
     event.guid = player->guid;
 

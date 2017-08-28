@@ -22,7 +22,7 @@ namespace mwmp
 
             Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_DOOR_STATE>(player, objects);
 
-            objCtrl.sendObjects(player, objects);
+            objCtrl.sendObjects(player, objects, event.cell);
         }
     };
 }

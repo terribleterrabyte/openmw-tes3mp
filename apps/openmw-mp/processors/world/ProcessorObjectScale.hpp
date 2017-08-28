@@ -24,7 +24,7 @@ namespace mwmp
 
             Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_OBJECT_SCALE>(player, objects);
 
-            objCtrl.sendObjects(player, objects);
+            objCtrl.sendObjects(player, objects, event.cell);
         }
     };
 }

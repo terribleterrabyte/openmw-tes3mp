@@ -41,12 +41,12 @@ public:
     ~ActorController();
 
     std::shared_ptr<Actor> createActor();
-    void sendActors(std::shared_ptr<Player> player, std::vector<std::shared_ptr<Actor>> actors, bool sendToAll = false);
-    void sendList(std::shared_ptr<Player> player, std::vector<std::shared_ptr<Actor>> actors, bool sendToAll = false);
+    void sendActors(std::shared_ptr<Player> player, std::vector<std::shared_ptr<Actor>> actors, const ESM::Cell &cell, bool sendToAll = false);
+    void sendList(std::shared_ptr<Player> player, std::vector<std::shared_ptr<Actor>> actors, const ESM::Cell &cell, bool sendToAll = false);
 
-    void requestList(std::shared_ptr<Player> player);
+    void requestList(std::shared_ptr<Player> player, const ESM::Cell &cell);
 
-    std::vector<std::shared_ptr<Actor>> getActors(std::shared_ptr<Player> player);
+    std::vector<std::shared_ptr<Actor>> getActors(std::shared_ptr<Player> player, const ESM::Cell &cell);
 
 private:
     mwmp::BaseActorList actorList;
