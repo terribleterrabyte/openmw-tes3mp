@@ -52,8 +52,7 @@ public:
     JournalItem getJournalItem(unsigned int id);
 
     void addKill(const std::string &refId, int number);
-    std::string getKillRefId(unsigned int i) const;
-    int getKillNumber(unsigned int i) const;
+    std::tuple<std::string, int> getKill(unsigned int i) const;
 
 private:
     Player *player;

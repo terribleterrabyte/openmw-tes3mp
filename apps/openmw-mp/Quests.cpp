@@ -80,8 +80,7 @@ void Quests::Init(LuaState &lua)
                                          "getJournalItem", &Quests::getJournalItem,
                                          
                                          "addKill", &Quests::addKill,
-                                         "getKillRefId", &Quests::getKillRefId,
-                                         "getKillNumber", &Quests::getKillNumber
+                                         "getKill", &Quests::getKill
     );
 }
 
@@ -150,12 +149,8 @@ void Quests::addKill(const std::string &refId, int number)
     changedKills = true;
 }
 
-std::string Quests::getKillRefId(unsigned int i) const
+std::tuple<std::string, int> Quests::getKill(unsigned int i) const
 {
-    return player->killChanges.kills.at(i).refId;
-}
-
-int Quests::getKillNumber(unsigned int i) const
-{
-    return player->killChanges.kills.at(i).number;
+    auto & kill = player->killChanges.kills.at(i);
+    return std::make_tuple(kill.refId, kill.number);
 }
