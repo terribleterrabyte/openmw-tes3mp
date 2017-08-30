@@ -87,43 +87,43 @@ LuaState::LuaState()
 
     sol::table Constants = lua->create_named_table("Constants");
     
-    Constants.set_function("GetAttributeCount", []() {
+    Constants.set_function("getAttributeCount", []() {
         return ESM::Attribute::Length;
     });
     
-    Constants.set_function("GetSkillCount", []() {
+    Constants.set_function("getSkillCount", []() {
         return ESM::Skill::Length;
     });
 
-    Constants.set_function("GetAttributeId", [](const string &name) {
+    Constants.set_function("getAttributeId", [](const string &name) {
         for (int x = 0; x < ESM::Attribute::Length; x++)
             if (Misc::StringUtils::ciEqual(name, ESM::Attribute::sAttributeNames[x]))
                 return x;
         return -1;
     });
 
-    Constants.set_function("GetSkillId", [](const string &name) {
+    Constants.set_function("getSkillId", [](const string &name) {
         for (int x = 0; x < ESM::Skill::Length; x++)
             if (Misc::StringUtils::ciEqual(name, ESM::Skill::sSkillNames[x]))
                 return x;
         return -1;
     });
 
-    Constants.set_function("GetAttributeName", [](unsigned short attribute) -> const string {
+    Constants.set_function("getAttributeName", [](unsigned short attribute) -> const string {
         if (attribute >= ESM::Attribute::Length)
             return "invalid";
 
         return ESM::Attribute::sAttributeNames[attribute];
     });
 
-    Constants.set_function("GetSkillName", [](unsigned short skill)  -> const string {
+    Constants.set_function("getSkillName", [](unsigned short skill)  -> const string {
         if (skill >= ESM::Skill::Length)
             return "invalid";
 
         return ESM::Skill::sSkillNames[skill];
     });
 
-    Constants.set_function("GetEquipmentSize", []() {
+    Constants.set_function("getEquipmentSize", []() {
         return MWWorld::InventoryStore::Slots;
     });
 

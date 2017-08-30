@@ -12,8 +12,8 @@
 void GameSettings::Init(LuaState &lua)
 {
     lua.getState()->new_usertype<GameSettings>("Settings",
-                                           "SetConsoleAllow", &GameSettings::SetConsoleAllow,
-                                           "SetDifficulty", &GameSettings::SetDifficulty
+                                           "setConsoleAllow", &GameSettings::SetConsoleAllow,
+                                           "setDifficulty", &GameSettings::SetDifficulty
     );
 }
 
