@@ -87,7 +87,7 @@ void ActorController::Init(LuaState &lua)
     sol::table playersTable = lua.getState()->create_named_table("Actors");
 
     playersTable.set_function("createActor", [&lua](){
-        lua.getActorCtrl().createActor();
+        return lua.getActorCtrl().createActor();
     });
 
     playersTable.set_function("sendActors", [&lua](shared_ptr<Player> player, vector<shared_ptr<Actor>> actors,
@@ -239,9 +239,16 @@ void ActorController::sendList(std::shared_ptr<Player> player, std::vector<std::
     actorList.guid = player->guid;
     actorList.action = mwmp::BaseActorList::SET;
 
+    for(auto &actor : actors)
+    {
+        actorList.baseActors.push_back(actor->actor);
+    }
+
     auto packet = mwmp::Networking::get().getActorPacketController()->GetPacket(ID_ACTOR_LIST);
     packet->setActorList(&actorList);
     packet->Send(actorList.guid);
+    if (sendToAll)
+        CellController::get()->getCell(&actorList.cell)->sendToLoaded(packet, &actorList);
 }
 
 void ActorController::requestList(std::shared_ptr<Player> player, const ESM::Cell &cell)

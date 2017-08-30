@@ -268,7 +268,7 @@ void ObjectController::Init(LuaState &lua)
     });
 
     objectCtrl.set_function("requestContainers", [&lua](shared_ptr<Player> player) {
-        return lua.getObjectCtrl().requestContainers(player);
+        lua.getObjectCtrl().requestContainers(player);
     });
 
 

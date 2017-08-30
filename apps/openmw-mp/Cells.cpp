@@ -13,7 +13,7 @@ using namespace std;
 
 void Cells::Init(LuaState &lua)
 {
-    lua.getState()->new_usertype<Cells>("Cells",
+    lua.getState()->new_usertype<Cells>("Cell",
                                         "cell", sol::property(&Cells::getCell, &Cells::setCell),
                                         "getExterior", &Cells::getExterior,
                                         "setExterior", &Cells::setExterior,
