@@ -424,6 +424,4 @@ void LuaState::loadMods()
     }
 
     dataEnv["Core"]["LOADED_MODS"] = mods.size();
-
-    eventCtrl->Call<CoreEvent::ON_POST_INIT>();
 }

@@ -59,8 +59,6 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
     serverPassword = TES3MP_DEFAULT_PASSW;
 
     ProcessorInitializer();
-
-    luaState.getEventCtrl().Call<CoreEvent::ON_POST_INIT>();
 }
 
 Networking::~Networking()
