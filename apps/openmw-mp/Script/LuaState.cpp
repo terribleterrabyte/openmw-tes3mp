@@ -223,16 +223,20 @@ LuaState::LuaState()
     });
 }
 
-sol::environment LuaState::openScript(std::string path, std::string modname)
+sol::environment LuaState::openScript(std::string homePath, std::string modname)
 {
-    cout << "Loading file: " << path + "/" + modname + "/main.lua" << endl;
+    cout << "Loading file: " << homePath + "/mods/" + modname + "/main.lua" << endl;
     sol::environment env(*lua, sol::create, lua->globals());
     std::string package_path = env["package"]["path"];
-    env["package"]["path"] = Utils::convertPath(path + "/" + modname + "/?.lua") + ";" + package_path;
+    env["package"]["path"] = Utils::convertPath(homePath + "/mods/" + modname + "/?.lua") + ";" + package_path;
     package_path = env["package"]["path"];
     //env["ModInfo"] = sol::create;
 
-    lua->script_file(path + "/" + modname + "/main.lua", env);
+    lua->set_function("getDataFolder", [homePath, modname]() -> const string {
+        return homePath + "/data/" + modname + '/';
+    });
+
+    lua->script_file(homePath + "/mods/" + modname + "/main.lua", env);
 
     sol::table modinfo = env["ModInfo"];
     if (!modinfo.valid())
@@ -348,11 +352,10 @@ void LuaState::loadMods()
     using namespace boost::filesystem;
 
     auto funcLoadMods = [this](path path) {
-        path /= "mods";
         const auto mainScript = "main.lua";
-        if (!is_directory(path))
+        if (!is_directory(path / "mods"))
             throw runtime_error(path.string() + ": No such directory.");
-        for (const auto &modDir : directory_iterator(path))
+        for (const auto &modDir : directory_iterator(path / "mods"))
         {
             if (is_directory(modDir.status()) && exists(modDir.path() / mainScript))
                 openScript(path.string(), modDir.path().filename().string());
