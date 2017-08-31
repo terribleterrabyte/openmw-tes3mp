@@ -109,35 +109,37 @@ void CharClass::setSpecialization(int spec)
     changed = true;
 }
 
-std::tuple<int, int, int, int> CharClass::getMinorSkills() const
+std::tuple<int, int, int, int, int> CharClass::getMinorSkills() const
 {
     const auto &data = player->charClass.mData;
-    return make_tuple( data.mSkills[0][0],  data.mSkills[1][0],  data.mSkills[2][0],  data.mSkills[3][0]);
+    return make_tuple( data.mSkills[0][0],  data.mSkills[1][0],  data.mSkills[2][0],  data.mSkills[3][0], data.mSkills[4][0]);
 }
 
-void CharClass::setMinorSkills(int fisrt, int second, int third, int fourth)
+void CharClass::setMinorSkills(int fisrt, int second, int third, int fourth, int fifth)
 {
     auto &data = player->charClass.mData;
     data.mSkills[0][0] = fisrt;
     data.mSkills[1][0] = second;
     data.mSkills[2][0] = third;
     data.mSkills[3][0] = fourth;
+    data.mSkills[4][0] = fifth;
     changed = true;
 }
 
-std::tuple<int, int, int, int> CharClass::getMajorSkills() const
+std::tuple<int, int, int, int, int> CharClass::getMajorSkills() const
 {
     const auto &data = player->charClass.mData;
-    return make_tuple( data.mSkills[0][1],  data.mSkills[1][1],  data.mSkills[2][1],  data.mSkills[3][1]);
+    return make_tuple( data.mSkills[0][1],  data.mSkills[1][1],  data.mSkills[2][1],  data.mSkills[3][1], data.mSkills[4][1]);
 }
 
-void CharClass::setMajorSkills(int fisrt, int second, int third, int fourth)
+void CharClass::setMajorSkills(int fisrt, int second, int third, int fourth, int fifth)
 {
     auto &data = player->charClass.mData;
     data.mSkills[0][1] = fisrt;
     data.mSkills[1][1] = second;
     data.mSkills[2][1] = third;
     data.mSkills[3][1] = fourth;
+    data.mSkills[4][1] = fifth;
     changed = true;
 }
 

@@ -36,11 +36,11 @@ public:
     int getSpecialization() const;
     void setSpecialization(int spec);
 
-    std::tuple<int, int, int, int> getMinorSkills() const;
-    void setMinorSkills(int fisrt, int second, int third, int fourth);
+    std::tuple<int, int, int, int, int> getMinorSkills() const;
+    void setMinorSkills(int fisrt, int second, int third, int fourth, int fifth);
 
-    std::tuple<int, int, int, int> getMajorSkills() const;
-    void setMajorSkills(int fisrt, int second, int third, int fourth);
+    std::tuple<int, int, int, int, int> getMajorSkills() const;
+    void setMajorSkills(int fisrt, int second, int third, int fourth, int fifth);
 private:
     // not controlled pointer
     Player *player;
