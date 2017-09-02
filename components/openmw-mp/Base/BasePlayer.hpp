@@ -185,6 +185,7 @@ namespace mwmp
             spellbookChanges.action = 0;
             spellbookChanges.count = 0;
             useCreatureName = false;
+            isWerewolf = false;
         }
 
         BasePlayer()

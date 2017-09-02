@@ -135,9 +135,9 @@ void ActorController::sendActors(std::shared_ptr<Player> player, std::vector<std
 
     bool positionChanged = false;
     bool statsChanged = false;
-    bool attributesChanged = false;
+    /*bool attributesChanged = false;
     bool skillsChanged = false;
-    bool baseInfoChanged = false;
+    bool baseInfoChanged = false;*/
     bool equipmentChanged = false;
     bool changedCell = false;
 
@@ -150,12 +150,12 @@ void ActorController::sendActors(std::shared_ptr<Player> player, std::vector<std
             positionChanged = true;
         if (actor->statsChanged)
             statsChanged = true;
-        if (actor->attributesChanged)
+        /*if (actor->attributesChanged)
             attributesChanged = true;
         if (actor->skillsChanged)
             skillsChanged = true;
         if (actor->baseInfoChanged)
-            baseInfoChanged = true;
+            baseInfoChanged = true;*/
         if (actor->inventory.isEquipmentChanged())
         {
             equipmentChanged = true;
