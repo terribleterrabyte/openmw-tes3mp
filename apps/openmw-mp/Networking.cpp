@@ -71,7 +71,6 @@ Networking::~Networking()
     delete playerPacketController;
     delete actorPacketController;
     delete worldPacketController;
-    LOG_QUIT();
 }
 
 void Networking::setServerPassword(std::string passw) noexcept
@@ -467,6 +466,7 @@ int Networking::mainLoop()
                     LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Client at %s has lost connection", packet->systemAddress.ToString());
                     disconnectPlayer(packet->guid);
                     break;
+                case ID_SND_RECEIPT_ACKED:
                 case ID_CONNECTED_PING:
                 case ID_UNCONNECTED_PING:
                     break;

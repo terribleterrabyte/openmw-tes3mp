@@ -13,7 +13,16 @@
 #include <components/sdlutil/sdlinputwrapper.hpp>
 #include <components/sdlutil/sdlvideowrapper.hpp>
 
+/*
+    Start of tes3mp addition
+
+    Include additional headers for multiplayer purposes
+*/
 #include "../mwmp/Main.hpp"
+#include "../mwmp/LocalPlayer.hpp"
+/*
+    End of tes3mp addition
+*/
 
 #include <components/esm/esmwriter.hpp>
 #include <components/esm/esmreader.hpp>
@@ -23,6 +32,7 @@
 #include "../mwbase/windowmanager.hpp"
 #include "../mwbase/statemanager.hpp"
 #include "../mwbase/environment.hpp"
+#include "../mwbase/mechanicsmanager.hpp"
 
 #include "../mwworld/player.hpp"
 #include "../mwworld/class.hpp"
@@ -957,6 +967,9 @@ namespace MWInput
             inventory.getSelectedEnchantItem() == inventory.end())
             return;
 
+        if (MWBase::Environment::get().getMechanicsManager()->isAttackingOrSpell(mPlayer->getPlayer()))
+            return;
+
         MWMechanics::DrawState_ state = mPlayer->getDrawState();
         if (state == MWMechanics::DrawState_Weapon || state == MWMechanics::DrawState_Nothing)
             mPlayer->setDrawState(MWMechanics::DrawState_Spell);
@@ -970,6 +983,9 @@ namespace MWInput
 
         // Not allowed before the inventory window is accessible
         if (!mControlSwitch["playerfighting"] || !mControlSwitch["playercontrols"])
+            return;
+
+        if (MWBase::Environment::get().getMechanicsManager()->isAttackingOrSpell(mPlayer->getPlayer()))
             return;
 
         MWMechanics::DrawState_ state = mPlayer->getDrawState();
@@ -1026,6 +1042,17 @@ namespace MWInput
 
     void InputManager::toggleConsole()
     {
+        /*
+            Start of tes3mp addition
+
+            If a player's console is disabled by the server, go no further
+        */
+        if (!mwmp::Main::get().getLocalPlayer()->consoleAllowed)
+            return;
+        /*
+            End of tes3mp addition
+        */
+
         if (MyGUI::InputManager::getInstance ().isModalAny())
             return;
 
@@ -1050,6 +1077,7 @@ namespace MWInput
             return;
 
         if(MWBase::Environment::get().getWindowManager()->getMode() != MWGui::GM_Journal
+                && MWBase::Environment::get().getWindowManager()->getMode() != MWGui::GM_MainMenu
                 && MWBase::Environment::get().getWindowManager ()->getJournalAllowed())
         {
             MWBase::Environment::get().getWindowManager()->playSound ("book open");

@@ -47,7 +47,7 @@ LocalPlayer::LocalPlayer()
     charGenStage.current = 0;
     charGenStage.end = 1;
 
-    consoleAllowed = true;
+    consoleAllowed = false;
     difficulty = 0;
 
     ignorePosPacket = false;
@@ -93,8 +93,15 @@ void LocalPlayer::update()
         updateDeadState();
         updateEquipment();
         updateStatsDynamic();
-        updateAttributes();
-        updateSkills();
+
+        // Only send attributes and skills if we are not a werewolf, or they will be
+        // overwritten by the werewolf ones
+        if (!isWerewolf)
+        {
+            updateAttributes();
+            updateSkills();
+        }
+
         updateLevel();
         updateBounty();
     }
@@ -639,9 +646,16 @@ void LocalPlayer::addItems()
 
     for (const auto &item : inventoryChanges.items)
     {
-        MWWorld::Ptr itemPtr = *ptrStore.add(item.refId, item.count, ptrPlayer);
-        if (item.charge != -1)
-            itemPtr.getCellRef().setCharge(item.charge);
+        try
+        {
+            MWWorld::Ptr itemPtr = *ptrStore.add(item.refId, item.count, ptrPlayer);
+            if (item.charge != -1)
+                itemPtr.getCellRef().setCharge(item.charge);
+        }
+        catch (std::exception&)
+        {
+            LOG_APPEND(Log::LOG_INFO, "- Ignored addition of invalid inventory item %s", item.refId.c_str());
+        }
     }
 }
 
@@ -651,33 +665,38 @@ void LocalPlayer::addSpells()
     MWMechanics::Spells &ptrSpells = ptrPlayer.getClass().getCreatureStats(ptrPlayer).getSpells();
 
     for (const auto &spell : spellbookChanges.spells)
-    {
-        if(spell.mId.find("$dynamic") != string::npos)
-        {
-            //custom spell
-            MWBase::Environment::get().getWorld()->createRecord(spell);
-            ptrSpells.add(&spell);
-        }else{
+        // Only add spells that are ensured to exist
+        if (MWBase::Environment::get().getWorld()->getStore().get<ESM::Spell>().search(spell.mId))
             ptrSpells.add(spell.mId);
-        }
-    }
+        else
+            LOG_APPEND(Log::LOG_INFO, "- Ignored addition of invalid spell %s", spell.mId.c_str());
 }
 
 void LocalPlayer::addJournalItems()
 {
     for (const auto &journalItem : journalChanges.journalItems)
     {
+        MWWorld::Ptr ptrFound;
+
         if (journalItem.type == JournalItem::ENTRY)
         {
-            MWWorld::Ptr ptrFound = MWBase::Environment::get().getWorld()->searchPtr(journalItem.actorRefId, false);
+            ptrFound = MWBase::Environment::get().getWorld()->searchPtr(journalItem.actorRefId, false);
 
             if (!ptrFound)
                 ptrFound = getPlayerPtr();
-
-            MWBase::Environment::get().getJournal()->addEntry(journalItem.quest, journalItem.index, ptrFound);
         }
-        else
-            MWBase::Environment::get().getJournal()->setJournalIndex(journalItem.quest, journalItem.index);
+
+        try
+        {
+            if (journalItem.type == JournalItem::ENTRY)
+                MWBase::Environment::get().getJournal()->addEntry(journalItem.quest, journalItem.index, ptrFound);
+            else
+                MWBase::Environment::get().getJournal()->setJournalIndex(journalItem.quest, journalItem.index);
+        }
+        catch (std::exception&)
+        {
+            LOG_APPEND(Log::LOG_INFO, "- Ignored addition of invalid journal quest %s", journalItem.quest.c_str());
+        }
     }
 }
 
@@ -903,11 +922,19 @@ void LocalPlayer::setEquipment()
                 return Misc::StringUtils::ciEqual(a.getCellRef().getRefId(), currentItem.refId);
             });
 
-            if (it == ptrInventory.end()) // if not exists add item
+            if (it == ptrInventory.end()) // If the item is not in our inventory, add it
             {
                 auto equipped = equipedItems[slot];
-                auto addIter = ptrInventory.ContainerStore::add(equipped.refId.c_str(), equipped.count, ptrPlayer);
-                ptrInventory.equip(slot, addIter, ptrPlayer);
+
+                try
+                {
+                    auto addIter = ptrInventory.ContainerStore::add(equipped.refId.c_str(), equipped.count, ptrPlayer);
+                    ptrInventory.equip(slot, addIter, ptrPlayer);
+                }
+                catch (std::exception&)
+                {
+                    LOG_APPEND(Log::LOG_INFO, "- Ignored addition of invalid equipment item %s", equipped.refId.c_str());
+                }
             }
             else
                 ptrInventory.equip(slot, it, ptrPlayer);
@@ -1143,6 +1170,7 @@ void LocalPlayer::sendSpellRemoval(std::string id)
 
 void LocalPlayer::sendSpellAddition(const ESM::Spell &spell)
 {
+    /*
     spellbookChanges.spells.clear();
 
     spellbookChanges.spells.push_back(spell);
@@ -1150,10 +1178,12 @@ void LocalPlayer::sendSpellAddition(const ESM::Spell &spell)
     spellbookChanges.action = SpellbookChanges::ADD;
     getNetworking()->getPlayerPacket(ID_PLAYER_SPELLBOOK)->setPlayer(this);
     getNetworking()->getPlayerPacket(ID_PLAYER_SPELLBOOK)->Send();
+    */
 }
 
 void LocalPlayer::sendSpellRemoval(const ESM::Spell &spell)
 {
+    /*
     spellbookChanges.spells.clear();
 
     spellbookChanges.spells.push_back(spell);
@@ -1161,6 +1191,7 @@ void LocalPlayer::sendSpellRemoval(const ESM::Spell &spell)
     spellbookChanges.action = SpellbookChanges::REMOVE;
     getNetworking()->getPlayerPacket(ID_PLAYER_SPELLBOOK)->setPlayer(this);
     getNetworking()->getPlayerPacket(ID_PLAYER_SPELLBOOK)->Send();
+    */
 }
 
 void LocalPlayer::sendJournalEntry(const std::string& quest, int index, const MWWorld::Ptr& actor)
