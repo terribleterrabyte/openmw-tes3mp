@@ -29,6 +29,9 @@ MasterServer::MasterServer(const std::string &luaScript)
     std::string package_path = state["package"]["path"];
     state["package"]["path"] = Utils::convertPath(absPath.parent_path().string() + "/?.lua") + ";" + package_path;
 
+    state.set_function("BanAddress", &MasterServer::ban, this);
+    state.set_function("UnbanAddress", &MasterServer::unban, this);
+
     state.script_file(luaScript);
 
     sol::table config = state["config"];
@@ -44,18 +47,12 @@ MasterServer::MasterServer(const std::string &luaScript)
     if (port.get_type() != sol::type::number)
         throw runtime_error("config.port is not correct");
 
-    state.set_function("BanAddress", [this](const string &address) {
-        this->ban(address);
-    });
     state.new_usertype<MasterServer::SServer>("Server",
                                                "name", sol::property(&MasterServer::SServer::GetName),
                                                "gamemode", sol::property(&MasterServer::SServer::GetGameMode),
                                                "version", sol::property(&MasterServer::SServer::GetVersion)
     );
 
-    state.set_function("UnbanAddress", [this](const string &address) {
-        this->unban(address);
-    });
 
     peer = RakPeerInterface::GetInstance();
     sockdescr = SocketDescriptor(port.as<unsigned short>(), nullptr);
