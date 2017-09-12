@@ -443,10 +443,15 @@ namespace MWMechanics
                 End of tes3mp addition
             */
         }
-        
+
         // Make guards go aggressive with creatures that are in combat, unless the creature is a follower or escorter
         if (actor1.getClass().isClass(actor1, "Guard") && !actor2.getClass().isNpc())
         {
+            // Check if the creature is too far
+            static const float fAlarmRadius = MWBase::Environment::get().getWorld()->getStore().get<ESM::GameSetting>().find("fAlarmRadius")->getFloat();
+            if (sqrDist > fAlarmRadius * fAlarmRadius)
+                return;
+
             bool followerOrEscorter = false;
             for (std::list<MWMechanics::AiPackage*>::const_iterator it = creatureStats2.getAiSequence().begin(); it != creatureStats2.getAiSequence().end(); ++it)
             {
@@ -851,6 +856,16 @@ namespace MWMechanics
         }
     }
 
+    bool Actors::isAttackPrepairing(const MWWorld::Ptr& ptr)
+    {
+        PtrActorMap::iterator it = mActors.find(ptr);
+        if (it == mActors.end())
+            return false;
+        CharacterController* ctrl = it->second->getCharacterController();
+
+        return ctrl->isAttackPrepairing();
+    }
+
     bool Actors::isRunning(const MWWorld::Ptr& ptr)
     {
         PtrActorMap::iterator it = mActors.find(ptr);
@@ -1065,7 +1080,18 @@ namespace MWMechanics
                     && MWBase::Environment::get().getMechanicsManager()->awarenessCheck(player, ptr))
                 {
                     static const int iCrimeThresholdMultiplier = esmStore.get<ESM::GameSetting>().find("iCrimeThresholdMultiplier")->getInt();
-                    if (player.getClass().getNpcStats(player).getBounty() >= cutoff * iCrimeThresholdMultiplier)
+
+                    /*
+                        Start of tes3mp change (major)
+
+                        Only attack players based on their high bounty if they haven't died since the last
+                        time an attempt was made to arrest them
+                    */
+                    if (player.getClass().getNpcStats(player).getBounty() >= cutoff * iCrimeThresholdMultiplier
+                        && !mwmp::Main::get().getLocalPlayer()->diedSinceArrestAttempt)
+                    /*
+                        End of tes3mp change (major)
+                    */
                     {
                         MWBase::Environment::get().getMechanicsManager()->startCombat(ptr, player);
                         creatureStats.setHitAttemptActorId(player.getClass().getCreatureStats(player).getActorId()); // Stops the guard from quitting combat if player is unreachable
@@ -1096,6 +1122,24 @@ namespace MWMechanics
                     // Update witness crime id
                     npcStats.setCrimeId(-1);
                 }
+                /*
+                    Start of tes3mp addition
+
+                    If the player has died, stop combat with them as though they had
+                    paid their bounty
+                */
+                else if (mwmp::Main::get().getLocalPlayer()->diedSinceArrestAttempt)
+                {
+                    if (creatureStats.getAiSequence().isInCombat(player))
+                    {
+                        creatureStats.getAiSequence().stopCombat();
+                        creatureStats.setAttacked(false);
+                        creatureStats.setAlarmed(false);
+                    }
+                }
+                /*
+                    End of tes3mp addition
+                */
             }
         }
     }
