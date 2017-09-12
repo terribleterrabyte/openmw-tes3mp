@@ -234,3 +234,15 @@ MasterServer::ServerMap *MasterServer::GetServers()
 {
     return &servers;
 }
+
+void MasterServer::ban(const std::string &addr)
+{
+    banned.push_back(addr);
+}
+
+void MasterServer::unban(const std::string &addr)
+{
+    auto it = find(banned.begin(), banned.end(), addr);
+    if (it != banned.end())
+        banned.erase(it);
+}

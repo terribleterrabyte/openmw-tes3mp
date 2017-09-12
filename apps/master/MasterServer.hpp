@@ -31,6 +31,9 @@ public:
 
     ServerMap* GetServers();
 
+    void ban(const std::string &addr);
+    void unban(const std::string &addr);
+
 private:
     void Thread();
 
