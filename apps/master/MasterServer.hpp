@@ -13,14 +13,6 @@
 class MasterServer
 {
 public:
-    struct Ban
-    {
-        RakNet::SystemAddress sa;
-        bool permanent;
-        struct Date
-        {
-        } date;
-    };
     struct SServer : QueryData
     {
         std::chrono::steady_clock::time_point lastUpdate;
@@ -49,6 +41,7 @@ private:
     ServerMap servers;
     bool run;
     std::map<RakNet::RakNetGUID, std::chrono::steady_clock::time_point> pendingACKs;
+    std::vector<std::string> banned; // does not save on restart
 };
 
 
