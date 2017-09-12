@@ -47,6 +47,11 @@ MasterServer::MasterServer(const std::string &luaScript)
     state.set_function("BanAddress", [this](const string &address) {
         this->ban(address);
     });
+    state.new_usertype<MasterServer::SServer>("Server",
+                                               "name", sol::property(&MasterServer::SServer::GetName),
+                                               "gamemode", sol::property(&MasterServer::SServer::GetGameMode),
+                                               "version", sol::property(&MasterServer::SServer::GetVersion)
+    );
 
     state.set_function("UnbanAddress", [this](const string &address) {
         this->unban(address);
@@ -173,6 +178,24 @@ void MasterServer::Thread()
                             pendingACKs[packet->guid] = steady_clock::now();
                         };
 
+                        auto isServerValid = [&](const SServer &sserver) {
+                            bool ret = false;
+                            auto addr = packet->systemAddress.ToString(false);
+
+                            if (find(banned.begin(), banned.end(), addr) != banned.end()) // check if address is banned
+                                return true;
+
+                            luaStuff([&ret, &packet, &sserver, &addr](sol::state &state) {
+                                sol::protected_function func = state["OnServerAnnounce"];
+                                sol::protected_function_result result = func.call(addr, sserver);
+                                if (result.valid())
+                                    ret = result.get<bool>();
+                                else
+                                    cerr << "Error: " << result.get<string>() << endl;
+                            });
+                            return ret;
+                        };
+
                         if (iter != servers.end())
                         {
                             if (pma.GetFunc() == PacketMasterAnnounce::FUNCTION_DELETE)
@@ -185,8 +208,17 @@ void MasterServer::Thread()
                             else if (pma.GetFunc() == PacketMasterAnnounce::FUNCTION_ANNOUNCE)
                             {
                                 cout << "Updated";
-                                iter->second = server;
-                                keepAliveFunc();
+
+                                if (isServerValid(server))
+                                {
+                                    iter->second = server;
+                                    keepAliveFunc();
+                                }
+                                else
+                                {
+                                    servers.erase(iter);
+                                    pendingACKs[packet->guid] = steady_clock::now();
+                                }
                             }
                             else
                             {
@@ -197,8 +229,11 @@ void MasterServer::Thread()
                         else if (pma.GetFunc() == PacketMasterAnnounce::FUNCTION_ANNOUNCE)
                         {
                             cout << "Added";
-                            iter = servers.insert({packet->systemAddress, server}).first;
-                            keepAliveFunc();
+                            if (isServerValid(server))
+                            {
+                                iter = servers.insert({packet->systemAddress, server}).first;
+                                keepAliveFunc();
+                            }
                         }
                         else
                         {
