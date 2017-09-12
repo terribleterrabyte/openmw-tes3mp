@@ -12,19 +12,51 @@
 #include <components/openmw-mp/Master/PacketMasterUpdate.hpp>
 #include <components/openmw-mp/Master/PacketMasterAnnounce.hpp>
 #include <components/openmw-mp/Version.hpp>
+#include <components/openmw-mp/Utils.hpp>
+#include <boost/filesystem.hpp>
 
 using namespace RakNet;
 using namespace std;
 using namespace mwmp;
 using namespace chrono;
 
-MasterServer::MasterServer(unsigned short maxConnections, unsigned short port)
+MasterServer::MasterServer(const std::string &luaScript)
 {
-    peer = RakPeerInterface::GetInstance();
-    sockdescr = SocketDescriptor(port, 0);
-    peer->Startup(maxConnections, &sockdescr, 1, 1000);
+    state.open_libraries();
 
-    peer->SetMaximumIncomingConnections(maxConnections);
+    boost::filesystem::path absPath = boost::filesystem::absolute(luaScript);
+
+    std::string package_path = state["package"]["path"];
+    state["package"]["path"] = Utils::convertPath(absPath.parent_path().string() + "/?.lua") + ";" + package_path;
+
+    state.script_file(luaScript);
+
+    sol::table config = state["config"];
+
+    if (config.get_type() != sol::type::table)
+        throw runtime_error("config is not correct");
+
+    sol::object maxConnections = config["maxConnections"];
+    if (maxConnections.get_type() != sol::type::number)
+        throw runtime_error("config.maxConnections is not correct");
+
+    sol::object port = config["port"];
+    if (port.get_type() != sol::type::number)
+        throw runtime_error("config.port is not correct");
+
+    state.set_function("BanAddress", [this](const string &address) {
+        this->ban(address);
+    });
+
+    state.set_function("UnbanAddress", [this](const string &address) {
+        this->unban(address);
+    });
+
+    peer = RakPeerInterface::GetInstance();
+    sockdescr = SocketDescriptor(port.as<unsigned short>(), nullptr);
+    peer->Startup(maxConnections.as<unsigned short>(), &sockdescr, 1, 1000);
+
+    peer->SetMaximumIncomingConnections(maxConnections.as<unsigned short>());
     peer->SetIncomingPassword(TES3MP_MASTERSERVER_PASSW, (int) strlen(TES3MP_MASTERSERVER_PASSW));
     run = false;
 }
@@ -67,9 +99,9 @@ void MasterServer::Thread()
                     servers.erase(it++);
                 else ++it;
             }
-            for(auto id = pendingACKs.begin(); id != pendingACKs.end();)
+            for (auto id = pendingACKs.begin(); id != pendingACKs.end();)
             {
-                if(now - id->second >= 30s)
+                if (now - id->second >= 30s)
                 {
                     cout << "timeout: " << peer->GetSystemAddressFromGuid(id->first).ToString() << endl;
                     peer->CloseConnection(id->first, true);
@@ -233,6 +265,13 @@ void MasterServer::Wait()
 MasterServer::ServerMap *MasterServer::GetServers()
 {
     return &servers;
+}
+
+
+void MasterServer::luaStuff(std::function<void(sol::state &)> f)
+{
+    lock_guard<mutex> lock(luaMutex);
+    f(state);
 }
 
 void MasterServer::ban(const std::string &addr)

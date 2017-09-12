@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Kbhit.h>
 #include <RakSleep.h>
+#include <extern/sol/sol.hpp>
 #include "MasterServer.hpp"
 #include "RestServer.hpp"
 
@@ -8,19 +9,36 @@ using namespace RakNet;
 using namespace std;
 
 unique_ptr<RestServer> restServer;
-unique_ptr<MasterServer> masterServer;
-bool run = true;
+shared_ptr<MasterServer> masterServer;
 
-int main()
+int main(int argc, char* argv[])
 {
-    masterServer.reset(new MasterServer(2000, 25560));
-    restServer.reset(new RestServer(8080, masterServer->GetServers()));
+    if (argc != 2)
+        return 1;
+
+    string luaScript(argv[1]);
+
+    masterServer = make_shared<MasterServer>(luaScript);
+    masterServer->luaStuff([](sol::state &state)
+    {
+        sol::table config = state["config"];
+        sol::object restPort = config["restPort"];
+        if (restPort.get_type() != sol::type::number)
+            throw runtime_error("config.restPort is not correct");
+
+
+        restServer = make_unique<RestServer>(restPort.as<unsigned short>(), masterServer->GetServers());
+    });
 
     auto onExit = [](int /*sig*/){
         restServer->stop();
+        masterServer->luaStuff([](sol::state &state) {
+            sol::protected_function func = state["OnExit"];
+            if (func.valid())
+                func.call();
+        });
         masterServer->Stop(false);
         masterServer->Wait();
-        run = false;
     };
 
     signal(SIGINT, onExit);
@@ -28,9 +46,9 @@ int main()
 
     masterServer->Start();
 
-    thread server_thread([]() { restServer->start(); });
+    thread rest_thread([]() { restServer->start();});
 
-    server_thread.join();
+    rest_thread.join();
     masterServer->Wait();
 
     return 0;

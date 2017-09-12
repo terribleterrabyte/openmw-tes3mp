@@ -9,6 +9,8 @@
 #include <chrono>
 #include <RakPeerInterface.h>
 #include <components/openmw-mp/Master/MasterData.hpp>
+#include <extern/sol/sol.hpp>
+#include <mutex>
 
 class MasterServer
 {
@@ -21,7 +23,7 @@ public:
     //typedef ServerMap::const_iterator ServerCIter;
     typedef ServerMap::iterator ServerIter;
 
-    MasterServer(unsigned short maxConnections, unsigned short port);
+    explicit MasterServer(const std::string &luaScript);
     ~MasterServer();
 
     void Start();
@@ -30,6 +32,7 @@ public:
     void Wait();
 
     ServerMap* GetServers();
+    void luaStuff(std::function<void(sol::state &)> f);
 
     void ban(const std::string &addr);
     void unban(const std::string &addr);
@@ -44,6 +47,8 @@ private:
     ServerMap servers;
     bool run;
     std::map<RakNet::RakNetGUID, std::chrono::steady_clock::time_point> pendingACKs;
+    sol::state state;
+    std::mutex luaMutex;
     std::vector<std::string> banned; // does not save on restart
 };
 
