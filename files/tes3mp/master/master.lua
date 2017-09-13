@@ -34,7 +34,6 @@ bansFile = script_path().."/".."banned.json"
 
 loggedIn = {} -- {{"koncord", "127.0.0.1"}}
 banned = {}
-
 if type(admins) ~= "table" then
     error("\"admins.lua\" is not configured.")
 end
@@ -42,7 +41,7 @@ end
 local json = require ("dkjson");
 
 function ban(addr, admin, reason, dontInsert)
-        entry = {
+    local entry = {
         address = addr,
         date = os.date("%s"),
         by = admin,
@@ -71,14 +70,13 @@ function loadBans()
     file:close()
 
     banned = json.decode(content, 1, nil)
-    for idx, entry in pairs(banned) do
+    for _, entry in pairs(banned) do
         ban(entry.address, entry.admin, entry.reason, true)
-        unban(entry.address)
-    end 
+    end
 end
 
 function saveBans()
-    local content = json.encode(banned, { indent = true, keyorder = {"address", "date", "by", "reason"}})
+    local content = json.encode(banned, { indent = true, --[[keyorder = {"address", "date", "by", "reason"}]]})
     if content ~= "null" then
         local file = assert(io.open(bansFile, 'w+b'), 'Error loading file: ' .. bansFile)
         file:write(content)
@@ -141,7 +139,7 @@ function OnCommand(command, v, address)
 
     if command == "ban" then
         print("Ban address: " .. v["address"])
-        ban(v["address"])
+        ban(v["address"], loggedIn[loginId][1], v["reason"])
     elseif command == "unban" then
         print("Unban address: " .. v["address"])
         unban(v["address"])
