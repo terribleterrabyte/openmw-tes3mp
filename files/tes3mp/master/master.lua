@@ -146,6 +146,8 @@ function OnCommand(command, v, address)
     elseif command == "banlist" then -- can be used only as last command
         local data = json.encode(banned, { indent = true--[[, keyorder = {"address", "date", "by", "reason"} ]] })
         return true, ResponseStr(data)
+    elseif command == "savebans" then
+        saveBans()
     end
 
     return false
