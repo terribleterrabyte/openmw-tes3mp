@@ -11,6 +11,7 @@
 #include <components/openmw-mp/Master/MasterData.hpp>
 #include <RakString.h>
 #include <components/openmw-mp/Master/PacketMasterAnnounce.hpp>
+#include <atomic>
 
 class MasterClient
 {

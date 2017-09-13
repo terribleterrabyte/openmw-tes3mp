@@ -376,7 +376,7 @@ void LuaState::loadMods()
     if (envServerDir.empty())
     {
         envServerDir = current_path();
-        setenv("TES3MP_SERVER_DIR", envServerDir.c_str(), 1);
+        setenv("TES3MP_SERVER_DIR", envServerDir.string().c_str(), 1);
     }
 
     addGlobalPackagePath(envServerDir.string() + "/lib/lua/?/init.lua;" + envServerDir.string() + "/lib/lua/?.lua");
