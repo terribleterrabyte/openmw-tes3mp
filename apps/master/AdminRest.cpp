@@ -58,10 +58,12 @@ void AdminRest::start()
         *response << response400;
     };
 
-    httpServer.start();
+    thr = thread([this](){httpServer.start();});
 }
 
 void AdminRest::stop()
 {
     httpServer.stop();
+    if(thr.joinable())
+        thr.join();
 }

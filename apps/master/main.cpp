@@ -67,12 +67,8 @@ int main(int argc, char* argv[])
     signal(SIGTERM, onExit);
 
     masterServer->Start();
-
-    thread rest_thread([]() { restServer->start();});
-    thread restAdmin_thread([]() { restAdminServer->start();});
-
-    rest_thread.join();
-    restAdmin_thread.join();
+    restServer->start();
+    restAdminServer->start();
     masterServer->Wait();
 
     return 0;

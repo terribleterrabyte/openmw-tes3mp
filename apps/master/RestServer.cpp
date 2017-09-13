@@ -167,7 +167,7 @@ void RestServer::start()
         *response << response400;
     };
 
-    httpServer.start();
+    thr = thread([this](){httpServer.start();});
 }
 
 void RestServer::cacheUpdated()
@@ -178,4 +178,6 @@ void RestServer::cacheUpdated()
 void RestServer::stop()
 {
     httpServer.stop();
+    if(thr.joinable())
+        thr.join();
 }

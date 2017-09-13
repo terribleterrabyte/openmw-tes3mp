@@ -19,6 +19,7 @@ public:
 private:
     HttpsServer httpServer;
     std::shared_ptr<MasterServer> master;
+    std::thread thr;
 };
 
 
