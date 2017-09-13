@@ -180,7 +180,7 @@ void MasterServer::Thread()
                             auto addr = packet->systemAddress.ToString(false);
 
                             if (find(banned.begin(), banned.end(), addr) != banned.end()) // check if address is banned
-                                return true;
+                                return false;
 
                             luaStuff([&ret, &packet, &sserver, &addr](sol::state &state) {
                                 sol::protected_function func = state["OnServerAnnounce"];

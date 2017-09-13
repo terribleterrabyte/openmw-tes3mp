@@ -186,6 +186,7 @@ function OnServerAnnounce(address, sserver) -- callback
     print(sserver.name)
     print(sserver.gamemode)
     print(sserver.version)
+    return true
 end
 
 function OnExit() -- callback
