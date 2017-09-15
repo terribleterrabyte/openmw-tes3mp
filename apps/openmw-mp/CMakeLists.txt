@@ -128,8 +128,9 @@ add_executable(tes3mp-server
         ${APPLE_BUNDLE_RESOURCES}
         )
 
-target_compile_definitions(tes3mp-server PRIVATE $<$<CONFIG:Debug>:SOL_SAFE_FUNCTIONS>) # for lua debuging
-target_compile_definitions(tes3mp-server PRIVATE $<$<CONFIG:Debug>:SERVER_DEBUG>) # for lua debuging
+# For Lua debugging
+target_compile_definitions(tes3mp-server PRIVATE $<$<CONFIG:Debug>:SOL_SAFE_FUNCTIONS> $<$<CONFIG:RelWithDebInfo>:SOL_SAFE_FUNCTIONS>)
+target_compile_definitions(tes3mp-server PRIVATE $<$<CONFIG:Debug>:SERVER_DEBUG> $<$<CONFIG:RelWithDebInfo>:SERVER_DEBUG>)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     target_compile_options(tes3mp-server PRIVATE -std=gnu++14 -Wno-ignored-qualifiers -ftemplate-depth=2048)
