@@ -314,6 +314,8 @@ int main(int argc, char *argv[])
 
     if (code == 0)
         LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Quitting peacefully.");
+    else if (code == 1)
+        LOG_MESSAGE_SIMPLE(Log::LOG_ERROR, "Forcibly shutting down because of error.");
 
     LOG_QUIT();
 

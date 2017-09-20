@@ -139,7 +139,7 @@ LuaState::LuaState()
         LOG_MESSAGE_SIMPLE(level, "[Script]: %s", message);
     });
     lua->set_function("logAppend", [](unsigned short level, const char *message) {
-        LOG_APPEND(level, "[Script]: %s", message);
+        LOG_APPEND(level, "%s", message);
     });
 
     lua->set_function("stopServer", [](int code) {
