@@ -49,6 +49,7 @@ private:
     std::map<RakNet::RakNetGUID, std::chrono::steady_clock::time_point> pendingACKs;
     sol::state state;
     std::mutex luaMutex;
+    std::mutex banMutex;
     std::vector<std::string> banned; // does not save on restart
 };
 

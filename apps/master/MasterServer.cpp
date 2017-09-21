@@ -179,8 +179,13 @@ void MasterServer::Thread()
                             bool ret = false;
                             auto addr = packet->systemAddress.ToString(false);
 
+                            lock_guard<mutex> lock(banMutex);
+
                             if (find(banned.begin(), banned.end(), addr) != banned.end()) // check if address is banned
+                            {
+                                peer->AddToBanList(addr);
                                 return false;
+                            }
 
                             luaStuff([&ret, &packet, &sserver, &addr](sol::state &state) {
                                 sol::protected_function func = state["OnServerAnnounce"];
@@ -204,15 +209,16 @@ void MasterServer::Thread()
                             }
                             else if (pma.GetFunc() == PacketMasterAnnounce::FUNCTION_ANNOUNCE)
                             {
-                                cout << "Updated";
 
                                 if (isServerValid(server))
                                 {
+                                    cout << "Updated";
                                     iter->second = server;
                                     keepAliveFunc();
                                 }
                                 else
                                 {
+                                    cout << "Update rejected";
                                     servers.erase(iter);
                                     pendingACKs[packet->guid] = steady_clock::now();
                                 }
@@ -225,12 +231,14 @@ void MasterServer::Thread()
                         }
                         else if (pma.GetFunc() == PacketMasterAnnounce::FUNCTION_ANNOUNCE)
                         {
-                            cout << "Added";
                             if (isServerValid(server))
                             {
+                                cout << "Added";
                                 iter = servers.insert({packet->systemAddress, server}).first;
                                 keepAliveFunc();
                             }
+                            else
+                                cout << "Adding rejected";
                         }
                         else
                         {
@@ -308,12 +316,18 @@ void MasterServer::luaStuff(std::function<void(sol::state &)> f)
 
 void MasterServer::ban(const std::string &addr)
 {
+    lock_guard<mutex> lock(banMutex);
     banned.push_back(addr);
 }
 
 void MasterServer::unban(const std::string &addr)
 {
+    lock_guard<mutex> lock(banMutex);
     auto it = find(banned.begin(), banned.end(), addr);
     if (it != banned.end())
+    {
         banned.erase(it);
+        if(peer)
+            peer->RemoveFromBanList(addr.c_str());
+    }
 }
