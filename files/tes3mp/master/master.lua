@@ -6,7 +6,7 @@ end
 -------------------------------------[response strings]-------------------------------------
 
 response_ok = "HTTP/1.1 200 OK\r\nContent-Length: 2\r\n\r\nOK"
---response_bad = "HTTP/1.1 400 Bad Request\r\nContent-Length: 11\r\n\r\nbad request"
+response_bad = "HTTP/1.1 400 Bad Request\r\nContent-Length: 11\r\n\r\nbad request"
 response_forbidden = "HTTP/1.1 403 Forbidden\r\nContent-Length: 9\r\n\r\nforbidden"
 response_error = "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 21\r\n\r\nInternal Server Error"
 
@@ -43,7 +43,7 @@ local json = require ("dkjson");
 function ban(addr, admin, reason, dontInsert)
     local entry = {
         address = addr,
-        date = os.date("%s"),
+        date = tonumber(os.date("%s")),
         by = admin,
         reason = reason
     }
@@ -59,9 +59,10 @@ function unban(addr)
         if value.address == addr then
             table.remove(banned, idx)
             UnbanAddress(addr)
-            break
+            return true
         end
     end
+    return false
 end
 
 function loadBans()
@@ -142,7 +143,9 @@ function OnCommand(command, v, address)
         ban(v["address"], loggedIn[loginId][1], v["reason"])
     elseif command == "unban" then
         print("Unban address: " .. v["address"])
-        unban(v["address"])
+        if not unban(v["address"]) then -- if server not found
+            return true, response_bad
+        end
     elseif command == "banlist" then -- can be used only as last command
         local data = json.encode(banned, { indent = true--[[, keyorder = {"address", "date", "by", "reason"} ]] })
         return true, ResponseStr(data)
