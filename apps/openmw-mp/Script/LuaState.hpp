@@ -40,6 +40,7 @@ private:
 private:
     std::shared_ptr<sol::state> lua;
     sol::environment dataEnv;
+    sol::environment configEnv;
     std::unique_ptr<CommandController> cmdCtrl;
     std::unique_ptr<EventController> eventCtrl;
     std::unique_ptr<TimerController> timerCtrl;

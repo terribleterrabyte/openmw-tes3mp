@@ -75,6 +75,9 @@ LuaState::LuaState()
     coreTable["PROTOCOL"] = TES3MP_PROTO_VERSION;
     coreTable["loadedMods"] = coreTable.create();
 
+    configEnv = sol::environment(*lua, sol::create, lua->globals());
+    lua->set("Config", configEnv); // plain global environment for mod configuration
+
     // errors in sol::functions catches only in debug build for better performance
 #ifdef SOL_SAFE_FUNCTIONS
     lua->set_function("ErrorHandler", [](sol::object error_msg) {
@@ -234,6 +237,10 @@ sol::environment LuaState::openScript(std::string homePath, std::string modname)
 
     lua->set_function("getDataFolder", [homePath, modname]() -> const string {
         return homePath + "/data/" + modname + '/';
+    });
+
+    lua->set_function("getModFolder", [homePath, modname]() -> const string{
+        return homePath + "/mods/" + modname + '/';
     });
 
     lua->script_file(homePath + "/mods/" + modname + "/main.lua", env);
