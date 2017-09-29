@@ -1,5 +1,7 @@
 #version 120
 
+#define FRAGMENT
+
 #if @diffuseMap
 uniform sampler2D diffuseMap;
 varying vec2 diffuseMapUV;
@@ -48,11 +50,15 @@ varying float depth;
 
 #if !PER_PIXEL_LIGHTING
 varying vec4 lighting;
+varying vec3 shadowDiffuseLighting;
 #else
 varying vec4 passColor;
 #endif
 varying vec3 passViewPos;
 varying vec3 passNormal;
+
+uniform sampler2DShadow shadowTexture;
+varying vec4 shadowSpaceCoords;
 
 #include "lighting.glsl"
 #include "parallax.glsl"
@@ -112,10 +118,12 @@ void main()
     gl_FragData[0].xyz = mix(gl_FragData[0].xyz, decalTex.xyz, decalTex.a);
 #endif
 
+	float shadowing = shadow2DProj(shadowTexture, shadowSpaceCoords).r;
+
 #if !PER_PIXEL_LIGHTING
-    gl_FragData[0] *= lighting;
+    gl_FragData[0] *= lighting + vec4(shadowDiffuseLighting * shadowing, 0);
 #else
-    gl_FragData[0] *= doLighting(passViewPos, normalize(viewNormal), passColor);
+    gl_FragData[0] *= doLighting(passViewPos, normalize(viewNormal), passColor, shadowing);
 #endif
 
 #if @emissiveMap
@@ -147,7 +155,7 @@ void main()
     vec3 matSpec = gl_FrontMaterial.specular.xyz;
 #endif
 
-    gl_FragData[0].xyz += getSpecular(normalize(viewNormal), normalize(passViewPos.xyz), shininess, matSpec);
+    gl_FragData[0].xyz += getSpecular(normalize(viewNormal), normalize(passViewPos.xyz), shininess, matSpec) * shadowing;
 
     float fogValue = clamp((depth - gl_Fog.start) * gl_Fog.scale, 0.0, 1.0);
     gl_FragData[0].xyz = mix(gl_FragData[0].xyz, gl_Fog.color.xyz, fogValue);

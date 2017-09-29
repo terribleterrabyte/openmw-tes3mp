@@ -1,10 +1,25 @@
 #define MAX_LIGHTS 8
 
-vec4 doLighting(vec3 viewPos, vec3 viewNormal, vec4 vertexColor)
+void perLight(out vec3 ambientOut, out vec3 diffuseOut, int lightIndex, vec3 viewPos, vec3 viewNormal, vec4 diffuse, vec3 ambient)
 {
     vec3 lightDir;
-    float d;
+	float lightDistance;
 
+    lightDir = gl_LightSource[lightIndex].position.xyz - (viewPos.xyz * gl_LightSource[lightIndex].position.w);
+    lightDistance = length(lightDir);
+    lightDir = normalize(lightDir);
+	float illumination = clamp(1.0 / (gl_LightSource[lightIndex].constantAttenuation + gl_LightSource[lightIndex].linearAttenuation * lightDistance + gl_LightSource[lightIndex].quadraticAttenuation * lightDistance * lightDistance), 0.0, 1.0);
+
+    ambientOut = ambient * gl_LightSource[lightIndex].ambient.xyz * illumination;
+    diffuseOut = diffuse.xyz * gl_LightSource[lightIndex].diffuse.xyz * max(dot(viewNormal.xyz, lightDir), 0.0) * illumination;
+}
+
+#ifdef FRAGMENT
+vec4 doLighting(vec3 viewPos, vec3 viewNormal, vec4 vertexColor, float shadowing)
+#else
+vec4 doLighting(vec3 viewPos, vec3 viewNormal, vec4 vertexColor, out vec3 shadowDiffuse)
+#endif
+{
 #if @colorMode == 3
     vec4 diffuse = gl_FrontMaterial.diffuse;
     vec3 ambient = vertexColor.xyz;
@@ -17,13 +32,18 @@ vec4 doLighting(vec3 viewPos, vec3 viewNormal, vec4 vertexColor)
 #endif
     vec4 lightResult = vec4(0.0, 0.0, 0.0, diffuse.a);
 
-    for (int i=0; i<MAX_LIGHTS; ++i)
+    vec3 diffuseLight, ambientLight;
+    perLight(ambientLight, diffuseLight, 0, viewPos, viewNormal, diffuse, ambient);
+#ifdef FRAGMENT
+    lightResult.xyz += ambientLight + diffuseLight * shadowing;
+#else
+    shadowDiffuse = diffuseLight;
+	lightResult.xyz += ambientLight;
+#endif
+    for (int i=1; i<MAX_LIGHTS; ++i)
     {
-        lightDir = gl_LightSource[i].position.xyz - (viewPos.xyz * gl_LightSource[i].position.w);
-        d = length(lightDir);
-        lightDir = normalize(lightDir);
-
-        lightResult.xyz += (ambient * gl_LightSource[i].ambient.xyz + diffuse.xyz * gl_LightSource[i].diffuse.xyz * max(dot(viewNormal.xyz, lightDir), 0.0)) * clamp(1.0 / (gl_LightSource[i].constantAttenuation + gl_LightSource[i].linearAttenuation * d + gl_LightSource[i].quadraticAttenuation * d * d), 0.0, 1.0);
+        perLight(ambientLight, diffuseLight, i, viewPos, viewNormal, diffuse, ambient);
+        lightResult.xyz += ambientLight + diffuseLight;
     }
 
     lightResult.xyz += gl_LightModel.ambient.xyz * ambient;
