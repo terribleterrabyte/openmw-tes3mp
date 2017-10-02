@@ -156,8 +156,6 @@ function OnCommand(command, v, address)
     return false
 end
 
-loadBans() -- load on start
-
 -------------------------------------[callbacks]-------------------------------------
 
 function OnAdminRequest(address, request) -- callback
@@ -192,6 +190,10 @@ function OnServerAnnounce(address, sserver) -- callback
     print(sserver.gamemode)
     print(sserver.version)
     return true
+end
+
+function OnInit() -- called when master server thread was started
+    loadBans()
 end
 
 function OnExit() -- callback

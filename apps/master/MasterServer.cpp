@@ -57,6 +57,7 @@ MasterServer::MasterServer(const std::string &luaScript)
     peer = RakPeerInterface::GetInstance();
     sockdescr = SocketDescriptor(port.as<unsigned short>(), nullptr);
     peer->Startup(maxConnections.as<unsigned short>(), &sockdescr, 1, 1000);
+    peer->SetLimitIPConnectionFrequency(true);
 
     peer->SetMaximumIncomingConnections(maxConnections.as<unsigned short>());
     peer->SetIncomingPassword(TES3MP_MASTERSERVER_PASSW, (int) strlen(TES3MP_MASTERSERVER_PASSW));
@@ -85,6 +86,13 @@ void MasterServer::Thread()
 
     PacketMasterAnnounce pma(peer);
     pma.SetSendStream(&send);
+
+    luaStuff([](sol::state &state) {
+        sol::protected_function func = state["OnInit"];
+        sol::protected_function_result result = func.call();
+        if (!result.valid())
+            cerr << "Error: " << result.get<string>() << endl;
+    });
 
     while (run)
     {
@@ -147,7 +155,7 @@ void MasterServer::Thread()
                         SystemAddress addr;
                         data.Read(addr); // update 1 server
 
-                        ServerIter it = servers.find(addr);
+                        auto it = servers.find(addr);
                         if (it != servers.end())
                         {
                             pair<SystemAddress, QueryData> pairPtr(it->first, static_cast<QueryData>(it->second));
@@ -161,7 +169,7 @@ void MasterServer::Thread()
                     }
                     case ID_MASTER_ANNOUNCE:
                     {
-                        ServerIter iter = servers.find(packet->systemAddress);
+                        auto iter = servers.find(packet->systemAddress);
 
                         pma.SetReadStream(&data);
                         SServer server;
@@ -181,11 +189,8 @@ void MasterServer::Thread()
 
                             lock_guard<mutex> lock(banMutex);
 
-                            if (find(banned.begin(), banned.end(), addr) != banned.end()) // check if address is banned
-                            {
-                                peer->AddToBanList(addr);
+                            if (peer->IsBanned(addr)) // check if address is banned
                                 return false;
-                            }
 
                             luaStuff([&ret, &packet, &sserver, &addr](sol::state &state) {
                                 sol::protected_function func = state["OnServerAnnounce"];
@@ -220,7 +225,7 @@ void MasterServer::Thread()
                                 {
                                     cout << "Update rejected";
                                     servers.erase(iter);
-                                    pendingACKs[packet->guid] = steady_clock::now();
+                                    pendingACKs.erase(packet->guid);
                                 }
                             }
                             else
@@ -258,7 +263,8 @@ void MasterServer::Thread()
                         peer->CloseConnection(packet->systemAddress, true);
                         break;
                     default:
-                        cout << "Wrong packet. id " << (unsigned) packet->data[0] << " packet length " << packet->length << " from " << packet->systemAddress.ToString() << endl;
+                        cout << "Wrong packet. id " << (unsigned) packet->data[0] << " packet length "
+                             << packet->length << " from " << packet->systemAddress.ToString() << endl;
                         peer->CloseConnection(packet->systemAddress, true);
                 }
             }
@@ -317,17 +323,11 @@ void MasterServer::luaStuff(std::function<void(sol::state &)> f)
 void MasterServer::ban(const std::string &addr)
 {
     lock_guard<mutex> lock(banMutex);
-    banned.push_back(addr);
+    peer->AddToBanList(addr.c_str());
 }
 
 void MasterServer::unban(const std::string &addr)
 {
     lock_guard<mutex> lock(banMutex);
-    auto it = find(banned.begin(), banned.end(), addr);
-    if (it != banned.end())
-    {
-        banned.erase(it);
-        if(peer)
-            peer->RemoveFromBanList(addr.c_str());
-    }
+    peer->RemoveFromBanList(addr.c_str());
 }

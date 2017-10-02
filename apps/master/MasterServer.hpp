@@ -50,7 +50,6 @@ private:
     sol::state state;
     std::mutex luaMutex;
     std::mutex banMutex;
-    std::vector<std::string> banned; // does not save on restart
 };
 
 
