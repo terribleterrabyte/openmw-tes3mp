@@ -129,6 +129,10 @@ bool MasterClient::Process(RakNet::Packet *packet)
         case ID_CONNECTION_REQUEST_ACCEPTED:
         case ID_DISCONNECTION_NOTIFICATION:
             break;
+        case ID_CONNECTION_BANNED:
+            Stop();
+            LOG_MESSAGE_SIMPLE(Log::LOG_FATAL, "Your server was banned on the master server. Contact the master server administrator for details.");
+            break;
         case ID_MASTER_QUERY:
             break;
         case ID_MASTER_ANNOUNCE:
