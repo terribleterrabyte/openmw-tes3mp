@@ -65,7 +65,7 @@ MainWindow::~MainWindow()
     delete mGameInvoker;
 }
 
-void MainWindow::addServerAndUpdate(QString addr)
+void MainWindow::addServerAndUpdate(const QString &addr)
 {
     favorites->insertRow(0);
     QModelIndex mi = favorites->index(0, ServerData::ADDR);

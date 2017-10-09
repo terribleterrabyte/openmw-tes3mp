@@ -7,7 +7,7 @@
 #include <QDebug>
 #include "PingUpdater.hpp"
 
-void PingHelper::Add(int row, AddrPair addrPair)
+void PingHelper::Add(int row, const AddrPair &addrPair)
 {
     pingUpdater->addServer(row, addrPair);
     if (!pingThread->isRunning())
@@ -48,11 +48,4 @@ PingHelper::PingHelper()
     connect(this, SIGNAL(stop()), pingUpdater, SLOT(stop()));
     //connect(pingUpdater, SIGNAL(finished()), pingUpdater, SLOT(deleteLater()));
     connect(pingUpdater, SIGNAL(updateModel(int, unsigned)), this, SLOT(update(int, unsigned)));
-
-
-}
-
-PingHelper::~PingHelper()
-{
-
 }

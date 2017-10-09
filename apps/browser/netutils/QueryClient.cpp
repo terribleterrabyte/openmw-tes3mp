@@ -30,7 +30,7 @@ QueryClient::~QueryClient()
     RakPeerInterface::DestroyInstance(peer);
 }
 
-void QueryClient::SetServer(std::string addr, unsigned short port)
+void QueryClient::SetServer(const string &addr, unsigned short port)
 {
     masterAddr = SystemAddress(addr.c_str(), port);
 }
@@ -83,7 +83,7 @@ map<SystemAddress, QueryData> QueryClient::Query()
     return query;
 }
 
-pair<SystemAddress, QueryData> QueryClient::Update(RakNet::SystemAddress addr)
+pair<SystemAddress, QueryData> QueryClient::Update(const RakNet::SystemAddress &addr)
 {
     qDebug() << "Locking mutex in QueryClient::Update(RakNet::SystemAddress addr)";
     pair<SystemAddress, QueryData> server;

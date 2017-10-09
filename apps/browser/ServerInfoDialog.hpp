@@ -11,9 +11,8 @@ class ServerInfoDialog : public QDialog,  public Ui::Dialog
 {
     Q_OBJECT
 public:
-    explicit ServerInfoDialog(QWidget *parent = 0);
-    virtual ~ServerInfoDialog();
-    void Server(QString addr);
+    explicit ServerInfoDialog(QWidget *parent = nullptr);
+    void Server(const QString &addr);
 public slots:
     bool refresh();
 private:

@@ -8,6 +8,7 @@
 #include "ServerInfoDialog.hpp"
 #include <apps/browser/netutils/Utils.hpp>
 #include <algorithm>
+#include <utility>
 
 using namespace std;
 using namespace RakNet;
@@ -18,12 +19,7 @@ ServerInfoDialog::ServerInfoDialog(QWidget *parent): QDialog(parent)
     connect(btnRefresh, SIGNAL(clicked()), this, SLOT(refresh()));
 }
 
-ServerInfoDialog::~ServerInfoDialog()
-{
-
-}
-
-void ServerInfoDialog::Server(QString addr)
+void ServerInfoDialog::Server(const QString &addr)
 {
     this->addr = addr;
 }
@@ -42,7 +38,7 @@ bool ServerInfoDialog::refresh()
 
         listPlayers->clear();
 
-        for (auto player : sd.second.players)
+        for (const auto &player : sd.second.players)
             listPlayers->addItem(QString::fromStdString(player));
 
         listPlugins->clear();

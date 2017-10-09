@@ -5,12 +5,6 @@
 ServerModel::ServerModel(QObject *parent) : QAbstractTableModel(parent)
 {
 }
-
-ServerModel::~ServerModel()
-{
-
-}
-
 /*QHash<int, QByteArray> ServerModel::roleNames() const
 {
     return roles;

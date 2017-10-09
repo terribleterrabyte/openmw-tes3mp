@@ -14,7 +14,7 @@ class MySortFilterProxyModel : public QSortFilterProxyModel
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_FINAL;
 public:
-    MySortFilterProxyModel(QObject *parent);
+    explicit MySortFilterProxyModel(QObject *parent);
     void filterFullServer(bool state);
     void filterEmptyServers(bool state);
     void pingLessThan(int maxPing);
