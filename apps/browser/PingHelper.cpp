@@ -35,9 +35,8 @@ PingHelper &PingHelper::Get()
     return helper;
 }
 
-PingHelper::PingHelper()
+PingHelper::PingHelper() : QObject()
 {
-    QObject();
     pingThread = new QThread;
     pingUpdater = new PingUpdater;
     pingUpdater->moveToThread(pingThread);
