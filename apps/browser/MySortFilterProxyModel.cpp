@@ -35,8 +35,6 @@ bool MySortFilterProxyModel::lessThan(const QModelIndex &source_left, const QMod
     if(sortColumn() == ServerData::PING)
     {
         bool valid;
-        QModelIndex cLeft = source_left;
-        QModelIndex cRight = source_right;
 
         int pingright = sourceModel()->data(source_right).toInt(&valid);
         pingright = valid ? pingright : PING_UNREACHABLE;
