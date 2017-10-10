@@ -6,6 +6,7 @@
 #include "ServerModel.hpp"
 
 #include <qdebug.h>
+#include <apps/browser/netutils/Utils.hpp>
 
 bool MySortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
@@ -26,6 +27,25 @@ bool MySortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &
         return false;
 
     return QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
+}
+
+bool MySortFilterProxyModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
+{
+    if(sortColumn() == ServerData::PING)
+    {
+        bool valid;
+        QModelIndex cLeft = source_left;
+        QModelIndex cRight = source_right;
+
+        int pingright = sourceModel()->data(source_right).toInt(&valid);
+        pingright = valid ? pingright : PING_UNREACHABLE;
+
+        int pingleft = sourceModel()->data(source_left).toInt(&valid);
+        pingleft = valid ? pingleft : PING_UNREACHABLE;
+        return pingleft < pingright;
+    }
+    else
+        return QSortFilterProxyModel::lessThan(source_left, source_right);
 }
 
 MySortFilterProxyModel::MySortFilterProxyModel(QObject *parent) : QSortFilterProxyModel(parent)
