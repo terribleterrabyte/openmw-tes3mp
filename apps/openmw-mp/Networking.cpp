@@ -30,7 +30,7 @@
 using namespace mwmp;
 using namespace std;
 
-Networking *Networking::sThis = 0;
+Networking *Networking::sThis = nullptr;
 
 static int currentMpNum = 0;
 
@@ -48,9 +48,9 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
     worldPacketController = new WorldPacketController(peer);
 
     // Set send stream
-    playerPacketController->SetStream(0, &bsOut);
-    actorPacketController->SetStream(0, &bsOut);
-    worldPacketController->SetStream(0, &bsOut);
+    playerPacketController->SetStream(nullptr, &bsOut);
+    actorPacketController->SetStream(nullptr, &bsOut);
+    worldPacketController->SetStream(nullptr, &bsOut);
 
     running = true;
     exitCode = 0;
@@ -244,7 +244,7 @@ bool Networking::update(RakNet::Packet *packet)
             return false;
         }
 
-        playerPacketController->SetStream(&bsIn, 0);
+        playerPacketController->SetStream(&bsIn, nullptr);
 
         playerPacketController->GetPacket(ID_HANDSHAKE)->RequestData(packet->guid);
         player = Players::addPlayer(packet->guid);
@@ -253,21 +253,21 @@ bool Networking::update(RakNet::Packet *packet)
 
     if (playerPacketController->ContainsPacket(packet->data[0]))
     {
-        playerPacketController->SetStream(&bsIn, 0);
+        playerPacketController->SetStream(&bsIn, nullptr);
         processPlayerPacket(packet);
         return true;
     }
 
     if (actorPacketController->ContainsPacket(packet->data[0]))
     {
-        actorPacketController->SetStream(&bsIn, 0);
+        actorPacketController->SetStream(&bsIn, nullptr);
         processActorPacket(packet);
         return true;
     }
 
     if (worldPacketController->ContainsPacket(packet->data[0]))
     {
-        worldPacketController->SetStream(&bsIn, 0);
+        worldPacketController->SetStream(&bsIn, nullptr);
         processWorldPacket(packet);
         return true;
     }
@@ -398,17 +398,17 @@ PacketPreInit::PluginContainer Networking::getPluginListSample()
     {
         unsigned field = 0;
         auto name = luaState.getEventCtrl().Call<CoreEvent::ON_REQUEST_PLUGIN_LIST, string>(id, field++);
-        if (name.size() == 0)
+        if (name.empty())
             break;
         PacketPreInit::HashList hashList;
         while (true)
         {
             auto hash = luaState.getEventCtrl().Call<CoreEvent::ON_REQUEST_PLUGIN_LIST, string>(id, field++);
-            if (hash.size() == 0)
+            if (hash.empty())
                 break;
             hashList.push_back((unsigned)stoul(hash));
         }
-        pls.push_back({name, hashList});
+        pls.emplace_back(name, hashList);
         id++;
     }
     return pls;
@@ -525,7 +525,7 @@ MasterClient *Networking::getMasterClient()
     return mclient;
 }
 
-void Networking::InitQuery(std::string queryAddr, unsigned short queryPort)
+void Networking::InitQuery(const std::string &queryAddr, unsigned short queryPort)
 {
     mclient = new MasterClient(peer, queryAddr, queryPort);
 }

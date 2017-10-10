@@ -109,7 +109,7 @@ void MasterClient::SetRuleValue(std::string key, double value)
 void MasterClient::PushPlugin(Plugin plugin)
 {
     mutexData.lock();
-    queryData.plugins.push_back(plugin);
+    queryData.plugins.push_back(move(plugin));
     updated = true;
     mutexData.unlock();
 }
