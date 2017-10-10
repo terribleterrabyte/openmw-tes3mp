@@ -31,7 +31,7 @@ struct Plugin
 {
     std::string name;
     unsigned hash;
-    explicit Plugin(std::string name = "", unsigned hash = 0): name(std::move(name)), hash(hash) {};
+    Plugin(std::string name = "", unsigned hash = 0): name(std::move(name)), hash(hash) {};
 };
 
 struct QueryData
