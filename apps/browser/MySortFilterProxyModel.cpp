@@ -53,6 +53,7 @@ MySortFilterProxyModel::MySortFilterProxyModel(QObject *parent) : QSortFilterPro
     filterEmpty = false;
     filterFull = false;
     maxPing = 0;
+    setSortCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
 }
 
 void MySortFilterProxyModel::filterEmptyServers(bool state)
