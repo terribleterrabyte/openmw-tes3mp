@@ -78,7 +78,7 @@ LuaState::LuaState()
     configEnv = sol::environment(*lua, sol::create, lua->globals());
     lua->set("Config", configEnv); // plain global environment for mod configuration
 
-    // errors in sol::functions catches only in debug build for better performance
+    // errors in sol::functions are caught only in Debug or RelWithDebInfo builds for better performance
 #ifdef SOL_SAFE_FUNCTIONS
     lua->set_function("ErrorHandler", [](sol::object error_msg) {
         LOG_MESSAGE_SIMPLE(Log::LOG_ERROR, ("Lua: " + error_msg.as<string>()).c_str());
@@ -134,6 +134,7 @@ LuaState::LuaState()
     lua->set_function("getCurrentMpNum", []() {
         return mwmp::Networking::getPtr()->getCurrentMpNum();
     });
+
     lua->set_function("setCurrentMpNum", [](int num) {
         mwmp::Networking::getPtr()->setCurrentMpNum(num);
     });

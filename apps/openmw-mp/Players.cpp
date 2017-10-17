@@ -69,7 +69,7 @@ std::shared_ptr<Player> Players::addPlayer(RakNet::RakNetGUID guid)
 
 void Players::deletePlayerByPID(int pid)
 {
-    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Marking player (pid %lu) to deleting", pid);
+    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Marking player (pid %i) for deletion", pid);
     auto &ls = store.get<ByID>();
     auto it = ls.find(pid);
     if (it != ls.end())
@@ -80,7 +80,7 @@ void Players::deletePlayerByPID(int pid)
 
 void Players::deletePlayerByGUID(RakNet::RakNetGUID guid)
 {
-    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Marking player (guid %lu) to deleting", guid.g);
+    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Marking player (guid %lu) for deletion", guid.g);
     auto &ls = store.get<ByGUID>();
     auto it = ls.find(guid.g);
     if (it != ls.end())
