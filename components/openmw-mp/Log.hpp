@@ -25,8 +25,8 @@
 #define LOG_APPEND(level, msg, ...) Log::Get().print((level), (0), (0), (0), (msg), __VA_ARGS__)
 #else
 #define LOG_MESSAGE(level, msg, args...) Log::Get().print((level), (1), (__FILE__), (__LINE__), (msg), ##args)
-#define LOG_MESSAGE_SIMPLE(level, msg, args...) Log::Get().print((level), (1), (0), (0), (msg), ##args)
-#define LOG_APPEND(level, msg, args...) Log::Get().print((level), (0), (0), (0), (msg), ##args)
+#define LOG_MESSAGE_SIMPLE(level, msg, args...) Log::Get().print((level), (true), (0), (0), (msg), ##args)
+#define LOG_APPEND(level, msg, args...) Log::Get().print((level), (false), (0), (0), (msg), ##args)
 #endif
 #endif
 
@@ -48,12 +48,11 @@ public:
     void print(int level, bool hasPrefix, const char *file, int line, const char *message, ...) const;
 
     static std::string getFilenameTimestamp();
-private:
-    Log(int logLevel);
-    /// Not implemented
+
     Log(const Log &) = delete;
-    /// Not implemented
     Log &operator=(Log &) = delete;
+private:
+    explicit Log(int logLevel);
     static Log *sLog;
     int logLevel;
 };
