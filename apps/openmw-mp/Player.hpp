@@ -189,6 +189,7 @@ private:
     Factions factions;
     Quests quests;
     Spells spells;
+    sol::table customData;
 };
 
 #endif //OPENMW_PLAYER_HPP

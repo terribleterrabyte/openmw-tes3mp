@@ -79,7 +79,8 @@ void Player::Init(LuaState &lua)
                                          "getCellState", &Player::getCellState,
                                          "cellStateSize", &Player::cellStateSize,
                                          "addCellExplored", &Player::addCellExplored,
-                                         "setAuthority", &Player::setAuthority
+                                         "setAuthority", &Player::setAuthority,
+                                         "customData", &Player::customData
     );
 }
 
@@ -98,6 +99,7 @@ Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedM
     npcStats.blank();
     creatureStats.blank();
     charClass.blank();
+    customData = mwmp::Networking::get().getState().getState()->create_table();
 }
 
 Player::~Player()
@@ -250,9 +252,9 @@ void Player::forEachLoaded(std::function<void(Player *pl, Player *other)> func)
 {
     std::list <Player*> plList;
 
-    for (auto cell : cells)
+    for (auto &&cell : cells)
     {
-        for (auto pl : *cell)
+        for (auto &&pl : *cell)
         {
             if (pl != nullptr && !pl->npc.mName.empty())
                 plList.push_back(pl);
@@ -262,7 +264,7 @@ void Player::forEachLoaded(std::function<void(Player *pl, Player *other)> func)
     plList.sort();
     plList.unique();
 
-    for (auto pl : plList)
+    for (auto &&pl : plList)
     {
         if (pl == this) continue;
         func(this, pl);
