@@ -179,7 +179,7 @@ ConnectionState QueryClient::Connect()
 {
 
     ConnectionAttemptResult car = peer->Connect(masterAddr.ToString(false), masterAddr.GetPort(), TES3MP_MASTERSERVER_PASSW,
-                                                strlen(TES3MP_MASTERSERVER_PASSW), 0, 0, 5, 500);
+                                                strlen(TES3MP_MASTERSERVER_PASSW), nullptr, 0, 5, 500);
 
     while (true)
     {

@@ -44,10 +44,14 @@ unsigned int PingRakNetServer(const char *addr, unsigned short port)
                 break;
             case ID_CONNECTED_PING:
             case ID_UNCONNECTED_PONG:
+            {
                 RakNet::BitStream bsIn(&packet->data[1], packet->length, false);
                 bsIn.Read(time);
                 time = now - time;
                 done = true;
+                break;
+            }
+            default:
                 break;
         }
         peer->DeallocatePacket(packet);
