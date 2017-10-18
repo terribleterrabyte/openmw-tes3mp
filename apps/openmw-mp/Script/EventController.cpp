@@ -13,7 +13,6 @@ void EventController::Init(LuaState &lua)
 
     eventsTable["register"] = [&lua](int event, sol::function func, sol::this_environment te) {
         sol::environment& env = te;
-        string modname = env["ModInfo"]["name"];
         lua.getEventCtrl().registerEvent(event, env, func);
     };
     eventsTable["stop"] = [&lua](int event) {

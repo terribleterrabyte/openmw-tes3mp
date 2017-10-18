@@ -16,6 +16,16 @@
 class EventController;
 //class TimerController;
 
+struct ServerPluginInfo
+{
+    std::string name;
+    std::pair<std::string, std::string> path; // homePath, modname
+    std::string version;
+    std::string author;
+    std::vector<std::pair<std::string, std::string>> dependencies; // name, requestedVersion
+    sol::environment env;
+};
+
 class LuaState
 {
 public:
@@ -46,5 +56,7 @@ private:
     std::unique_ptr<TimerController> timerCtrl;
     std::unique_ptr<ActorController> actorCtrl;
     std::unique_ptr<ObjectController> objectCtrl;
-    std::unordered_map<std::string, sol::environment> mods;
+
+    std::vector<ServerPluginInfo> mods;
+
 };
