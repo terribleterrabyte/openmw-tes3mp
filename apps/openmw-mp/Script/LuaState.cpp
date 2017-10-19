@@ -438,7 +438,7 @@ vector<vector<ServerPluginInfo>::iterator> loadOrderSolver(vector<ServerPluginIn
     return move(result);
 }
 
-void LuaState::loadMods(std::vector<std::string> *list)
+void LuaState::loadMods(const std::string &modDir, std::vector<std::string> *list)
 {
     using namespace boost::filesystem;
 
@@ -480,25 +480,14 @@ void LuaState::loadMods(std::vector<std::string> *list)
 #endif
 
 
-    path envServerDir = std::getenv("TES3MP_SERVER_DIR");
-    const char *envServerUserDir = std::getenv("TES3MP_SERVER_USERDIR");
+    path envServerDir = modDir;
 
     if (envServerDir.empty())
-    {
         envServerDir = current_path();
-        setenv("TES3MP_SERVER_DIR", envServerDir.string().c_str(), 1);
-    }
 
     addGlobalPackagePath(envServerDir.string() + "/lib/lua/?/init.lua;" + envServerDir.string() + "/lib/lua/?.lua");
     addGlobalCPath(envServerDir.string() + "lib/?" + libExt);
     readConfig(envServerDir);
-
-    if (envServerUserDir != nullptr)
-    {
-        readConfig(envServerUserDir);
-        addGlobalPackagePath(string(envServerUserDir) + "/lib/lua/?/init.lua;" + string(envServerUserDir) + "/lib/lua/?.lua");
-    }
-
 
     vector<vector<ServerPluginInfo>::iterator> sortedPluginList;
     if (list != nullptr && !list->empty()) // manual sorted list

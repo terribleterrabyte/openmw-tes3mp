@@ -191,11 +191,6 @@ int main(int argc, char *argv[])
 
     string passw = mgr.getString("password", "General");
 
-    string plugin_home = mgr.getString("home", "Plugins");
-    string moddir = Utils::convertPath(plugin_home + "/data");
-
-    vector<string> plugins (Utils::split(mgr.getString("plugins", "Plugins"), ','));
-
     Utils::printVersion("TES3MP dedicated server", TES3MP_VERSION, version.mCommitHash, TES3MP_PROTO_VERSION);
 
     int code;
@@ -246,10 +241,10 @@ int main(int argc, char *argv[])
 
         Networking networking(peer);
 
-
+        string plugin_home = mgr.getString("home", "Plugins");
 
         if (mgr.getBool("autoSort", "Plugins"))
-            networking.getState().loadMods();
+            networking.getState().loadMods(plugin_home);
         else
         {
             std::vector<std::string> list;
@@ -261,7 +256,7 @@ int main(int argc, char *argv[])
             }
             catch (...) {} // Manager::getString throws runtime_error exception if setting is not exist
 
-            networking.getState().loadMods(&list);
+            networking.getState().loadMods(plugin_home, &list);
         }
 
 
