@@ -442,22 +442,21 @@ void LuaState::loadMods(const std::string &modDir, std::vector<std::string> *lis
 {
     using namespace boost::filesystem;
 
-    auto readConfig = [this](path path) {
+    auto readConfig = [this](path homePath){
         const auto mainScript = "main.lua";
-        if (!is_directory(path / "mods"))
-            throw runtime_error(path.string() + ": No such directory.");
-        for (const auto &modDir : directory_iterator(path / "mods"))
+        if (!is_directory(homePath / "mods"))
+            throw runtime_error(homePath.string() + ": No such directory.");
+        for (const auto &modDir : directory_iterator(homePath / "mods"))
         {
             if (is_directory(modDir.status()) && exists(modDir.path() / mainScript))
             {
                 boost::property_tree::ptree pt;
-                auto _path = path.string() + "/mods/" + modDir.path().filename().string();
+                auto _path = homePath.string() + "/mods/" + modDir.path().filename().string();
                 boost::property_tree::read_json(_path + "/modinfo.json", pt);
 
                 ServerPluginInfo modInfo;
 
-
-                modInfo.path = {path.string(), modDir.path().filename().string()};
+                modInfo.path = std::make_pair(homePath.string(), modDir.path().filename().string());
                 modInfo.author = pt.get<string>("author");
                 modInfo.version = pt.get<string>("version");
 
