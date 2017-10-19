@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
 
 
 
-        if(mgr.getBool("autoSort", "Plugins"))
+        if (mgr.getBool("autoSort", "Plugins"))
             networking.getState().loadMods();
         else
         {
@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
                 for (int i = 0;; ++i)
                     list.push_back(mgr.getString("Plugin" + to_string(i), "Plugins"));
             }
-            catch(...) {} // Manager::getString throws runtime_error exception if setting is not exist
+            catch (...) {} // Manager::getString throws runtime_error exception if setting is not exist
 
             networking.getState().loadMods(&list);
         }

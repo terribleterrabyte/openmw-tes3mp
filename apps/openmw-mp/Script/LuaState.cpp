@@ -501,14 +501,14 @@ void LuaState::loadMods(std::vector<std::string> *list)
 
 
     vector<vector<ServerPluginInfo>::iterator> sortedPluginList;
-    if(list != nullptr && !list->empty()) // manual sorted list
+    if (list != nullptr && !list->empty()) // manual sorted list
     {
-        for(const auto &mssp : *list)
+        for (const auto &mssp : *list)
         {
             bool found = false;
             for (auto it = mods.begin(); it != mods.end(); ++it)
             {
-                if(it->name == mssp)
+                if (it->name == mssp)
                 {
                     checkDependencies(mods, *it, false); // check dependencies, but do not throw exceptions
                     sortedPluginList.push_back(it);
@@ -516,14 +516,14 @@ void LuaState::loadMods(std::vector<std::string> *list)
                     break;
                 }
             }
-            if(!found)
+            if (!found)
                 throw runtime_error("Plugin: \"" + mssp + "\" not found");
         }
     }
     else
         sortedPluginList = loadOrderSolver(mods);
 
-    for(auto &&mod : sortedPluginList)
+    for (auto &&mod : sortedPluginList)
     {
         mod->env = openScript(mod->path.first, mod->path.second);
 
