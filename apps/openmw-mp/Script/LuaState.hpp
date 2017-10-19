@@ -36,7 +36,7 @@ public:
     void addGlobalCPath(const std::string &path);
     sol::table getCoreTable() { return dataEnv["Core"]; }
     sol::environment &getDataEnv(){ return dataEnv; }
-    void loadMods();
+    void loadMods(std::vector<std::string> *list = nullptr);
 
     CommandController &getCmdCtrl();
     EventController &getEventCtrl();
@@ -58,5 +58,4 @@ private:
     std::unique_ptr<ObjectController> objectCtrl;
 
     std::vector<ServerPluginInfo> mods;
-
 };

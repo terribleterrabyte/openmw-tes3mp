@@ -54,7 +54,6 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
 
     running = true;
     exitCode = 0;
-    luaState.loadMods();
 
     serverPassword = TES3MP_DEFAULT_PASSW;
 

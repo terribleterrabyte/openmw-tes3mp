@@ -245,6 +245,26 @@ int main(int argc, char *argv[])
         peer->SetMaximumIncomingConnections((unsigned short) (players));
 
         Networking networking(peer);
+
+
+
+        if(mgr.getBool("autoSort", "Plugins"))
+            networking.getState().loadMods();
+        else
+        {
+            std::vector<std::string> list;
+
+            try
+            {
+                for (int i = 0;; ++i)
+                    list.push_back(mgr.getString("Plugin" + to_string(i), "Plugins"));
+            }
+            catch(...) {} // Manager::getString throws runtime_error exception if setting is not exist
+
+            networking.getState().loadMods(&list);
+        }
+
+
         networking.setServerPassword(passw);
 
         if (mgr.getBool("enabled", "MasterServer"))

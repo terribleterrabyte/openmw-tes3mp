@@ -334,6 +334,43 @@ int CompVersion(const string &wishVersion, const string &depVersionFound)
     return 0;
 }
 
+void checkDependencies(const vector<ServerPluginInfo> &mods, const ServerPluginInfo &spi, bool fatal = true)
+{
+    for (auto &dependency : spi.dependencies)
+    {
+        const std::string &depNameRequest = dependency.first;
+        const std::string &depVersionRequest = dependency.second;
+
+        const auto &depEnvIt = find_if(mods.begin(), mods.end(), [&depNameRequest](const auto &val) {
+            return val.name == depNameRequest;
+        });
+
+        if (depEnvIt != mods.end())
+        {
+            const string &depVersionFound = depEnvIt->version;
+            if (CompVersion(depVersionRequest, depVersionFound) != 0)
+            {
+                stringstream sstr;
+                sstr << depNameRequest << ": version \"" << depVersionFound << "\" is not applicable for \""
+                     << spi.name << "\" expected \"" << depVersionRequest + "\"";
+                if(fatal)
+                    throw runtime_error(sstr.str());
+                else
+                    LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "%s", sstr.str().c_str());
+            }
+        }
+        else // dependency not found.
+        {
+            stringstream sstr;
+            sstr << depNameRequest + " \"" << depVersionRequest << "\" not found.";
+            if(fatal)
+                throw runtime_error(sstr.str());
+            else
+                LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "%s", sstr.str().c_str());
+        }
+    }
+}
+
 vector<vector<ServerPluginInfo>::iterator> loadOrderSolver(vector<ServerPluginInfo> &mods)
 {
     vector<vector<ServerPluginInfo>::iterator> notResolved;
@@ -341,34 +378,7 @@ vector<vector<ServerPluginInfo>::iterator> loadOrderSolver(vector<ServerPluginIn
 
     for (auto it = mods.begin(); it != mods.end(); ++it)
     {
-        for (auto &dependency : it->dependencies)
-        {
-            const std::string &depNameRequest = dependency.first;
-            const std::string &depVersionRequest = dependency.second;
-
-            const auto &depEnvIt = find_if(mods.begin(), mods.end(), [&depNameRequest](const auto &val) {
-                return val.name == depNameRequest;
-            });
-
-            if (depEnvIt != mods.end())
-            {
-                const string &depVersionFound = depEnvIt->version;
-                if (CompVersion(depVersionRequest, depVersionFound) != 0)
-                {
-                    stringstream sstr;
-                    sstr << depNameRequest << ": version \"" << depVersionFound
-                         << "\" is not applicable for \"" << it->name << "\" expected \""
-                         << depVersionRequest + "\"";
-                    throw runtime_error(sstr.str());
-                }
-            }
-            else // dependency not found.
-            {
-                stringstream sstr;
-                sstr << depNameRequest + " \"" << depVersionRequest << "\" not found.";
-                throw runtime_error(sstr.str());
-            }
-        }
+        checkDependencies(mods, *it);
 
         if (it->dependencies.empty()) // if server plugin doesn't have any dependencies we can safely put it on result
             result.push_back(it);
@@ -428,7 +438,7 @@ vector<vector<ServerPluginInfo>::iterator> loadOrderSolver(vector<ServerPluginIn
     return move(result);
 }
 
-void LuaState::loadMods()
+void LuaState::loadMods(std::vector<std::string> *list)
 {
     using namespace boost::filesystem;
 
@@ -490,7 +500,28 @@ void LuaState::loadMods()
     }
 
 
-    auto sortedPluginList = loadOrderSolver(mods);
+    vector<vector<ServerPluginInfo>::iterator> sortedPluginList;
+    if(list != nullptr && !list->empty()) // manual sorted list
+    {
+        for(const auto &mssp : *list)
+        {
+            bool found = false;
+            for (auto it = mods.begin(); it != mods.end(); ++it)
+            {
+                if(it->name == mssp)
+                {
+                    checkDependencies(mods, *it, false); // check dependencies, but do not throw exceptions
+                    sortedPluginList.push_back(it);
+                    found = true;
+                    break;
+                }
+            }
+            if(!found)
+                throw runtime_error("Plugin: \"" + mssp + "\" not found");
+        }
+    }
+    else
+        sortedPluginList = loadOrderSolver(mods);
 
     for(auto &&mod : sortedPluginList)
     {
