@@ -14,6 +14,7 @@ bool MySortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &
     QModelIndex pingIndex = sourceModel()->index(sourceRow, ServerData::PING, sourceParent);
     QModelIndex plIndex = sourceModel()->index(sourceRow, ServerData::PLAYERS, sourceParent);
     QModelIndex maxPlIndex = sourceModel()->index(sourceRow, ServerData::MAX_PLAYERS, sourceParent);
+    QModelIndex passwordIndex = sourceModel()->index(sourceRow, ServerData::PASSW, sourceParent);
 
     bool pingOk;
     int ping = sourceModel()->data(pingIndex).toInt(&pingOk);
@@ -25,6 +26,8 @@ bool MySortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &
     if (filterEmpty && players == 0)
         return false;
     if (filterFull && players >= maxPlayers)
+        return false;
+    if(filterPasswEnabled && sourceModel()->data(passwordIndex).toString() == "Yes")
         return false;
 
     return QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
@@ -51,6 +54,7 @@ MySortFilterProxyModel::MySortFilterProxyModel(QObject *parent) : QSortFilterPro
 {
     filterEmpty = false;
     filterFull = false;
+    filterPasswEnabled = false;
     maxPing = 0;
     setSortCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
 }
@@ -70,5 +74,11 @@ void MySortFilterProxyModel::filterFullServer(bool state)
 void MySortFilterProxyModel::pingLessThan(int maxPing)
 {
     this->maxPing = maxPing;
+    invalidateFilter();
+}
+
+void MySortFilterProxyModel::filterPassworded(bool state)
+{
+    filterPasswEnabled = state;
     invalidateFilter();
 }

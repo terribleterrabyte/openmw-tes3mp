@@ -18,9 +18,10 @@ public:
     explicit MySortFilterProxyModel(QObject *parent);
     void filterFullServer(bool state);
     void filterEmptyServers(bool state);
+    void filterPassworded(bool state);
     void pingLessThan(int maxPing);
 private:
-    bool filterEmpty, filterFull;
+    bool filterEmpty, filterFull, filterPasswEnabled;
     int maxPing;
 };
 

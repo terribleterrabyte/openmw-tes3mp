@@ -31,6 +31,7 @@ protected slots:
     void serverSelected();
     void notFullSwitch(bool state);
     void havePlayersSwitch(bool state);
+    void noPasswordSwitch(bool state);
     void maxLatencyChanged(int index);
     void gamemodeChanged(const QString &text);
 private:

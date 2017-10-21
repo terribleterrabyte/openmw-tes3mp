@@ -54,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(tblServerBrowser, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(play()));
     connect(cBoxNotFull, SIGNAL(toggled(bool)), this, SLOT(notFullSwitch(bool)));
     connect(cBoxWithPlayers, SIGNAL(toggled(bool)), this, SLOT(havePlayersSwitch(bool)));
+    connect(cBBoxWOPass, SIGNAL(toggled(bool)), this, SLOT(noPasswordSwitch(bool)));
     connect(comboLatency, SIGNAL(currentIndexChanged(int)), this, SLOT(maxLatencyChanged(int)));
     connect(leGamemode, SIGNAL(textChanged(const QString &)), this, SLOT(gamemodeChanged(const QString &)));
     loadFavorites();
@@ -227,6 +228,11 @@ void MainWindow::notFullSwitch(bool state)
 void MainWindow::havePlayersSwitch(bool state)
 {
     proxyModel->filterEmptyServers(state);
+}
+
+void MainWindow::noPasswordSwitch(bool state)
+{
+    proxyModel->filterPassworded(state);
 }
 
 void MainWindow::maxLatencyChanged(int index)
