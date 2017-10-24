@@ -17,8 +17,6 @@ namespace mwmp
         {
             DEBUG_PRINTF(strPacketID.c_str());
 
-            packet.Send(true);
-
             //Todo: Script::Call<Script::CallbackIdentity("OnPlayerTopic")>(player.getId());
             Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_TOPIC>(player);
         }
