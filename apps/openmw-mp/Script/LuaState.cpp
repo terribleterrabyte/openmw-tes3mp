@@ -141,6 +141,21 @@ LuaState::LuaState()
         mwmp::Networking::getPtr()->setCurrentMpNum(num);
     });
 
+    lua->set_function("getCaseInsensitiveFilename", [](const char *folderPath, const char *filename) {
+        if (!boost::filesystem::exists(folderPath)) return "invalid";
+
+        boost::filesystem::directory_iterator end_itr; // default construction yields past-the-end
+
+        for (boost::filesystem::directory_iterator itr(folderPath); itr != end_itr; ++itr)
+        {
+            if (Misc::StringUtils::ciEqual(itr->path().filename().string(), filename))
+            {
+                return itr->path().filename().string().c_str();
+            }
+        }
+        return "invalid";
+    });
+
     lua->set_function("logMessage", [](unsigned short level, const char *message) {
         LOG_MESSAGE_SIMPLE(level, "[Script]: %s", message);
     });
