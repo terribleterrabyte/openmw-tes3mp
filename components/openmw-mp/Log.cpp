@@ -14,41 +14,25 @@
 
 using namespace std;
 
-Log *Log::sLog = nullptr;
-
 Log::Log(int logLevel) : logLevel(logLevel)
 {
 
 }
 
-void Log::Create(int logLevel)
+Log &Log::Get()
 {
-    if (sLog != nullptr)
-        return;
-    sLog = new Log(logLevel);
-}
-
-void Log::Delete()
-{
-    if (sLog == nullptr)
-        return;
-    delete sLog;
-    sLog = nullptr;
-}
-
-const Log &Log::Get()
-{
-    return *sLog;
+    static Log instance(1000);
+    return instance;
 }
 
 void Log::SetLevel(int level)
 {
-    sLog->logLevel = level;
+    logLevel = level;
 }
 
 const char* getTime()
 {
-    time_t t = time(0);
+    time_t t = time(nullptr);
     struct tm *tm = localtime(&t);
     static char result[20];
     sprintf(result, "%.4d-%.2d-%.2d %.2d:%.2d:%.2d",
@@ -59,7 +43,7 @@ const char* getTime()
 
 void Log::print(int level, bool hasPrefix, const char *file, int line, const char *message, ...) const
 {
-    if (level < logLevel) return;
+    if (level > logLevel || logLevel == LOG_OFF) return;
     std::stringstream sstr;
 
     if (hasPrefix)
@@ -67,7 +51,7 @@ void Log::print(int level, bool hasPrefix, const char *file, int line, const cha
 
         sstr << "[" << getTime() << "] ";
 
-        if (file != 0 && line != 0)
+        if (file != nullptr && line != 0)
         {
             sstr << "[" << file << ":";
             sstr << line << "] ";
@@ -84,6 +68,13 @@ void Log::print(int level, bool hasPrefix, const char *file, int line, const cha
             break;
         case LOG_FATAL:
             sstr << "FATAL";
+            break;
+        case LOG_TRACE:
+            sstr << "TRACE";
+            break;
+        case LOG_VERBOSE:
+        case LOG_INFO:
+            sstr << "INFO";
             break;
         default:
             sstr << "INFO";
@@ -108,10 +99,9 @@ void Log::print(int level, bool hasPrefix, const char *file, int line, const cha
 
 string Log::getFilenameTimestamp()
 {
-    time_t rawtime = time(0);
+    time_t rawtime = time(nullptr);
     struct tm *timeinfo = localtime(&rawtime);
     char buffer[25];
     strftime(buffer, 25, "%Y-%m-%d-%H_%M_%S", timeinfo);
-    std::string timestamp(buffer);
-    return timestamp;
+    return string(buffer);
 }

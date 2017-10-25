@@ -153,8 +153,6 @@ int main(int argc, char *argv[])
     auto version = Version::getOpenmwVersion(variables["resources"].as<Files::EscapeHashString>().toStdString());
 
     int logLevel = mgr.getInt("logLevel", "General");
-    if (logLevel < Log::LOG_VERBOSE || logLevel > Log::LOG_FATAL)
-        logLevel = Log::LOG_VERBOSE;
 
     // Some objects used to redirect cout and cerr
     // Scope must be here, so this still works inside the catch block for logging exceptions

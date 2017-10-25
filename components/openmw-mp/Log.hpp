@@ -17,8 +17,8 @@
 #define LOG_MESSAGE(level, msg, ...)
 #define LOG_MESSAGE_SIMPLE(level, msg, ...)
 #else
-#define LOG_INIT(logLevel) Log::Create(logLevel)
-#define LOG_QUIT() Log::Delete()
+#define LOG_INIT(logLevel) Log::Get().SetLevel(logLevel)
+#define LOG_QUIT()
 #if defined(_MSC_VER)
 #define LOG_MESSAGE(level, msg, ...) Log::Get().print((level), (1), (__FILE__), (__LINE__), (msg), __VA_ARGS__)
 #define LOG_MESSAGE_SIMPLE(level, msg, ...) Log::Get().print((level), (1), (0), (0), (msg), __VA_ARGS__)
@@ -35,16 +35,17 @@ class Log
 public:
     enum
     {
-        LOG_VERBOSE = 0,
-        LOG_INFO,
-        LOG_WARN,
+        LOG_OFF = 0,
+        LOG_FATAL,
         LOG_ERROR,
-        LOG_FATAL
+        LOG_WARN,
+        LOG_INFO,
+        LOG_VERBOSE,
+        LOG_TRACE,
     };
-    static void Create(int logLevel);
-    static void Delete();
-    static const Log &Get();
-    static void SetLevel(int level);
+
+    static Log &Get();
+    void SetLevel(int level);
     void print(int level, bool hasPrefix, const char *file, int line, const char *message, ...) const;
 
     static std::string getFilenameTimestamp();
@@ -53,7 +54,6 @@ public:
     Log &operator=(Log &) = delete;
 private:
     explicit Log(int logLevel);
-    static Log *sLog;
     int logLevel;
 };
 
