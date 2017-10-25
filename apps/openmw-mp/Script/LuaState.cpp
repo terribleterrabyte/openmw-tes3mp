@@ -138,6 +138,14 @@ LuaState::LuaState()
         LOG_APPEND(level, "%s", message);
     });
 
+    lua->new_enum("Log"
+                "LOG_FATAL", Log::LOG_FATAL,
+                "LOG_ERROR", Log::LOG_ERROR,
+                "LOG_WARN", Log::LOG_WARN,
+                "LOG_INFO", Log::LOG_INFO,
+                "LOG_VERBOSE", Log::LOG_VERBOSE,
+                "LOG_TRACE", Log::LOG_TRACE);
+
     lua->set_function("stopServer", [](int code) {
         mwmp::Networking::getPtr()->stopServer(code);
     });
@@ -425,7 +433,7 @@ vector<vector<ServerPluginInfo>::iterator> loadOrderSolver(vector<ServerPluginIn
             break;
     }
 
-    return move(result);
+    return result;
 }
 
 void LuaState::loadMods(const std::string &modDir, std::vector<std::string> *list)
@@ -446,7 +454,7 @@ void LuaState::loadMods(const std::string &modDir, std::vector<std::string> *lis
 
                 ServerPluginInfo modInfo;
 
-                modInfo.path = std::make_pair(homePath.string(), modDir.path().filename().string());
+                modInfo.path = make_pair(homePath.string(), modDir.path().filename().string());
                 modInfo.author = pt.get<string>("author");
                 modInfo.version = pt.get<string>("version");
 
