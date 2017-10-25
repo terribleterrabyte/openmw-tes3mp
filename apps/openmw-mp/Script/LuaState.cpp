@@ -138,7 +138,7 @@ LuaState::LuaState()
         LOG_APPEND(level, "%s", message);
     });
 
-    lua->new_enum("Log"
+    lua->new_enum("Log",
                 "LOG_FATAL", Log::LOG_FATAL,
                 "LOG_ERROR", Log::LOG_ERROR,
                 "LOG_WARN", Log::LOG_WARN,
