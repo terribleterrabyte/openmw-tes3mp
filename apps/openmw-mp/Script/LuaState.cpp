@@ -80,16 +80,6 @@ LuaState::LuaState()
     configEnv = sol::environment(*lua, sol::create, lua->globals());
     lua->set("Config", configEnv); // plain global environment for mod configuration
 
-    // errors in sol::functions are caught only in Debug or RelWithDebInfo builds for better performance
-#ifdef SOL_SAFE_FUNCTIONS
-    lua->set_function("ErrorHandler", [](sol::object error_msg) {
-        LOG_MESSAGE_SIMPLE(Log::LOG_ERROR, ("Lua: " + error_msg.as<string>()).c_str());
-    });
-
-    sol::reference errHandler = (*lua)["ErrorHandler"];
-    sol::protected_function::set_default_handler(errHandler);
-#endif
-
     sol::table Constants = lua->create_named_table("Constants");
     
     Constants.set_function("getAttributeCount", []() {
