@@ -56,6 +56,7 @@ set(SERVER
     NetActor.cpp
     CellState.cpp
     Object.cpp
+    stacktrace.cpp
     Script/CommandController.cpp Script/EventController.cpp Script/LuaState.cpp Script/luaUtils.cpp
 )
 
