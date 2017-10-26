@@ -65,9 +65,30 @@ void stacktrace()
 
 #else
 
+#include "stackwalker/StackWalker.h"
+
+class StackWalkerClr: public StackWalker
+{
+    std::string out;
+    virtual void OnOutput(LPCSTR szText)
+    {
+        out.append(szText);
+    }
+
+public:
+    std::string &getData()
+    {
+        ShowCallstack();
+        return out;
+    }
+};
+
+
 void stacktrace()
 {
-
+    LOG_MESSAGE_SIMPLE(Log::LOG_FATAL,  "Stacktrace:");
+    StackWalkerClr swc;
+    LOG_APPEND(Log::LOG_FATAL, swc.getData().c_str());
 }
 
 #endif

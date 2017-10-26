@@ -60,6 +60,10 @@ set(SERVER
     Script/CommandController.cpp Script/EventController.cpp Script/LuaState.cpp Script/luaUtils.cpp
 )
 
+if(WIN32)
+    list(APPEND SERVER stackwalker/StackWalker.cpp)
+endif()
+
 set(SERVER_HEADER
 
 )
