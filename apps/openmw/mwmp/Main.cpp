@@ -154,7 +154,7 @@ bool Main::init(std::vector<std::string> &content, Files::Collections &collectio
     InitMgr(mgr);
 
     int logLevel = mgr.getInt("logLevel", "General");
-    Log::SetLevel(logLevel);
+    Log::Get().SetLevel(logLevel);
     if (addr.empty())
     {
         pMain->server = mgr.getString("destinationAddress", "General");
