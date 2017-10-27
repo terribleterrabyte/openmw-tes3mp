@@ -177,6 +177,12 @@ bool mwmp::GUIController::pressedKey(int key)
     MWBase::WindowManager *windowManager = MWBase::Environment::get().getWindowManager();
     if (mChat == nullptr || windowManager->getMode() != MWGui::GM_None)
         return false;
+
+    if(key == SDL_SCANCODE_F2 && (SDL_GetModState() & KMOD_CTRL) > 0)
+    {
+        mChat->switchNetstat();
+        return true;
+    }
     if (key == keyChatMode)
     {
         mChat->pressedChatMode();

@@ -30,6 +30,7 @@
 
 #include <SDL_messagebox.h>
 #include <RakSleep.h>
+#include <RakNetStatistics.h>
 #include <iomanip>
 #include <components/version/version.hpp>
 
@@ -193,6 +194,7 @@ Networking::~Networking()
     peer->CloseConnection(peer->GetSystemAddressFromIndex(0), true, 0);
     RakNet::RakPeerInterface::DestroyInstance(peer);
 }
+
 
 void Networking::update()
 {
@@ -449,4 +451,12 @@ WorldEvent *Networking::getWorldEvent()
 bool Networking::isConnected()
 {
     return connected;
+}
+
+std::string Networking::getNetworkStatistics()
+{
+    static char message[2048];
+    auto rss = peer->GetStatistics(peer->GetSystemAddressFromIndex(0));
+    StatisticsToString(rss, message, 2);
+    return message;
 }

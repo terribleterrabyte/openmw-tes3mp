@@ -23,6 +23,7 @@ namespace mwmp
     GUIChat::GUIChat(int x, int y, int w, int h)
             : WindowBase("tes3mp_chat.layout")
     {
+        netStat = false;
         setCoord(x, y, w, h);
 
         getWidget(mCommandLine, "edit_Command");
@@ -250,10 +251,21 @@ namespace mwmp
                 this->mMainWidget->setVisible(false);
             }
         }
+
+        if(netStat)
+        {
+            auto rss = Main::get().getNetworking()->getNetworkStatistics();
+            mHistory->setCaption(rss);
+        }
     }
 
     void GUIChat::setDelay(float delay)
     {
         this->delay = delay;
+    }
+
+    void GUIChat::switchNetstat()
+    {
+        netStat = !netStat;
     }
 }

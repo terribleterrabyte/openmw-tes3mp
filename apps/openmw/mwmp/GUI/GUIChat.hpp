@@ -68,6 +68,8 @@ namespace mwmp
 
         void send(const std::string &str);
 
+        void switchNetstat();
+
     protected:
 
     private:
@@ -82,6 +84,7 @@ namespace mwmp
 
         int windowState;
         bool editState;
+        bool netStat;
         float delay;
         float curTime;
     };
