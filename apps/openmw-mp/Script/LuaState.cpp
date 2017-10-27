@@ -498,7 +498,7 @@ void LuaState::loadMods(const std::string &modDir, std::vector<std::string> *lis
         envServerDir = current_path();
 
     addGlobalPackagePath(envServerDir.string() + "/lib/lua/?/init.lua;" + envServerDir.string() + "/lib/lua/?.lua");
-    addGlobalCPath(envServerDir.string() + "lib/?" + libExt);
+    addGlobalCPath(envServerDir.string() + "/lib/?" + libExt);
     readConfig(envServerDir);
 
     vector<vector<ServerPluginInfo>::iterator> sortedPluginList;
