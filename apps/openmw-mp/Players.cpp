@@ -18,6 +18,10 @@ void Players::Init(LuaState &lua)
         for (shared_ptr<Player> player : store)
             func(player);
     });
+
+    playersTable.set_function("size", [](){
+        return store.size();
+    });
 }
 
 
