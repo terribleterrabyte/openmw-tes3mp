@@ -19,9 +19,7 @@ void Players::Init(LuaState &lua)
             func(player);
     });
 
-    playersTable.set_function("size", [](){
-        return store.size();
-    });
+    playersTable.set_function("size", &Players::size);
 }
 
 

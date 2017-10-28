@@ -145,13 +145,15 @@ LuaState::LuaState()
     lua->set_function("getCaseInsensitiveFilename", [](const char *folderPath, const char *filename) {
         if (!boost::filesystem::exists(folderPath)) return "invalid";
 
+        static std::string foundFilename;
         boost::filesystem::directory_iterator end_itr; // default construction yields past-the-end
 
         for (boost::filesystem::directory_iterator itr(folderPath); itr != end_itr; ++itr)
         {
             if (Misc::StringUtils::ciEqual(itr->path().filename().string(), filename))
             {
-                return itr->path().filename().string().c_str();
+                foundFilename = itr->path().filename().string();
+                return foundFilename.c_str();
             }
         }
         return "invalid";
