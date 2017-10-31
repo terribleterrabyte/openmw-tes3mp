@@ -31,6 +31,30 @@
 
 using namespace std;
 
+
+#if defined(SOL_SAFE_FUNCTIONS) && defined(WIN32)
+inline int errHandler(lua_State *L)
+{
+    string msg = "An unknown error has triggered the default error handler";
+    auto maybetopmsg = sol::stack::check_get<sol::string_view>(L, 1);
+    if (maybetopmsg)
+    {
+        const sol::string_view &topmsg = maybetopmsg.value();
+        msg.assign(topmsg.data(), topmsg.size());
+    }
+    luaL_tramceback(L, L, msg.c_str(), 1);
+    auto maybetraceback = sol::stack::check_get<sol::string_view>(L, -1);
+    if (maybetraceback)
+    {
+        const sol::string_view &traceback = maybetraceback.value();
+        msg.assign(traceback.data(), traceback.size());
+    }
+    LOG_MESSAGE_SIMPLE(Log::LOG_ERROR, msg.c_str());
+    abort();
+    return 0; // Not used because the server is already terminated
+}
+#endif
+
 LuaState::LuaState()
 {
     lua = make_shared<sol::state>();
@@ -83,12 +107,8 @@ LuaState::LuaState()
     // Enable a special Sol error handler for Windows, because exceptions aren't caught properly
     // in main.cpp for it
 #if defined(SOL_SAFE_FUNCTIONS) && defined(WIN32)
-    lua->set_function("ErrorHandler", [](sol::object error_msg) {
-        LOG_MESSAGE_SIMPLE(Log::LOG_ERROR, ("Lua: " + error_msg.as<string>()).c_str());
-    });
-
-    sol::reference errHandler = (*lua)["ErrorHandler"];
-    sol::protected_function::set_default_handler(errHandler);
+    lua_CFunction f = sol::c_call<decltype(&errHandler), &errHandler>;
+    sol::protected_function::set_default_handler(sol::object(lua->lua_state(), sol::in_place, f));
 #endif
 
     sol::table Constants = lua->create_named_table("Constants");
