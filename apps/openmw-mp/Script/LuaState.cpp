@@ -42,7 +42,7 @@ inline int errHandler(lua_State *L)
         const sol::string_view &topmsg = maybetopmsg.value();
         msg.assign(topmsg.data(), topmsg.size());
     }
-    luaL_tramceback(L, L, msg.c_str(), 1);
+    luaL_traceback(L, L, msg.c_str(), 1);
     auto maybetraceback = sol::stack::check_get<sol::string_view>(L, -1);
     if (maybetraceback)
     {
