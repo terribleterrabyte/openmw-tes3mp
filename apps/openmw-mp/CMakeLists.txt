@@ -135,6 +135,7 @@ add_executable(tes3mp-server
 
 # For Lua debugging
 target_compile_definitions(tes3mp-server PRIVATE $<$<CONFIG:Debug>:SOL_SAFE_FUNCTIONS> $<$<CONFIG:RelWithDebInfo>:SOL_SAFE_FUNCTIONS>)
+target_compile_definitions(tes3mp-server PRIVATE $<$<CONFIG:Debug>:SOL_SAFE_USERTYPE> $<$<CONFIG:RelWithDebInfo>:SOL_SAFE_USERTYPE>)
 target_compile_definitions(tes3mp-server PRIVATE $<$<CONFIG:Debug>:SERVER_DEBUG> $<$<CONFIG:RelWithDebInfo>:SERVER_DEBUG>)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
