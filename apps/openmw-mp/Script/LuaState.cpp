@@ -72,6 +72,7 @@ LuaState::LuaState()
 
     cmdCtrl = make_unique<CommandController>();
     Player::Init(*this);
+    Cells::Init(*this);
     CharClass::Init(*this);
     Inventory::Init(*this);
     GameSettings::Init(*this);

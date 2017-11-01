@@ -14,7 +14,7 @@ using namespace std;
 void Cells::Init(LuaState &lua)
 {
     lua.getState()->new_usertype<Cells>("Cell",
-                                        "cell", sol::property(&Cells::getCell, &Cells::setCell),
+                                        "description", sol::property(&Cells::getCell, &Cells::setCell),
                                         "getExterior", &Cells::getExterior,
                                         "setExterior", &Cells::setExterior,
                                         "getRegion", &Cells::getRegion,
