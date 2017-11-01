@@ -32,7 +32,7 @@
 using namespace std;
 
 
-#if defined(SOL_SAFE_FUNCTIONS) && defined(WIN32)
+#if defined(SOL_SAFE_FUNCTIONS)
 inline int errHandler(lua_State *L)
 {
     string msg = "An unknown error has triggered the default error handler";
@@ -107,7 +107,7 @@ LuaState::LuaState()
 
     // Enable a special Sol error handler for Windows, because exceptions aren't caught properly
     // in main.cpp for it
-#if defined(SOL_SAFE_FUNCTIONS) && defined(WIN32)
+#if defined(SOL_SAFE_FUNCTIONS)
     lua_CFunction f = sol::c_call<decltype(&errHandler), &errHandler>;
     sol::protected_function::set_default_handler(sol::object(lua->lua_state(), sol::in_place, f));
 #endif
