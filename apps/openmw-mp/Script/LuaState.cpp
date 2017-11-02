@@ -285,11 +285,11 @@ sol::environment LuaState::openScript(std::string homePath, std::string modname)
     env["package"]["path"] = Utils::convertPath(homePath + "/mods/" + modname + "/?.lua") + ";" + package_path;
     package_path = env["package"]["path"];
 
-    lua->set_function("getDataFolder", [homePath, modname]() -> const string {
+    env.set_function("getDataFolder", [homePath, modname]() -> const string {
         return homePath + "/data/" + modname + '/';
     });
 
-    lua->set_function("getModFolder", [homePath, modname]() -> const string{
+    env.set_function("getModFolder", [homePath, modname]() -> const string {
         return homePath + "/mods/" + modname + '/';
     });
 
