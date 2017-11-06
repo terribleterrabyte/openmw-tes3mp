@@ -73,7 +73,7 @@ namespace mwmp
 
                 Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_CELLCHANGE>(player);
 
-                LOG_APPEND(Log::LOG_INFO, "- Finished processing ID_PLAYER_CELL_CHANGE", player->cell.getDescription().c_str());
+                LOG_APPEND(Log::LOG_INFO, "- Finished processing ID_PLAYER_CELL_CHANGE");
             }
             else
                 LOG_APPEND(Log::LOG_INFO, "- Ignored because %s is dead", player->npc.mName.c_str());
