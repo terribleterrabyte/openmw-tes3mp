@@ -40,5 +40,7 @@ namespace Utils
 
     void printWithWidth(std::ostringstream &sstr, std::string str, size_t width);
     std::string intToHexStr(unsigned val);
+
+    std::string getFilenameTimestamp();
 }
 #endif //UTILS_HPP

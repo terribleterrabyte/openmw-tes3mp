@@ -196,3 +196,12 @@ string Utils::intToHexStr(unsigned val)
     sstr << "0x" << setfill('0') << setw(8) << uppercase << hex << val;
     return sstr.str();
 }
+
+string Utils::getFilenameTimestamp()
+{
+    time_t rawtime = time(nullptr);
+    struct tm *timeinfo = localtime(&rawtime);
+    char buffer[25];
+    strftime(buffer, 25, "%Y-%m-%d-%H_%M_%S", timeinfo);
+    return string(buffer);
+}

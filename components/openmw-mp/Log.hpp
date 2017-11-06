@@ -48,7 +48,6 @@ public:
     void SetLevel(int level);
     void print(int level, bool hasPrefix, const char *file, int line, const char *message, ...) const;
 
-    static std::string getFilenameTimestamp();
 
     Log(const Log &) = delete;
     Log &operator=(Log &) = delete;
