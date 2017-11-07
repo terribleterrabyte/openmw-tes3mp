@@ -42,6 +42,8 @@ namespace mwmp
         mHistory->setTextShadow(true);
         mHistory->setTextShadowColour(MyGUI::Colour::Black);
 
+        mHistory->setNeedKeyFocus(false);
+
         windowState = 0;
         mCommandLine->setVisible(0);
         delay = 3; // 3 sec.
