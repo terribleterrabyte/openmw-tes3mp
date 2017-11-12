@@ -231,7 +231,7 @@ void Networking::update()
                 break;
             default:
                 receiveMessage(packet);
-                //LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Message with identifier %i has arrived.", packet->data[0]);
+                //LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Message with identifier %i has arrived.", (int) packet->data[0]);
                 break;
         }
     }
@@ -404,17 +404,17 @@ void Networking::receiveMessage(RakNet::Packet *packet)
     if (playerPacketController.ContainsPacket(packet->data[0]))
     {
         if (!PlayerProcessor::Process(*packet))
-            LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled PlayerPacket with identifier %i has arrived", packet->data[0]);
+            LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled PlayerPacket with identifier %i has arrived", (int) packet->data[0]);
     }
     else if (actorPacketController.ContainsPacket(packet->data[0]))
     {
         if (!ActorProcessor::Process(*packet, actorList))
-            LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled ActorPacket with identifier %i has arrived", packet->data[0]);
+            LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled ActorPacket with identifier %i has arrived", (int) packet->data[0]);
     }
     else if (worldPacketController.ContainsPacket(packet->data[0]))
     {
         if (!WorldProcessor::Process(*packet, worldEvent))
-            LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled WorldPacket with identifier %i has arrived", packet->data[0]);
+            LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled WorldPacket with identifier %i has arrived", (int) packet->data[0]);
     }
 }
 

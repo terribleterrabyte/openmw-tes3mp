@@ -153,7 +153,7 @@ bool MasterClient::Process(RakNet::Packet *packet)
             }
             break;
         default:
-            LOG_MESSAGE_SIMPLE(Log::LOG_ERROR, "Received wrong packet from master server with id: %d", packet->data[0]);
+            LOG_MESSAGE_SIMPLE(Log::LOG_ERROR, "Received wrong packet from master server with id: %d", (int) packet->data[0]);
             return false;
     }
     return true;

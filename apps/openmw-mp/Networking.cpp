@@ -153,7 +153,7 @@ void Networking::processPlayerPacket(RakNet::Packet *packet)
 
 
     if (!PlayerProcessor::Process(*packet))
-        LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled PlayerPacket with identifier %i has arrived", packet->data[0]);
+        LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled PlayerPacket with identifier %i has arrived", (int) packet->data[0]);
 
 }
 
@@ -165,7 +165,7 @@ void Networking::processActorPacket(RakNet::Packet *packet)
         return;
 
     if (!ActorProcessor::Process(*packet, baseActorList))
-        LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled ActorPacket with identifier %i has arrived", packet->data[0]);
+        LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled ActorPacket with identifier %i has arrived", (int) packet->data[0]);
 
 }
 
@@ -177,7 +177,7 @@ void Networking::processWorldPacket(RakNet::Packet *packet)
         return;
 
     if (!WorldProcessor::Process(*packet, baseEvent))
-        LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled WorldPacket with identifier %i has arrived", packet->data[0]);
+        LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled WorldPacket with identifier %i has arrived", (int) packet->data[0]);
 
 }
 
@@ -271,7 +271,7 @@ bool Networking::update(RakNet::Packet *packet)
         return true;
     }
 
-    LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled RakNet packet with identifier %i has arrived", packet->data[0]);
+    LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled RakNet packet with identifier %i has arrived", (int) packet->data[0]);
     return false;
 }
 
