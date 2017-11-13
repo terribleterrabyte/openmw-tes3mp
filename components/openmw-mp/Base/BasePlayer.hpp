@@ -154,9 +154,10 @@ namespace mwmp
     {
     public:
 
-        struct CGStage
+        struct CharGenState
         {
-            int current, end;
+            int currentStage, endStage;
+            bool isFinished;
         };
 
         struct GUIMessageBox
@@ -227,7 +228,7 @@ namespace mwmp
         ESM::Class charClass;
         std::string birthsign;
         std::string chatMessage;
-        CGStage charGenStage;
+        CharGenState charGenState;
         std::string passw;
 
         bool isWerewolf;

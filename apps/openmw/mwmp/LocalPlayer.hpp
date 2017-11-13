@@ -21,8 +21,7 @@ namespace mwmp
 
         void update();
 
-        void charGen(int stageFirst, int stageEnd);
-        bool charGenThread(); // return true if CGStage::current == CGStage::end
+        bool processCharGen(); // return true if CGStage::current == CGStage::end
         bool hasFinishedCharGen();
 
         void updateStatsDynamic(bool forceUpdate = false);

@@ -21,7 +21,7 @@ namespace mwmp
         {
             DEBUG_PRINTF(strPacketID.c_str());
 
-            if (player->charGenStage.current == player->charGenStage.end && player->charGenStage.current != 0)
+            if (player->charGenState.currentStage == player->charGenState.endStage)
                 Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_ENDCHARGEN>(player);
         }
     };

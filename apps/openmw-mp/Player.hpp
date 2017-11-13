@@ -80,7 +80,7 @@ public:
 
     void setName(const std::string &name);
     std::string getName();
-    void setCharGenStage(int start, int end);
+    void setCharGenStages(int currentStage, int endStage);
     void message(const std::string &message, bool toAll = false);
     bool isMale() const;
     void setIsMale(bool male);

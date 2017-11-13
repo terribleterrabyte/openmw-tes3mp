@@ -44,7 +44,7 @@ void Player::Init(LuaState &lua)
                                          "guid", sol::readonly_property(&Player::getGUID),
 
                                          "name", sol::property(&Player::getName, &Player::setName),
-                                         "setCharGenStage", &Player::setCharGenStage,
+                                         "setCharGenStages", &Player::setCharGenStages,
                                          "isMale", &Player::isMale,
                                          "setIsMake", &Player::setIsMale,
                                          "level", sol::property(&Player::getLevel, &Player::setLevel),
@@ -314,10 +314,11 @@ std::string Player::getName()
     return npc.mName;
 }
 
-void Player::setCharGenStage(int start, int end)
+void Player::setCharGenStages(int currentStage, int endStage)
 {
-    charGenStage.current = start;
-    charGenStage.end = end;
+    charGenState.currentStage = currentStage;
+    charGenState.endStage = endStage;
+    charGenState.isFinished = false;
 
     auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_CHARGEN);
     packet->setPlayer(this);
