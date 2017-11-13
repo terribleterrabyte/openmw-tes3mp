@@ -46,7 +46,7 @@ void Player::Init(LuaState &lua)
                                          "name", sol::property(&Player::getName, &Player::setName),
                                          "setCharGenStages", &Player::setCharGenStages,
                                          "isMale", &Player::isMale,
-                                         "setIsMake", &Player::setIsMale,
+                                         "setIsMale", &Player::setIsMale,
                                          "level", sol::property(&Player::getLevel, &Player::setLevel),
                                          "race", sol::property(&Player::getRace, &Player::setRace),
                                          "head", sol::property(&Player::getHead, &Player::setHead),
