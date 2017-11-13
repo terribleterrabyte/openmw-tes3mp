@@ -172,8 +172,6 @@ bool LocalPlayer::processCharGen()
             getNetworking()->getPlayerPacket(ID_PLAYER_CHARGEN)->Send();
         }
 
-        sendCellStates();
-
         // Mark character generation as finished until overridden by a new ID_PLAYER_CHARGEN packet
         charGenState.isFinished = true;
     }
