@@ -112,6 +112,48 @@ void Player::update()
 {
     auto plPCtrl = mwmp::Networking::get().getPlayerPacketController();
 
+    if (baseInfoChanged)
+    {
+        auto packet = plPCtrl->GetPacket(ID_PLAYER_BASEINFO);
+        packet->setPlayer(basePlayer);
+        packet->Send(false);
+        packet->Send(true);
+    }
+
+    // The character class can override values from below on the client, so send it first
+    cClass.update();
+
+    if (statsChanged)
+    {
+        auto packet = plPCtrl->GetPacket(ID_PLAYER_STATS_DYNAMIC);
+        packet->setPlayer(basePlayer);
+        packet->Send(false);
+        packet->Send(true);
+    }
+
+    if (positionChanged)
+    {
+        auto packet = plPCtrl->GetPacket(ID_PLAYER_POSITION);
+        packet->setPlayer(basePlayer);
+        packet->Send(false);
+    }
+
+    if (attributesChanged)
+    {
+        auto packet = plPCtrl->GetPacket(ID_PLAYER_ATTRIBUTE);
+        packet->setPlayer(basePlayer);
+        packet->Send(false);
+        packet->Send(true);
+    }
+
+    if (skillsChanged)
+    {
+        auto packet = plPCtrl->GetPacket(ID_PLAYER_SKILL);
+        packet->setPlayer(basePlayer);
+        packet->Send(false);
+        packet->Send(true);
+    }
+
     if (inventory.isEquipmentChanged())
     {
         auto packet = plPCtrl->GetPacket(ID_PLAYER_EQUIPMENT);
@@ -127,42 +169,6 @@ void Player::update()
         packet->setPlayer(this);
         packet->Send(/*toOthers*/ false);
         inventory.resetInventoryFlag();
-    }
-
-    if (attributesChanged)
-    {
-        auto packet = plPCtrl->GetPacket(ID_PLAYER_ATTRIBUTE);
-        packet->setPlayer(basePlayer);
-        packet->Send(false);
-        packet->Send(true);
-    }
-    if (statsChanged)
-    {
-        auto packet = plPCtrl->GetPacket(ID_PLAYER_STATS_DYNAMIC);
-        packet->setPlayer(basePlayer);
-        packet->Send(false);
-        packet->Send(true);
-    }
-    if (skillsChanged)
-    {
-        auto packet = plPCtrl->GetPacket(ID_PLAYER_SKILL);
-        packet->setPlayer(basePlayer);
-        packet->Send(false);
-        packet->Send(true);
-    }
-    if (baseInfoChanged)
-    {
-        auto packet = plPCtrl->GetPacket(ID_PLAYER_BASEINFO);
-        packet->setPlayer(basePlayer);
-        packet->Send(false);
-        packet->Send(true);
-    }
-
-    if (positionChanged)
-    {
-        auto packet = plPCtrl->GetPacket(ID_PLAYER_POSITION);
-        packet->setPlayer(basePlayer);
-        packet->Send(false);
     }
 
     if (changedMap)
@@ -181,7 +187,6 @@ void Player::update()
         cellAPI.resetChangedCell();
     }
 
-    cClass.update();
     settings.update();
     books.update();
     gui.update();
