@@ -19,7 +19,7 @@ void CharClass::Init(LuaState &lua)
                                             "isDefault", &CharClass::isDefault,
 
                                             "name", sol::property(&CharClass::getName, &CharClass::setName),
-                                            "description", sol::property(&CharClass::getDesc, &CharClass::setDesc),
+                                            "description", sol::property(&CharClass::getDescription, &CharClass::setDescription),
                                             "specialization",
                                             sol::property(&CharClass::getSpecialization, &CharClass::setSpecialization),
 
@@ -72,12 +72,12 @@ string CharClass::getName() const
     return player->charClass.mName;
 }
 
-std::string CharClass::getDesc() const
+std::string CharClass::getDescription() const
 {
     return player->charClass.mDescription;
 }
 
-void CharClass::setDesc(const string &desc)
+void CharClass::setDescription(const string &desc)
 {
     player->charClass.mDescription = desc;
     changed = true;
@@ -115,10 +115,10 @@ std::tuple<int, int, int, int, int> CharClass::getMinorSkills() const
     return make_tuple( data.mSkills[0][0],  data.mSkills[1][0],  data.mSkills[2][0],  data.mSkills[3][0], data.mSkills[4][0]);
 }
 
-void CharClass::setMinorSkills(int fisrt, int second, int third, int fourth, int fifth)
+void CharClass::setMinorSkills(int first, int second, int third, int fourth, int fifth)
 {
     auto &data = player->charClass.mData;
-    data.mSkills[0][0] = fisrt;
+    data.mSkills[0][0] = first;
     data.mSkills[1][0] = second;
     data.mSkills[2][0] = third;
     data.mSkills[3][0] = fourth;
@@ -132,10 +132,10 @@ std::tuple<int, int, int, int, int> CharClass::getMajorSkills() const
     return make_tuple( data.mSkills[0][1],  data.mSkills[1][1],  data.mSkills[2][1],  data.mSkills[3][1], data.mSkills[4][1]);
 }
 
-void CharClass::setMajorSkills(int fisrt, int second, int third, int fourth, int fifth)
+void CharClass::setMajorSkills(int first, int second, int third, int fourth, int fifth)
 {
     auto &data = player->charClass.mData;
-    data.mSkills[0][1] = fisrt;
+    data.mSkills[0][1] = first;
     data.mSkills[1][1] = second;
     data.mSkills[2][1] = third;
     data.mSkills[3][1] = fourth;

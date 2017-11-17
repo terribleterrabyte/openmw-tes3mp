@@ -21,8 +21,8 @@ public:
 
     void update();
 
-    std::string getCell() const;
-    void setCell(const std::string &cellDescription);
+    std::string getDescription() const;
+    void setDescription(const std::string &cellDescription);
 
     std::tuple<int, int> getExterior() const;
     void setExterior(int x, int y);

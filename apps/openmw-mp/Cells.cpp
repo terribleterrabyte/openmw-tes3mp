@@ -14,7 +14,7 @@ using namespace std;
 void Cells::Init(LuaState &lua)
 {
     lua.getState()->new_usertype<Cells>("Cell",
-                                        "description", sol::property(&Cells::getCell, &Cells::setCell),
+                                        "description", sol::property(&Cells::getDescription, &Cells::setDescription),
                                         "getExterior", &Cells::getExterior,
                                         "setExterior", &Cells::setExterior,
                                         "getRegion", &Cells::getRegion,
@@ -39,12 +39,12 @@ void Cells::update()
 
 }
 
-std::string Cells::getCell() const
+std::string Cells::getDescription() const
 {
     return netActor->getNetCreature()->cell.getDescription();
 }
 
-void Cells::setCell(const std::string &cellDescription)
+void Cells::setDescription(const std::string &cellDescription)
 {
     /*LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Script is moving %s from %s to %s", netActor->getNetCreature()->npc.mName.c_str(),
                        netActor->getNetCreature()->cell.getDescription().c_str(), cellDescription.c_str());*/

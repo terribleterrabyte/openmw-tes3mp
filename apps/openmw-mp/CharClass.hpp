@@ -27,8 +27,8 @@ public:
     std::string getName() const;
     void setName(const std::string &className);
 
-    std::string getDesc() const;
-    void setDesc(const std::string &desc);
+    std::string getDescription() const;
+    void setDescription(const std::string &desc);
 
     std::tuple<int, int> getMajorAttributes() const;
     void setMajorAttributes(int first, int second);
