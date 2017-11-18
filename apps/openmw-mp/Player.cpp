@@ -123,6 +123,14 @@ void Player::update()
     // The character class can override values from below on the client, so send it first
     cClass.update();
 
+    if (levelChanged)
+    {
+        auto packet = plPCtrl->GetPacket(ID_PLAYER_LEVEL);
+        packet->setPlayer(basePlayer);
+        packet->Send(false);
+        packet->Send(true);
+    }
+
     if (statsChanged)
     {
         auto packet = plPCtrl->GetPacket(ID_PLAYER_STATS_DYNAMIC);
@@ -356,10 +364,7 @@ void Player::setIsMale(bool male)
 void Player::setLevel(int level)
 {
     creatureStats.mLevel = level;
-    auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_LEVEL);
-    packet->setPlayer(this);
-    packet->Send(false);
-    packet->Send(true);
+    levelChanged = true;
 }
 
 int Player::getLevel() const

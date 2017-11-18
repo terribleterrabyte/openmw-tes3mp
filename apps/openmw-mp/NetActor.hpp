@@ -64,7 +64,7 @@ public:
 
     mwmp::BaseNetCreature *getNetCreature() { return netCreature; }
 protected:
-    bool statsChanged, attributesChanged, skillsChanged, baseInfoChanged, positionChanged;
+    bool baseInfoChanged, levelChanged, statsChanged, positionChanged, attributesChanged, skillsChanged;
     mwmp::BasePlayer *basePlayer;
     mwmp::BaseNetCreature *netCreature;
 

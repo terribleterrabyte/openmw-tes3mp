@@ -19,11 +19,12 @@ NetActor::NetActor() : inventory(this), cellAPI(this)
 
 void NetActor::resetUpdateFlags()
 {
+    baseInfoChanged = false;
+    levelChanged = false;
     statsChanged = false;
+    positionChanged = false;
     skillsChanged = false;
     attributesChanged = false;
-    baseInfoChanged = false;
-    positionChanged = false;
 }
 
 std::tuple<float, float, float> NetActor::getPosition() const
