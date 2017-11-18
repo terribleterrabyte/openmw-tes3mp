@@ -158,8 +158,11 @@ public:
      *
      * @return base, current, progress, increase
      */
-    std::tuple<int, int, float, int> getSkill(unsigned short id) const;
-    void setSkill(unsigned short id, int base, int current, float progress, int increase);
+    std::tuple<int, int, float> getSkill(unsigned short id) const;
+    void setSkill(unsigned short id, int base, int current, float progress);
+
+    int getSkillIncrease(unsigned short attributeId) const;
+    void setSkillIncrease(unsigned short attributeId, int increase);
 
     CellState getCellState(int i);
     size_t cellStateSize() const;

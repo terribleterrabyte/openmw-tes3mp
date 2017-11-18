@@ -67,6 +67,9 @@ void Player::Init(LuaState &lua)
                                          "getSkill", &Player::getSkill,
                                          "setSkill", &Player::setSkill,
 
+                                         "getSkillIncrease", &Player::getSkillIncrease,
+                                         "setSkillIncrease", &Player::setSkillIncrease,
+
                                          "getClass", &Player::getCharClass,
                                          "getSettings", &Player::getSettings,
                                          "getBooks", &Player::getBooks,
@@ -483,16 +486,16 @@ void Player::setAttribute(unsigned short id, int base, int current)
     attributesChanged = true;
 }
 
-std::tuple<int, int, float, int> Player::getSkill(unsigned short id) const
+std::tuple<int, int, float> Player::getSkill(unsigned short id) const
 {
     if (id >= ESM::Skill::Length)
-        return make_tuple(0, 0, 0.0f, 0);
+        return make_tuple(0, 0, 0.0f);
 
     const auto &skill = npcStats.mSkills[id];
-    return make_tuple(skill.mBase, skill.mCurrent, skill.mProgress, npcStats.mSkillIncrease[id]);
+    return make_tuple(skill.mBase, skill.mCurrent, skill.mProgress);
 }
 
-void Player::setSkill(unsigned short id, int base, int current, float progress, int increase)
+void Player::setSkill(unsigned short id, int base, int current, float progress)
 {
     if (id >= ESM::Skill::Length)
         return;
@@ -501,7 +504,21 @@ void Player::setSkill(unsigned short id, int base, int current, float progress, 
     skill.mBase = base;
     skill.mCurrent = current;
     skill.mProgress = progress;
-    npcStats.mSkillIncrease[id] = increase;
+
+    skillsChanged = true;
+}
+
+int Player::getSkillIncrease(unsigned short attributeId) const
+{
+    return npcStats.mSkillIncrease[attributeId];
+}
+
+void Player::setSkillIncrease(unsigned short attributeId, int increase)
+{
+    if (attributeId >= ESM::Attribute::Length)
+        return;
+
+    npcStats.mSkillIncrease[attributeId] = increase;
 
     skillsChanged = true;
 }
