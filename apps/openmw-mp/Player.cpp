@@ -123,6 +123,22 @@ void Player::update()
         packet->Send(true);
     }
 
+    // Make sure we send a cell change before we send the position so the position isn't overridden
+    if (cellAPI.isChangedCell())
+    {
+        auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_CELL_CHANGE);
+        packet->setPlayer(this);
+        packet->Send(/*toOthers*/ false);
+        cellAPI.resetChangedCell();
+    }
+
+    if (positionChanged)
+    {
+        auto packet = plPCtrl->GetPacket(ID_PLAYER_POSITION);
+        packet->setPlayer(basePlayer);
+        packet->Send(false);
+    }
+
     // The character class can override values from below on the client, so send it first
     cClass.update();
 
@@ -140,13 +156,6 @@ void Player::update()
         packet->setPlayer(basePlayer);
         packet->Send(false);
         packet->Send(true);
-    }
-
-    if (positionChanged)
-    {
-        auto packet = plPCtrl->GetPacket(ID_PLAYER_POSITION);
-        packet->setPlayer(basePlayer);
-        packet->Send(false);
     }
 
     if (attributesChanged)
@@ -190,20 +199,11 @@ void Player::update()
         changedMap = false;
     }
 
-    if (cellAPI.isChangedCell())
-    {
-        auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_CELL_CHANGE);
-        packet->setPlayer(this);
-        packet->Send(/*toOthers*/ false);
-        cellAPI.resetChangedCell();
-    }
-
     settings.update();
     books.update();
     gui.update();
     dialogue.update();
     factions.update();
-    cellAPI.update();
     quests.update();
     spells.update();
 
