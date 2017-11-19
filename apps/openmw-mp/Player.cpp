@@ -28,7 +28,6 @@ void Player::Init(LuaState &lua)
                                          "getCell", &NetActor::getCell,
                                          "getInventory", &NetActor::getInventory,
 
-
                                          "getPreviousCellPos", &Player::getPreviousCellPos,
 
                                          "kick", &Player::kick,
@@ -219,19 +218,14 @@ void Player::setId(unsigned short id)
     this->id = id;
 }
 
-void Player::setHandshake()
-{
-    handshakeState = true;
-}
-
 bool Player::isHandshaked()
 {
     return handshakeState;
 }
 
-void Player::setLoadState(int state)
+void Player::setHandshake()
 {
-    loadState = state;
+    handshakeState = true;
 }
 
 int Player::getLoadState()
@@ -239,28 +233,14 @@ int Player::getLoadState()
     return loadState;
 }
 
+void Player::setLoadState(int state)
+{
+    loadState = state;
+}
+
 CellController::TContainer *Player::getCells()
 {
     return &cells;
-}
-
-void Player::sendToLoaded(mwmp::PlayerPacket *myPacket)
-{
-    std::list <Player*> plList;
-
-    for (auto cell : cells)
-        for (auto pl : *cell)
-            plList.push_back(pl);
-
-    plList.sort();
-    plList.unique();
-
-    for (auto pl : plList)
-    {
-        if (pl == this) continue;
-        myPacket->setPlayer(this);
-        myPacket->Send(pl->guid);
-    }
 }
 
 void Player::forEachLoaded(std::function<void(Player *pl, Player *other)> func)
@@ -283,6 +263,25 @@ void Player::forEachLoaded(std::function<void(Player *pl, Player *other)> func)
     {
         if (pl == this) continue;
         func(this, pl);
+    }
+}
+
+void Player::sendToLoaded(mwmp::PlayerPacket *myPacket)
+{
+    std::list <Player*> plList;
+
+    for (auto cell : cells)
+        for (auto pl : *cell)
+            plList.push_back(pl);
+
+    plList.sort();
+    plList.unique();
+
+    for (auto pl : plList)
+    {
+        if (pl == this) continue;
+        myPacket->setPlayer(this);
+        myPacket->Send(pl->guid);
     }
 }
 
@@ -318,15 +317,15 @@ int Player::getAvgPing()
     return mwmp::Networking::get().getAvgPing(guid);
 }
 
+std::string Player::getName()
+{
+    return npc.mName;
+}
+
 void Player::setName(const std::string &name)
 {
     npc.mName = name;
     baseInfoChanged = true;
-}
-
-std::string Player::getName()
-{
-    return npc.mName;
 }
 
 void Player::setCharGenStages(int currentStage, int endStage)
@@ -352,15 +351,20 @@ void Player::message(const std::string &message, bool toAll)
         packet->Send(true);
 }
 
+int Player::getLevel() const
+{
+    return creatureStats.mLevel;
+}
+
 void Player::setLevel(int level)
 {
     creatureStats.mLevel = level;
     levelChanged = true;
 }
 
-int Player::getLevel() const
+int Player::getGender() const
 {
-    return creatureStats.mLevel;
+    return npc.isMale();
 }
 
 void Player::setGender(int gender)
@@ -369,9 +373,9 @@ void Player::setGender(int gender)
     baseInfoChanged = true;
 }
 
-int Player::getGender() const
+std::string Player::getRace() const
 {
-    return npc.isMale();
+    return npc.mRace;
 }
 
 void Player::setRace(const std::string &race)
@@ -382,9 +386,9 @@ void Player::setRace(const std::string &race)
     baseInfoChanged = true;
 }
 
-std::string Player::getRace() const
+std::string Player::getHead() const
 {
-    return npc.mRace;
+    return npc.mHead;
 }
 
 void Player::setHead(const std::string &head)
@@ -393,20 +397,15 @@ void Player::setHead(const std::string &head)
     baseInfoChanged = true;
 }
 
-std::string Player::getHead() const
+std::string Player::getHair() const
 {
-    return npc.mHead;
+    return npc.mHair;
 }
 
 void Player::setHair(const std::string &hair)
 {
     npc.mHair = hair;
     baseInfoChanged = true;
-}
-
-std::string Player::getHair() const
-{
-    return npc.mHair;
 }
 
 std::string Player::getBirthsign() const
@@ -434,26 +433,26 @@ void Player::setBounty(int bounty)
     packet->Send(true);
 }
 
+int Player::getLevelProgress() const
+{
+    return npcStats.mLevelProgress;
+}
+
 void Player::setLevelProgress(int progress)
 {
     npcStats.mLevelProgress = progress;
     skillsChanged = true;
 }
 
-int Player::getLevelProgress() const
+std::string Player::getCreatureModel() const
 {
-    return npcStats.mLevelProgress;
+    return creatureModel;
 }
 
 void Player::setCreatureModel(const std::string &model)
 {
     creatureModel = model;
     baseInfoChanged = true;
-}
-
-std::string Player::getCreatureModel() const
-{
-    return creatureModel;
 }
 
 void Player::creatureName(bool useName)
@@ -591,6 +590,11 @@ void Player::jail(int jailDays, bool ignoreJailTeleportation, bool ignoreJailSki
     packet->Send(false);
 }
 
+bool Player::getWerewolfState() const
+{
+    return isWerewolf;
+}
+
 void Player::setWerewolfState(bool state)
 {
     isWerewolf = state;
@@ -599,11 +603,6 @@ void Player::setWerewolfState(bool state)
     packet->setPlayer(this);
     packet->Send(false);
     packet->Send(true);
-}
-
-bool Player::getWerewolfState() const
-{
-    return isWerewolf;
 }
 
 size_t Player::cellStateSize() const

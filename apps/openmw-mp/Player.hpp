@@ -59,8 +59,8 @@ public:
     bool isHandshaked();
     void setHandshake();
 
-    void setLoadState(int state);
     int getLoadState();
+    void setLoadState(int state);
 
     virtual ~Player();
 
@@ -78,27 +78,27 @@ public:
 
     int getAvgPing();
 
-    void setName(const std::string &name);
     std::string getName();
+    void setName(const std::string &name);
     void setCharGenStages(int currentStage, int endStage);
     void message(const std::string &message, bool toAll = false);
-    void setGender(int gender);
     int getGender() const;
-    void setRace(const std::string &race);
+    void setGender(int gender);
     std::string getRace() const;
-    void setHead(const std::string &head);
+    void setRace(const std::string &race);
     std::string getHead() const;
-    void setHair(const std::string &hair);
+    void setHead(const std::string &head);
     std::string getHair() const;
+    void setHair(const std::string &hair);
     std::string getBirthsign() const;
     void setBirthsign(const std::string &sign);
 
     int getBounty() const;
     void setBounty(int bounty);
-    void setLevel(int level);
     int getLevel() const;
-    void setLevelProgress(int progress);
+    void setLevel(int level);
     int getLevelProgress() const;
+    void setLevelProgress(int progress);
 
     /**
      * \brief Send a PlayerResurrect packet about a player.
@@ -130,12 +130,11 @@ public:
     void jail(int jailDays, bool ignoreJailTeleportation, bool ignoreJailSkillIncreases,
               const std::string &jailProgressText, const std::string &jailEndText);
 
-    void setWerewolfState(bool state);
     bool getWerewolfState() const;
+    void setWerewolfState(bool state);
 
-
-    void setCreatureModel(const std::string &model);
     std::string getCreatureModel() const;
+    void setCreatureModel(const std::string &model);
     void creatureName(bool useName);
     bool isCreatureName() const;
 
