@@ -185,7 +185,7 @@ void Player::update()
 
     if (inventory.inventoryChangeType() != 0)
     {
-        auto packet = plPCtrl->GetPacket(ID_PLAYER_EQUIPMENT);
+        auto packet = plPCtrl->GetPacket(ID_PLAYER_INVENTORY);
         packet->setPlayer(this);
         packet->Send(/*toOthers*/ false);
         inventory.resetInventoryFlag();
