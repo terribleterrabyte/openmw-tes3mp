@@ -3,8 +3,10 @@
 //
 #include "CommandController.hpp"
 
-#include <boost/spirit/home/x3.hpp>
 #include <iostream>
+#include <boost/spirit/home/x3.hpp>
+#include <components/misc/stringops.hpp>
+
 #include "Player.hpp"
 #include "LuaState.hpp"
 
@@ -15,15 +17,15 @@ void CommandController::Init(LuaState &lua)
     sol::table cmdCtrlTable = lua.getState()->create_named_table("CommandController");
 
     cmdCtrlTable["registerCommand"] = [&lua](const std::string &command, sol::function func, const std::string &helpMessage) {
-        return lua.getCmdCtrl().registerCommand(command, func, helpMessage);
+        return lua.getCmdCtrl().registerCommand(Misc::StringUtils::lowerCase(command), func, helpMessage);
     };
 
     cmdCtrlTable["unregisterCommand"] = [&lua](const std::string &command) {
-        lua.getCmdCtrl().unregisterCommand(command);
+        lua.getCmdCtrl().unregisterCommand(Misc::StringUtils::lowerCase(command));
     };
 
     cmdCtrlTable["hasCommand"] = [&lua](const std::string &command) {
-        return lua.getCmdCtrl().hasCommand(command);
+        return lua.getCmdCtrl().hasCommand(Misc::StringUtils::lowerCase(command));
     };
 
     cmdCtrlTable["getHelpStrings"] = [&lua]() {
@@ -66,7 +68,7 @@ std::pair<CommandController::ExecResult, std::string> CommandController::exec(st
 
     auto tokens = cmdParser(message);
 
-    auto cmd = commands.find(&tokens[0][1]);
+    auto cmd = commands.find(Misc::StringUtils::lowerCase(&tokens[0][1]));
     if (cmd != commands.end())
     {
         tokens.pop_front();
