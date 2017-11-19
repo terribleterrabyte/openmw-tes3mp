@@ -22,7 +22,7 @@ public:
 
     std::string getDefault() const;
     void setDefault(const std::string &className);
-    bool isDefault() const;
+    bool isCustom() const;
 
     std::string getName() const;
     void setName(const std::string &className);

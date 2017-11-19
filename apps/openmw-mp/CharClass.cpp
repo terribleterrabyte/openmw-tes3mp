@@ -16,7 +16,7 @@ void CharClass::Init(LuaState &lua)
     lua.getState()->new_usertype<CharClass>("Class",
                                             //"__gc", sol::destructor(deleter),
                                             "default", sol::property(&CharClass::getDefault, &CharClass::setDefault),
-                                            "isDefault", &CharClass::isDefault,
+                                            "isCustom", &CharClass::isCustom,
 
                                             "name", sol::property(&CharClass::getName, &CharClass::setName),
                                             "description", sol::property(&CharClass::getDescription, &CharClass::setDescription),
@@ -56,7 +56,7 @@ void CharClass::setDefault(const string &className)
     printf("CharClass::setDefault()\n");
 }
 
-bool CharClass::isDefault() const
+bool CharClass::isCustom() const
 {
     return player->charClass.mId.empty();
 }
