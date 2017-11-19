@@ -82,8 +82,8 @@ public:
     std::string getName();
     void setCharGenStages(int currentStage, int endStage);
     void message(const std::string &message, bool toAll = false);
-    bool isMale() const;
-    void setIsMale(bool male);
+    void setGender(int gender);
+    int getGender() const;
     void setRace(const std::string &race);
     std::string getRace() const;
     void setHead(const std::string &head);

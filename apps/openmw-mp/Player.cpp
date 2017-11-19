@@ -45,9 +45,8 @@ void Player::Init(LuaState &lua)
 
                                          "name", sol::property(&Player::getName, &Player::setName),
                                          "setCharGenStages", &Player::setCharGenStages,
-                                         "isMale", &Player::isMale,
-                                         "setIsMale", &Player::setIsMale,
                                          "level", sol::property(&Player::getLevel, &Player::setLevel),
+                                         "gender", sol::property(&Player::getGender, &Player::setGender),
                                          "race", sol::property(&Player::getRace, &Player::setRace),
                                          "head", sol::property(&Player::getHead, &Player::setHead),
                                          "hair", sol::property(&Player::getHair, &Player::setHair),
@@ -353,17 +352,6 @@ void Player::message(const std::string &message, bool toAll)
         packet->Send(true);
 }
 
-bool Player::isMale() const
-{
-    return npc.isMale();
-}
-
-void Player::setIsMale(bool male)
-{
-    npc.setIsMale(male);
-    baseInfoChanged = true;
-}
-
 void Player::setLevel(int level)
 {
     creatureStats.mLevel = level;
@@ -373,6 +361,17 @@ void Player::setLevel(int level)
 int Player::getLevel() const
 {
     return creatureStats.mLevel;
+}
+
+void Player::setGender(int gender)
+{
+    npc.setIsMale(gender);
+    baseInfoChanged = true;
+}
+
+int Player::getGender() const
+{
+    return npc.isMale();
 }
 
 void Player::setRace(const std::string &race)
