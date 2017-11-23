@@ -3,9 +3,11 @@
 //
 
 #include <components/openmw-mp/NetworkMessages.hpp>
-#include "Actors.hpp"
+
 #include "Script/LuaState.hpp"
 #include "Networking.hpp"
+
+#include "Actors.hpp"
 #include "Cell.hpp"
 #include "CellController.hpp"
 #include "Player.hpp"

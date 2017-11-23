@@ -2,13 +2,13 @@
 // Created by koncord on 25.08.17.
 //
 
-#include "NetActor.hpp"
-
 #include <components/openmw-mp/NetworkMessages.hpp>
-#include "Script/LuaState.hpp"
-//#include "Player.hpp"
-#include "Networking.hpp"
 #include <components/openmw-mp/Base/BaseNetCreature.hpp>
+
+#include "Script/LuaState.hpp"
+#include "Networking.hpp"
+
+#include "NetActor.hpp"
 
 using namespace std;
 

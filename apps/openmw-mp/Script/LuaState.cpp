@@ -4,30 +4,35 @@
 
 #include <iostream>
 #include <cstdlib>
+
 #include <boost/filesystem.hpp>
-#include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
-#include <components/misc/stringops.hpp>
-#include <apps/openmw/mwworld/inventorystore.hpp>
-#include <apps/openmw-mp/Networking.hpp>
-#include <components/openmw-mp/Version.hpp>
-#include <apps/openmw-mp/GUI.hpp>
-#include <apps/openmw-mp/Dialogue.hpp>
-#include <apps/openmw-mp/Factions.hpp>
-#include <apps/openmw-mp/Quests.hpp>
-#include <apps/openmw-mp/Spells.hpp>
-#include <components/openmw-mp/NetworkMessages.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/tokenizer.hpp>
+
+#include <components/misc/stringops.hpp>
+#include <components/openmw-mp/NetworkMessages.hpp>
+#include <components/openmw-mp/Version.hpp>
+
+#include <apps/openmw/mwworld/inventorystore.hpp>
+
 #include "LuaState.hpp"
-#include "EventController.hpp"
 #include "luaUtils.hpp"
+#include "EventController.hpp"
 #include "CommandController.hpp"
-#include "../Inventory.hpp"
-#include "../Settings.hpp"
-#include "../Players.hpp"
+
 #include "../Networking.hpp"
 #include "../MasterClient.hpp"
+
+#include "../Dialogue.hpp"
+#include "../Factions.hpp"
+#include "../GUI.hpp"
+#include "../Inventory.hpp"
+#include "../Players.hpp"
+#include "../Quests.hpp"
+#include "../Settings.hpp"
+#include "../Spells.hpp"
 
 using namespace std;
 

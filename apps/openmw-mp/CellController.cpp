@@ -1,10 +1,11 @@
-#include "CellController.hpp"
-
 #include <iostream>
+
 #include <apps/openmw-mp/Script/EventController.hpp>
+#include "Networking.hpp"
+
+#include "CellController.hpp"
 #include "Cell.hpp"
 #include "Player.hpp"
-#include "Networking.hpp"
 
 using namespace std;
 

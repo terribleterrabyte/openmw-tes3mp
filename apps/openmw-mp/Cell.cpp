@@ -2,14 +2,14 @@
 // Created by koncord on 18.02.17.
 //
 
-#include "Cell.hpp"
-
+#include <iostream>
 #include <components/openmw-mp/NetworkMessages.hpp>
 
-#include <iostream>
 #include "Script/EventController.hpp"
-#include "Player.hpp"
 #include "Networking.hpp"
+
+#include "Cell.hpp"
+#include "Player.hpp"
 
 using namespace std;
 

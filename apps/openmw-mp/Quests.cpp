@@ -2,12 +2,13 @@
 // Created by koncord on 25.08.17.
 //
 
-#include "Quests.hpp"
-
 #include <components/openmw-mp/NetworkMessages.hpp>
+
 #include "Script/LuaState.hpp"
-#include "Player.hpp"
 #include "Networking.hpp"
+
+#include "Quests.hpp"
+#include "Player.hpp"
 
 void JournalItem::Init(LuaState &lua)
 {

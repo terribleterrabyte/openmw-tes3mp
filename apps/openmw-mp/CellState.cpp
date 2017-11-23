@@ -2,9 +2,9 @@
 // Created by koncord on 25.08.17.
 //
 
-#include "CellState.hpp"
-
 #include "Script/LuaState.hpp"
+
+#include "CellState.hpp"
 
 void CellState::Init(LuaState &lua)
 {

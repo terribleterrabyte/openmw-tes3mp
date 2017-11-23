@@ -2,12 +2,13 @@
 // Created by koncord on 12.08.17.
 //
 
-#include "Settings.hpp"
 #include <components/openmw-mp/NetworkMessages.hpp>
-#include "Player.hpp"
+
 #include "Script/LuaState.hpp"
 #include "Networking.hpp"
 
+#include "Settings.hpp"
+#include "Player.hpp"
 
 void GameSettings::Init(LuaState &lua)
 {

@@ -2,12 +2,13 @@
 // Created by koncord on 12.08.17.
 //
 
-#include "CharClass.hpp"
-
 #include <components/openmw-mp/NetworkMessages.hpp>
-#include <apps/openmw-mp/Script/LuaState.hpp>
-#include "Player.hpp"
+
+#include "Script/LuaState.hpp"
 #include "Networking.hpp"
+
+#include "CharClass.hpp"
+#include "Player.hpp"
 
 using namespace std;
 

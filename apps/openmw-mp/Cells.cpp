@@ -2,12 +2,13 @@
 // Created by koncord on 25.08.17.
 //
 
-#include "Cells.hpp"
-
 #include <components/openmw-mp/NetworkMessages.hpp>
+
 #include "Script/LuaState.hpp"
-#include "NetActor.hpp"
 #include "Networking.hpp"
+
+#include "Cells.hpp"
+#include "NetActor.hpp"
 
 using namespace std;
 

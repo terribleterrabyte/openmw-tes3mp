@@ -3,8 +3,10 @@
 //
 
 #include <components/openmw-mp/NetworkMessages.hpp>
-#include "Player.hpp"
+
 #include "Networking.hpp"
+
+#include "Player.hpp"
 #include "Inventory.hpp"
 #include "Settings.hpp"
 
@@ -490,6 +492,7 @@ std::tuple<int, int, float> Player::getSkill(unsigned short id) const
         return make_tuple(0, 0, 0.0f);
 
     const auto &skill = npcStats.mSkills[id];
+
     return make_tuple(skill.mBase, skill.mCurrent, skill.mProgress);
 }
 

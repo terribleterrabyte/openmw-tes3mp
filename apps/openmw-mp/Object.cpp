@@ -3,9 +3,11 @@
 //
 
 #include <components/openmw-mp/NetworkMessages.hpp>
+
+#include "Networking.hpp"
+
 #include "Object.hpp"
 #include "Player.hpp"
-#include "Networking.hpp"
 
 using namespace std;
 

@@ -2,12 +2,13 @@
 // Created by koncord on 15.08.17.
 //
 
-#include "Dialogue.hpp"
-
 #include <components/openmw-mp/NetworkMessages.hpp>
+
 #include "Script/LuaState.hpp"
-#include "Player.hpp"
 #include "Networking.hpp"
+
+#include "Dialogue.hpp"
+#include "Player.hpp"
 
 void Dialogue::Init(LuaState &lua)
 {

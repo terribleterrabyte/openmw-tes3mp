@@ -3,9 +3,11 @@
 //
 
 #include <components/openmw-mp/NetworkMessages.hpp>
+
+#include "Networking.hpp"
+
 #include "GUI.hpp"
 #include "Player.hpp"
-#include "Networking.hpp"
 
 void GUI::Init(LuaState &lua)
 {

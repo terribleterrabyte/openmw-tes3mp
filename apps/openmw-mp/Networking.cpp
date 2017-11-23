@@ -2,11 +2,12 @@
 // Created by koncord on 12.01.16.
 //
 
-#include "Players.hpp"
-#include <Script/EventController.hpp>
-#include "processors/ProcessorInitializer.hpp"
-#include <RakPeer.h>
+#include <chrono>
+#include <iostream>
+#include <thread>
+
 #include <Kbhit.h>
+#include <RakPeer.h>
 
 #include <components/misc/stringops.hpp>
 #include <components/openmw-mp/NetworkMessages.hpp>
@@ -14,18 +15,18 @@
 #include <components/openmw-mp/Version.hpp>
 #include <components/openmw-mp/Packets/PacketPreInit.hpp>
 
-#include <iostream>
-//#include <Script/API/TimerAPI.hpp>
-#include <chrono>
-#include <thread>
-
-#include "Networking.hpp"
-#include "MasterClient.hpp"
-#include "Cell.hpp"
-#include "CellController.hpp"
+#include <Script/EventController.hpp>
+#include "processors/ProcessorInitializer.hpp"
 #include "processors/PlayerProcessor.hpp"
 #include "processors/ActorProcessor.hpp"
 #include "processors/WorldProcessor.hpp"
+
+#include "Networking.hpp"
+#include "MasterClient.hpp"
+
+#include "Cell.hpp"
+#include "CellController.hpp"
+#include "Players.hpp"
 
 using namespace mwmp;
 using namespace std;
@@ -33,8 +34,6 @@ using namespace std;
 Networking *Networking::sThis = nullptr;
 
 static int currentMpNum = 0;
-
-
 
 Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
 {

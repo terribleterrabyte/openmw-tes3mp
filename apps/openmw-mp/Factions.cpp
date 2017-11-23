@@ -3,11 +3,12 @@
 //
 
 #include <components/openmw-mp/NetworkMessages.hpp>
-#include "Factions.hpp"
 
-#include "Player.hpp"
 #include "Script/LuaState.hpp"
 #include "Networking.hpp"
+
+#include "Factions.hpp"
+#include "Player.hpp"
 
 void Factions::Init(LuaState &lua)
 {

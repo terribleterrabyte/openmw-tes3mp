@@ -4,9 +4,10 @@
 
 #include <chrono>
 #include <memory>
-#include "Timer.hpp"
 
 #include "Script/LuaState.hpp"
+
+#include "Timer.hpp"
 
 using namespace std;
 

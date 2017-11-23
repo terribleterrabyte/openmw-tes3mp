@@ -2,17 +2,21 @@
 // Created by koncord on 14.08.16.
 //
 
-#include <RakSleep.h>
-#include <Getche.h>
-#include <sstream>
 #include <iostream>
+#include <sstream>
 #include <thread>
+
+#include <Getche.h>
 #include <RakPeerInterface.h>
-#include "MasterClient.hpp"
+#include <RakSleep.h>
+
 #include <components/openmw-mp/Log.hpp>
 #include <components/openmw-mp/Version.hpp>
 #include <components/openmw-mp/Master/PacketMasterAnnounce.hpp>
+
+#include "MasterClient.hpp"
 #include "Networking.hpp"
+
 #include "Players.hpp"
 
 using namespace std;

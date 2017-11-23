@@ -2,13 +2,16 @@
 // Created by koncord on 12.08.17.
 //
 
-#include "Inventory.hpp"
-#include <components/openmw-mp/NetworkMessages.hpp>
-#include <apps/openmw-mp/Script/LuaState.hpp>
-#include <apps/openmw/mwworld/inventorystore.hpp>
 #include <components/misc/stringops.hpp>
-#include "NetActor.hpp"
+#include <components/openmw-mp/NetworkMessages.hpp>
+
+#include <apps/openmw/mwworld/inventorystore.hpp>
+
+#include "Script/LuaState.hpp"
 #include "Networking.hpp"
+
+#include "Inventory.hpp"
+#include "NetActor.hpp"
 
 using namespace std;
 
