@@ -164,6 +164,8 @@ void Player::update()
         packet->setPlayer(basePlayer);
         packet->Send(false);
         packet->Send(true);
+
+        attributeChanges.attributeIndexes.clear();
     }
 
     if (skillsChanged)
@@ -485,6 +487,10 @@ void Player::setAttribute(unsigned short id, int base, int current)
 
     creatureStats.mAttributes[id].mBase = base;
     creatureStats.mAttributes[id].mCurrent = current;
+
+    if (std::find(attributeChanges.attributeIndexes.begin(), attributeChanges.attributeIndexes.end(), id) == attributeChanges.attributeIndexes.end())
+        attributeChanges.attributeIndexes.push_back(id);
+
     attributesChanged = true;
 }
 
@@ -524,6 +530,9 @@ void Player::setSkillIncrease(unsigned short attributeId, int increase)
         return;
 
     npcStats.mSkillIncrease[attributeId] = increase;
+
+    if (std::find(attributeChanges.attributeIndexes.begin(), attributeChanges.attributeIndexes.end(), attributeId) == attributeChanges.attributeIndexes.end())
+        attributeChanges.attributeIndexes.push_back(attributeId);
 
     attributesChanged = true;
 }
