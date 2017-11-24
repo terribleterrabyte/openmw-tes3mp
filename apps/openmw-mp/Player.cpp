@@ -172,6 +172,8 @@ void Player::update()
         packet->setPlayer(basePlayer);
         packet->Send(false);
         packet->Send(true);
+
+        skillChanges.skillIndexes.clear();
     }
 
     if (inventory.isEquipmentChanged())
@@ -443,7 +445,7 @@ int Player::getLevelProgress() const
 void Player::setLevelProgress(int progress)
 {
     npcStats.mLevelProgress = progress;
-    skillsChanged = true;
+    levelChanged = true;
 }
 
 std::string Player::getCreatureModel() const
@@ -506,6 +508,8 @@ void Player::setSkill(unsigned short id, int base, int current, float progress)
     skill.mCurrent = current;
     skill.mProgress = progress;
 
+    skillChanges.skillIndexes.push_back(id);
+
     skillsChanged = true;
 }
 
@@ -521,7 +525,7 @@ void Player::setSkillIncrease(unsigned short attributeId, int increase)
 
     npcStats.mSkillIncrease[attributeId] = increase;
 
-    skillsChanged = true;
+    attributesChanged = true;
 }
 
 CharClass &Player::getCharClass(sol::this_state thisState)
