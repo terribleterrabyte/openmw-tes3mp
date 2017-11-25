@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "Window.hpp"
+
 class LuaState;
 class Player;
 
@@ -28,9 +30,15 @@ public:
     //state 0 - disallow, 1 - allow
     void setMapVisibility(unsigned short targetPID, unsigned short affectedPID, unsigned short state);
     void setMapVisibilityAll(unsigned short targetPID, unsigned short state);
+
+    std::shared_ptr<Window> createWindow(short x, short y, sol::function fn, sol::this_environment te);
+    void deleteWindow(std::shared_ptr<Window> window);
+    void onGUIWindowAction();
 private:
     Player *player;
     bool changed;
+    std::unordered_map<int, std::shared_ptr<Window>> windows;
+    int lastWindowId;
 };
 
 

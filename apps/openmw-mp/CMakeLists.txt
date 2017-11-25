@@ -57,6 +57,7 @@ set(SERVER
     CellState.cpp
     Object.cpp
     stacktrace.cpp
+    Window.cpp
     Script/CommandController.cpp Script/EventController.cpp Script/LuaState.cpp Script/luaUtils.cpp
 )
 
@@ -95,7 +96,7 @@ set(PROCESSORS_PLAYER
         processors/player/ProcessorPlayerResurrect.hpp processors/player/ProcessorPlayerShapeshift.hpp
         processors/player/ProcessorPlayerSkill.hpp processors/player/ProcessorPlayerSpeech.hpp
         processors/player/ProcessorPlayerSpellbook.hpp processors/player/ProcessorPlayerStatsDynamic.hpp
-        processors/player/ProcessorPlayerTopic.hpp
+        processors/player/ProcessorPlayerTopic.hpp processors/player/ProcessorGUIWindow.hpp
         )
 
 source_group(tes3mp-server\\processors\\player FILES ${PROCESSORS_PLAYER})

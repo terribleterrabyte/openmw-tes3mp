@@ -3,11 +3,9 @@
 //
 
 #include <components/openmw-mp/NetworkMessages.hpp>
-
-#include "Networking.hpp"
-
 #include "GUI.hpp"
 #include "Player.hpp"
+#include "Networking.hpp"
 
 void GUI::Init(LuaState &lua)
 {
@@ -18,8 +16,11 @@ void GUI::Init(LuaState &lua)
                                       "passwordDialog", &GUI::passwordDialog,
                                       "listBox", &GUI::listBox,
                                       "setMapVisibility", &GUI::setMapVisibility,
-                                      "setMapVisibilityAll", &GUI::setMapVisibilityAll
+                                      "setMapVisibilityAll", &GUI::setMapVisibilityAll,
+                                      "createWindow", &GUI::createWindow,
+                                      "deleteWindow", &GUI::deleteWindow
     );
+    Window::Init(lua);
 }
 
 GUI::GUI(Player *player): player(player), changed(false)
@@ -99,4 +100,46 @@ void GUI::setMapVisibility(unsigned short targetPID, unsigned short affectedPID,
 void GUI::setMapVisibilityAll(unsigned short targetPID, unsigned short state)
 {
     LOG_MESSAGE(Log::LOG_WARN, "stub");
+}
+
+std::shared_ptr<Window> GUI::createWindow(short x, short y, sol::function fn, sol::this_environment te)
+{
+    int id = 0;
+
+    for(auto &window : windows)
+    {
+        if(window.second == nullptr)
+        {
+            id = window.first;
+            break;
+        }
+    }
+
+    if(id == 0)
+        id = lastWindowId++;
+
+    auto window = std::make_shared<Window>(player, id);
+    window->setSize(x, y);
+    window->setCallback(fn);
+
+    windows[id] = window;
+    return window;
+}
+
+void GUI::deleteWindow(std::shared_ptr<Window> window)
+{
+    auto it = windows.find(window->getID());
+    if(it != windows.end())
+    {
+        it->second = nullptr;
+    }
+}
+
+void GUI::onGUIWindowAction()
+{
+    auto it = windows.find(player->guiWindow.id);
+    if(it != windows.end() && it->second != nullptr)
+    {
+        it->second->call(player->guiWindow);
+    }
 }
