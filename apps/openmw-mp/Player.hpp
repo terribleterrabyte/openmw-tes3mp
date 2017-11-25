@@ -57,10 +57,11 @@ public:
     void setId(unsigned short id);
 
     bool isHandshaked();
+    int handshakeAttempts();
     void setHandshake();
 
-    int getLoadState();
     void setLoadState(int state);
+    int getLoadState();
 
     virtual ~Player();
 
@@ -180,7 +181,7 @@ public:
 
 private:
     CellController::TContainer cells;
-    bool handshakeState;
+    int handshakeCounter;
     int loadState;
     bool /*statsChanged, attributesChanged, skillsChanged, baseInfoChanged, positionChanged,*/ changedMap;
     CharClass cClass;

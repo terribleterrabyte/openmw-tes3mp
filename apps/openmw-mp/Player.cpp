@@ -94,7 +94,7 @@ Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedM
     basePlayer = this;
     netCreature = this;
     printf("Player::Player()\n");
-    handshakeState = false;
+    handshakeCounter = 0;
     loadState = NOTLOADED;
     resetUpdateFlags();
     cell.blank();
@@ -226,12 +226,17 @@ void Player::setId(unsigned short id)
 
 bool Player::isHandshaked()
 {
-    return handshakeState;
+    return handshakeCounter == numeric_limits<int>::max();
 }
 
 void Player::setHandshake()
 {
-    handshakeState = true;
+    handshakeCounter = numeric_limits<int>::max();
+}
+
+int Player::handshakeAttempts()
+{
+    return handshakeCounter++;
 }
 
 int Player::getLoadState()

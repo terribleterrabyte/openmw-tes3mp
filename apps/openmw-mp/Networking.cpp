@@ -114,7 +114,8 @@ void Networking::processPlayerPacket(RakNet::Packet *packet)
     if (!player->isHandshaked())
     {
         LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Have not completed handshake with player %d", player->getId());
-        //KickPlayer(player->guid);
+        if(player->handshakeAttempts() > 5)
+            kickPlayer(player->guid);
         return;
     }
 
@@ -126,6 +127,7 @@ void Networking::processPlayerPacket(RakNet::Packet *packet)
 
         if (!result)
         {
+            LOG_MESSAGE(Log::LOG_TRACE, "Player \"%s\" Disconnected by ON_PLAYER_CONNECT event", player->getName().c_str());
             playerPacketController->GetPacket(ID_USER_DISCONNECTED)->setPlayer(player.get());
             playerPacketController->GetPacket(ID_USER_DISCONNECTED)->Send(false);
             Players::deletePlayerByGUID(packet->guid);
