@@ -189,7 +189,7 @@ add_component_dir (openmw-mp/Packets/Player
         PacketPlayerInventory PacketPlayerJail PacketPlayerJournal PacketPlayerKillCount PacketPlayerLevel
         PacketPlayerMap PacketPlayerPosition PacketPlayerRegionAuthority PacketPlayerRest PacketPlayerResurrect
         PacketPlayerShapeshift PacketPlayerSkill PacketPlayerSpeech PacketPlayerSpellbook PacketPlayerStatsDynamic
-        PacketPlayerTopic
+        PacketPlayerTopic PacketGUIWindow
         )
 
 add_component_dir (openmw-mp/Packets/World

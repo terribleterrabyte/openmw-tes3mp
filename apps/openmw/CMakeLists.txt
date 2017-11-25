@@ -101,7 +101,7 @@ add_openmw_dir (mwmp Main Networking LocalPlayer DedicatedPlayer PlayerList Loca
     Cell CellController MechanicsHelper GUIController
     )
 
-add_openmw_dir (mwmp/GUI GUIChat GUILogin PlayerMarkerCollection GUIDialogList TextInputDialog
+add_openmw_dir (mwmp/GUI GUIChat GUILogin PlayerMarkerCollection GUIDialogList TextInputDialog GUICustomWindow
     )
 
 add_openmw_dir(mwmp/processors BaseClientPacketProcessor PlayerProcessor WorldProcessor ActorProcessor ProcessorInitializer
