@@ -3,6 +3,7 @@
 #include "../Packets/Player/PacketPlayerCharGen.hpp"
 #include "../Packets/Player/PacketHandshake.hpp"
 #include "../Packets/Player/PacketGUIBoxes.hpp"
+#include "../Packets/Player/PacketGUIWindow.hpp"
 #include "../Packets/Player/PacketLoaded.hpp"
 #include "../Packets/Player/PacketGameSettings.hpp"
 #include "../Packets/Player/PacketGameTime.hpp"
@@ -54,6 +55,7 @@ mwmp::PlayerPacketController::PlayerPacketController(RakNet::RakPeerInterface *p
     AddPacket<PacketChatMessage>(&packets, peer);
     AddPacket<PacketHandshake>(&packets, peer);
     AddPacket<PacketGUIBoxes>(&packets, peer);
+    AddPacket<PacketGUIWindow>(&packets, peer);
     AddPacket<PacketLoaded>(&packets, peer);
     AddPacket<PacketGameSettings>(&packets, peer);
     AddPacket<PacketGameTime>(&packets, peer);
@@ -95,7 +97,7 @@ mwmp::PlayerPacketController::PlayerPacketController(RakNet::RakPeerInterface *p
 
 mwmp::PlayerPacket *mwmp::PlayerPacketController::GetPacket(RakNet::MessageID id)
 {
-    return packets[(unsigned char)id].get();
+    return packets[(RakNet::MessageID)id].get();
 }
 
 void mwmp::PlayerPacketController::SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream)

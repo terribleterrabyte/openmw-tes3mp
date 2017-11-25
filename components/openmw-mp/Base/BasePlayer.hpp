@@ -195,6 +195,33 @@ namespace mwmp
             std::string data;
         };
 
+        struct GUIWindow
+        {
+            int32_t id;
+            short width, height;
+            enum class WidgetType: int
+            {
+                Button,
+                Editbox,
+                Label,
+                ListBoxActive,
+                ListBoxPassive,
+                Slider
+            };
+
+            struct Widget
+            {
+                WidgetType type;
+                std::string name;
+                bool disabled;
+                short posX, posY;
+                short width, height;
+                std::vector<std::string> data;
+            };
+
+            std::vector<Widget> widgets;
+        };
+
         BasePlayer(RakNet::RakNetGUID guid) : guid(guid)
         {
             inventoryChanges.action = 0;
@@ -219,6 +246,7 @@ namespace mwmp
         GUIMessageBox guiMessageBox;
         int month;
         int day;
+        GUIWindow guiWindow;
         double hour;
 
         AttributeChanges attributeChanges;
