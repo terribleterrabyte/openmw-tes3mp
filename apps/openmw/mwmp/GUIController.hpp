@@ -23,13 +23,15 @@ namespace mwmp
 {
     class GUIDialogList;
     class GUIChat;
+    class GUICustomWindow;
     class GUIController
     {
     public:
         enum GM
         {
             GM_TES3MP_InputBox = MWGui::GM_QuickKeysMenu + 1,
-            GM_TES3MP_ListBox
+            GM_TES3MP_ListBox,
+            GM_TES3MP_CustomWindow
 
         };
         GUIController();
@@ -43,6 +45,8 @@ namespace mwmp
         void showMessageBox(const BasePlayer::GUIMessageBox &guiMessageBox);
         void showCustomMessageBox(const BasePlayer::GUIMessageBox &guiMessageBox);
         void showInputBox(const BasePlayer::GUIMessageBox &guiMessageBox);
+
+        void showCustomWindow(const BasePlayer::GUIWindow &guiMessageBox);
 
         void showDialogList(const BasePlayer::GUIMessageBox &guiMessageBox);
 
@@ -72,6 +76,7 @@ namespace mwmp
         bool calledInteractiveMessage;
         TextInputDialog *mInputBox;
         GUIDialogList *mListBox;
+        GUICustomWindow *mCustomWindow;
         void onInputBoxDone(MWGui::WindowBase* parWindow);
         //MyGUI::Widget *oldFocusWidget, *currentFocusWidget;
     };

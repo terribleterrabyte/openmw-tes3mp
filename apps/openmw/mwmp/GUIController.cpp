@@ -33,12 +33,13 @@
 #include "GUI/PlayerMarkerCollection.hpp"
 #include "GUI/GUIDialogList.hpp"
 #include "GUI/GUIChat.hpp"
+#include "GUI/GUICustomWindow.hpp"
 #include "LocalPlayer.hpp"
 #include "DedicatedPlayer.hpp"
 #include "PlayerList.hpp"
 
 
-mwmp::GUIController::GUIController(): mInputBox(0), mListBox(0)
+mwmp::GUIController::GUIController(): mInputBox(0), mListBox(0), mCustomWindow(0)
 {
     mChat = nullptr;
     keySay = SDL_SCANCODE_Y;
@@ -54,8 +55,8 @@ mwmp::GUIController::~GUIController()
 void mwmp::GUIController::cleanUp()
 {
     mPlayerMarkers.clear();
-    if (mChat != nullptr)
-        delete mChat;
+
+    delete mChat;
     mChat = nullptr;
 }
 
@@ -158,6 +159,20 @@ void mwmp::GUIController::showInputBox(const BasePlayer::GUIMessageBox &guiMessa
     mInputBox->setVisible(true);
 }
 
+void mwmp::GUIController::showCustomWindow(const mwmp::BasePlayer::GUIWindow &guiMessageBox)
+{
+    MWBase::WindowManager *windowManager = MWBase::Environment::get().getWindowManager();
+    if(mCustomWindow != nullptr)
+        LOG_MESSAGE_SIMPLE(Log::LOG_VERBOSE, "Deleting mCustomWindow");
+    windowManager->removeDialog(mCustomWindow);
+    windowManager->pushGuiMode((MWGui::GuiMode)GM_TES3MP_CustomWindow);
+    mCustomWindow = nullptr;
+
+    mCustomWindow = new GUICustomWindow(guiMessageBox);
+
+    mCustomWindow->setVisible(true);
+}
+
 void mwmp::GUIController::onInputBoxDone(MWGui::WindowBase *parWindow)
 {
     //MWBase::WindowManager *windowManager = MWBase::Environment::get().getWindowManager();
@@ -193,10 +208,128 @@ bool mwmp::GUIController::pressedKey(int key)
         mChat->pressedSay();
         return true;
     }
+    else if (key == SDL_SCANCODE_F4)
+    {
+        windowManager->removeDialog(mCustomWindow);
+        windowManager->pushGuiMode((MWGui::GuiMode)GM_TES3MP_CustomWindow);
+        mCustomWindow = nullptr;
+
+
+        BasePlayer::GUIWindow data;
+        data.id = 1234;
+        data.width = 450;
+        data.height = 250;
+        BasePlayer::GUIWindow::Widget widget;
+        {
+            widget.type = BasePlayer::GUIWindow::WidgetType::Button;
+            widget.posX = 12;
+            widget.posY = 12;
+            widget.name = "My Button";
+            widget.disabled = false;
+            data.widgets.push_back(widget);
+        }
+
+        {
+            widget.type = BasePlayer::GUIWindow::WidgetType::Editbox;
+            widget.posX = 12;
+            widget.posY = 50;
+            widget.height = 30;
+            widget.width = 96;
+            widget.name = "MyEditBox"; // id
+            widget.disabled = false;
+            data.widgets.push_back(widget);
+        }
+
+        {
+            widget.type = BasePlayer::GUIWindow::WidgetType::Button;
+            widget.posX = 12;
+            widget.posY = 88;
+            widget.name = "Disabled\nButton";
+            widget.disabled = true;
+            data.widgets.push_back(widget);
+        }
+
+        {
+            widget.type = BasePlayer::GUIWindow::WidgetType::Editbox;
+            widget.posX = 12;
+            widget.posY = 132;
+            widget.height = 30;
+            widget.width = 96;
+            widget.name = "Inactive"; // id
+            widget.disabled = true;
+            data.widgets.push_back(widget);
+        }
+
+        {
+            widget.type = BasePlayer::GUIWindow::WidgetType::Label;
+            widget.posX = 150;
+            widget.posY = 12;
+            widget.height = 0;
+            widget.width = 0;
+            widget.name = "Active ListBox"; // id
+            widget.disabled = false;
+            data.widgets.push_back(widget);
+        }
+
+        {
+            widget.type = BasePlayer::GUIWindow::WidgetType::ListBoxActive;
+            widget.posX = 130;
+            widget.posY = 30;
+            widget.height = 150;
+            widget.width = 150;
+            widget.name = "MyListBox"; // id
+            widget.disabled = false;
+            widget.data.clear();
+            for(int i = 0; i < 10; ++i)
+                widget.data.push_back("Item" + std::to_string(i));
+            data.widgets.push_back(widget);
+        }
+
+        {
+            widget.type = BasePlayer::GUIWindow::WidgetType::Label;
+            widget.posX = 300;
+            widget.posY = 12;
+            widget.height = 0;
+            widget.width = 0;
+            widget.name = "Passive ListBox"; // id
+            widget.disabled = false;
+            data.widgets.push_back(widget);
+        }
+
+        {
+            widget.type = BasePlayer::GUIWindow::WidgetType::ListBoxPassive;
+            widget.posX = 288;
+            widget.posY = 30;
+            widget.height = 150;
+            widget.width = 150;
+            widget.name = "MyListBox"; // id
+            widget.disabled = false;
+            widget.data.clear();
+            for(int i = 0; i < 10; ++i)
+                widget.data.push_back("Value" + std::to_string(i));
+            data.widgets.push_back(widget);
+        }
+
+        mCustomWindow = new GUICustomWindow(data);
+
+        {
+            widget.type = BasePlayer::GUIWindow::WidgetType::ListBoxPassive;
+            widget.posX = 12;
+            widget.posY = 168;
+            widget.height = 14;
+            widget.width = 110;
+            widget.name = "MySlider"; // id
+            widget.disabled = false;
+            mCustomWindow->addSlider(widget);
+        }
+
+        mCustomWindow->setVisible(true);
+        return true;
+    }
     return false;
 }
 
-bool mwmp::GUIController::hasFocusedElement()
+bool mwmp::GUIController:: hasFocusedElement()
 {
     return false;
 }
