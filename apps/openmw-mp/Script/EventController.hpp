@@ -85,17 +85,6 @@ public:
     bool isStoped() const {return _stop;}
     CIterator stopedAt() const { return lastCalled; }
 
-    auto get(const std::string &modname)
-    {
-        for(auto iter = functions.cbegin(); iter != functions.cend(); ++iter)
-        {
-            if(iter->first["ModName"]["name"] == modname)
-                return iter;
-        }
-        return functions.cend();
-    }
-
-
     template<typename... Args>
     void call(type_tag<void>, Args&&... args)
     {
