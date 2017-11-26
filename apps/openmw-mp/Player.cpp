@@ -493,7 +493,7 @@ void Player::setAttribute(unsigned short id, int base, int current)
     creatureStats.mAttributes[id].mBase = base;
     creatureStats.mAttributes[id].mCurrent = current;
 
-    if (std::find(attributeChanges.attributeIndexes.begin(), attributeChanges.attributeIndexes.end(), id) == attributeChanges.attributeIndexes.end())
+    if (!Utils::vectorContains(&attributeChanges.attributeIndexes, id))
         attributeChanges.attributeIndexes.push_back(id);
 
     attributesChanged = true;
@@ -519,7 +519,8 @@ void Player::setSkill(unsigned short id, int base, int current, float progress)
     skill.mCurrent = current;
     skill.mProgress = progress;
 
-    skillChanges.skillIndexes.push_back(id);
+    if (!Utils::vectorContains(&skillChanges.skillIndexes, id))
+        skillChanges.skillIndexes.push_back(id);
 
     skillsChanged = true;
 }
@@ -536,7 +537,7 @@ void Player::setSkillIncrease(unsigned short attributeId, int increase)
 
     npcStats.mSkillIncrease[attributeId] = increase;
 
-    if (std::find(attributeChanges.attributeIndexes.begin(), attributeChanges.attributeIndexes.end(), attributeId) == attributeChanges.attributeIndexes.end())
+    if (!Utils::vectorContains(&attributeChanges.attributeIndexes, attributeId))
         attributeChanges.attributeIndexes.push_back(attributeId);
 
     attributesChanged = true;
