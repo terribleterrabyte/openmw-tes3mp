@@ -219,9 +219,9 @@ unsigned short Player::getId()
     return id;
 }
 
-void Player::setId(unsigned short id)
+void Player::setId(unsigned short newId)
 {
-    this->id = id;
+    this->id = newId;
 }
 
 bool Player::isHandshaked()
@@ -477,50 +477,50 @@ bool Player::isCreatureName() const
     return useCreatureName;
 }
 
-std::tuple<int, int> Player::getAttribute(unsigned short id) const
+std::tuple<int, int> Player::getAttribute(unsigned short attributeId) const
 {
-    if (id >= ESM::Attribute::Length)
+    if (attributeId >= ESM::Attribute::Length)
         return make_tuple(0, 0);
 
-    return make_tuple(creatureStats.mAttributes[id].mBase, creatureStats.mAttributes[id].mCurrent);
+    return make_tuple(creatureStats.mAttributes[attributeId].mBase, creatureStats.mAttributes[attributeId].mCurrent);
 }
 
-void Player::setAttribute(unsigned short id, int base, int current)
+void Player::setAttribute(unsigned short attributeId, int base, int current)
 {
-    if (id >= ESM::Attribute::Length)
+    if (attributeId >= ESM::Attribute::Length)
         return;
 
-    creatureStats.mAttributes[id].mBase = base;
-    creatureStats.mAttributes[id].mCurrent = current;
+    creatureStats.mAttributes[attributeId].mBase = base;
+    creatureStats.mAttributes[attributeId].mCurrent = current;
 
-    if (!Utils::vectorContains(&attributeChanges.attributeIndexes, id))
-        attributeChanges.attributeIndexes.push_back(id);
+    if (!Utils::vectorContains(&attributeChanges.attributeIndexes, attributeId))
+        attributeChanges.attributeIndexes.push_back(attributeId);
 
     attributesChanged = true;
 }
 
-std::tuple<int, int, float> Player::getSkill(unsigned short id) const
+std::tuple<int, int, float> Player::getSkill(unsigned short skillId) const
 {
-    if (id >= ESM::Skill::Length)
+    if (skillId >= ESM::Skill::Length)
         return make_tuple(0, 0, 0.0f);
 
-    const auto &skill = npcStats.mSkills[id];
+    const auto &skill = npcStats.mSkills[skillId];
 
     return make_tuple(skill.mBase, skill.mCurrent, skill.mProgress);
 }
 
-void Player::setSkill(unsigned short id, int base, int current, float progress)
+void Player::setSkill(unsigned short skillId, int base, int current, float progress)
 {
-    if (id >= ESM::Skill::Length)
+    if (skillId >= ESM::Skill::Length)
         return;
 
-    auto &skill = npcStats.mSkills[id];
+    auto &skill = npcStats.mSkills[skillId];
     skill.mBase = base;
     skill.mCurrent = current;
     skill.mProgress = progress;
 
-    if (!Utils::vectorContains(&skillChanges.skillIndexes, id))
-        skillChanges.skillIndexes.push_back(id);
+    if (!Utils::vectorContains(&skillChanges.skillIndexes, skillId))
+        skillChanges.skillIndexes.push_back(skillId);
 
     skillsChanged = true;
 }
