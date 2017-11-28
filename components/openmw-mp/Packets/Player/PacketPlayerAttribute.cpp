@@ -13,9 +13,9 @@ void PacketPlayerAttribute::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
 
-    unsigned count;
+    uint32_t count;
     if (send)
-        count = (unsigned int)(player->attributeChanges.attributeIndexes.size());
+        count = static_cast<uint32_t>(player->attributeChanges.attributeIndexes.size());
 
     RW(count, send);
 
