@@ -58,7 +58,7 @@ mwmp::WorldPacketController::WorldPacketController(RakNet::RakPeerInterface *pee
 
 mwmp::WorldPacket *mwmp::WorldPacketController::GetPacket(RakNet::MessageID id)
 {
-    return packets[(unsigned char)id].get();
+    return packets[(RakNet::MessageID)id].get();
 }
 
 void mwmp::WorldPacketController::SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream)
