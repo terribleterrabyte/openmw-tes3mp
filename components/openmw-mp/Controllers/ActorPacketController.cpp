@@ -43,7 +43,7 @@ mwmp::ActorPacketController::ActorPacketController(RakNet::RakPeerInterface *pee
 
 mwmp::ActorPacket *mwmp::ActorPacketController::GetPacket(RakNet::MessageID id)
 {
-    return packets[(unsigned char)id].get();
+    return packets[(RakNet::MessageID)id].get();
 }
 
 void mwmp::ActorPacketController::SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream)

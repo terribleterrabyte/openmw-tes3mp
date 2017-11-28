@@ -18,7 +18,7 @@ namespace mwmp
 
         bool ContainsPacket(RakNet::MessageID id);
 
-        typedef std::unordered_map<unsigned char, std::unique_ptr<ActorPacket> > packets_t;
+        typedef std::unordered_map<RakNet::MessageID, std::unique_ptr<ActorPacket> > packets_t;
     private:
         packets_t packets;
     };
