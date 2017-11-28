@@ -24,7 +24,7 @@ void PacketGUIWindow::Packet(RakNet::BitStream *bs, bool send)
 
     int32_t size;
     if (send)
-        size = player->guiWindow.widgets.size();
+        size = static_cast<int32_t>(player->guiWindow.widgets.size());
     RW(size, send);
 
     if(!send)

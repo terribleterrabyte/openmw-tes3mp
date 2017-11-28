@@ -59,5 +59,5 @@ std::string Dialogue::getTopicId(unsigned int i) const
 
 unsigned int Dialogue::getChanges() const
 {
-    return player->topicChanges.count;
+    return player->topicChanges.topics.size();
 }

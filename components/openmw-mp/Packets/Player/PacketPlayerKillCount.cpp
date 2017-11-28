@@ -9,25 +9,23 @@ mwmp::PacketPlayerKillCount::PacketPlayerKillCount(RakNet::RakPeerInterface *pee
 void mwmp::PacketPlayerKillCount::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
+    
+    uint32_t count;
 
     if (send)
-        player->killChanges.count = (unsigned int)(player->killChanges.kills.size());
-    else
-        player->killChanges.kills.clear();
+        count = static_cast<uint32_t>(player->killChanges.kills.size());
 
-    RW(player->killChanges.count, send);
+    RW(count, send);
 
-    for (unsigned int i = 0; i < player->killChanges.count; i++)
+    if(!send)
     {
-        Kill kill;
+        player->killChanges.kills.clear();
+        player->killChanges.kills.resize(count);
+    }
 
-        if (send)
-            kill = player->killChanges.kills.at(i);
-
-        RW(kill.refId, send, 1);
+    for (auto &&kill : player->killChanges.kills)
+    {
+        RW(kill.refId, send, true);
         RW(kill.number, send);
-
-        if (!send)
-            player->killChanges.kills.push_back(kill);
     }
 }

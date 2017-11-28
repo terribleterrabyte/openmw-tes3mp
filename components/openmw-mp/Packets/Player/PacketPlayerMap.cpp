@@ -12,25 +12,23 @@ PacketPlayerMap::PacketPlayerMap(RakNet::RakPeerInterface *peer) : PlayerPacket(
 void PacketPlayerMap::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
+    
+    uint32_t count;
 
     if (send)
-        player->mapChanges.count = (unsigned int)(player->mapChanges.cellsExplored.size());
-    else
-        player->mapChanges.cellsExplored.clear();
+        count = static_cast<uint32_t>(player->mapChanges.cellsExplored.size());
 
-    RW(player->mapChanges.count, send);
+    RW(count, send);
 
-    for (unsigned int i = 0; i < player->mapChanges.count; i++)
+    if(!send)
     {
-        ESM::Cell cellExplored;
+        player->mapChanges.cellsExplored.clear();
+        player->mapChanges.cellsExplored.resize(count);
+    }
 
-        if (send)
-            cellExplored = player->mapChanges.cellsExplored.at(i);
-
-        RW(cellExplored.mData, send, 1);
-        RW(cellExplored.mName, send, 1);
-
-        if (!send)
-            player->mapChanges.cellsExplored.push_back(cellExplored);
+    for (auto &&cellExplored : player->mapChanges.cellsExplored)
+    {
+        RW(cellExplored.mData, send, true);
+        RW(cellExplored.mName, send, true);
     }
 }

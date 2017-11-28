@@ -15,58 +15,56 @@ void PacketPlayerSpellbook::Packet(RakNet::BitStream *bs, bool send)
 
     RW(player->spellbookChanges.action, send);
 
+    uint32_t changesCount;
+    
     if (send)
-        player->spellbookChanges.count = (unsigned int) (player->spellbookChanges.spells.size());
-    else
-        player->spellbookChanges.spells.clear();
+        changesCount = static_cast<uint32_t>(player->spellbookChanges.spells.size());
 
-    RW(player->spellbookChanges.count, send);
+    RW(changesCount, send);
 
-    for (unsigned int i = 0; i < player->spellbookChanges.count; i++)
+    if(!send)
     {
-        ESM::Spell spell;
+        player->spellbookChanges.spells.clear();
+        player->spellbookChanges.spells.resize(changesCount);
+    }
 
-        if (send)
-            spell = player->spellbookChanges.spells.at(i);
+    for (auto &&spell : player->spellbookChanges.spells)
+    {
 
-        RW(spell.mId, send, 1);
+        RW(spell.mId, send, true);
 
         if(spell.mId.find("$dynamic") != string::npos)
         {
-            RW(spell.mName, send, 1);
+            RW(spell.mName, send, true);
 
-            RW(spell.mData.mType, send, 1);
-            RW(spell.mData.mCost, send, 1);
-            RW(spell.mData.mFlags, send, 1);
+            RW(spell.mData.mType, send, true);
+            RW(spell.mData.mCost, send, true);
+            RW(spell.mData.mFlags, send, true);
 
-            int effectCount = 0;
+            uint32_t effectCount;
             if (send)
-                effectCount = spell.mEffects.mList.size();
+                effectCount = static_cast<uint32_t>(spell.mEffects.mList.size());
 
-            RW(effectCount, send, 1);
-
-            for (unsigned int j = 0; j < effectCount; j++)
+            RW(effectCount, send, true);
+            
+            if (!send)
             {
-                ESM::ENAMstruct effect;
-                if (send)
-                    effect = spell.mEffects.mList.at(j);
+                spell.mEffects.mList.resize(effectCount);
+            }
 
-                RW(effect.mEffectID, send, 1);
-                RW(effect.mSkill, send, 1);
-                RW(effect.mAttribute, send, 1);
-                RW(effect.mRange, send, 1);
-                RW(effect.mArea, send, 1);
-                RW(effect.mDuration, send, 1);
-                RW(effect.mMagnMin, send, 1);
-                RW(effect.mMagnMax, send, 1);
+            for (auto &&effect : spell.mEffects.mList)
+            {
 
-                if(!send)
-                    spell.mEffects.mList.push_back(effect);
+                RW(effect.mEffectID, send, true);
+                RW(effect.mSkill, send, true);
+                RW(effect.mAttribute, send, true);
+                RW(effect.mRange, send, true);
+                RW(effect.mArea, send, true);
+                RW(effect.mDuration, send, true);
+                RW(effect.mMagnMin, send, true);
+                RW(effect.mMagnMax, send, true);
             }
         }
-
-        if (!send)
-            player->spellbookChanges.spells.push_back(spell);
     }
 
 }

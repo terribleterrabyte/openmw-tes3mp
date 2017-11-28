@@ -76,7 +76,7 @@ namespace mwmp
                 bs->Read(data);
         }
 
-        void RW(std::string &str, bool write, bool compress = 0)
+        void RW(std::string &str, bool write, bool compress = false)
         {
             if (write)
             {
@@ -101,10 +101,10 @@ namespace mwmp
         }
 
     protected:
-        unsigned char packetID;
+        uint8_t packetID;
         PacketReliability reliability;
         PacketPriority priority;
-        int orderChannel;
+        char orderChannel;
         RakNet::BitStream *bsRead, *bsSend, *bs;
         RakNet::RakPeerInterface *peer;
         RakNet::RakNetGUID guid;

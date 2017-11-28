@@ -40,7 +40,7 @@ void Books::addBook(const std::string &bookId)
 
 std::string Books::getBookId(unsigned i) const
 {
-    if (i >= player->bookChanges.count)
+    if (i >= player->bookChanges.books.size())
         return "invalid";
 
     return player->bookChanges.books.at(i).bookId;
@@ -48,7 +48,7 @@ std::string Books::getBookId(unsigned i) const
 
 unsigned Books::getChanges() const
 {
-    return player->bookChanges.count;
+    return player->bookChanges.books.size();
 }
 
 void Books::reset()

@@ -73,7 +73,7 @@ void Inventory::InitializeInventoryChanges()
 
 int Inventory::getChangesSize() const
 {
-    return netActor->getNetCreature()->inventoryChanges.count;
+    return netActor->getNetCreature()->inventoryChanges.items.size();
 }
 
 void Inventory::equipItem(unsigned short slot, const std::string& refId, unsigned int count, int charge)

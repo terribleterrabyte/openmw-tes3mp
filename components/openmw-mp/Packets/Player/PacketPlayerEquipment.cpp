@@ -16,10 +16,10 @@ void PacketPlayerEquipment::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
 
-    for (int i = 0; i < 19; i++)
+    for (auto &equipedItem : player->equipedItems)
     {
-        RW(player->equipedItems[i].refId, send, 1);
-        RW(player->equipedItems[i].count, send);
-        RW(player->equipedItems[i].charge, send);
+        RW(equipedItem.refId, send, true);
+        RW(equipedItem.count, send);
+        RW(equipedItem.charge, send);
     }
 }

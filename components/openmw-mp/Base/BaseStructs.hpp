@@ -22,7 +22,6 @@ namespace mwmp
     struct InventoryChanges
     {
         std::vector<Item> items;
-        unsigned int count;
         enum ACTION_TYPE
         {
             SET = 0,

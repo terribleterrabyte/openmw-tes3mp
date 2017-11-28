@@ -84,7 +84,6 @@ namespace mwmp
     struct AttributeChanges
     {
         std::vector<int> attributeIndexes;
-        unsigned int count;
     };
 
     // Track only the indexes of the skills that have been changed,
@@ -92,19 +91,16 @@ namespace mwmp
     struct SkillChanges
     {
         std::vector<int> skillIndexes;
-        unsigned int count;
     };
 
     struct JournalChanges
     {
         std::vector<JournalItem> journalItems;
-        unsigned int count;
     };
 
     struct FactionChanges
     {
         std::vector<Faction> factions;
-        unsigned int count;
 
         enum FACTION_ACTION
         {
@@ -119,31 +115,27 @@ namespace mwmp
     struct TopicChanges
     {
         std::vector<Topic> topics;
-        unsigned int count;
     };
 
     struct KillChanges
     {
         std::vector<Kill> kills;
-        unsigned int count;
     };
 
     struct BookChanges
     {
         std::vector<Book> books;
-        unsigned int count;
     };
 
     struct MapChanges
     {
         std::vector<ESM::Cell> cellsExplored;
-        unsigned int count;
     };
 
     struct SpellbookChanges
     {
         std::vector<ESM::Spell> spells;
-        unsigned int count;
+
         enum ACTION_TYPE
         {
             SET = 0,
@@ -156,7 +148,6 @@ namespace mwmp
     struct CellStateChanges
     {
         std::vector<CellState> cellStates;
-        unsigned int count;
     };
 
     enum RESURRECT_TYPE
@@ -225,9 +216,7 @@ namespace mwmp
         BasePlayer(RakNet::RakNetGUID guid) : guid(guid)
         {
             inventoryChanges.action = 0;
-            inventoryChanges.count = 0;
             spellbookChanges.action = 0;
-            spellbookChanges.count = 0;
             useCreatureName = false;
             isWerewolf = false;
         }

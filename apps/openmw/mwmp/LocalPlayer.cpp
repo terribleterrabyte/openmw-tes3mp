@@ -1091,7 +1091,6 @@ void LocalPlayer::sendInventory()
         inventoryChanges.items.push_back(item);
     }
 
-    inventoryChanges.count = (unsigned int) inventoryChanges.items.size();
     inventoryChanges.action = InventoryChanges::SET;
     getNetworking()->getPlayerPacket(ID_PLAYER_INVENTORY)->setPlayer(this);
     getNetworking()->getPlayerPacket(ID_PLAYER_INVENTORY)->Send();
