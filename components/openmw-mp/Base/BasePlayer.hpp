@@ -190,7 +190,7 @@ namespace mwmp
         {
             int32_t id;
             short width, height;
-            enum class WidgetType: int
+            enum class WidgetType: uint8_t
             {
                 Button,
                 Editbox,
