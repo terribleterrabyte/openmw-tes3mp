@@ -54,7 +54,7 @@ bool WorldPacket::PacketHeader(RakNet::BitStream *bs, bool send)
         return false;
     }
 
-    if(!send)
+    if (!send)
     {
         event->worldObjects.resize(event->worldObjectCount);
     }

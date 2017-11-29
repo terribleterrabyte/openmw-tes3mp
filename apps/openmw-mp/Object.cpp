@@ -280,7 +280,7 @@ shared_ptr<vector<shared_ptr<Object>>> ObjectController::copyObjects(mwmp::BaseE
 {
     auto objects = make_shared<vector<shared_ptr<Object>>>();
 
-    for(auto &obj : event.worldObjects)
+    for (auto &obj : event.worldObjects)
     {
         auto object = new Object;
         object->copied = true;
@@ -294,7 +294,7 @@ shared_ptr<vector<shared_ptr<Container>>> ObjectController::copyContainers(mwmp:
 {
     auto containers = make_shared<vector<shared_ptr<Container>>>();
 
-    for(auto &obj : event.worldObjects)
+    for (auto &obj : event.worldObjects)
     {
         auto container = new Container;
         container->copied = true;
@@ -321,7 +321,7 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     mwmp::BaseEvent events[Type::LAST];
     bool changed[Type::LAST];
 
-    for(auto &e : events)
+    for (auto &e : events)
     {
         e.action = mwmp::BaseEvent::SET;
         e.guid = player->guid;
@@ -329,48 +329,48 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     }
 
 
-    for(auto &object : *objects)
+    for (auto &object : *objects)
     {
         //sendObject(player.get(), object.get());
 
         bool validNewObjOrCopy = (!object->copied && object->changedBase) || object->copied;
 
-        if(object->changedDoorState && validNewObjOrCopy)
+        if (object->changedDoorState && validNewObjOrCopy)
         {
             changed[Type::DOOR_STATE] = true;
             events[Type::DOOR_STATE].worldObjects.push_back(object->object);
         }
-        if(object->changedObjectState && validNewObjOrCopy)
+        if (object->changedObjectState && validNewObjOrCopy)
         {
             changed[Type::OBJECT_STATE] = true;
             events[Type::OBJECT_STATE].worldObjects.push_back(object->object);
         }
-        if(object->changedObjectScale && validNewObjOrCopy)
+        if (object->changedObjectScale && validNewObjOrCopy)
         {
             changed[Type::OBJECT_SCALE] = true;
             events[Type::OBJECT_SCALE].worldObjects.push_back(object->object);
         }
-        if(object->changedObjectTrap && validNewObjOrCopy)
+        if (object->changedObjectTrap && validNewObjOrCopy)
         {
             changed[Type::OBJECT_TRAP] = true;
             events[Type::OBJECT_TRAP].worldObjects.push_back(object->object);
         }
-        if(object->changedObjectLock && validNewObjOrCopy)
+        if (object->changedObjectLock && validNewObjOrCopy)
         {
             changed[Type::OBJECT_LOCK] = true;
             events[Type::OBJECT_LOCK].worldObjects.push_back(object->object);
         }
-        if(object->changedObjectDelete && validNewObjOrCopy)
+        if (object->changedObjectDelete && validNewObjOrCopy)
         {
             changed[Type::OBJECT_DELETE] = true;
             events[Type::OBJECT_DELETE].worldObjects.push_back(object->object);
         }
-        if(object->changedObjectSpawn && validNewObjOrCopy)
+        if (object->changedObjectSpawn && validNewObjOrCopy)
         {
             changed[Type::OBJECT_SPAWN] = true;
             events[Type::OBJECT_SPAWN].worldObjects.push_back(object->object);
         }
-        if(object->changedObjectPlace && validNewObjOrCopy)
+        if (object->changedObjectPlace && validNewObjOrCopy)
         {
             changed[Type::OBJECT_PLACE] = true;
             events[Type::OBJECT_PLACE].worldObjects.push_back(object->object);
@@ -379,56 +379,56 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
 
     auto worldCtrl = mwmp::Networking::get().getWorldPacketController();
 
-    if(changed[Type::DOOR_STATE])
+    if (changed[Type::DOOR_STATE])
     {
         auto packet = worldCtrl->GetPacket(ID_DOOR_STATE);
         auto &event = events[Type::DOOR_STATE];
         packet->setEvent(&event);
         packet->Send(event.guid);
     }
-    if(changed[Type::OBJECT_STATE])
+    if (changed[Type::OBJECT_STATE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_STATE);
         auto &event = events[Type::OBJECT_STATE];
         packet->setEvent(&event);
         packet->Send(event.guid);
     }
-    if(changed[Type::OBJECT_SCALE])
+    if (changed[Type::OBJECT_SCALE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_SCALE);
         auto &event = events[Type::OBJECT_SCALE];
         packet->setEvent(&event);
         packet->Send(event.guid);
     }
-    if(changed[Type::OBJECT_TRAP])
+    if (changed[Type::OBJECT_TRAP])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_TRAP);
         auto &event = events[Type::OBJECT_TRAP];
         packet->setEvent(&event);
         packet->Send(event.guid);
     }
-    if(changed[Type::OBJECT_LOCK])
+    if (changed[Type::OBJECT_LOCK])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_LOCK);
         auto &event = events[Type::OBJECT_LOCK];
         packet->setEvent(&event);
         packet->Send(event.guid);
     }
-    if(changed[Type::OBJECT_DELETE])
+    if (changed[Type::OBJECT_DELETE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_DELETE);
         auto &event = events[Type::OBJECT_DELETE];
         packet->setEvent(&event);
         packet->Send(event.guid);
     }
-    if(changed[Type::OBJECT_SCALE])
+    if (changed[Type::OBJECT_SCALE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_SPAWN);
         auto &event = events[Type::OBJECT_SCALE];
         packet->setEvent(&event);
         packet->Send(event.guid);
     }
-    if(changed[Type::OBJECT_PLACE])
+    if (changed[Type::OBJECT_PLACE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_PLACE);
         auto &event = events[Type::OBJECT_PLACE];
@@ -445,10 +445,10 @@ void ObjectController::sendContainers(shared_ptr<Player> player, shared_ptr<vect
     event.action = mwmp::BaseEvent::SET;
     event.guid = player->guid;
 
-    for(auto &object : *objects)
+    for (auto &object : *objects)
     {
         bool validNewObjOrCopy = (!object->copied && object->changedBase) || object->copied;
-        if(object->changed && validNewObjOrCopy)
+        if (object->changed && validNewObjOrCopy)
             event.worldObjects.push_back(object->object);
     }
 

@@ -17,7 +17,7 @@ void mwmp::PacketPlayerKillCount::Packet(RakNet::BitStream *bs, bool send)
 
     RW(count, send);
 
-    if(!send)
+    if (!send)
     {
         player->killChanges.kills.clear();
         player->killChanges.kills.resize(count);

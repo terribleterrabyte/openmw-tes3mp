@@ -126,7 +126,7 @@ public:
 
         }
         std::string str = Message(message, std::forward<Args&&>(args)...);
-        if(str.back() != '\n')
+        if (str.back() != '\n')
             std::cout << str << std::endl;
         else
             std::cout << str << std::flush;

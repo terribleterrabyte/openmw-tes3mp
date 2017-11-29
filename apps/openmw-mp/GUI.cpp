@@ -106,16 +106,16 @@ std::shared_ptr<Window> GUI::createWindow(short x, short y, sol::function fn, so
 {
     int id = 0;
 
-    for(auto &window : windows)
+    for (auto &window : windows)
     {
-        if(window.second == nullptr)
+        if (window.second == nullptr)
         {
             id = window.first;
             break;
         }
     }
 
-    if(id == 0)
+    if (id == 0)
         id = lastWindowId++;
 
     auto window = std::make_shared<Window>(player, id);
@@ -129,7 +129,7 @@ std::shared_ptr<Window> GUI::createWindow(short x, short y, sol::function fn, so
 void GUI::deleteWindow(std::shared_ptr<Window> window)
 {
     auto it = windows.find(window->getID());
-    if(it != windows.end())
+    if (it != windows.end())
     {
         it->second = nullptr;
     }
@@ -138,7 +138,7 @@ void GUI::deleteWindow(std::shared_ptr<Window> window)
 void GUI::onGUIWindowAction()
 {
     auto it = windows.find(player->guiWindow.id);
-    if(it != windows.end() && it->second != nullptr)
+    if (it != windows.end() && it->second != nullptr)
     {
         it->second->call(player->guiWindow);
     }

@@ -25,7 +25,7 @@ void PacketPlayerSkill::Packet(RakNet::BitStream *bs, bool send)
 
     RW(count, send);
 
-    if(!send)
+    if (!send)
     {
         player->skillChanges.skillIndexes.clear();
         player->skillChanges.skillIndexes.resize(count);

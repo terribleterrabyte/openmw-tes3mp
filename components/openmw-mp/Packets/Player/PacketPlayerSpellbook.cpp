@@ -22,7 +22,7 @@ void PacketPlayerSpellbook::Packet(RakNet::BitStream *bs, bool send)
 
     RW(changesCount, send);
 
-    if(!send)
+    if (!send)
     {
         player->spellbookChanges.spells.clear();
         player->spellbookChanges.spells.resize(changesCount);
@@ -33,7 +33,7 @@ void PacketPlayerSpellbook::Packet(RakNet::BitStream *bs, bool send)
 
         RW(spell.mId, send, true);
 
-        if(spell.mId.find("$dynamic") != string::npos)
+        if (spell.mId.find("$dynamic") != string::npos)
         {
             RW(spell.mName, send, true);
 

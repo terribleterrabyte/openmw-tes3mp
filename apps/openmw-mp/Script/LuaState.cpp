@@ -405,7 +405,7 @@ void checkDependencies(const vector<ServerPluginInfo> &mods, const ServerPluginI
                 stringstream sstr;
                 sstr << depNameRequest << ": version \"" << depVersionFound << "\" is not applicable for \""
                      << spi.name << "\" expected \"" << depVersionRequest + "\"";
-                if(fatal)
+                if (fatal)
                     throw runtime_error(sstr.str());
                 else
                     LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "%s", sstr.str().c_str());
@@ -415,7 +415,7 @@ void checkDependencies(const vector<ServerPluginInfo> &mods, const ServerPluginI
         {
             stringstream sstr;
             sstr << depNameRequest + " \"" << depVersionRequest << "\" not found.";
-            if(fatal)
+            if (fatal)
                 throw runtime_error(sstr.str());
             else
                 LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "%s", sstr.str().c_str());
@@ -512,7 +512,7 @@ void LuaState::loadMods(const std::string &modDir, std::vector<std::string> *lis
                 modInfo.author = pt.get<string>("author");
                 modInfo.version = pt.get<string>("version");
 
-                for(const auto &v : pt.get_child("dependencies"))
+                for (const auto &v : pt.get_child("dependencies"))
                     modInfo.dependencies.emplace_back(v.first, v.second.get_value<string>());
 
                 auto name = pt.get<string>("name");

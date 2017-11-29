@@ -21,7 +21,7 @@ void mwmp::PacketPlayerCellState::Packet(RakNet::BitStream *bs, bool send)
 
     RW(count, send);
 
-    if(!send)
+    if (!send)
     {
         player->cellStateChanges.cellStates.clear();
         player->cellStateChanges.cellStates.resize(count);

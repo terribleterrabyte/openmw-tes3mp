@@ -28,12 +28,12 @@ void PacketPlayerActiveSkills::Packet(RakNet::BitStream *bs, bool send)
         RW(spell.second.mTimeStamp, send);
         uint32_t effectsCount;
 
-        if(send)
+        if (send)
             effectsCount = static_cast<uint32_t>(spell.second.mEffects.size());
 
         RW(effectsCount, send);
 
-        if(!send)
+        if (!send)
             spell.second.mEffects.resize(effectsCount);
 
         for (auto &&effect : spell.second.mEffects)

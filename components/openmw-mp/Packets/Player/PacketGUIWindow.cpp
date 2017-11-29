@@ -27,7 +27,7 @@ void PacketGUIWindow::Packet(RakNet::BitStream *bs, bool send)
         size = static_cast<int32_t>(player->guiWindow.widgets.size());
     RW(size, send);
 
-    if(!send)
+    if (!send)
         player->guiWindow.widgets.resize(size);
 
 
@@ -42,7 +42,7 @@ void PacketGUIWindow::Packet(RakNet::BitStream *bs, bool send)
         {
             RW(widget.disabled, send);
 
-            if(widget.type != BasePlayer::GUIWindow::WidgetType::Button)
+            if (widget.type != BasePlayer::GUIWindow::WidgetType::Button)
             {
                 RW(widget.width, send);
                 RW(widget.height, send);

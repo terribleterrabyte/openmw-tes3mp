@@ -20,7 +20,7 @@ void PacketPlayerBook::Packet(RakNet::BitStream *bs, bool send)
 
     RW(count, send);
 
-    if(!send)
+    if (!send)
     {
         player->bookChanges.books.clear();
         player->bookChanges.books.resize(count);

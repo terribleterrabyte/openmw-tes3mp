@@ -28,7 +28,7 @@ void PacketContainer::Packet(RakNet::BitStream *bs, bool send)
 
         RW(worldObject.containerItemCount, send);
 
-        if(!send)
+        if (!send)
         {
             worldObject.containerItems.clear();
             worldObject.containerItems.resize(worldObject.containerItemCount);
@@ -41,7 +41,7 @@ void PacketContainer::Packet(RakNet::BitStream *bs, bool send)
             return;
         }
 
-        for(auto &&containerItem: worldObject.containerItems)
+        for (auto &&containerItem: worldObject.containerItems)
         {
             RW(containerItem.refId, send);
             RW(containerItem.count, send);

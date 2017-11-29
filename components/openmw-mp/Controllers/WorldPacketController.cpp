@@ -63,13 +63,13 @@ mwmp::WorldPacket *mwmp::WorldPacketController::GetPacket(RakNet::MessageID id)
 
 void mwmp::WorldPacketController::SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream)
 {
-    for(const auto &packet : packets)
+    for (const auto &packet : packets)
         packet.second->SetStreams(inStream, outStream);
 }
 
 bool mwmp::WorldPacketController::ContainsPacket(RakNet::MessageID id)
 {
-    for(const auto &packet : packets)
+    for (const auto &packet : packets)
     {
         if (packet.first == id)
             return true;

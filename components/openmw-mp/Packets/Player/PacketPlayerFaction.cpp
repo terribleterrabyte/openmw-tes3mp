@@ -22,7 +22,7 @@ void PacketPlayerFaction::Packet(RakNet::BitStream *bs, bool send)
 
     RW(count, send);
 
-    if(!send)
+    if (!send)
     {
         player->factionChanges.factions.clear();
         player->factionChanges.factions.resize(count);

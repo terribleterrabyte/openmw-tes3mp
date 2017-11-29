@@ -98,12 +98,12 @@ void Window::call(const BasePlayer::GUIWindow &window)
 void Window::setCallback(sol::function callback)
 {
     /*int id = 0;
-    for(auto &&cb : callbacks)
+    for (auto &&cb : callbacks)
     {
-        if(cb.second.get() == nullptr)
+        if (cb.second.get() == nullptr)
             id = cb.first;
     }
-    if(id == 0)
+    if (id == 0)
         id = lastId++;
     callbacks[id] = make_unique(callback);*/
     this->callback = callback;
@@ -122,7 +122,7 @@ void Window::addButton(short x, short y, const std::string &label, sol::optional
     widget.posY = y;
     widget.name = label;
     widget.type = BasePlayer::GUIWindow::WidgetType::Button;
-    if(active)
+    if (active)
         widget.disabled = !active.value();
     else
         widget.disabled = false;
@@ -138,7 +138,7 @@ void Window::addEditBox(short x, short y, short w, short h, const std::string &i
     widget.height = h;
     widget.name = id;
     widget.type = BasePlayer::GUIWindow::WidgetType::Editbox;
-    if(active)
+    if (active)
         widget.disabled = !active.value();
     else
         widget.disabled = false;
@@ -166,7 +166,7 @@ void Window::addPassiveListBox(short x, short y, short w, short h, const std::st
     widget.name = id;
     widget.type = BasePlayer::GUIWindow::WidgetType::ListBoxPassive;
 
-    if(active)
+    if (active)
         widget.disabled = !active.value();
     else
         widget.disabled = false;
@@ -187,7 +187,7 @@ void Window::addActiveListBox(short x, short y, short w, short h, const std::str
     widget.height = h;
     widget.name = id;
     widget.type = BasePlayer::GUIWindow::WidgetType::ListBoxActive;
-    if(active)
+    if (active)
         widget.disabled = !active.value();
     else
         widget.disabled = false;
@@ -207,7 +207,7 @@ void Window::addSlider(short x, short y, short w, short h, const std::string &id
     widget.height = h;
     widget.name = id;
     widget.type = BasePlayer::GUIWindow::WidgetType::Slider;
-    if(active)
+    if (active)
         widget.disabled = !active.value();
     else
         widget.disabled = false;

@@ -20,7 +20,7 @@ void PacketPlayerJournal::Packet(RakNet::BitStream *bs, bool send)
 
     RW(count, send);
 
-    if(!send)
+    if (!send)
     {
         player->journalChanges.journalItems.clear();
         player->journalChanges.journalItems.resize(count);

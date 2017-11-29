@@ -19,7 +19,7 @@ void PacketPlayerAttribute::Packet(RakNet::BitStream *bs, bool send)
 
     RW(count, send);
 
-    if(!send)
+    if (!send)
     {
         player->attributeChanges.attributeIndexes.clear();
         player->attributeChanges.attributeIndexes.resize(count);

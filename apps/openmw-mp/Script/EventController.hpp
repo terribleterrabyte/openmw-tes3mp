@@ -90,9 +90,9 @@ public:
     {
         lastCalled = functions.end();
         _stop = false;
-        for(CIterator iter = functions.begin(); iter != functions.end(); ++iter)
+        for (CIterator iter = functions.begin(); iter != functions.end(); ++iter)
         {
-            if(!_stop)
+            if (!_stop)
                 iter->second.call(std::forward<Args>(args)...);
             else
             {
@@ -110,7 +110,7 @@ public:
 
         lastCalled = functions.end();
         _stop = false;
-        for(CIterator iter = functions.begin(); iter != functions.end(); ++iter)
+        for (CIterator iter = functions.begin(); iter != functions.end(); ++iter)
         {
             if (!_stop)
                 ret = iter->second.call(std::forward<Args>(args)...);

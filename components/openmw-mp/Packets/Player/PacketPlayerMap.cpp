@@ -20,7 +20,7 @@ void PacketPlayerMap::Packet(RakNet::BitStream *bs, bool send)
 
     RW(count, send);
 
-    if(!send)
+    if (!send)
     {
         player->mapChanges.cellsExplored.clear();
         player->mapChanges.cellsExplored.resize(count);

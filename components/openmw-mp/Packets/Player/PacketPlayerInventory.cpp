@@ -26,7 +26,7 @@ void PacketPlayerInventory::Packet(RakNet::BitStream *bs, bool send)
 
     RW(count, send);
 
-    if(!send)
+    if (!send)
     {
         player->inventoryChanges.items.clear();
         player->inventoryChanges.items.resize(count);

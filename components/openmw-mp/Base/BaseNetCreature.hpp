@@ -36,10 +36,10 @@ namespace mwmp
 
         inline void copyCreatureStats(ESM::CreatureStats &stats)
         {
-            for(int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)
                 creatureStats.mDynamic[i] = stats.mDynamic[i];
 
-            for(int i = 0; i < 8; i++)
+            for (int i = 0; i < 8; i++)
                 creatureStats.mAttributes[i] = stats.mAttributes[i];
 
             creatureStats.mLevel = stats.mLevel;

@@ -241,7 +241,7 @@ void ActorController::sendList(std::shared_ptr<Player> player, std::vector<std::
     actorList.guid = player->guid;
     actorList.action = mwmp::BaseActorList::SET;
 
-    for(auto &actor : actors)
+    for (auto &actor : actors)
     {
         actorList.baseActors.push_back(actor->actor);
     }
