@@ -21,17 +21,17 @@ void PacketPlayerSkill::Packet(RakNet::BitStream *bs, bool send)
     uint32_t count;
 
     if (send)
-        count = static_cast<uint32_t>(player->skillChanges.skillIndexes.size());
+        count = static_cast<uint32_t>(player->skillIndexChanges.size());
 
     RW(count, send);
 
     if (!send)
     {
-        player->skillChanges.skillIndexes.clear();
-        player->skillChanges.skillIndexes.resize(count);
+        player->skillIndexChanges.clear();
+        player->skillIndexChanges.resize(count);
     }
 
-    for (auto && skillId : player->skillChanges.skillIndexes)
+    for (auto && skillId : player->skillIndexChanges)
     {
         RW(skillId, send);
         RW(player->npcStats.mSkills[skillId], send);

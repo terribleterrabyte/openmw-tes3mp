@@ -15,17 +15,17 @@ void PacketPlayerAttribute::Packet(RakNet::BitStream *bs, bool send)
 
     uint32_t count;
     if (send)
-        count = static_cast<uint32_t>(player->attributeChanges.attributeIndexes.size());
+        count = static_cast<uint32_t>(player->attributeIndexChanges.size());
 
     RW(count, send);
 
     if (!send)
     {
-        player->attributeChanges.attributeIndexes.clear();
-        player->attributeChanges.attributeIndexes.resize(count);
+        player->attributeIndexChanges.clear();
+        player->attributeIndexChanges.resize(count);
     }
 
-    for (auto &&attributeIndex :  player->attributeChanges.attributeIndexes)
+    for (auto &&attributeIndex :  player->attributeIndexChanges)
     {
         RW(attributeIndex, send);
 

@@ -79,20 +79,6 @@ namespace mwmp
         int type; // 0 - Cell load, 1 - Cell unload
     };
 
-    // Track only the indexes of the attributes that have been changed,
-    // with the attribute values themselves being stored in creatureStats.mAttributes
-    struct AttributeChanges
-    {
-        std::vector<int> attributeIndexes;
-    };
-
-    // Track only the indexes of the skills that have been changed,
-    // with the skill values themselves being stored in npcStats.mSkills
-    struct SkillChanges
-    {
-        std::vector<int> skillIndexes;
-    };
-
     struct JournalChanges
     {
         std::vector<JournalItem> journalItems;
@@ -238,8 +224,13 @@ namespace mwmp
         GUIWindow guiWindow;
         double hour;
 
-        AttributeChanges attributeChanges;
-        SkillChanges skillChanges;
+        // Track only the indexes of the attributes that have been changed,
+        // with the attribute values themselves being stored in creatureStats.mAttributes
+        std::vector<int> attributeIndexChanges;
+
+        // Track only the indexes of the skills that have been changed,
+        // with the skill values themselves being stored in npcStats.mSkills
+        std::vector<int> skillIndexChanges;
 
         SpellbookChanges spellbookChanges;
         JournalChanges journalChanges;

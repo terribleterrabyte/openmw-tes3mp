@@ -165,7 +165,7 @@ void Player::update()
         packet->Send(false);
         packet->Send(true);
 
-        attributeChanges.attributeIndexes.clear();
+        attributeIndexChanges.clear();
     }
 
     if (skillsChanged)
@@ -175,7 +175,7 @@ void Player::update()
         packet->Send(false);
         packet->Send(true);
 
-        skillChanges.skillIndexes.clear();
+        skillIndexChanges.clear();
     }
 
     if (inventory.isEquipmentChanged())
@@ -493,8 +493,8 @@ void Player::setAttribute(unsigned short attributeId, int base, int current)
     creatureStats.mAttributes[attributeId].mBase = base;
     creatureStats.mAttributes[attributeId].mCurrent = current;
 
-    if (!Utils::vectorContains(&attributeChanges.attributeIndexes, attributeId))
-        attributeChanges.attributeIndexes.push_back(attributeId);
+    if (!Utils::vectorContains(&attributeIndexChanges, attributeId))
+        attributeIndexChanges.push_back(attributeId);
 
     attributesChanged = true;
 }
@@ -519,8 +519,8 @@ void Player::setSkill(unsigned short skillId, int base, int current, float progr
     skill.mCurrent = current;
     skill.mProgress = progress;
 
-    if (!Utils::vectorContains(&skillChanges.skillIndexes, skillId))
-        skillChanges.skillIndexes.push_back(skillId);
+    if (!Utils::vectorContains(&skillIndexChanges, skillId))
+        skillIndexChanges.push_back(skillId);
 
     skillsChanged = true;
 }
@@ -537,8 +537,8 @@ void Player::setSkillIncrease(unsigned short attributeId, int increase)
 
     npcStats.mSkillIncrease[attributeId] = increase;
 
-    if (!Utils::vectorContains(&attributeChanges.attributeIndexes, attributeId))
-        attributeChanges.attributeIndexes.push_back(attributeId);
+    if (!Utils::vectorContains(&attributeIndexChanges, attributeId))
+        attributeIndexChanges.push_back(attributeId);
 
     attributesChanged = true;
 }
