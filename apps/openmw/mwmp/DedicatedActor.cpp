@@ -168,8 +168,8 @@ void DedicatedActor::setEquipment()
     {
         MWWorld::ContainerStoreIterator it = invStore.getSlot(slot);
 
-        const string &packetRefId = equipedItems[slot].refId;
-        int packetCharge = equipedItems[slot].charge;
+        const string &packetRefId = equipmentItems[slot].refId;
+        int packetCharge = equipmentItems[slot].charge;
         std::string storeRefId = "";
         bool equal = false;
 
@@ -186,7 +186,7 @@ void DedicatedActor::setEquipment()
         if (packetRefId.empty() || equal)
             continue;
 
-        int count = equipedItems[slot].count;
+        int count = equipmentItems[slot].count;
 
         if (hasItem(packetRefId, packetCharge))
             equipItem(packetRefId, packetCharge);

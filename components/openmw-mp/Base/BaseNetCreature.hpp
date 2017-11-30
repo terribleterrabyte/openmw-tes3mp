@@ -26,7 +26,12 @@ namespace mwmp
         bool isChangingRegion;
 
         Attack attack;
-        Item equipedItems[19];
+
+        // Track only the indexes of the equipment items that have been changed,
+        // with the items themselves being stored in equipmentItems
+        std::vector<int> equipmentIndexChanges;
+
+        Item equipmentItems[19];
         InventoryChanges inventoryChanges;
 
         unsigned int movementFlags;

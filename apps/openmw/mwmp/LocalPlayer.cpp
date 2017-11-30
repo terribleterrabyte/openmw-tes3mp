@@ -235,9 +235,9 @@ void LocalPlayer::updateAttributes(bool forceUpdate)
             ptrNpcStats.getSkillIncrease(i) != npcStats.mSkillIncrease[i] ||
             forceUpdate)
         {
+            attributeIndexChanges.push_back(i);
             ptrNpcStats.getAttribute(i).writeState(creatureStats.mAttributes[i]);
             npcStats.mSkillIncrease[i] = ptrNpcStats.getSkillIncrease(i);
-            attributeIndexChanges.push_back(i);
         }
     }
 
@@ -265,8 +265,8 @@ void LocalPlayer::updateSkills(bool forceUpdate)
             ptrNpcStats.getSkill(i).getProgress() != npcStats.mSkills[i].mProgress ||
             forceUpdate)
         {
-            ptrNpcStats.getSkill(i).writeState(npcStats.mSkills[i]);
             skillIndexChanges.push_back(i);
+            ptrNpcStats.getSkill(i).writeState(npcStats.mSkills[i]);
         }
     }
 
@@ -399,24 +399,19 @@ void LocalPlayer::updateEquipment(bool forceUpdate)
 {
     MWWorld::Ptr ptrPlayer = getPlayerPtr();
 
-    static bool equipmentChanged = false;
-
-    if (forceUpdate)
-        equipmentChanged = true;
-
     MWWorld::InventoryStore &invStore = ptrPlayer.getClass().getInventoryStore(ptrPlayer);
     for (int slot = 0; slot < MWWorld::InventoryStore::Slots; slot++)
     {
-        auto &item = equipedItems[slot];
+        auto &item = equipmentItems[slot];
         MWWorld::ContainerStoreIterator it = invStore.getSlot(slot);
         if (it != invStore.end())
         {
-            if (!::Misc::StringUtils::ciEqual(it->getCellRef().getRefId(), equipedItems[slot].refId))
+            if (!::Misc::StringUtils::ciEqual(it->getCellRef().getRefId(), equipmentItems[slot].refId) || forceUpdate)
             {
-                equipmentChanged = true;
-
+                equipmentIndexChanges.push_back(slot);
                 item.refId = it->getCellRef().getRefId();
                 item.charge = it->getCellRef().getCharge();
+
                 if (slot == MWWorld::InventoryStore::Slot_CarriedRight)
                 {
                     MWMechanics::WeaponType weaptype;
@@ -431,18 +426,18 @@ void LocalPlayer::updateEquipment(bool forceUpdate)
         }
         else if (!item.refId.empty())
         {
-            equipmentChanged = true;
+            equipmentIndexChanges.push_back(slot);
             item.refId = "";
             item.count = 0;
             item.charge = 0;
         }
     }
 
-    if (equipmentChanged)
+    if (equipmentIndexChanges.size() > 0)
     {
         getNetworking()->getPlayerPacket(ID_PLAYER_EQUIPMENT)->setPlayer(this);
         getNetworking()->getPlayerPacket(ID_PLAYER_EQUIPMENT)->Send();
-        equipmentChanged = false;
+        equipmentIndexChanges.clear();
     }
 }
 
@@ -901,7 +896,7 @@ void LocalPlayer::setEquipment()
 
     for (int slot = 0; slot < MWWorld::InventoryStore::Slots; slot++)
     {
-        mwmp::Item &currentItem = equipedItems[slot];
+        mwmp::Item &currentItem = equipmentItems[slot];
 
         if (!currentItem.refId.empty())
         {
@@ -911,16 +906,16 @@ void LocalPlayer::setEquipment()
 
             if (it == ptrInventory.end()) // If the item is not in our inventory, add it
             {
-                auto equipped = equipedItems[slot];
+                auto equipmentItem = equipmentItems[slot];
 
                 try
                 {
-                    auto addIter = ptrInventory.ContainerStore::add(equipped.refId.c_str(), equipped.count, ptrPlayer);
+                    auto addIter = ptrInventory.ContainerStore::add(equipmentItem.refId.c_str(), equipmentItem.count, ptrPlayer);
                     ptrInventory.equip(slot, addIter, ptrPlayer);
                 }
                 catch (std::exception&)
                 {
-                    LOG_APPEND(Log::LOG_INFO, "- Ignored addition of invalid equipment item %s", equipped.refId.c_str());
+                    LOG_APPEND(Log::LOG_INFO, "- Ignored addition of invalid equipment item %s", equipmentItem.refId.c_str());
                 }
             }
             else

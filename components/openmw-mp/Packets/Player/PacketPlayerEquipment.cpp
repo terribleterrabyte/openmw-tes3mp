@@ -1,7 +1,3 @@
-//
-// Created by koncord on 07.01.16.
-//
-
 #include "PacketPlayerEquipment.hpp"
 #include <components/openmw-mp/NetworkMessages.hpp>
 
@@ -16,10 +12,24 @@ void PacketPlayerEquipment::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
 
-    for (auto &equipedItem : player->equipedItems)
+    uint32_t count;
+    if (send)
+        count = static_cast<uint32_t>(player->equipmentIndexChanges.size());
+
+    RW(count, send);
+
+    if (!send)
     {
-        RW(equipedItem.refId, send, true);
-        RW(equipedItem.count, send);
-        RW(equipedItem.charge, send);
+        player->equipmentIndexChanges.clear();
+        player->equipmentIndexChanges.resize(count);
+    }
+
+    for (auto &&equipmentIndex : player->equipmentIndexChanges)
+    {
+        RW(equipmentIndex, send);
+
+        RW(player->equipmentItems[equipmentIndex].refId, send);
+        RW(player->equipmentItems[equipmentIndex].count, send);
+        RW(player->equipmentItems[equipmentIndex].charge, send);
     }
 }

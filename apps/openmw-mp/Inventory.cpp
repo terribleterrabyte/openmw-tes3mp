@@ -78,9 +78,13 @@ int Inventory::getChangesSize() const
 
 void Inventory::equipItem(unsigned short slot, const std::string& refId, unsigned int count, int charge)
 {
-    netActor->getNetCreature()->equipedItems[slot].refId = refId;
-    netActor->getNetCreature()->equipedItems[slot].count = count;
-    netActor->getNetCreature()->equipedItems[slot].charge = charge;
+    netActor->getNetCreature()->equipmentItems[slot].refId = refId;
+    netActor->getNetCreature()->equipmentItems[slot].count = count;
+    netActor->getNetCreature()->equipmentItems[slot].charge = charge;
+
+    if (!Utils::vectorContains(&netActor->getNetCreature()->equipmentIndexChanges, slot))
+        netActor->getNetCreature()->equipmentIndexChanges.push_back(slot);
+
     equipmentChanged = true;
 }
 
@@ -126,14 +130,14 @@ void Inventory::removeItem(const std::string &refId, unsigned short count)
 bool Inventory::hasItemEquipped(const std::string &refId) const
 {
     for (int slot = 0; slot < MWWorld::InventoryStore::Slots; slot++)
-        if (Misc::StringUtils::ciEqual(netActor->getNetCreature()->equipedItems[slot].refId, refId))
+        if (Misc::StringUtils::ciEqual(netActor->getNetCreature()->equipmentItems[slot].refId, refId))
             return true;
     return false;
 }
 
 std::tuple<std::string, int, int> Inventory::getEquipmentItem(unsigned short slot) const
 {
-    const auto &item = netActor->getNetCreature()->equipedItems[slot];
+    const auto &item = netActor->getNetCreature()->equipmentItems[slot];
     return make_tuple(item.refId, item.count, item.charge);
 }
 
@@ -146,6 +150,8 @@ std::tuple<std::string, int, int> Inventory::getInventoryItem(unsigned int slot)
 void Inventory::resetEquipmentFlag()
 {
     equipmentChanged = false;
+
+    netActor->getNetCreature()->equipmentIndexChanges.clear();
 }
 
 bool Inventory::isEquipmentChanged()
