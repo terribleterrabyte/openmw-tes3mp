@@ -24,8 +24,8 @@ void EventController::Init(LuaState &lua)
     eventsTable["raise"] = [&lua](unsigned event, sol::table data) {
         lua.getEventCtrl().raiseEvent(event, data);
     };
-    eventsTable["raiseSpecified"] = [&lua](unsigned event, const std::string &modname, sol::table data) {
-        lua.getEventCtrl().raiseEvent(event, data, modname);
+    eventsTable["raiseSpecified"] = [&lua](unsigned event, const std::string &moduleName, sol::table data) {
+        lua.getEventCtrl().raiseEvent(event, data, moduleName);
     };
 }
 
@@ -132,15 +132,15 @@ Event EventController::createEvent()
     return lastEvent++;
 }
 
-void EventController::raiseEvent(Event id, sol::table data, const string &modname)
+void EventController::raiseEvent(Event id, sol::table data, const string &moduleName)
 {
     auto iter = events.find(id);
     if (iter != events.end())
     {
-        if (!modname.empty())
+        if (!moduleName.empty())
         {
-            auto f = std::find_if (iter->second.begin(), iter->second.end(), [&modname](const auto &item){
-                return item.first["ModName"]["name"] == modname;
+            auto f = std::find_if (iter->second.begin(), iter->second.end(), [&moduleName](const auto &item){
+                return item.first["ModuleName"]["name"] == moduleName;
             });
             if (f != iter->second.end())
                 f->second.call(data); // call only specified mod

@@ -253,23 +253,23 @@ int main(int argc, char *argv[])
 
     Networking networking(peer);
 
-    string plugin_home = mgr.getString("home", "Plugins");
+    string moduleHome = mgr.getString("home", "Modules");
 
-    if (mgr.getBool("autoSort", "Plugins"))
-        networking.getState().loadMods(plugin_home);
+    if (mgr.getBool("autoSort", "Modules"))
+        networking.getState().loadModules(moduleHome);
     else
     {
         std::vector<std::string> list;
 
         try
         {
-            for (int i = 0;; ++i)
-                list.push_back(mgr.getString("Plugin" + to_string(i), "Plugins"));
+            for (int i = 1;; ++i)
+                list.push_back(mgr.getString("Module" + to_string(i), "Modules"));
         }
         catch (...)
         {} // Manager::getString throws runtime_error exception if setting is not exist
 
-        networking.getState().loadMods(plugin_home, &list);
+        networking.getState().loadModules(moduleHome, &list);
     }
 
 

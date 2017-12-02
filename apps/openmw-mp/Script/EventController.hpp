@@ -140,7 +140,7 @@ public:
     void registerEvent(int event, sol::environment &env, sol::function& func);
     CallbackCollection& GetEvents(Event event);
     Event createEvent();
-    void raiseEvent(Event id, sol::table data, const std::string &modname = "");
+    void raiseEvent(Event id, sol::table data, const std::string &moduleName = "");
     void stop(int event);
 
     template<Event event, typename R = void, typename... Args>

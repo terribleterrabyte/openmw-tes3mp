@@ -16,10 +16,10 @@
 class EventController;
 //class TimerController;
 
-struct ServerPluginInfo
+struct ServerModuleInfo
 {
     std::string name;
-    std::pair<std::string, std::string> path; // homePath, modname
+    std::pair<std::string, std::string> path; // homePath, moduleName
     std::string version;
     std::string author;
     std::vector<std::pair<std::string, std::string>> dependencies; // name, requestedVersion
@@ -36,7 +36,7 @@ public:
     void addGlobalCPath(const std::string &path);
     sol::table getCoreTable() { return dataEnv["Core"]; }
     sol::environment &getDataEnv(){ return dataEnv; }
-    void loadMods(const std::string &path, std::vector<std::string> *list = nullptr);
+    void loadModules(const std::string &path, std::vector<std::string> *list = nullptr);
 
     CommandController &getCmdCtrl();
     EventController &getEventCtrl();
@@ -46,7 +46,7 @@ public:
     ActorController &getActorCtrl();
 
 private:
-    sol::environment openScript(std::string path, std::string modname);
+    sol::environment openScript(std::string path, std::string moduleName);
 private:
     std::shared_ptr<sol::state> lua;
     sol::environment dataEnv;
@@ -57,5 +57,5 @@ private:
     std::unique_ptr<ActorController> actorCtrl;
     std::unique_ptr<ObjectController> objectCtrl;
 
-    std::vector<ServerPluginInfo> mods;
+    std::vector<ServerModuleInfo> modules;
 };

@@ -101,14 +101,14 @@ LuaState::LuaState()
     CommandController::Init(*this);
 
     dataEnv = sol::environment(*lua, sol::create, lua->globals());
-    lua->set("Data", dataEnv); // plain global environment for communicating between mods
+    lua->set("Data", dataEnv); // plain global environment for communicating between modules
     auto coreTable = dataEnv.create("Core");
     coreTable["VERSION"] = TES3MP_VERSION;
     coreTable["PROTOCOL"] = TES3MP_PROTO_VERSION;
-    coreTable["loadedMods"] = coreTable.create();
+    coreTable["loadedModules"] = coreTable.create();
 
     configEnv = sol::environment(*lua, sol::create, lua->globals());
-    lua->set("Config", configEnv); // plain global environment for mod configuration
+    lua->set("Config", configEnv); // plain global environment for module configuration
 
     // Enable a special Sol error handler for Windows, because exceptions aren't caught properly
     // in main.cpp for it
@@ -227,10 +227,10 @@ LuaState::LuaState()
         }
     });
 
-    lua->set_function("setModname", [](const std::string &modname) {
+    lua->set_function("setModname", [](const std::string &modName) {
         auto mc = mwmp::Networking::getPtr()->getMasterClient();
         if (mc)
-            mc->SetModname(modname);
+            mc->SetModname(modName);
     });
 
     lua->set_function("setHostname", [](const std::string &hostname) {
@@ -281,24 +281,24 @@ LuaState::LuaState()
     });
 }
 
-sol::environment LuaState::openScript(std::string homePath, std::string modname)
+sol::environment LuaState::openScript(std::string homePath, std::string moduleName)
 {
-    cout << "Loading file: " << homePath + "/mods/" + modname + "/main.lua" << endl;
+    cout << "Loading module: " << homePath + "/modules/" + moduleName + "/main.lua" << endl;
 
     sol::environment env(*lua, sol::create, lua->globals());
     std::string package_path = env["package"]["path"];
-    env["package"]["path"] = Utils::convertPath(homePath + "/mods/" + modname + "/?.lua") + ";" + package_path;
+    env["package"]["path"] = Utils::convertPath(homePath + "/modules/" + moduleName + "/?.lua") + ";" + package_path;
     package_path = env["package"]["path"];
 
-    env.set_function("getDataFolder", [homePath, modname]() -> const string {
-        return homePath + "/data/" + modname + '/';
+    env.set_function("getDataFolder", [homePath, moduleName]() -> const string {
+        return homePath + "/data/" + moduleName + '/';
     });
 
-    env.set_function("getModFolder", [homePath, modname]() -> const string {
-        return homePath + "/mods/" + modname + '/';
+    env.set_function("getModuleFolder", [homePath, moduleName]() -> const string {
+        return homePath + "/modules/" + moduleName + '/';
     });
 
-    lua->script_file(homePath + "/mods/" + modname + "/main.lua", env);
+    lua->script_file(homePath + "/modules/" + moduleName + "/main.lua", env);
 
     return env;
 }
@@ -386,25 +386,25 @@ int CompVersion(const string &wishVersion, const string &depVersionFound)
     return 0;
 }
 
-void checkDependencies(const vector<ServerPluginInfo> &mods, const ServerPluginInfo &spi, bool fatal = true)
+void checkDependencies(const vector<ServerModuleInfo> &modules, const ServerModuleInfo &smi, bool fatal = true)
 {
-    for (auto &dependency : spi.dependencies)
+    for (auto &dependency : smi.dependencies)
     {
         const std::string &depNameRequest = dependency.first;
         const std::string &depVersionRequest = dependency.second;
 
-        const auto &depEnvIt = find_if(mods.begin(), mods.end(), [&depNameRequest](const auto &val) {
+        const auto &depEnvIt = find_if(modules.begin(), modules.end(), [&depNameRequest](const auto &val) {
             return val.name == depNameRequest;
         });
 
-        if (depEnvIt != mods.end())
+        if (depEnvIt != modules.end())
         {
             const string &depVersionFound = depEnvIt->version;
             if (CompVersion(depVersionRequest, depVersionFound) != 0)
             {
                 stringstream sstr;
                 sstr << depNameRequest << ": version \"" << depVersionFound << "\" is not applicable for \""
-                     << spi.name << "\" expected \"" << depVersionRequest + "\"";
+                     << smi.name << "\" expected \"" << depVersionRequest + "\"";
                 if (fatal)
                     throw runtime_error(sstr.str());
                 else
@@ -423,16 +423,16 @@ void checkDependencies(const vector<ServerPluginInfo> &mods, const ServerPluginI
     }
 }
 
-vector<vector<ServerPluginInfo>::iterator> loadOrderSolver(vector<ServerPluginInfo> &mods)
+vector<vector<ServerModuleInfo>::iterator> loadOrderSolver(vector<ServerModuleInfo> &modules)
 {
-    vector<vector<ServerPluginInfo>::iterator> notResolved;
-    vector<vector<ServerPluginInfo>::iterator> result;
+    vector<vector<ServerModuleInfo>::iterator> notResolved;
+    vector<vector<ServerModuleInfo>::iterator> result;
 
-    for (auto it = mods.begin(); it != mods.end(); ++it)
+    for (auto it = modules.begin(); it != modules.end(); ++it)
     {
-        checkDependencies(mods, *it);
+        checkDependencies(modules, *it);
 
-        if (it->dependencies.empty()) // if server plugin doesn't have any dependencies we can safely put it on result
+        if (it->dependencies.empty()) // if the server module doesn't have any dependencies, we can safely add it to the result
             result.push_back(it);
         else
             notResolved.push_back(it);
@@ -449,9 +449,9 @@ vector<vector<ServerPluginInfo>::iterator> loadOrderSolver(vector<ServerPluginIn
                     return dep.first == a->name;
                 });
                 if (found != result.end())
-                    continue; // if dependency already in correct order, otherwise hold plugin in unresolved
+                    continue; // if the dependency is already in the correct order, otherwise hold it among the unresolved ones
 
-                // check if someone depends on this plugin
+                // check if any module depends on this one
                 found = find_if(notResolved.begin(), notResolved.end(), [&dep](auto &a) {
                     return dep.first == a->name;
                 });
@@ -490,35 +490,35 @@ vector<vector<ServerPluginInfo>::iterator> loadOrderSolver(vector<ServerPluginIn
     return result;
 }
 
-void LuaState::loadMods(const std::string &modDir, std::vector<std::string> *list)
+void LuaState::loadModules(const std::string &moduleDir, std::vector<std::string> *list)
 {
     using namespace boost::filesystem;
 
     auto readConfig = [this](path homePath){
         const auto mainScript = "main.lua";
-        if (!is_directory(homePath / "mods"))
+        if (!is_directory(homePath / "modules"))
             throw runtime_error(homePath.string() + ": No such directory.");
-        for (const auto &modDir : directory_iterator(homePath / "mods"))
+        for (const auto &moduleDir : directory_iterator(homePath / "modules"))
         {
-            if (is_directory(modDir.status()) && exists(modDir.path() / mainScript))
+            if (is_directory(moduleDir.status()) && exists(moduleDir.path() / mainScript))
             {
                 boost::property_tree::ptree pt;
-                auto _path = homePath.string() + "/mods/" + modDir.path().filename().string();
-                boost::property_tree::read_json(_path + "/modinfo.json", pt);
+                auto _path = homePath.string() + "/modules/" + moduleDir.path().filename().string();
+                boost::property_tree::read_json(_path + "/moduleInfo.json", pt);
 
-                ServerPluginInfo modInfo;
+                ServerModuleInfo moduleInfo;
 
-                modInfo.path = make_pair(homePath.string(), modDir.path().filename().string());
-                modInfo.author = pt.get<string>("author");
-                modInfo.version = pt.get<string>("version");
+                moduleInfo.path = make_pair(homePath.string(), moduleDir.path().filename().string());
+                moduleInfo.author = pt.get<string>("author");
+                moduleInfo.version = pt.get<string>("version");
 
                 for (const auto &v : pt.get_child("dependencies"))
-                    modInfo.dependencies.emplace_back(v.first, v.second.get_value<string>());
+                    moduleInfo.dependencies.emplace_back(v.first, v.second.get_value<string>());
 
                 auto name = pt.get<string>("name");
 
-                modInfo.name = name;
-                mods.push_back(move(modInfo));
+                moduleInfo.name = name;
+                modules.push_back(move(moduleInfo));
             }
         }
     };
@@ -531,7 +531,7 @@ void LuaState::loadMods(const std::string &modDir, std::vector<std::string> *lis
 #endif
 
 
-    path envServerDir = modDir;
+    path envServerDir = moduleDir;
 
     if (envServerDir.empty())
         envServerDir = current_path();
@@ -540,37 +540,37 @@ void LuaState::loadMods(const std::string &modDir, std::vector<std::string> *lis
     addGlobalCPath(envServerDir.string() + "/lib/?" + libExt);
     readConfig(envServerDir);
 
-    vector<vector<ServerPluginInfo>::iterator> sortedPluginList;
+    vector<vector<ServerModuleInfo>::iterator> sortedModuleList;
     if (list != nullptr && !list->empty()) // manual sorted list
     {
         for (const auto &mssp : *list)
         {
             bool found = false;
-            for (auto it = mods.begin(); it != mods.end(); ++it)
+            for (auto it = modules.begin(); it != modules.end(); ++it)
             {
                 if (it->name == mssp)
                 {
-                    checkDependencies(mods, *it, false); // check dependencies, but do not throw exceptions
-                    sortedPluginList.push_back(it);
+                    checkDependencies(modules, *it, false); // check dependencies, but do not throw exceptions
+                    sortedModuleList.push_back(it);
                     found = true;
                     break;
                 }
             }
             if (!found)
-                throw runtime_error("Plugin: \"" + mssp + "\" not found");
+                throw runtime_error("Module: \"" + mssp + "\" not found");
         }
     }
     else
-        sortedPluginList = loadOrderSolver(mods);
+        sortedModuleList = loadOrderSolver(modules);
 
-    for (auto &&mod : sortedPluginList)
+    for (auto &&module : sortedModuleList)
     {
-        mod->env = openScript(mod->path.first, mod->path.second);
+        module->env = openScript(module->path.first, module->path.second);
 
-        sol::table loaded = dataEnv["Core"]["loadedMods"];
-        loaded.add(mod->name);
-        cout << "modname: " << mod->name << endl;
+        sol::table loaded = dataEnv["Core"]["loadedModules"];
+        loaded.add(module->name);
+        cout << "moduleName: " << module->name << endl;
     }
 
-    dataEnv["Core"]["LOADED_MODS"] = mods.size();
+    dataEnv["Core"]["LOADED_MODULES"] = modules.size();
 }
