@@ -156,6 +156,8 @@ void Player::update()
         packet->setPlayer(basePlayer);
         packet->Send(false);
         packet->Send(true);
+
+        statsDynamicIndexChanges.clear();
     }
 
     if (attributesChanged)

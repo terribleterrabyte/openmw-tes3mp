@@ -61,6 +61,10 @@ void NetActor::setHealth(float base, float current)
 {
     netCreature->creatureStats.mDynamic[0].mBase = base;
     netCreature->creatureStats.mDynamic[0].mCurrent = current;
+
+    if (!Utils::vectorContains(&netCreature->statsDynamicIndexChanges, 0))
+        netCreature->statsDynamicIndexChanges.push_back(0);
+
     statsChanged = true;
 }
 
@@ -73,6 +77,10 @@ void NetActor::setMagicka(float base, float current)
 {
     netCreature->creatureStats.mDynamic[1].mBase = base;
     netCreature->creatureStats.mDynamic[1].mCurrent = current;
+
+    if (!Utils::vectorContains(&netCreature->statsDynamicIndexChanges, 1))
+        netCreature->statsDynamicIndexChanges.push_back(1);
+
     statsChanged = true;
 }
 
@@ -85,6 +93,10 @@ void NetActor::setFatigue(float base, float current)
 {
     netCreature->creatureStats.mDynamic[2].mBase = base;
     netCreature->creatureStats.mDynamic[2].mCurrent = current;
+
+    if (!Utils::vectorContains(&netCreature->statsDynamicIndexChanges, 2))
+        netCreature->statsDynamicIndexChanges.push_back(2);
+
     statsChanged = true;
 }
 
