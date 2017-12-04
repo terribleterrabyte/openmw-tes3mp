@@ -100,7 +100,7 @@ EventController::EventController(LuaState *luaCtrl)
         });
 
         if (!found)
-            throw runtime_error("Event " + to_string(i) + " is not registered. Dear developer, please fix me :D");
+            Utils::throwError("Event " + to_string(i) + " is not registered");
 #endif
         events[i]; // create core event
     }

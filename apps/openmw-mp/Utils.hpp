@@ -40,6 +40,10 @@ namespace Utils
 
     ESM::Cell getCellFromDescription(std::string cellDescription);
 
+    const std::string getLastError();
+
+    void throwError(std::string errorMessage);
+
     template<size_t N>
     constexpr unsigned int hash(const char(&str)[N], size_t I = N)
     {

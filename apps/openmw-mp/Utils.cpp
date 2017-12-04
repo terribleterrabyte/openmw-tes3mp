@@ -6,6 +6,8 @@
 
 using namespace std;
 
+static std::string lastErrorMessage = "unknown error";
+
 const vector<string> Utils::split(const string &str, int delimiter)
 {
     string buffer;
@@ -51,4 +53,21 @@ ESM::Cell Utils::getCellFromDescription(std::string cellDescription)
     }
 
     return cell;
+}
+
+const std::string Utils::getLastError()
+{
+    return lastErrorMessage;
+}
+
+void Utils::throwError(const std::string errorMessage)
+{
+#ifdef _WIN32
+    // Throwing exceptions makes them show up as "bad exception" on Windows with
+    // our stacktracer, so record their intended error messages separately here
+    // when possible
+    lastErrorMessage = errorMessage;
+#endif
+
+    throw runtime_error(errorMessage);
 }

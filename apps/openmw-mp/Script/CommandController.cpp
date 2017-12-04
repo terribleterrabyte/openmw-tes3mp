@@ -93,10 +93,10 @@ std::deque<std::string> CommandController::cmdParser(const std::string &message)
     /*auto const command = '/' >> *~x3::char_(sep) >> sep;
 
     if (!x3::phrase_parse(message.cbegin(), message.cend(), arguments, command, ret))
-        throw runtime_error("failed to parse message: "+ message);*/
+        Utils::throwError("failed to parse message: "+ message);*/
 
     if (!x3::parse(message.cbegin(), message.cend(), arguments, ret))
-        throw runtime_error("failed to parse message: " + message);
+        Utils::throwError("failed to parse message: " + message);
 
     return ret;
 }

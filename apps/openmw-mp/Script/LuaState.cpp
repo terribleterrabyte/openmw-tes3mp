@@ -406,7 +406,7 @@ void checkDependencies(const vector<ServerModuleInfo> &modules, const ServerModu
                 sstr << depNameRequest << ": version \"" << depVersionFound << "\" is not applicable for \""
                      << smi.name << "\" expected \"" << depVersionRequest + "\"";
                 if (fatal)
-                    throw runtime_error(sstr.str());
+                    Utils::throwError(sstr.str());
                 else
                     LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "%s", sstr.str().c_str());
             }
@@ -416,7 +416,7 @@ void checkDependencies(const vector<ServerModuleInfo> &modules, const ServerModu
             stringstream sstr;
             sstr << depNameRequest + " \"" << depVersionRequest << "\" not found.";
             if (fatal)
-                throw runtime_error(sstr.str());
+                Utils::throwError(sstr.str());
             else
                 LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "%s", sstr.str().c_str());
         }
@@ -468,7 +468,7 @@ vector<vector<ServerModuleInfo>::iterator> loadOrderSolver(vector<ServerModuleIn
                         stringstream sstr;
                         sstr << "Found circular dependency: \"" << (*it)->name << "\" and \"" << (*found)->name
                              << "\" depend on each other" << endl;
-                        throw runtime_error(sstr.str());
+                        Utils::throwError(sstr.str());
                     }
                 }
 
@@ -497,7 +497,7 @@ void LuaState::loadModules(const std::string &moduleDir, std::vector<std::string
     auto readConfig = [this](path homePath){
         const auto mainScript = "main.lua";
         if (!is_directory(homePath / "modules"))
-            throw runtime_error(homePath.string() + ": No such directory.");
+            Utils::throwError(homePath.string() + ": No such directory.");
         for (const auto &moduleDir : directory_iterator(homePath / "modules"))
         {
             if (is_directory(moduleDir.status()) && exists(moduleDir.path() / mainScript))
@@ -557,7 +557,7 @@ void LuaState::loadModules(const std::string &moduleDir, std::vector<std::string
                 }
             }
             if (!found)
-                throw runtime_error("Module: \"" + mssp + "\" not found");
+                Utils::throwError("Module: \"" + mssp + "\" not found");
         }
     }
     else

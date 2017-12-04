@@ -151,7 +151,13 @@ int main(int argc, char *argv[])
         }
         catch (const exception &e)
         {
-            LOG_MESSAGE_SIMPLE(Log::LOG_FATAL, " Woops, something wrong! Exception:\n\t%s", e.what());
+            LOG_MESSAGE_SIMPLE(Log::LOG_FATAL, "A fatal error has occurred!");
+
+#ifndef _WIN32
+            LOG_APPEND(Log::LOG_FATAL, "\t%s", e.what());
+#else
+            LOG_APPEND(Log::LOG_FATAL, "\t%s", Utils::getLastError().c_str());
+#endif
         }
 
         stacktrace();
@@ -232,21 +238,21 @@ int main(int argc, char *argv[])
         case RakNet::RAKNET_STARTED:
             break;
         case RakNet::RAKNET_ALREADY_STARTED:
-            throw runtime_error("Already started");
+            Utils::throwError("Already started");
         case RakNet::INVALID_SOCKET_DESCRIPTORS:
-            throw runtime_error("Incorrect port or address");
+            Utils::throwError("Incorrect port or address");
         case RakNet::INVALID_MAX_CONNECTIONS:
-            throw runtime_error("Max players cannot be negative or 0");
+            Utils::throwError("Max players cannot be negative or 0");
         case RakNet::SOCKET_FAILED_TO_BIND:
         case RakNet::SOCKET_PORT_ALREADY_IN_USE:
         case RakNet::PORT_CANNOT_BE_ZERO:
-            throw runtime_error("Failed to bind port");
+            Utils::throwError("Failed to bind port");
         case RakNet::SOCKET_FAILED_TEST_SEND:
         case RakNet::SOCKET_FAMILY_NOT_SUPPORTED:
         case RakNet::FAILED_TO_CREATE_NETWORK_THREAD:
         case RakNet::COULD_NOT_GENERATE_GUID:
         case RakNet::STARTUP_OTHER_FAILURE:
-            throw runtime_error("Cannot start server");
+            Utils::throwError("Cannot start server");
     }
 
     peer->SetMaximumIncomingConnections((unsigned short) (players));
