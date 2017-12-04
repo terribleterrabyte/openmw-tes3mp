@@ -261,16 +261,6 @@ namespace MWWorld
                 mPhysics->removeHeightField ((*iter)->getCell()->getGridX(), (*iter)->getCell()->getGridY());
         }
 
-        MWBase::Environment::get().getMechanicsManager()->drop (*iter);
-
-        mRendering.removeCell(*iter);
-        MWBase::Environment::get().getWindowManager()->removeCell(*iter);
-
-        MWBase::Environment::get().getWorld()->getLocalScripts().clearCell (*iter);
-
-        MWBase::Environment::get().getSoundManager()->stopSound (*iter);
-        mActiveCells.erase(*iter);
-
         /*
             Start of tes3mp addition
 
@@ -280,6 +270,16 @@ namespace MWWorld
         /*
             End of tes3mp addition
         */
+
+        MWBase::Environment::get().getMechanicsManager()->drop (*iter);
+
+        mRendering.removeCell(*iter);
+        MWBase::Environment::get().getWindowManager()->removeCell(*iter);
+
+        MWBase::Environment::get().getWorld()->getLocalScripts().clearCell (*iter);
+
+        MWBase::Environment::get().getSoundManager()->stopSound (*iter);
+        mActiveCells.erase(*iter);
     }
 
     void Scene::loadCell (CellStore *cell, Loading::Listener* loadingListener, bool respawn)

@@ -1333,7 +1333,7 @@ void LocalPlayer::clearCurrentContainer()
     currentContainer.mpNum = 0;
 }
 
-void LocalPlayer::storeCellState(ESM::Cell cell, int stateType)
+void LocalPlayer::storeCellState(const ESM::Cell& cell, int stateType)
 {
     std::vector<CellState>::iterator iter;
 
