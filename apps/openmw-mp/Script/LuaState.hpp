@@ -46,7 +46,7 @@ public:
     ActorController &getActorCtrl();
 
 private:
-    sol::environment openScript(std::string path, std::string moduleName);
+    sol::environment openModule(std::string path, std::string moduleName);
 private:
     std::shared_ptr<sol::state> lua;
     sol::environment dataEnv;

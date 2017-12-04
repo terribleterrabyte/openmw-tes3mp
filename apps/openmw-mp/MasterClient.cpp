@@ -68,10 +68,10 @@ void MasterClient::SetHostname(std::string hostname)
     mutexData.unlock();
 }
 
-void MasterClient::SetModname(std::string modname)
+void MasterClient::SetGameModeName(std::string modeName)
 {
     mutexData.lock();
-    string substr = modname.substr(0, 200);
+    string substr = modeName.substr(0, 200);
     if (queryData.GetGameMode() != substr)
     {
         queryData.SetGameMode(substr.c_str());

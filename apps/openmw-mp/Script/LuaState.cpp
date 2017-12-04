@@ -227,10 +227,10 @@ LuaState::LuaState()
         }
     });
 
-    lua->set_function("setModname", [](const std::string &modName) {
+    lua->set_function("setGameModeName", [](const std::string &modeName) {
         auto mc = mwmp::Networking::getPtr()->getMasterClient();
         if (mc)
-            mc->SetModname(modName);
+            mc->SetGameModeName(modeName);
     });
 
     lua->set_function("setHostname", [](const std::string &hostname) {
@@ -281,7 +281,7 @@ LuaState::LuaState()
     });
 }
 
-sol::environment LuaState::openScript(std::string homePath, std::string moduleName)
+sol::environment LuaState::openModule(std::string homePath, std::string moduleName)
 {
     cout << "Loading module: " << homePath + "/modules/" + moduleName + "/main.lua" << endl;
 
@@ -340,7 +340,7 @@ ObjectController &LuaState::getObjectCtrl()
     return *objectCtrl;
 }
 
-int CompVersion(const string &wishVersion, const string &depVersionFound)
+int compareVersion(const string &wishVersion, const string &depVersionFound)
 {
     unsigned startVer = 0;
 
@@ -358,7 +358,7 @@ int CompVersion(const string &wishVersion, const string &depVersionFound)
 
     auto wishIter = tokensWish.begin();
     auto founditer = tokensFound.begin();
-    int bellowExpected = 0;
+    int belowExpected = 0;
 
     for (int i = 0; i < 3; ++i)
     {
@@ -371,7 +371,7 @@ int CompVersion(const string &wishVersion, const string &depVersionFound)
         if (v2 <= v1)
         {
             if (v2 == v1 && startVer == 1)
-                bellowExpected++;
+                belowExpected++;
             else if (v2 < v1)
                 return -1; // found version below expected
             continue;
@@ -380,7 +380,7 @@ int CompVersion(const string &wishVersion, const string &depVersionFound)
         return 1; // version higher than expected
     }
 
-    if (bellowExpected == 3)
+    if (belowExpected == 3)
         return -1; // found version below expected
 
     return 0;
@@ -400,7 +400,7 @@ void checkDependencies(const vector<ServerModuleInfo> &modules, const ServerModu
         if (depEnvIt != modules.end())
         {
             const string &depVersionFound = depEnvIt->version;
-            if (CompVersion(depVersionRequest, depVersionFound) != 0)
+            if (compareVersion(depVersionRequest, depVersionFound) != 0)
             {
                 stringstream sstr;
                 sstr << depNameRequest << ": version \"" << depVersionFound << "\" is not applicable for \""
@@ -565,7 +565,7 @@ void LuaState::loadModules(const std::string &moduleDir, std::vector<std::string
 
     for (auto &&module : sortedModuleList)
     {
-        module->env = openScript(module->path.first, module->path.second);
+        module->env = openModule(module->path.first, module->path.second);
 
         sol::table loaded = dataEnv["Core"]["loadedModules"];
         loaded.add(module->name);

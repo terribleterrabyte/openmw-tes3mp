@@ -24,7 +24,7 @@ public:
     void SetPlayers(unsigned pl);
     void SetMaxPlayers(unsigned pl);
     void SetHostname(std::string hostname);
-    void SetModname(std::string hostname);
+    void SetGameModeName(std::string modeName);
     void SetRuleString(std::string key, std::string value);
     void SetRuleValue(std::string key, double value);
     void PushPlugin(Plugin plugin);
