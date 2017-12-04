@@ -154,7 +154,7 @@ bool Main::init(std::vector<std::string> &content, Files::Collections &collectio
     InitMgr(mgr);
 
     int logLevel = mgr.getInt("logLevel", "General");
-    Log::SetLevel(logLevel);
+    Log::Get().SetLevel(logLevel);
     if (addr.empty())
     {
         pMain->server = mgr.getString("destinationAddress", "General");
@@ -212,8 +212,7 @@ void Main::frame(float dt)
 
 void Main::updateWorld(float dt) const
 {
-
-    if (!mLocalPlayer->charGenThread())
+    if (!mLocalPlayer->processCharGen())
         return;
 
     static bool init = true;
@@ -227,6 +226,7 @@ void Main::updateWorld(float dt) const
         mNetworking->getPlayerPacket(ID_PLAYER_BASEINFO)->Send();
         mNetworking->getPlayerPacket(ID_LOADED)->Send();
         mLocalPlayer->updateStatsDynamic(true);
+        mLocalPlayer->sendCellStates();
         get().getGUIController()->setChatVisible(true);
     }
     else

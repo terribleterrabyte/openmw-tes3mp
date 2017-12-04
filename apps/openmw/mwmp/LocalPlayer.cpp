@@ -44,8 +44,9 @@ using namespace std;
 
 LocalPlayer::LocalPlayer()
 {
-    charGenStage.current = 0;
-    charGenStage.end = 1;
+    charGenState.currentStage = 0;
+    charGenState.endStage = 1;
+    charGenState.isFinished = false;
 
     consoleAllowed = false;
     difficulty = 0;
@@ -104,26 +105,22 @@ void LocalPlayer::update()
     }
 }
 
-void LocalPlayer::charGen(int stageFirst, int stageEnd)
-{
-    charGenStage.current = stageFirst;
-    charGenStage.end = stageEnd;
-}
-
-bool LocalPlayer::charGenThread()
+bool LocalPlayer::processCharGen()
 {
     MWBase::WindowManager *windowManager = MWBase::Environment::get().getWindowManager();
 
     // If we haven't finished CharGen and we're in a menu, it must be
     // one of the CharGen menus, so go no further until it's closed
-    if (windowManager->isGuiMode() && charGenStage.end != 0)
+    if (windowManager->isGuiMode() && !charGenState.isFinished)
+    {
         return false;
+    }
 
     // If the current stage of CharGen is not the last one,
     // move to the next one
-    else if (charGenStage.current < charGenStage.end)
+    else if (charGenState.currentStage < charGenState.endStage)
     {
-        switch (charGenStage.current)
+        switch (charGenState.currentStage)
         {
         case 0:
             windowManager->pushGuiMode(MWGui::GM_Name);
@@ -143,14 +140,14 @@ bool LocalPlayer::charGenThread()
         }
         getNetworking()->getPlayerPacket(ID_PLAYER_CHARGEN)->setPlayer(this);
         getNetworking()->getPlayerPacket(ID_PLAYER_CHARGEN)->Send();
-        charGenStage.current++;
+        charGenState.currentStage++;
 
         return false;
     }
 
     // If we've reached the last stage of CharGen, send the
     // corresponding packets and mark CharGen as finished
-    else if (charGenStage.end != 0)
+    else if (!charGenState.isFinished)
     {
         MWBase::World *world = MWBase::Environment::get().getWorld();
         MWWorld::Ptr ptrPlayer = world->getPlayerPtr();
@@ -163,7 +160,7 @@ bool LocalPlayer::charGenThread()
 
         // Send stats packets if this is the 2nd round of CharGen that
         // only happens for new characters
-        if (charGenStage.end != 1)
+        if (charGenState.endStage != 1)
         {
             updateStatsDynamic(true);
             updateAttributes(true);
@@ -175,10 +172,8 @@ bool LocalPlayer::charGenThread()
             getNetworking()->getPlayerPacket(ID_PLAYER_CHARGEN)->Send();
         }
 
-        sendCellStates();
-
-        // Set the last stage variable to 0 to indicate that CharGen is finished
-        charGenStage.end = 0;
+        // Mark character generation as finished until overridden by a new ID_PLAYER_CHARGEN packet
+        charGenState.isFinished = true;
     }
 
     return true;
@@ -186,7 +181,7 @@ bool LocalPlayer::charGenThread()
 
 bool LocalPlayer::hasFinishedCharGen()
 {
-    return charGenStage.end == 0;
+    return charGenState.isFinished;
 }
 
 void LocalPlayer::updateStatsDynamic(bool forceUpdate)
@@ -209,8 +204,16 @@ void LocalPlayer::updateStatsDynamic(bool forceUpdate)
                                     || abs(oldVal.getCurrent() - newVal.getCurrent()) >= limit);
     };
 
-    if (forceUpdate || needUpdate(oldHealth, health, 3) || needUpdate(oldMagicka, magicka, 7) ||
-        needUpdate(oldFatigue, fatigue, 7))
+    if (needUpdate(oldHealth, health, 2))
+        statsDynamicIndexChanges.push_back(0);
+    
+    if (needUpdate(oldMagicka, magicka, 4))
+        statsDynamicIndexChanges.push_back(1);
+    
+    if (needUpdate(oldFatigue, fatigue, 4))
+        statsDynamicIndexChanges.push_back(2);
+
+    if (statsDynamicIndexChanges.size() > 0 || forceUpdate)
     {
         oldHealth = health;
         oldMagicka = magicka;
@@ -222,6 +225,7 @@ void LocalPlayer::updateStatsDynamic(bool forceUpdate)
 
         getNetworking()->getPlayerPacket(ID_PLAYER_STATS_DYNAMIC)->setPlayer(this);
         getNetworking()->getPlayerPacket(ID_PLAYER_STATS_DYNAMIC)->Send();
+        statsDynamicIndexChanges.clear();
     }
 }
 
@@ -233,21 +237,24 @@ void LocalPlayer::updateAttributes(bool forceUpdate)
 
     MWWorld::Ptr ptrPlayer = getPlayerPtr();
     const MWMechanics::NpcStats &ptrNpcStats = ptrPlayer.getClass().getNpcStats(ptrPlayer);
-    bool attributesChanged = false;
 
     for (int i = 0; i < 8; ++i)
     {
-        if (ptrNpcStats.getAttribute(i).getBase() != creatureStats.mAttributes[i].mBase)
+        if (ptrNpcStats.getAttribute(i).getBase() != creatureStats.mAttributes[i].mBase ||
+            ptrNpcStats.getSkillIncrease(i) != npcStats.mSkillIncrease[i] ||
+            forceUpdate)
         {
+            attributeIndexChanges.push_back(i);
             ptrNpcStats.getAttribute(i).writeState(creatureStats.mAttributes[i]);
-            attributesChanged = true;
+            npcStats.mSkillIncrease[i] = ptrNpcStats.getSkillIncrease(i);
         }
     }
 
-    if (attributesChanged || forceUpdate)
+    if (attributeIndexChanges.size() > 0)
     {
         getNetworking()->getPlayerPacket(ID_PLAYER_ATTRIBUTE)->setPlayer(this);
         getNetworking()->getPlayerPacket(ID_PLAYER_ATTRIBUTE)->Send();
+        attributeIndexChanges.clear();
     }
 }
 
@@ -260,52 +267,39 @@ void LocalPlayer::updateSkills(bool forceUpdate)
     MWWorld::Ptr ptrPlayer = getPlayerPtr();
     const MWMechanics::NpcStats &ptrNpcStats = ptrPlayer.getClass().getNpcStats(ptrPlayer);
 
-    // Track whether skills have changed their values, but not whether
-    // progress towards skill increases has changed (to not spam server
-    // with packets every time tiny progress is made)
-    bool skillsChanged = false;
-
     for (int i = 0; i < 27; ++i)
     {
-        if (ptrNpcStats.getSkill(i).getBase() != npcStats.mSkills[i].mBase)
+        // Update a skill if its base value has changed at all or its progress has changed enough
+        if (ptrNpcStats.getSkill(i).getBase() != npcStats.mSkills[i].mBase ||
+            ptrNpcStats.getSkill(i).getProgress() != npcStats.mSkills[i].mProgress ||
+            forceUpdate)
         {
+            skillIndexChanges.push_back(i);
             ptrNpcStats.getSkill(i).writeState(npcStats.mSkills[i]);
-            skillsChanged = true;
         }
-        // If we only have skill progress, remember it for future packets,
-        // but don't send a packet just because of this
-        else if (ptrNpcStats.getSkill(i).getProgress() != npcStats.mSkills[i].mProgress)
-            ptrNpcStats.getSkill(i).writeState(npcStats.mSkills[i]);
     }
 
-    for (int i = 0; i < 8; i++)
+    if (skillIndexChanges.size() > 0)
     {
-        if (ptrNpcStats.getSkillIncrease(i) != npcStats.mSkillIncrease[i])
-            npcStats.mSkillIncrease[i] = ptrNpcStats.getSkillIncrease(i);
-    }
-
-    if (skillsChanged || forceUpdate)
-    {
-        npcStats.mLevelProgress = ptrNpcStats.getLevelProgress();
         getNetworking()->getPlayerPacket(ID_PLAYER_SKILL)->setPlayer(this);
         getNetworking()->getPlayerPacket(ID_PLAYER_SKILL)->Send();
+        skillIndexChanges.clear();
     }
 }
 
 void LocalPlayer::updateLevel(bool forceUpdate)
 {
     MWWorld::Ptr ptrPlayer = getPlayerPtr();
-    const MWMechanics::CreatureStats &ptrCreatureStats = ptrPlayer.getClass().getCreatureStats(ptrPlayer);
+    const MWMechanics::NpcStats &ptrNpcStats = ptrPlayer.getClass().getNpcStats(ptrPlayer);
 
-    if (ptrCreatureStats.getLevel() != creatureStats.mLevel || forceUpdate)
+    if (ptrNpcStats.getLevel() != creatureStats.mLevel ||
+        ptrNpcStats.getLevelProgress() != npcStats.mLevelProgress ||
+        forceUpdate)
     {
-        creatureStats.mLevel = ptrCreatureStats.getLevel();
+        creatureStats.mLevel = ptrNpcStats.getLevel();
+        npcStats.mLevelProgress = ptrNpcStats.getLevelProgress();
         getNetworking()->getPlayerPacket(ID_PLAYER_LEVEL)->setPlayer(this);
         getNetworking()->getPlayerPacket(ID_PLAYER_LEVEL)->Send();
-
-        // Also update skills to refresh level progress and attribute bonuses
-        // for next level up
-        updateSkills(true);
     }
 }
 
@@ -398,9 +392,6 @@ void LocalPlayer::updateCell(bool forceUpdate)
 
         isChangingRegion = false;
 
-        // Also force an update to skills (to send all progress to skill increases)
-        updateSkills(true);
-
         // Also check if the inventory needs to be updated
         updateInventory();
     }
@@ -417,24 +408,19 @@ void LocalPlayer::updateEquipment(bool forceUpdate)
 {
     MWWorld::Ptr ptrPlayer = getPlayerPtr();
 
-    static bool equipmentChanged = false;
-
-    if (forceUpdate)
-        equipmentChanged = true;
-
     MWWorld::InventoryStore &invStore = ptrPlayer.getClass().getInventoryStore(ptrPlayer);
     for (int slot = 0; slot < MWWorld::InventoryStore::Slots; slot++)
     {
-        auto &item = equipedItems[slot];
+        auto &item = equipmentItems[slot];
         MWWorld::ContainerStoreIterator it = invStore.getSlot(slot);
         if (it != invStore.end())
         {
-            if (!::Misc::StringUtils::ciEqual(it->getCellRef().getRefId(), equipedItems[slot].refId))
+            if (!::Misc::StringUtils::ciEqual(it->getCellRef().getRefId(), equipmentItems[slot].refId) || forceUpdate)
             {
-                equipmentChanged = true;
-
+                equipmentIndexChanges.push_back(slot);
                 item.refId = it->getCellRef().getRefId();
                 item.charge = it->getCellRef().getCharge();
+
                 if (slot == MWWorld::InventoryStore::Slot_CarriedRight)
                 {
                     MWMechanics::WeaponType weaptype;
@@ -449,18 +435,18 @@ void LocalPlayer::updateEquipment(bool forceUpdate)
         }
         else if (!item.refId.empty())
         {
-            equipmentChanged = true;
+            equipmentIndexChanges.push_back(slot);
             item.refId = "";
             item.count = 0;
             item.charge = 0;
         }
     }
 
-    if (equipmentChanged)
+    if (equipmentIndexChanges.size() > 0)
     {
         getNetworking()->getPlayerPacket(ID_PLAYER_EQUIPMENT)->setPlayer(this);
         getNetworking()->getPlayerPacket(ID_PLAYER_EQUIPMENT)->Send();
-        equipmentChanged = false;
+        equipmentIndexChanges.clear();
     }
 }
 
@@ -919,7 +905,7 @@ void LocalPlayer::setEquipment()
 
     for (int slot = 0; slot < MWWorld::InventoryStore::Slots; slot++)
     {
-        mwmp::Item &currentItem = equipedItems[slot];
+        mwmp::Item &currentItem = equipmentItems[slot];
 
         if (!currentItem.refId.empty())
         {
@@ -929,16 +915,16 @@ void LocalPlayer::setEquipment()
 
             if (it == ptrInventory.end()) // If the item is not in our inventory, add it
             {
-                auto equipped = equipedItems[slot];
+                auto equipmentItem = equipmentItems[slot];
 
                 try
                 {
-                    auto addIter = ptrInventory.ContainerStore::add(equipped.refId.c_str(), equipped.count, ptrPlayer);
+                    auto addIter = ptrInventory.ContainerStore::add(equipmentItem.refId.c_str(), equipmentItem.count, ptrPlayer);
                     ptrInventory.equip(slot, addIter, ptrPlayer);
                 }
                 catch (std::exception&)
                 {
-                    LOG_APPEND(Log::LOG_INFO, "- Ignored addition of invalid equipment item %s", equipped.refId.c_str());
+                    LOG_APPEND(Log::LOG_INFO, "- Ignored addition of invalid equipment item %s", equipmentItem.refId.c_str());
                 }
             }
             else
@@ -1109,7 +1095,6 @@ void LocalPlayer::sendInventory()
         inventoryChanges.items.push_back(item);
     }
 
-    inventoryChanges.count = (unsigned int) inventoryChanges.items.size();
     inventoryChanges.action = InventoryChanges::SET;
     getNetworking()->getPlayerPacket(ID_PLAYER_INVENTORY)->setPlayer(this);
     getNetworking()->getPlayerPacket(ID_PLAYER_INVENTORY)->Send();

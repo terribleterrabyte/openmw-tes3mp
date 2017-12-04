@@ -5,11 +5,11 @@
 #include "ProcessorInitializer.hpp"
 
 #include "Networking.hpp"
-#include "Script/Script.hpp"
 
 #include "PlayerProcessor.hpp"
 #include "player/ProcessorChatMsg.hpp"
 #include "player/ProcessorGUIMessageBox.hpp"
+#include "player/ProcessorGUIWindow.hpp"
 #include "player/ProcessorGameWeather.hpp"
 #include "player/ProcessorPlayerCharGen.hpp"
 #include "player/ProcessorPlayerAnimFlags.hpp"
@@ -79,6 +79,7 @@ void ProcessorInitializer()
 {
     PlayerProcessor::AddProcessor(new ProcessorChatMsg());
     PlayerProcessor::AddProcessor(new ProcessorGUIMessageBox());
+    PlayerProcessor::AddProcessor(new ProcessorGUIWindow());
     PlayerProcessor::AddProcessor(new ProcessorGameWeather());
     PlayerProcessor::AddProcessor(new ProcessorPlayerCharGen());
     PlayerProcessor::AddProcessor(new ProcessorPlayerAnimFlags());

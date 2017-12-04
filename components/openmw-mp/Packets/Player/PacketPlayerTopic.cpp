@@ -12,24 +12,16 @@ PacketPlayerTopic::PacketPlayerTopic(RakNet::RakPeerInterface *peer) : PlayerPac
 void PacketPlayerTopic::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
+    
+    uint32_t count;
 
     if (send)
-        player->topicChanges.count = (unsigned int)(player->topicChanges.topics.size());
-    else
-        player->topicChanges.topics.clear();
+        count = static_cast<uint32_t>(player->topicChanges.topics.size());
 
-    RW(player->topicChanges.count, send);
+    RW(count, send);
 
-    for (unsigned int i = 0; i < player->topicChanges.count; i++)
+    for (auto &&topic : player->topicChanges.topics)
     {
-        Topic topic;
-
-        if (send)
-            topic = player->topicChanges.topics.at(i);
-
-        RW(topic.topicId, send, 1);
-
-        if (!send)
-            player->topicChanges.topics.push_back(topic);
+        RW(topic.topicId, send, true);
     }
 }

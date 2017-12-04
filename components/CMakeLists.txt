@@ -158,7 +158,7 @@ add_component_dir (openmw-mp
         )
 
 add_component_dir (openmw-mp/Base
-        BaseActor BaseEvent BasePacketProcessor BasePlayer BaseStructs
+        BaseActor BaseEvent BaseNetCreature BasePacketProcessor BasePlayer BaseStructs
         )
 
 add_component_dir (openmw-mp/Controllers
@@ -189,7 +189,7 @@ add_component_dir (openmw-mp/Packets/Player
         PacketPlayerInventory PacketPlayerJail PacketPlayerJournal PacketPlayerKillCount PacketPlayerLevel
         PacketPlayerMap PacketPlayerPosition PacketPlayerRegionAuthority PacketPlayerRest PacketPlayerResurrect
         PacketPlayerShapeshift PacketPlayerSkill PacketPlayerSpeech PacketPlayerSpellbook PacketPlayerStatsDynamic
-        PacketPlayerTopic
+        PacketPlayerTopic PacketGUIWindow
         )
 
 add_component_dir (openmw-mp/Packets/World

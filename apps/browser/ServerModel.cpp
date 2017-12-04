@@ -1,16 +1,11 @@
 #include <qmessagebox.h>
 #include "ServerModel.hpp"
 #include <qdebug.h>
+#include <apps/browser/netutils/Utils.hpp>
 
 ServerModel::ServerModel(QObject *parent) : QAbstractTableModel(parent)
 {
 }
-
-ServerModel::~ServerModel()
-{
-
-}
-
 /*QHash<int, QByteArray> ServerModel::roleNames() const
 {
     return roles;
@@ -49,7 +44,7 @@ QVariant ServerModel::data(const QModelIndex &index, int role) const
                 var = QString(sd.rules.at("name").str.c_str());
                 break;
             case ServerData::PING:
-                var = sd.ping;
+                var = sd.ping == PING_UNREACHABLE ? QVariant("Unreachable") : sd.ping;
                 break;
             case ServerData::MODNAME:
                 if (sd.rules.at("gamemode").str == "")

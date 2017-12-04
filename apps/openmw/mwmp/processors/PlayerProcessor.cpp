@@ -37,6 +37,9 @@ bool PlayerProcessor::Process(RakNet::Packet &packet)
             else
                 player = Main::get().getLocalPlayer();
 
+            if (player != 0)
+                LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Processing %s about %s", processor.second->strPacketID.c_str(), player->npc.mName.c_str());
+
             if (!request && !processor.second->avoidReading && player != 0)
             {
                 myPacket->setPlayer(player);

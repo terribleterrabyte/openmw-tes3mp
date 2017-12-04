@@ -16,43 +16,40 @@ void PacketPlayerActiveSkills::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
 
-    unsigned long spells = 0;
+    uint32_t spellCount = 0;
 
     if (send)
-        spells = player->activeSpells.mSpells.size();
+        spellCount = static_cast<uint32_t>(player->activeSpells.mSpells.size());
 
-    RW(spells, send);
+    RW(spellCount, send);
+
+    auto fnRWSpell = [this, &send](ESM::ActiveSpells::TContainer::value_type &spell) {
+        RW(spell.first, send);
+        RW(spell.second.mTimeStamp, send);
+        uint32_t effectsCount;
+
+        if (send)
+            effectsCount = static_cast<uint32_t>(spell.second.mEffects.size());
+
+        RW(effectsCount, send);
+
+        if (!send)
+            spell.second.mEffects.resize(effectsCount);
+
+        for (auto &&effect : spell.second.mEffects)
+            RW(effect, send);
+    };
 
     if (send)
-        for (ESM::ActiveSpells::TContainer::const_iterator spell = player->activeSpells.mSpells.begin();
-             spell != player->activeSpells.mSpells.end(); ++spell)
+        for (auto && spell : player->activeSpells.mSpells)
         {
-            RW(spell->first, true);
-            RW(spell->second.mTimeStamp, true);
-            unsigned long effects = spell->second.mEffects.size();
-            RW(effects, true);
-
-            for (std::vector<ESM::ActiveEffect>::const_iterator effect = spell->second.mEffects.begin();
-                 effect != spell->second.mEffects.end(); ++effect)
-                RW(effect, true);
-
+            fnRWSpell(spell);
         }
     else
-        for (unsigned int i = 0; i < spells; i++)
+        for (unsigned int i = 0; i < spellCount; i++)
         {
             ESM::ActiveSpells::TContainer::value_type spell;
-
-            RW(spell.first, false);
-            RW(spell.second.mTimeStamp, false);
-            unsigned long effects;
-            RW(effects, false);
-
-            ESM::ActiveEffect effect;
-            for (unsigned int j = 0; j < effects; j++)
-            {
-                RW(effect, false);
-                spell.second.mEffects.push_back(effect);
-            }
+            fnRWSpell(spell);
             player->activeSpells.mSpells.insert(spell);
         }
 }

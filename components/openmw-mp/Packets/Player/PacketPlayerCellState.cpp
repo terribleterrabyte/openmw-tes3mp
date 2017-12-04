@@ -13,25 +13,24 @@ void mwmp::PacketPlayerCellState::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
 
+    uint32_t count;
+
     if (send)
-        player->cellStateChanges.count = (unsigned int)(player->cellStateChanges.cellStates.size());
-    else
-        player->cellStateChanges.cellStates.clear();
+        count = static_cast<uint32_t>(player->cellStateChanges.cellStates.size());
 
-    RW(player->cellStateChanges.count, send);
 
-    for (unsigned int i = 0; i < player->cellStateChanges.count; i++)
+    RW(count, send);
+
+    if (!send)
     {
-        CellState cellState;
+        player->cellStateChanges.cellStates.clear();
+        player->cellStateChanges.cellStates.resize(count);
+    }
 
-        if (send)
-            cellState = player->cellStateChanges.cellStates.at(i);
-        
+    for (auto &&cellState : player->cellStateChanges.cellStates)
+    {
         RW(cellState.type, send);
-        RW(cellState.cell.mData, send, 1);
-        RW(cellState.cell.mName, send, 1);
-
-        if (!send)
-            player->cellStateChanges.cellStates.push_back(cellState);
+        RW(cellState.cell.mData, send, true);
+        RW(cellState.cell.mName, send, true);
     }
 }

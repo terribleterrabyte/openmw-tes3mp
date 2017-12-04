@@ -85,6 +85,11 @@ bool Utils::compareDoubles(double a, double b, double epsilon)
     return fabs(a - b) < epsilon;
 }
 
+bool Utils::vectorContains(std::vector<int>* vectorChecked, int value)
+{
+    return std::find(vectorChecked->begin(), vectorChecked->end(), value) != vectorChecked->end();
+}
+
 std::string Utils::toString(int num)
 {
     std::ostringstream stream;
@@ -195,4 +200,13 @@ string Utils::intToHexStr(unsigned val)
     ostringstream sstr;
     sstr << "0x" << setfill('0') << setw(8) << uppercase << hex << val;
     return sstr.str();
+}
+
+string Utils::getFilenameTimestamp()
+{
+    time_t rawtime = time(nullptr);
+    struct tm *timeinfo = localtime(&rawtime);
+    char buffer[25];
+    strftime(buffer, 25, "%Y-%m-%d-%H_%M_%S", timeinfo);
+    return string(buffer);
 }

@@ -7,6 +7,7 @@
 
 #include <string>
 #include <sstream>
+#include <vector>
 
 #if (defined __WIN32__ || defined _WIN32 || defined WIN32)
 #define __WINDOWS
@@ -26,6 +27,8 @@ namespace Utils
 
     bool compareDoubles(double a, double b, double epsilon);
 
+    bool vectorContains(std::vector<int>* vectorChecked, int value);
+
     std::string replaceString(const std::string &source, const char *find, const char *replace);
 
     std::string toString(int num);
@@ -40,5 +43,7 @@ namespace Utils
 
     void printWithWidth(std::ostringstream &sstr, std::string str, size_t width);
     std::string intToHexStr(unsigned val);
+
+    std::string getFilenameTimestamp();
 }
 #endif //UTILS_HPP

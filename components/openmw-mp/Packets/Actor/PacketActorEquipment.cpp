@@ -11,10 +11,10 @@ PacketActorEquipment::PacketActorEquipment(RakNet::RakPeerInterface *peer) : Act
 
 void PacketActorEquipment::Actor(BaseActor &actor, bool send)
 {
-    for (int j = 0; j < 19; j++)
+    for (auto &&equipmentItem : actor.equipmentItems)
     {
-        RW(actor.equipedItems[j].refId, send);
-        RW(actor.equipedItems[j].count, send);
-        RW(actor.equipedItems[j].charge, send);
+        RW(equipmentItem.refId, send);
+        RW(equipmentItem.count, send);
+        RW(equipmentItem.charge, send);
     }
 }

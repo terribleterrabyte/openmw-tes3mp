@@ -8,6 +8,7 @@
 
 #include "player/ProcessorChatMessage.hpp"
 #include "player/ProcessorGUIMessageBox.hpp"
+#include "player/ProcessorGUIWindow.hpp"
 #include "player/ProcessorHandshake.hpp"
 #include "player/ProcessorUserDisconnected.hpp"
 #include "player/ProcessorGameSettings.hpp"
@@ -86,6 +87,7 @@ void ProcessorInitializer()
 {
     PlayerProcessor::AddProcessor(new ProcessorChatMessage());
     PlayerProcessor::AddProcessor(new ProcessorGUIMessageBox());
+    PlayerProcessor::AddProcessor(new ProcessorGUIWindow());
     PlayerProcessor::AddProcessor(new ProcessorHandshake());
     PlayerProcessor::AddProcessor(new ProcessorUserDisconnected());
     PlayerProcessor::AddProcessor(new ProcessorGameSettings());

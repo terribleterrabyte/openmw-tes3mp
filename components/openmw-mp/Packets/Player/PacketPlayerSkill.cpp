@@ -17,11 +17,23 @@ PacketPlayerSkill::PacketPlayerSkill(RakNet::RakPeerInterface *peer) : PlayerPac
 void PacketPlayerSkill::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
+    
+    uint32_t count;
 
-    RW(player->npcStats.mSkills, send);
+    if (send)
+        count = static_cast<uint32_t>(player->skillIndexChanges.size());
 
+    RW(count, send);
 
-    RW(player->npcStats.mSkillIncrease, send);
+    if (!send)
+    {
+        player->skillIndexChanges.clear();
+        player->skillIndexChanges.resize(count);
+    }
 
-    RW(player->npcStats.mLevelProgress, send);
+    for (auto && skillId : player->skillIndexChanges)
+    {
+        RW(skillId, send);
+        RW(player->npcStats.mSkills[skillId], send);
+    }
 }

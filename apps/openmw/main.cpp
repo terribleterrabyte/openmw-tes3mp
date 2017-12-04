@@ -393,7 +393,7 @@ int main(int argc, char**argv)
             that includes a timestamp
         */
         // Redirect cout and cerr to tes3mp client log
-        logfile.open (boost::filesystem::path(cfgMgr.getLogPath() / "/tes3mp-client-" += Log::getFilenameTimestamp() += ".log"));
+        logfile.open (boost::filesystem::path(cfgMgr.getLogPath() / "/tes3mp-client-" += Utils::getFilenameTimestamp() += ".log"));
         /*
             End of tes3mp change (major)
         */

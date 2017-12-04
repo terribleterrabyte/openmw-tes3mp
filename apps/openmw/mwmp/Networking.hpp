@@ -46,6 +46,8 @@ namespace mwmp
         ActorList *getActorList();
         WorldEvent *getWorldEvent();
 
+        std::string getNetworkStatistics();
+
     private:
         bool connected;
         RakNet::RakPeerInterface *peer;

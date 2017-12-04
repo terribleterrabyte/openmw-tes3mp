@@ -13,30 +13,26 @@ void PacketPlayerJournal::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
 
+    uint32_t count;
+
     if (send)
-        player->journalChanges.count = (unsigned int)(player->journalChanges.journalItems.size());
-    else
-        player->journalChanges.journalItems.clear();
+        count = static_cast<uint32_t>(player->journalChanges.journalItems.size());
 
-    RW(player->journalChanges.count, send);
+    RW(count, send);
 
-    for (unsigned int i = 0; i < player->journalChanges.count; i++)
+    if (!send)
     {
-        JournalItem journalItem;
+        player->journalChanges.journalItems.clear();
+        player->journalChanges.journalItems.resize(count);
+    }
 
-        if (send)
-            journalItem = player->journalChanges.journalItems.at(i);
-
+    for (auto &&journalItem : player->journalChanges.journalItems)
+    {
         RW(journalItem.type, send);
-        RW(journalItem.quest, send, 1);
+        RW(journalItem.quest, send, true);
         RW(journalItem.index, send);
 
         if (journalItem.type == JournalItem::ENTRY)
-        {
-            RW(journalItem.actorRefId, send, 1);
-        }
-
-        if (!send)
-            player->journalChanges.journalItems.push_back(journalItem);
+            RW(journalItem.actorRefId, send, true);
     }
 }

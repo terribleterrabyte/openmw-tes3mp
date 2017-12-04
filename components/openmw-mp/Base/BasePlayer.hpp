@@ -8,11 +8,12 @@
 #include <components/esm/loadcell.hpp>
 #include <components/esm/loadnpc.hpp>
 #include <components/esm/npcstats.hpp>
-#include <components/esm/creaturestats.hpp>
 #include <components/esm/loadclas.hpp>
 #include <components/esm/loadspel.hpp>
+#include <components/esm/activespells.hpp>
 
 #include <components/openmw-mp/Base/BaseStructs.hpp>
+#include <components/openmw-mp/Base/BaseNetCreature.hpp>
 
 #include <RakNetTypes.h>
 
@@ -81,13 +82,11 @@ namespace mwmp
     struct JournalChanges
     {
         std::vector<JournalItem> journalItems;
-        unsigned int count;
     };
 
     struct FactionChanges
     {
         std::vector<Faction> factions;
-        unsigned int count;
 
         enum FACTION_ACTION
         {
@@ -102,44 +101,27 @@ namespace mwmp
     struct TopicChanges
     {
         std::vector<Topic> topics;
-        unsigned int count;
     };
 
     struct KillChanges
     {
         std::vector<Kill> kills;
-        unsigned int count;
     };
 
     struct BookChanges
     {
         std::vector<Book> books;
-        unsigned int count;
     };
 
     struct MapChanges
     {
         std::vector<ESM::Cell> cellsExplored;
-        unsigned int count;
-    };
-
-    struct InventoryChanges
-    {
-        std::vector<Item> items;
-        unsigned int count;
-        enum ACTION_TYPE
-        {
-            SET = 0,
-            ADD,
-            REMOVE
-        };
-        int action; // 0 - Clear and set in entirety, 1 - Add item, 2 - Remove item
     };
 
     struct SpellbookChanges
     {
         std::vector<ESM::Spell> spells;
-        unsigned int count;
+
         enum ACTION_TYPE
         {
             SET = 0,
@@ -152,7 +134,6 @@ namespace mwmp
     struct CellStateChanges
     {
         std::vector<CellState> cellStates;
-        unsigned int count;
     };
 
     enum RESURRECT_TYPE
@@ -162,13 +143,14 @@ namespace mwmp
         TRIBUNAL_TEMPLE
     };
 
-    class BasePlayer
+    class BasePlayer : public mwmp::BaseNetCreature
     {
     public:
 
-        struct CGStage
+        struct CharGenState
         {
-            int current, end;
+            int currentStage, endStage;
+            bool isFinished;
         };
 
         struct GUIMessageBox
@@ -190,16 +172,47 @@ namespace mwmp
             std::string data;
         };
 
+        struct GUIWindow
+        {
+            int32_t id;
+            short width, height;
+            enum class WidgetType: uint8_t
+            {
+                Button,
+                Editbox,
+                Label,
+                ListBoxActive,
+                ListBoxPassive,
+                Slider
+            };
+
+            struct Widget
+            {
+                WidgetType type;
+                std::string name;
+                bool disabled;
+                short posX, posY;
+                short width, height;
+                std::vector<std::string> data;
+            };
+
+            std::vector<Widget> widgets;
+        };
+
         BasePlayer(RakNet::RakNetGUID guid) : guid(guid)
         {
             inventoryChanges.action = 0;
-            inventoryChanges.count = 0;
             spellbookChanges.action = 0;
-            spellbookChanges.count = 0;
             useCreatureName = false;
+            isWerewolf = false;
         }
 
         BasePlayer()
+        {
+
+        }
+
+        ~BasePlayer()
         {
 
         }
@@ -208,9 +221,17 @@ namespace mwmp
         GUIMessageBox guiMessageBox;
         int month;
         int day;
+        GUIWindow guiWindow;
         double hour;
 
-        InventoryChanges inventoryChanges;
+        // Track only the indexes of the attributes that have been changed,
+        // with the attribute values themselves being stored in creatureStats.mAttributes
+        std::vector<int> attributeIndexChanges;
+
+        // Track only the indexes of the skills that have been changed,
+        // with the skill values themselves being stored in npcStats.mSkills
+        std::vector<int> skillIndexChanges;
+
         SpellbookChanges spellbookChanges;
         JournalChanges journalChanges;
         FactionChanges factionChanges;
@@ -228,31 +249,18 @@ namespace mwmp
 
         bool ignorePosPacket;
 
-        unsigned int movementFlags;
-        char movementAnim;
-        char drawState;
-        bool isFlying;
-
-        ESM::Position position;
-        ESM::Position direction;
         ESM::Position previousCellPosition;
-        ESM::Cell cell;
         ESM::NPC npc;
         ESM::NpcStats npcStats;
-        ESM::CreatureStats creatureStats;
         ESM::Class charClass;
-        Item equipedItems[19];
-        Attack attack;
         std::string birthsign;
         std::string chatMessage;
-        CGStage charGenStage;
+        CharGenState charGenState;
         std::string passw;
 
         bool isWerewolf;
         std::string creatureModel;
         bool useCreatureName;
-
-        bool isChangingRegion;
 
         std::string deathReason;
 

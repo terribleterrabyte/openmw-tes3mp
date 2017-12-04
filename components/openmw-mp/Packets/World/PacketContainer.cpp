@@ -17,43 +17,36 @@ void PacketContainer::Packet(RakNet::BitStream *bs, bool send)
 
     RW(event->action, send);
 
-    WorldObject worldObject;
-    for (unsigned int i = 0; i < event->worldObjectCount; i++)
+    for (auto &&worldObject : event->worldObjects)
     {
+        Object(worldObject, send);
+
         if (send)
         {
-            worldObject = event->worldObjects.at(i);
             worldObject.containerItemCount = (unsigned int) (worldObject.containerItems.size());
         }
-        else
-            worldObject.containerItems.clear();
-
-        Object(worldObject, send);
 
         RW(worldObject.containerItemCount, send);
 
-        if (worldObject.containerItemCount > maxObjects || worldObject.refId.empty() || (worldObject.refNumIndex != 0 && worldObject.mpNum != 0))
+        if (!send)
+        {
+            worldObject.containerItems.clear();
+            worldObject.containerItems.resize(worldObject.containerItemCount);
+        }
+
+        if (worldObject.containerItemCount > maxObjects || worldObject.refId.empty()
+            || (worldObject.refNumIndex != 0 && worldObject.mpNum != 0))
         {
             event->isValid = false;
             return;
         }
 
-        ContainerItem containerItem;
-
-        for (unsigned int j = 0; j < worldObject.containerItemCount; j++)
+        for (auto &&containerItem: worldObject.containerItems)
         {
-            if (send)
-                containerItem = worldObject.containerItems.at(j);
-
             RW(containerItem.refId, send);
             RW(containerItem.count, send);
             RW(containerItem.charge, send);
             RW(containerItem.actionCount, send);
-
-            if (!send)
-                worldObject.containerItems.push_back(containerItem);
         }
-        if (!send)
-            event->worldObjects.push_back(worldObject);
     }
 }

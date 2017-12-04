@@ -30,6 +30,7 @@
 
 #include <SDL_messagebox.h>
 #include <RakSleep.h>
+#include <RakNetStatistics.h>
 #include <iomanip>
 #include <components/version/version.hpp>
 
@@ -194,6 +195,7 @@ Networking::~Networking()
     RakNet::RakPeerInterface::DestroyInstance(peer);
 }
 
+
 void Networking::update()
 {
     RakNet::Packet *packet;
@@ -229,7 +231,7 @@ void Networking::update()
                 break;
             default:
                 receiveMessage(packet);
-                //LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Message with identifier %i has arrived.", packet->data[0]);
+                //LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Message with identifier %i has arrived.", (int) packet->data[0]);
                 break;
         }
     }
@@ -402,17 +404,17 @@ void Networking::receiveMessage(RakNet::Packet *packet)
     if (playerPacketController.ContainsPacket(packet->data[0]))
     {
         if (!PlayerProcessor::Process(*packet))
-            LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled PlayerPacket with identifier %i has arrived", packet->data[0]);
+            LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled PlayerPacket with identifier %i has arrived", (int) packet->data[0]);
     }
     else if (actorPacketController.ContainsPacket(packet->data[0]))
     {
         if (!ActorProcessor::Process(*packet, actorList))
-            LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled ActorPacket with identifier %i has arrived", packet->data[0]);
+            LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled ActorPacket with identifier %i has arrived", (int) packet->data[0]);
     }
     else if (worldPacketController.ContainsPacket(packet->data[0]))
     {
         if (!WorldProcessor::Process(*packet, worldEvent))
-            LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled WorldPacket with identifier %i has arrived", packet->data[0]);
+            LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled WorldPacket with identifier %i has arrived", (int) packet->data[0]);
     }
 }
 
@@ -449,4 +451,12 @@ WorldEvent *Networking::getWorldEvent()
 bool Networking::isConnected()
 {
     return connected;
+}
+
+std::string Networking::getNetworkStatistics()
+{
+    static char message[2048];
+    auto rss = peer->GetStatistics(peer->GetSystemAddressFromIndex(0));
+    StatisticsToString(rss, message, 2);
+    return message;
 }

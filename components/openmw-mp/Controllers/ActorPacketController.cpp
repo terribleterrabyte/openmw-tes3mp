@@ -43,18 +43,18 @@ mwmp::ActorPacketController::ActorPacketController(RakNet::RakPeerInterface *pee
 
 mwmp::ActorPacket *mwmp::ActorPacketController::GetPacket(RakNet::MessageID id)
 {
-    return packets[(unsigned char)id].get();
+    return packets[(RakNet::MessageID)id].get();
 }
 
 void mwmp::ActorPacketController::SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream)
 {
-    for(const auto &packet : packets)
+    for (const auto &packet : packets)
         packet.second->SetStreams(inStream, outStream);
 }
 
 bool mwmp::ActorPacketController::ContainsPacket(RakNet::MessageID id)
 {
-    for(const auto &packet : packets)
+    for (const auto &packet : packets)
     {
         if (packet.first == id)
             return true;

@@ -33,12 +33,13 @@
 #include "GUI/PlayerMarkerCollection.hpp"
 #include "GUI/GUIDialogList.hpp"
 #include "GUI/GUIChat.hpp"
+#include "GUI/GUICustomWindow.hpp"
 #include "LocalPlayer.hpp"
 #include "DedicatedPlayer.hpp"
 #include "PlayerList.hpp"
 
 
-mwmp::GUIController::GUIController(): mInputBox(0), mListBox(0)
+mwmp::GUIController::GUIController(): mInputBox(0), mListBox(0), mCustomWindow(0)
 {
     mChat = nullptr;
     keySay = SDL_SCANCODE_Y;
@@ -54,8 +55,8 @@ mwmp::GUIController::~GUIController()
 void mwmp::GUIController::cleanUp()
 {
     mPlayerMarkers.clear();
-    if (mChat != nullptr)
-        delete mChat;
+
+    delete mChat;
     mChat = nullptr;
 }
 
@@ -158,6 +159,20 @@ void mwmp::GUIController::showInputBox(const BasePlayer::GUIMessageBox &guiMessa
     mInputBox->setVisible(true);
 }
 
+void mwmp::GUIController::showCustomWindow(const mwmp::BasePlayer::GUIWindow &guiMessageBox)
+{
+    MWBase::WindowManager *windowManager = MWBase::Environment::get().getWindowManager();
+    if(mCustomWindow != nullptr)
+        LOG_MESSAGE_SIMPLE(Log::LOG_VERBOSE, "Deleting mCustomWindow");
+    windowManager->removeDialog(mCustomWindow);
+    windowManager->pushGuiMode((MWGui::GuiMode)GM_TES3MP_CustomWindow);
+    mCustomWindow = nullptr;
+
+    mCustomWindow = new GUICustomWindow(guiMessageBox);
+
+    mCustomWindow->setVisible(true);
+}
+
 void mwmp::GUIController::onInputBoxDone(MWGui::WindowBase *parWindow)
 {
     //MWBase::WindowManager *windowManager = MWBase::Environment::get().getWindowManager();
@@ -177,6 +192,12 @@ bool mwmp::GUIController::pressedKey(int key)
     MWBase::WindowManager *windowManager = MWBase::Environment::get().getWindowManager();
     if (mChat == nullptr || windowManager->getMode() != MWGui::GM_None)
         return false;
+
+    if(key == SDL_SCANCODE_F2 && (SDL_GetModState() & KMOD_CTRL) > 0)
+    {
+        mChat->switchNetstat();
+        return true;
+    }
     if (key == keyChatMode)
     {
         mChat->pressedChatMode();
@@ -190,7 +211,7 @@ bool mwmp::GUIController::pressedKey(int key)
     return false;
 }
 
-bool mwmp::GUIController::hasFocusedElement()
+bool mwmp::GUIController:: hasFocusedElement()
 {
     return false;
 }

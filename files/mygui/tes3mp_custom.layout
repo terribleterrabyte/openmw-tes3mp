@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout">
+    <Widget type="Window" skin="MW_Dialog" position="0 0 500 500" align="Center" layer="Windows" name="_Main">
+        <Widget type="AutoSizedButton" skin="MW_Button" name="SendButton">
+            <Property key="Caption" value="Send"/>
+        </Widget>
+    </Widget>
+</MyGUI>

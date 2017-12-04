@@ -11,7 +11,7 @@ const vector<string> Utils::split(const string &str, int delimiter)
     string buffer;
     vector<string> result;
 
-    for (auto symb:str)
+    for (const auto &symb : str)
         if (symb != delimiter)
             buffer += symb;
         else if (!buffer.empty())
@@ -30,10 +30,10 @@ ESM::Cell Utils::getCellFromDescription(std::string cellDescription)
     ESM::Cell cell;
     cell.blank();
 
-    static std::regex exteriorCellPattern("^(-?\\d+), (-?\\d+)$");
-    std::smatch baseMatch;
+    static regex exteriorCellPattern("^(-?\\d+), (-?\\d+)$");
+    smatch baseMatch;
 
-    if (std::regex_match(cellDescription, baseMatch, exteriorCellPattern))
+    if (regex_match(cellDescription, baseMatch, exteriorCellPattern))
     {
         cell.mData.mFlags &= ~ESM::Cell::Interior;
 

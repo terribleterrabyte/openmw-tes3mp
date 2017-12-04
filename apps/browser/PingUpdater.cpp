@@ -14,7 +14,7 @@ void PingUpdater::stop()
     run = false;
 }
 
-void PingUpdater::addServer(int row, AddrPair addr)
+void PingUpdater::addServer(int row, const AddrPair &addr)
 {
     servers.push_back({row, addr});
     run = true;

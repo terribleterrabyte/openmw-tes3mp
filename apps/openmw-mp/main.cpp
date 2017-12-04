@@ -23,8 +23,6 @@
 #include "MasterClient.hpp"
 #include "Utils.hpp"
 
-#include <apps/openmw-mp/Script/Script.hpp>
-
 #ifdef ENABLE_BREAKPAD
 #include <handler/exception_handler.h>
 #endif
@@ -141,8 +139,25 @@ boost::program_options::variables_map launchOptions(int argc, char *argv[], File
     return variables;
 }
 
+#include "stacktrace.hpp"
+
+
 int main(int argc, char *argv[])
 {
+    set_terminate([]() {
+        try
+        {
+            rethrow_exception(current_exception());
+        }
+        catch (const exception &e)
+        {
+            LOG_MESSAGE_SIMPLE(Log::LOG_FATAL, " Woops, something wrong! Exception:\n\t%s", e.what());
+        }
+
+        stacktrace();
+        abort();
+    });
+
     Settings::Manager mgr;
     Files::ConfigurationManager cfgMgr;
 
@@ -155,8 +170,6 @@ int main(int argc, char *argv[])
     auto version = Version::getOpenmwVersion(variables["resources"].as<Files::EscapeHashString>().toStdString());
 
     int logLevel = mgr.getInt("logLevel", "General");
-    if (logLevel < Log::LOG_VERBOSE || logLevel > Log::LOG_FATAL)
-        logLevel = Log::LOG_VERBOSE;
 
     // Some objects used to redirect cout and cerr
     // Scope must be here, so this still works inside the catch block for logging exceptions
@@ -176,7 +189,7 @@ int main(int argc, char *argv[])
         // Redirect cout and cerr to tes3mp server log
 
         logfile.open(boost::filesystem::path(
-                cfgMgr.getLogPath() / "/tes3mp-server-" += Log::getFilenameTimestamp() += ".log"));
+                cfgMgr.getLogPath() / "/tes3mp-server-" += Utils::getFilenameTimestamp() += ".log"));
 
         coutsb.open(Tee(logfile, oldcout));
         cerrsb.open(Tee(logfile, oldcerr));
@@ -193,25 +206,7 @@ int main(int argc, char *argv[])
 
     string passw = mgr.getString("password", "General");
 
-    string plugin_home = mgr.getString("home", "Plugins");
-    string moddir = Utils::convertPath(plugin_home + "/data");
-
-    vector<string> plugins (Utils::split(mgr.getString("plugins", "Plugins"), ','));
-
     Utils::printVersion("TES3MP dedicated server", TES3MP_VERSION, version.mCommitHash, TES3MP_PROTO_VERSION);
-
-    setenv("AMXFILE", moddir.c_str(), 1);
-    setenv("MOD_DIR", moddir.c_str(), 1); // hack for lua
-
-    setenv("LUA_PATH", Utils::convertPath(plugin_home + "/scripts/?.lua" + ";"
-                                          + plugin_home + "/scripts/?.t" + ";"
-                                          + plugin_home + "/lib/lua/?.lua" + ";"
-                                          + plugin_home + "/lib/lua/?.t").c_str(), 1);
-#ifdef _WIN32
-    setenv("LUA_CPATH", Utils::convertPath(plugin_home + "/lib/?.dll").c_str(), 1);
-#else
-    setenv("LUA_CPATH", Utils::convertPath(plugin_home + "/lib/?.so").c_str(), 1);
-#endif
 
     int code;
 
@@ -232,71 +227,83 @@ int main(int argc, char *argv[])
 
     RakNet::SocketDescriptor sd((unsigned short) port, addr.c_str());
 
-    try
+    switch (peer->Startup((unsigned) players, &sd, 1))
     {
-        for (auto plugin : plugins)
-            Script::LoadScript(plugin.c_str(), plugin_home.c_str());
-
-        switch (peer->Startup((unsigned) players, &sd, 1))
-        {
-            case RakNet::RAKNET_STARTED:
-                break;
-            case RakNet::RAKNET_ALREADY_STARTED:
-                throw runtime_error("Already started");
-            case RakNet::INVALID_SOCKET_DESCRIPTORS:
-                throw runtime_error("Incorrect port or address");
-            case RakNet::INVALID_MAX_CONNECTIONS:
-                throw runtime_error("Max players cannot be negative or 0");
-            case RakNet::SOCKET_FAILED_TO_BIND:
-            case RakNet::SOCKET_PORT_ALREADY_IN_USE:
-            case RakNet::PORT_CANNOT_BE_ZERO:
-                throw runtime_error("Failed to bind port");
-            case RakNet::SOCKET_FAILED_TEST_SEND:
-            case RakNet::SOCKET_FAMILY_NOT_SUPPORTED:
-            case RakNet::FAILED_TO_CREATE_NETWORK_THREAD:
-            case RakNet::COULD_NOT_GENERATE_GUID:
-            case RakNet::STARTUP_OTHER_FAILURE:
-                throw runtime_error("Cannot start server");
-        }
-
-        peer->SetMaximumIncomingConnections((unsigned short) (players));
-
-        Networking networking(peer);
-        networking.setServerPassword(passw);
-
-        if (mgr.getBool("enabled", "MasterServer"))
-        {
-            LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Sharing server query info to master enabled.");
-            string masterAddr = mgr.getString("address", "MasterServer");
-            int masterPort = mgr.getInt("port", "MasterServer");
-            int updateRate = mgr.getInt("rate", "MasterServer");
-
-            networking.InitQuery(masterAddr, (unsigned short) masterPort);
-            networking.getMasterClient()->SetMaxPlayers((unsigned) players);
-            networking.getMasterClient()->SetUpdateRate((unsigned) updateRate);
-            string hostname = mgr.getString("hostname", "General");
-            networking.getMasterClient()->SetHostname(hostname);
-            networking.getMasterClient()->SetRuleString("CommitHash", version.mCommitHash.substr(0, 10));
-
-            networking.getMasterClient()->Start();
-        }
-
-        networking.postInit();
-
-        code = networking.mainLoop();
-
-        networking.getMasterClient()->Stop();
+        case RakNet::RAKNET_STARTED:
+            break;
+        case RakNet::RAKNET_ALREADY_STARTED:
+            throw runtime_error("Already started");
+        case RakNet::INVALID_SOCKET_DESCRIPTORS:
+            throw runtime_error("Incorrect port or address");
+        case RakNet::INVALID_MAX_CONNECTIONS:
+            throw runtime_error("Max players cannot be negative or 0");
+        case RakNet::SOCKET_FAILED_TO_BIND:
+        case RakNet::SOCKET_PORT_ALREADY_IN_USE:
+        case RakNet::PORT_CANNOT_BE_ZERO:
+            throw runtime_error("Failed to bind port");
+        case RakNet::SOCKET_FAILED_TEST_SEND:
+        case RakNet::SOCKET_FAMILY_NOT_SUPPORTED:
+        case RakNet::FAILED_TO_CREATE_NETWORK_THREAD:
+        case RakNet::COULD_NOT_GENERATE_GUID:
+        case RakNet::STARTUP_OTHER_FAILURE:
+            throw runtime_error("Cannot start server");
     }
-    catch (std::exception &e)
+
+    peer->SetMaximumIncomingConnections((unsigned short) (players));
+
+    Networking networking(peer);
+
+    string moduleHome = mgr.getString("home", "Modules");
+
+    if (mgr.getBool("autoSort", "Modules"))
+        networking.getState().loadModules(moduleHome);
+    else
     {
-        LOG_MESSAGE_SIMPLE(Log::LOG_ERROR, e.what());
-        throw; //fall through
+        std::vector<std::string> list;
+
+        try
+        {
+            for (int i = 1;; ++i)
+                list.push_back(mgr.getString("Module" + to_string(i), "Modules"));
+        }
+        catch (...)
+        {} // Manager::getString throws runtime_error exception if setting is not exist
+
+        networking.getState().loadModules(moduleHome, &list);
     }
+
+
+    networking.setServerPassword(passw);
+
+    if (mgr.getBool("enabled", "MasterServer"))
+    {
+        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Sharing server query info to master enabled.");
+        string masterAddr = mgr.getString("address", "MasterServer");
+        int masterPort = mgr.getInt("port", "MasterServer");
+        int updateRate = mgr.getInt("rate", "MasterServer");
+
+        networking.InitQuery(masterAddr, (unsigned short) masterPort);
+        networking.getMasterClient()->SetMaxPlayers((unsigned) players);
+        networking.getMasterClient()->SetUpdateRate((unsigned) updateRate);
+        string hostname = mgr.getString("hostname", "General");
+        networking.getMasterClient()->SetHostname(hostname);
+        networking.getMasterClient()->SetRuleString("CommitHash", version.mCommitHash.substr(0, 10));
+
+        networking.getMasterClient()->Start();
+    }
+
+    networking.postInit();
+
+    code = networking.mainLoop();
+
+    networking.getMasterClient()->Stop();
 
     RakNet::RakPeerInterface::DestroyInstance(peer);
 
     if (code == 0)
         LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Quitting peacefully.");
+    else if (code == 1)
+        LOG_MESSAGE_SIMPLE(Log::LOG_ERROR, "Forcibly shutting down because of error.");
 
     LOG_QUIT();
 
