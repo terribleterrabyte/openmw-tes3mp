@@ -239,20 +239,25 @@ int main(int argc, char *argv[])
             break;
         case RakNet::RAKNET_ALREADY_STARTED:
             Utils::throwError("Already started");
+            break;
         case RakNet::INVALID_SOCKET_DESCRIPTORS:
             Utils::throwError("Incorrect port or address");
+            break;
         case RakNet::INVALID_MAX_CONNECTIONS:
             Utils::throwError("Max players cannot be negative or 0");
+            break;
         case RakNet::SOCKET_FAILED_TO_BIND:
         case RakNet::SOCKET_PORT_ALREADY_IN_USE:
         case RakNet::PORT_CANNOT_BE_ZERO:
             Utils::throwError("Failed to bind port");
+            break;
         case RakNet::SOCKET_FAILED_TEST_SEND:
         case RakNet::SOCKET_FAMILY_NOT_SUPPORTED:
         case RakNet::FAILED_TO_CREATE_NETWORK_THREAD:
         case RakNet::COULD_NOT_GENERATE_GUID:
         case RakNet::STARTUP_OTHER_FAILURE:
             Utils::throwError("Cannot start server");
+            break;
     }
 
     peer->SetMaximumIncomingConnections((unsigned short) (players));
