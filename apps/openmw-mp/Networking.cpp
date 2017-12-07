@@ -57,6 +57,7 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
     serverPassword = TES3MP_DEFAULT_PASSW;
 
     ProcessorInitializer();
+    createChannel(); // create Default channel
 }
 
 Networking::~Networking()
@@ -544,4 +545,42 @@ void Networking::postInit()
                 mclient->PushPlugin({plugin.first, 0});
         }
     }
+}
+
+std::shared_ptr<ChatChannel> Networking::getChannel(unsigned id)
+{
+    auto it = chatChannels.find(id);
+    if (it != chatChannels.end())
+        return it->second;
+    else
+        return nullptr;
+}
+
+unsigned Networking::createChannel()
+{
+    static unsigned lastChatId = 0;
+    unsigned id = 0;
+    for(auto &channel : chatChannels)
+    {
+        if(channel.second == nullptr)
+            id = channel.first;
+    }
+
+    if (id == 0)
+        id = lastChatId++;
+
+
+    chatChannels[id] = make_shared<ChatChannel>();
+    return id;
+}
+
+bool Networking::closeChannel(unsigned id)
+{
+    auto it = chatChannels.find(id);
+    if (it != chatChannels.end())
+    {
+        it->second = nullptr;
+        return true;
+    }
+    return false;
 }

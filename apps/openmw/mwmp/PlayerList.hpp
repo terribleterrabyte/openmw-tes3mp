@@ -19,7 +19,7 @@ namespace MWMechanics
 
 namespace mwmp
 {
-    struct DedicatedPlayer;
+    class DedicatedPlayer;
 
     class PlayerList
     {

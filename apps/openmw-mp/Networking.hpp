@@ -14,6 +14,14 @@
 class MasterClient;
 namespace  mwmp
 {
+    struct ChatChannel
+    {
+        ChatChannel()
+        {
+        }
+        std::vector<std::weak_ptr<Player>> members;
+    };
+
     class Networking
     {
     public:
@@ -63,6 +71,11 @@ namespace  mwmp
         static Networking *getPtr();
 
         void postInit();
+
+        std::shared_ptr<ChatChannel> getChannel(unsigned id);
+        unsigned createChannel();
+        bool closeChannel(unsigned id);
+
     private:
         LuaState luaState;
         PacketPreInit::PluginContainer getPluginListSample();
@@ -83,6 +96,8 @@ namespace  mwmp
         bool running;
         int exitCode;
         PacketPreInit::PluginContainer samples;
+
+        std::unordered_map<unsigned, std::shared_ptr<ChatChannel>> chatChannels;
     };
 }
 

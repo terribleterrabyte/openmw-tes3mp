@@ -77,10 +77,38 @@ void mwmp::GUIController::setupChat(const Settings::Manager &mgr)
     mChat->setDelay(chatDelay);
 }
 
-void mwmp::GUIController::printChatMessage(std::string &msg)
+void mwmp::GUIController::printChatMessage(const mwmp::Chat &chat)
 {
     if (mChat != nullptr)
-        mChat->print(msg);
+    {
+        switch (chat.action)
+        {
+            case Chat::Action::print:
+                mChat->print(chat.channel, chat.message);
+                break;
+            case Chat::Action::clear:
+                mChat->clean(chat.channel);
+                break;
+            case Chat::Action::addchannel:
+                mChat->addChannel(chat.channel, chat.message);
+                break;
+            case Chat::Action::setchannel:
+                mChat->setChannel(chat.channel);
+                break;
+            case Chat::Action::closechannel:
+                mChat->closeChannel(chat.channel);
+                break;
+            case Chat::Action::renamechannel:
+                mChat->renameChannel(chat.channel, chat.message);
+                break;
+        }
+    }
+}
+
+void mwmp::GUIController::setChatCaption(const std::string &msg)
+{
+    if (mChat != nullptr)
+        mChat->setCaption(msg);
 }
 
 

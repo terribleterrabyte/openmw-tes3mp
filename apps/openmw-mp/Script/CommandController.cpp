@@ -60,7 +60,8 @@ bool CommandController::hasCommand(const std::string &command)
     return commands.find(command) != commands.end();
 }
 
-std::pair<CommandController::ExecResult, std::string> CommandController::exec(std::shared_ptr<Player> player, const std::string &message)
+std::pair<CommandController::ExecResult, std::string> CommandController::exec(const std::shared_ptr<Player> &player,
+                                                                              const std::string &message, unsigned channel)
 {
     char cmdChar = message[0];
     if (message.size() < 2 || (cmdChar != '/' && cmdChar != '!'))
@@ -72,7 +73,7 @@ std::pair<CommandController::ExecResult, std::string> CommandController::exec(st
     if (cmd != commands.end())
     {
         tokens.pop_front();
-        bool result = cmd->second.func(player, sol::as_table(tokens));
+        bool result = cmd->second.func(player, sol::as_table(tokens), channel);
         if (result)
             return make_pair(ExecResult::SUCCESS, "");
 

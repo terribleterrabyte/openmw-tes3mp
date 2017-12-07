@@ -117,10 +117,8 @@ void Cell::readActorList(unsigned char packetID, const mwmp::BaseActorList *newA
 
 bool Cell::containsActor(int refNumIndex, int mpNum)
 {
-    for (unsigned int i = 0; i < cellActorList.baseActors.size(); i++)
+    for (const auto &actor : cellActorList.baseActors)
     {
-        auto &actor = cellActorList.baseActors.at(i);
-
         if (actor->refNumIndex == refNumIndex && actor->mpNum == mpNum)
             return true;
     }
@@ -129,14 +127,12 @@ bool Cell::containsActor(int refNumIndex, int mpNum)
 
 mwmp::BaseActor *Cell::getActor(int refNumIndex, int mpNum)
 {
-    for (unsigned int i = 0; i < cellActorList.baseActors.size(); i++)
+    for (const auto &actor : cellActorList.baseActors)
     {
-        auto &actor = cellActorList.baseActors.at(i);
-
         if (actor->refNumIndex == refNumIndex && actor->mpNum == mpNum)
             return actor.get();
     }
-    return 0;
+    return nullptr;
 }
 
 void Cell::removeActors(const mwmp::BaseActorList *newActorList)

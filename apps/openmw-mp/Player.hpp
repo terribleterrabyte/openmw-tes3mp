@@ -75,14 +75,21 @@ public:
 public:
     void kick() const;
     void ban() const;
-    void cleanChat();
+
+    void cleanChannel(unsigned channelId);
+    void message(unsigned channelId, const std::string &message, bool toAll = false);
+    bool joinToChannel(unsigned channelId, const std::string &name);
+    void renameChannel(unsigned channelId, const std::string &name);
+    void closeChannel(unsigned channelId);
+    void leaveChannel(unsigned channelId);
+    void setChannel(unsigned channelId);
+    bool isChannelOpened(unsigned channelId);
 
     int getAvgPing();
 
     std::string getName();
     void setName(const std::string &name);
     void setCharGenStages(int currentStage, int endStage);
-    void message(const std::string &message, bool toAll = false);
     int getGender() const;
     void setGender(int gender);
     std::string getRace() const;

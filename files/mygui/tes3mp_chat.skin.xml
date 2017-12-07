@@ -17,4 +17,8 @@
         <Child type="TextBox" skin="TES3MP_EditClient" offset="4 2 19 22" align="Bottom Stretch" name="Client"/>
     </Resource>
 
+    <Resource type="ResourceSkin" name="TES3MP_ChatWindowBL" size="256 54">
+        <Child type="Widget" skin="BlackBG" offset="0 0 256 256" align="Stretch" name="Client"/>
+    </Resource>
+
 </MyGUI>

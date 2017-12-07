@@ -15,5 +15,7 @@ void mwmp::PacketChatMessage::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
 
-    RW(player->chatMessage, send);
+    RW(player->chat.channel, send);
+    RW(player->chat.action, send);
+    RW(player->chat.message, send);
 }

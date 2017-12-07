@@ -19,6 +19,21 @@
 
 namespace mwmp
 {
+    struct Chat
+    {
+        enum class Action : uint8_t {
+            print = 0,
+            clear,
+            addchannel,
+            setchannel,
+            closechannel,
+            renamechannel
+        };
+        unsigned channel;
+        Action action;
+        std::string message;
+    };
+
     struct CurrentContainer
     {
         std::string refId;
@@ -254,7 +269,7 @@ namespace mwmp
         ESM::NpcStats npcStats;
         ESM::Class charClass;
         std::string birthsign;
-        std::string chatMessage;
+        Chat chat;
         CharGenState charGenState;
         std::string passw;
 

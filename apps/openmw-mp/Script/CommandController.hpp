@@ -56,7 +56,7 @@ public:
      */
     bool hasCommand(const std::string &command);
 
-    std::pair<ExecResult, std::string> exec(std::shared_ptr<Player> player, const std::string &message);
+    std::pair<ExecResult, std::string> exec(const std::shared_ptr<Player> &player, const std::string &message, unsigned channel);
 private:
     std::deque<std::string> cmdParser(const std::string &message);
     Container commands;

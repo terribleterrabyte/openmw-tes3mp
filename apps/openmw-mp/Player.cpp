@@ -9,6 +9,8 @@
 #include "Player.hpp"
 #include "Inventory.hpp"
 #include "Settings.hpp"
+#include "Players.hpp"
+#include "Script/EventController.hpp"
 
 using namespace std;
 
@@ -39,7 +41,13 @@ void Player::Init(LuaState &lua)
                                          "getAvgPing", &Player::getAvgPing,
 
                                          "message", &Player::message,
-                                         "cleanChat", &Player::cleanChat,
+                                         "joinToChannel", &Player::joinToChannel,
+                                         "cleanChannel", &Player::cleanChannel,
+                                         "renameChannel", &Player::renameChannel,
+                                         "closeChannel", &Player::closeChannel,
+                                         "leaveChannel", &Player::leaveChannel,
+                                         "setChannel", &Player::setChannel,
+                                         "isChannelOpened", &Player::isChannelOpened,
 
                                          "pid", sol::readonly_property(&Player::id),
                                          "guid", sol::readonly_property(&Player::getGUID),
@@ -85,6 +93,12 @@ void Player::Init(LuaState &lua)
                                          "setAuthority", &Player::setAuthority,
                                          "customData", &Player::customData
     );
+
+    lua.getState()->new_enum("ChannelAction",
+                            "createChannel", 0,
+                            "joinChannel", 1,
+                            "closeChannel", 2,
+                            "leftChannel", 3);
 }
 
 Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedMap(false), cClass(this),
@@ -310,9 +324,11 @@ void Player::ban() const
     netCtrl->banAddress(addr.ToString(false));
 }
 
-void Player::cleanChat()
+void Player::cleanChannel(unsigned channelId)
 {
-    chatMessage.clear();
+    chat.action = mwmp::Chat::Action::clear;
+    chat.channel = channelId;
+    chat.message.clear();
 
     auto packet = mwmp::Networking::get().getPlayerPacketController();
     packet->GetPacket(ID_CHAT_MESSAGE)->setPlayer(this);
@@ -352,16 +368,142 @@ void Player::setCharGenStages(int currentStage, int endStage)
     packet->Send(false);
 }
 
-void Player::message(const std::string &message, bool toAll)
+void Player::message(unsigned channelId, const std::string &message, bool toAll)
 {
-   chatMessage = message;
+    if (isChannelOpened(channelId))
+    {
+        mwmp::Chat tmp;
+        tmp.action = mwmp::Chat::Action::print;
+        tmp.channel = channelId;
+        tmp.message = message;
+        chat = tmp;
+
+        auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_CHAT_MESSAGE);
+        packet->setPlayer(this);
+
+        packet->Send(false);
+        if (toAll)
+        {
+            auto channel = mwmp::Networking::get().getChannel(channelId);
+
+            for (auto it = channel->members.begin(); it != channel->members.end();)
+            {
+                if (auto member = it->lock())
+                {
+                    ++it;
+                    if (member->guid == this->guid)
+                        continue;
+                    member->chat = tmp;
+                    packet->setPlayer(member.get());
+                    packet->Send(false);
+
+                }
+                else
+                    it = channel->members.erase(it);
+            }
+        }
+    }
+}
+
+bool Player::joinToChannel(unsigned channelId, const std::string &name)
+{
+    auto channel = mwmp::Networking::get().getChannel(channelId);
+
+    if (channel == nullptr) // channel not found
+        return false;
+
+    for (const auto &weakMember : channel->members)
+    {
+        if (auto member = weakMember.lock())
+        {
+            if (member->guid == guid)
+                return false;  // player already member of the channel
+        }
+    }
+    auto thisPl = Players::getPlayerByGUID(guid);
+    channel->members.push_back(thisPl);
+
+    chat.action = mwmp::Chat::Action::addchannel;
+    chat.channel = channelId;
+    chat.message = name;
+
+    auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_CHAT_MESSAGE);
+    packet->setPlayer(this);
+    packet->Send(false);
+
+    return true;
+}
+
+void Player::renameChannel(unsigned channelId, const std::string &name)
+{
+    if (isChannelOpened(channelId))
+    {
+        chat.action = mwmp::Chat::Action::renamechannel;
+        chat.channel = channelId;
+        chat.message = name;
+
+        auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_CHAT_MESSAGE);
+        packet->setPlayer(this);
+
+        packet->Send(false);
+    }
+}
+
+void Player::leaveChannel(unsigned channelId)
+{
+    chat.action = mwmp::Chat::Action::closechannel;
+    chat.channel = channelId;
+    chat.message.clear();
 
     auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_CHAT_MESSAGE);
     packet->setPlayer(this);
 
     packet->Send(false);
-    if (toAll)
-        packet->Send(true);
+
+    mwmp::Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_CHANNEL_ACTION>(this, channelId, 2); // leaved channel
+}
+
+void Player::closeChannel(unsigned channelId)
+{
+    auto channel = mwmp::Networking::get().getChannel(channelId);
+
+    for(auto &weakMember : channel->members) // kick members from channel before deleting channel
+    {
+        if(auto member = weakMember.lock())
+            member->leaveChannel(channelId);
+    }
+
+    if (!mwmp::Networking::get().closeChannel(channelId)) // cannot close channel
+        return;
+
+    mwmp::Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_CHANNEL_ACTION>(this, channelId, 2); // channel closed
+}
+
+void Player::setChannel(unsigned channelId)
+{
+    if (isChannelOpened(channelId))
+    {
+        chat.action = mwmp::Chat::Action::setchannel;
+        chat.channel = channelId;
+        chat.message.clear();
+
+        auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_CHAT_MESSAGE);
+        packet->setPlayer(this);
+
+        packet->Send(false);
+    }
+}
+
+bool Player::isChannelOpened(unsigned channelId)
+{
+    auto channel = mwmp::Networking::get().getChannel(channelId);
+
+    auto it = std::find_if(channel->members.begin(), channel->members.end(), [this](const auto &weakMember){
+        if(auto member = weakMember.lock())
+            return member->guid == guid;
+        return false;
+    });
+    return it != channel->members.end();
 }
 
 int Player::getLevel() const

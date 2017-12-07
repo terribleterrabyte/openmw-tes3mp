@@ -41,6 +41,8 @@ namespace CoreEvent
         ON_PLAYER_SENDMESSAGE,
         ON_PLAYER_ENDCHARGEN,
 
+        ON_CHANNEL_ACTION,
+
         ON_GUI_ACTION,
         ON_MP_REFNUM,
 

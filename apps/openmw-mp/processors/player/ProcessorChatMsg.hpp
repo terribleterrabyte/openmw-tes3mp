@@ -23,19 +23,19 @@ namespace mwmp
 
             auto &lua = Networking::get().getState();
 
-            auto cmdExecResult = lua.getCmdCtrl().exec(player, player->chatMessage);
+            auto cmdExecResult = lua.getCmdCtrl().exec(player, player->chat.message, player->chat.channel);
             switch (cmdExecResult.first)
             {
                 case CommandController::ExecResult::NOT_FOUND: // err cmd not found
-                    player->message("#FF0000Command not found.\n"); // inform player that command not found
+                    player->message(player->chat.channel, "#FF0000Command not found.\n"); // inform player that command not found
                     break;
                 case CommandController::ExecResult::NOT_CMD: // cmd length < 2 or message is not cmd
-                    lua.getEventCtrl().Call<CoreEvent::ON_PLAYER_SENDMESSAGE>(player, player->chatMessage);
+                    lua.getEventCtrl().Call<CoreEvent::ON_PLAYER_SENDMESSAGE>(player, player->chat.message, player->chat.channel);
                     break;
                 case CommandController::ExecResult::SUCCESS: // returned true from function
                     break;
                 case CommandController::ExecResult::FAIL: // returned false from function
-                    player->message("#B8860B"+cmdExecResult.second); // show "help msg" to player
+                    player->message(player->chat.channel, "#B8860B"+cmdExecResult.second); // show "help msg" to player
                     break;
             }
         }

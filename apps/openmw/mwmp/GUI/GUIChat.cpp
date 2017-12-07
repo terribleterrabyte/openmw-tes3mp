@@ -10,10 +10,16 @@
 #include "apps/openmw/mwinput/inputmanagerimp.hpp"
 #include <MyGUI_InputManager.h>
 #include <components/openmw-mp/Log.hpp>
+#include <boost/tokenizer.hpp>
+#include <string>
 
 #include "../Networking.hpp"
 #include "../Main.hpp"
 #include "../LocalPlayer.hpp"
+
+#include "../../mwbase/world.hpp"
+
+#include "../../mwworld/timestamp.hpp"
 
 #include "../GUIController.hpp"
 
@@ -28,14 +34,23 @@ namespace mwmp
 
         getWidget(mCommandLine, "edit_Command");
         getWidget(mHistory, "list_History");
+        getWidget(mChannelPrevBtn, "btn_prev_ch");
+        mChannelPrevBtn->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIChat::prevChannels);
+        getWidget(mChannelNextBtn, "btn_next_ch");
+        mChannelNextBtn->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIChat::nextChannels);
+        getWidget(mBoxChannels, "box_channels");
+
+        for (int i = 0; i < 3; ++i)
+        {
+            getWidget(mChannelBtns[i], "btn_ch" + std::to_string(i + 1));
+            mChannelBtns[i]->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIChat::onClickChannel);
+        }
 
         // Set up the command line box
         mCommandLine->eventEditSelectAccept +=
                 newDelegate(this, &GUIChat::acceptCommand);
         mCommandLine->eventKeyButtonPressed +=
                 newDelegate(this, &GUIChat::keyPress);
-
-        setTitle("Chat");
 
         mHistory->setOverflowToTheLeft(true);
         mHistory->setEditWordWrap(true);
@@ -45,8 +60,14 @@ namespace mwmp
         mHistory->setNeedKeyFocus(false);
 
         windowState = 0;
-        mCommandLine->setVisible(0);
+        mCommandLine->setVisible(false);
+        mBoxChannels->setVisible(false);
         delay = 3; // 3 sec.
+        page = 0;
+        currentChannel = 0;
+        addChannel(0, "Default");
+        setChannel(0);
+        redrawChnnels();
     }
 
     void GUIChat::onOpen()
@@ -73,18 +94,42 @@ namespace mwmp
 
     void GUIChat::acceptCommand(MyGUI::EditBox *_sender)
     {
-        const std::string &cm =  MyGUI::TextIterator::toTagsString(mCommandLine->getCaption());
-        
+        const std::string &cm = MyGUI::TextIterator::toTagsString(mCommandLine->getCaption());
+
         // If they enter nothing, then it should be canceled.
         // Otherwise, there's no way of closing without having text.
         if (cm.empty())
         {
             mCommandLine->setCaption("");
-            SetEditState(0);
+            SetEditState(false);
             return;
         }
 
-        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Player: %s", cm.c_str());
+        if (cm.find("//", 0, 2) == 0) //clientside commands
+        {
+            typedef boost::char_separator<char> csep;
+            csep sep(" ");
+            boost::tokenizer<csep> tokens(cm, sep);
+
+            std::vector<std::string> cmd;
+            for (const auto& t : tokens)
+                cmd.push_back(t);
+
+            if (cmd[0] == "//channel")
+            {
+                if (cmd[1] == "close")
+                {
+                    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Closed \"%d\" channel", currentChannel);
+                    closeChannel(currentChannel);
+                }
+            }
+
+        }
+        else
+        {
+            LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Player: %s", cm);
+            send (cm);
+        }
 
         // Add the command to the history, and set the current pointer to
         // the end of the list
@@ -93,12 +138,9 @@ namespace mwmp
         mCurrent = mCommandHistory.end();
         mEditString.clear();
 
-        // Reset the command line before the command execution.
-        // It prevents the re-triggering of the acceptCommand() event for the same command
-        // during the actual command execution
         mCommandLine->setCaption("");
-        SetEditState(0);
-        send (cm);
+        SetEditState(false);
+
     }
 
     void GUIChat::onResChange(int width, int height)
@@ -112,33 +154,28 @@ namespace mwmp
         mCommandLine->setFontName(fntName);
     }
 
-    void GUIChat::print(const std::string &msg, const std::string &color)
+    void GUIChat::print(unsigned channelId, const std::string &msg, const std::string &color)
     {
         if (windowState == 2 && !isVisible())
         {
             setVisible(true);
         }
 
-        if(msg.size() == 0)
+        if (channelId != currentChannel)
         {
-            clean();
-            LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Chat cleaned");
+            try
+            {
+                auto it = getChannel(channelId);
+                if (it != channels.end())
+                    it->channelText = color + msg;
+            }
+            catch(std::out_of_range &e) {}
         }
         else
-        {
             mHistory->addText(color + msg);
-            LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "%s", msg.c_str());
-        }
-    }
+        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "%s", msg.c_str());
 
-    void GUIChat::printOK(const std::string &msg)
-    {
-        print(msg + "\n", "#FF00FF");
-    }
 
-    void GUIChat::printError(const std::string &msg)
-    {
-        print(msg + "\n", "#FF2222");
     }
 
     void GUIChat::send(const std::string &str)
@@ -147,15 +184,26 @@ namespace mwmp
 
         Networking *networking = Main::get().getNetworking();
 
-        localPlayer->chatMessage = str;
+        localPlayer->chat.action = Chat::Action::print;
+        localPlayer->chat.channel = currentChannel;
+        localPlayer->chat.message = str;
 
         networking->getPlayerPacket(ID_CHAT_MESSAGE)->setPlayer(localPlayer);
         networking->getPlayerPacket(ID_CHAT_MESSAGE)->Send();
     }
 
-    void GUIChat::clean()
+    void GUIChat::clean(unsigned channelId)
     {
-        mHistory->setCaption("");
+        if(channelId == currentChannel)
+            mHistory->setCaption("");
+        else
+        {
+            auto it = getChannel(channelId);
+            if(it != channels.end())
+            {
+                it->channelText.clear();
+            }
+        }
     }
 
     void GUIChat::pressedChatMode()
@@ -174,7 +222,7 @@ namespace mwmp
         {
             case CHAT_DISABLED:
                 this->mMainWidget->setVisible(false);
-                SetEditState(0);
+                SetEditState(false);
                 break;
             case CHAT_ENABLED:
                 this->mMainWidget->setVisible(true);
@@ -189,6 +237,7 @@ namespace mwmp
     {
         editState = state;
         mCommandLine->setVisible(editState);
+        mBoxChannels->setVisible(editState);
         MWBase::Environment::get().getWindowManager()->setKeyFocusWidget(editState ? mCommandLine : nullptr);
     }
 
@@ -239,7 +288,6 @@ namespace mwmp
                     mCommandLine->setCaption(mEditString);
             }
         }
-
     }
 
     void GUIChat::Update(float dt)
@@ -254,11 +302,16 @@ namespace mwmp
             }
         }
 
-        if(netStat)
+        if (netStat)
         {
             auto rss = Main::get().getNetworking()->getNetworkStatistics();
             mHistory->setCaption(rss);
         }
+    }
+
+    void GUIChat::setCaption(const std::string &str)
+    {
+        mHistory->setCaption(str);
     }
 
     void GUIChat::setDelay(float delay)
@@ -269,5 +322,140 @@ namespace mwmp
     void GUIChat::switchNetstat()
     {
         netStat = !netStat;
+    }
+
+    void GUIChat::addChannel(unsigned ch, const std::string &name)
+    {
+        auto channel = getChannel(ch);
+        if(channel == channels.end())
+        {
+            LOG_MESSAGE_SIMPLE(Log::LOG_VERBOSE, "Adding channel id: %d %s", ch, name);
+            channels.push_back(ChannelData{ch, name.substr(0, 9), ""});
+        }
+        redrawChnnels();
+    }
+
+    void GUIChat::renameChannel(unsigned ch, const std::string &newName)
+    {
+        auto it = getChannel(ch);
+        if(it != channels.end())
+        {
+            it->channelName = newName.substr(0, 9);
+            redrawChnnels();
+        }
+    }
+
+    void GUIChat::setChannel(const std::string &channel, bool saveHistory)
+    {
+        auto ch = channel.substr(0, 9);
+        auto it = std::find_if(channels.begin(), channels.end(), [&ch](const ChannelData &item) {
+            return item.channelName == ch;
+        });
+
+        if (it != channels.end())
+            setChannel(it, saveHistory);
+    }
+
+    void GUIChat::setChannel(unsigned ch, bool saveHistory)
+    {
+        auto it = getChannel(ch);
+        if (it != channels.end())
+            setChannel(it, saveHistory);
+    }
+
+    void GUIChat::setChannel(ChannelIter it, bool saveHistory)
+    {
+        if (saveHistory)
+            channels[currentChannel].channelText = mHistory->getCaption();
+
+        mHistory->setCaption(it->channelText);
+        currentChannel = it->channel;
+
+        redrawChnnels();
+    }
+
+    void GUIChat::closeChannel(unsigned ch)
+    {
+        if (ch == 0) // that's impossible
+            return;
+        auto it = getChannel(ch);
+
+        if (it != channels.end())
+        {
+            if (ch == it->channel)
+                setChannel(0, false); // reset to default channel
+            channels.erase(it);
+        }
+        redrawChnnels();
+    }
+
+    void GUIChat::redrawChnnels()
+    {
+        mChannelPrevBtn->setVisible(page != 0);
+        mChannelNextBtn->setVisible(channels.size() > 3 && page != lastPage());
+
+        if (page >=lastPage())
+            page = lastPage();
+        unsigned showElems = page * pageM + 3;
+        if (showElems > channels.size())
+            showElems = static_cast<unsigned>(channels.size());
+        auto it = channels.begin() + page * pageM;
+        auto endIt = channels.begin() + showElems;
+        for (auto &btn : mChannelBtns)
+        {
+            static const auto defaultColour = btn->getTextColour();
+            if (it == endIt)
+                btn->setVisible(false);
+            else
+            {
+                btn->setVisible(true);
+                if (currentChannel == it->channel)
+                {
+                    setTitle("Chat: " + it->channelName + "(" + std::to_string(it->channel) + ")");
+                    btn->setEnabled(false);
+                    btn->setStateSelected(true);
+                    btn->setTextColour(MyGUI::Colour::Red);
+                }
+                else
+                {
+                    btn->setEnabled(true);
+                    btn->setTextColour(defaultColour);
+                }
+                btn->setCaption(it++->channelName);
+            }
+        }
+    }
+
+    void GUIChat::nextChannels(MyGUI::Widget* _sender)
+    {
+        page++;
+        if (page > lastPage())
+           page = lastPage();
+        redrawChnnels();
+    }
+
+    void GUIChat::prevChannels(MyGUI::Widget* _sender)
+    {
+        if (page > 0)
+            page--;
+        redrawChnnels();
+    }
+
+    void GUIChat::onClickChannel(MyGUI::Widget *_sender)
+    {
+        auto sender = dynamic_cast<MyGUI::Button*>(_sender);
+        setChannel(sender->getCaption().asUTF8());
+    }
+
+    unsigned GUIChat::lastPage()
+    {
+        return static_cast<unsigned>(channels.size() / pageM + channels.size() % pageM - 1);
+    }
+
+    GUIChat::ChannelIter GUIChat::getChannel(unsigned ch)
+    {
+        return std::find_if(channels.begin(), channels.end(), [&ch](const ChannelData &data){
+            return data.channel == ch;
+        });
     }
 }

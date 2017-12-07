@@ -279,6 +279,10 @@ LuaState::LuaState()
             packet->Send(false);
         });
     });
+
+    lua->set_function("createChannel", [](){
+        return mwmp::Networking::get().createChannel();
+    });
 }
 
 sol::environment LuaState::openModule(std::string homePath, std::string moduleName)

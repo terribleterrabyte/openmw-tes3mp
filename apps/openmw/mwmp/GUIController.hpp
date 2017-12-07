@@ -39,7 +39,8 @@ namespace mwmp
         void cleanUp();
         void setupChat(const Settings::Manager &manager);
 
-        void printChatMessage(std::string &msg);
+        void printChatMessage(const mwmp::Chat &chat);
+        void setChatCaption(const std::string &msg);
         void setChatVisible(bool chatVisible);
 
         void showMessageBox(const BasePlayer::GUIMessageBox &guiMessageBox);

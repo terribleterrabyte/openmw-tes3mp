@@ -1,24 +1,49 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <MyGUI type="Layout">
-  <Widget type="Window" skin="MW_Window" position="0 0 400 400" layer="Console" name="_Main">
-    <Property key="Caption" value="#{sConsoleTitle}"/>
-    <Property key="MinSize" value="40 40"/>
-    <Property key="Visible" value="false"/>
+    <!--<Widget type="Window" skin="TES3MP_ChatWindowBL" position="0 0 400 400" layer="Console" name="_Main">-->
+    <Widget type="Window" skin="MW_Window" position="0 0 400 428" layer="Windows" name="_Main">
+        <Property key="Caption" value="#{sConsoleTitle}"/>
+        <Property key="MinSize" value="40 40"/>
+        <Property key="Visible" value="false"/>
 
-    <!-- Log window -->
-    <Widget type="EditBox" skin="MW_TextBoxEdit" position="5 5 380 328" align="Stretch" name="list_History">
-        <Property key="MultiLine" value="1"/>
-        <Property key="ReadOnly" value="true"/>
-        <Property key="FontName" value="Russo"/>
-        <Property key="TextAlign" value="Left Top"/>
-        <Property key="TextColour" value="1 1 1"/>
-        <Property key="InvertSelected" value="false"/>
+        <!-- Log window -->
+        <Widget type="EditBox" skin="MW_TextBoxEdit" position="5 5 380 328" align="Stretch" name="list_History">
+            <Property key="MultiLine" value="1"/>
+            <Property key="ReadOnly" value="true"/>
+            <Property key="FontName" value="Russo"/>
+            <Property key="TextAlign" value="Left Top"/>
+            <Property key="TextColour" value="1 1 1"/>
+            <Property key="InvertSelected" value="false"/>
+        </Widget>
+
+
+        <!-- Command line -->
+        <Widget type="VBox"  align="Bottom HStretch" position="0 338 384 56">
+            <UserString key="HStretch" value="true"/>
+            <Widget type="HBox" align="Bottom HStretch" name="box_channels">
+                <Widget type="AutoSizedButton" skin="MW_Button" name="btn_prev_ch">
+                    <Property key="Caption" value="<"/>
+                </Widget>
+                <Widget type="AutoSizedButton" skin="MW_Button" name="btn_ch1">
+                    <Property key="Caption" value="ZZZZZZZZZ"/>
+                </Widget>
+                <Widget type="AutoSizedButton" skin="MW_Button" name="btn_ch2">
+                    <Property key="Caption" value="ZZZZZZZZZ"/>
+                </Widget>
+                <Widget type="AutoSizedButton" skin="MW_Button" name="btn_ch3">
+                    <Property key="Caption" value="ZZZZZZZZZ"/>
+                </Widget>
+                <Widget type="AutoSizedButton" skin="MW_Button" name="btn_next_ch">
+                    <Property key="Caption" value=">"/>
+                </Widget>
+            </Widget>
+            <Widget type="Spacer"/>
+
+            <Widget type="EditBox" skin="TES3MP_ChatMsg" position="0 338 384 28" align="HStretch Bottom"
+                    name="edit_Command">
+                <Property key="InvertSelected" value="false"/>
+            </Widget>
+        </Widget>
     </Widget>
 
-    <!-- Command line -->
-    <Widget type="EditBox" skin="TES3MP_ChatMsg" position="0 338 384 28" align="HStretch Bottom" name="edit_Command">
-        <Property key="InvertSelected" value="false"/>
-    </Widget>
-
-  </Widget>
 </MyGUI>

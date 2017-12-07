@@ -38,17 +38,26 @@ std::shared_ptr<Player> Players::getPlayerByGUID(RakNet::RakNetGUID guid)
     const auto &ls = store.get<ByGUID>();
     auto it = ls.find(guid.g);
     if (it != ls.end())
+    {
+        LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "%d references: %d", guid.g, it->use_count());
         return *it;
+    }
 
     return nullptr;
+}
+
+void deleter(Player *pl)
+{
+    LOG_MESSAGE_SIMPLE(Log::LOG_VERBOSE, "Player %lu deleted", pl->guid.g);
+    delete pl;
 }
 
 std::shared_ptr<Player> Players::addPlayer(RakNet::RakNetGUID guid)
 {
     const int maxConnections = 65535;
-    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Creating new player with guid %lu", guid.g);
+    LOG_MESSAGE_SIMPLE(Log::LOG_VERBOSE, "Creating new player with guid %lu", guid.g);
 
-    auto player = make_shared<Player>(guid);
+    auto player = shared_ptr<Player>(new Player(guid), deleter);
 
     unsigned short findPid = 0;
     const auto &ls = store.get<ByID>();
@@ -71,25 +80,27 @@ std::shared_ptr<Player> Players::addPlayer(RakNet::RakNetGUID guid)
 
 void Players::deletePlayerByPID(int pid)
 {
-    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Marking player (pid %i) for deletion", pid);
+    LOG_MESSAGE_SIMPLE(Log::LOG_VERBOSE, "Marking player (pid %i) for deletion", pid);
     auto &ls = store.get<ByID>();
     auto it = ls.find(pid);
     if (it != ls.end())
     {
+        (*it)->markedForDeletion = true;
         ls.erase(it);
+        LOG_APPEND(Log::LOG_TRACE, "- references: %d", it->use_count());
     }
 }
 
 void Players::deletePlayerByGUID(RakNet::RakNetGUID guid)
 {
-    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Marking player (guid %lu) for deletion", guid.g);
+    LOG_MESSAGE_SIMPLE(Log::LOG_VERBOSE, "Marking player (guid %lu) for deletion", guid.g);
     auto &ls = store.get<ByGUID>();
     auto it = ls.find(guid.g);
     if (it != ls.end())
     {
-        LOG_APPEND(Log::LOG_INFO, "- references: %d", it->use_count());
+        (*it)->markedForDeletion = true;
         ls.erase(it);
-        LOG_APPEND(Log::LOG_INFO, "- references: %d", it->use_count());
+        LOG_APPEND(Log::LOG_TRACE, "- references: %d", it->use_count());
     }
 }
 

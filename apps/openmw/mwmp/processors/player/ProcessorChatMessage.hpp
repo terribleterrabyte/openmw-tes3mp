@@ -23,7 +23,7 @@ namespace mwmp
         virtual void Do(PlayerPacket &packet, BasePlayer *player)
         {
             if (player != 0)
-                Main::get().getGUIController()->printChatMessage(player->chatMessage);
+                Main::get().getGUIController()->printChatMessage(player->chat);
         }
     };
 }
