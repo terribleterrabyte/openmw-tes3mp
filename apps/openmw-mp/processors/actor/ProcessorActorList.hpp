@@ -13,7 +13,7 @@ namespace mwmp
             BPP_INIT(ID_ACTOR_LIST)
         }
 
-        void Do(ActorPacket &packet, std::shared_ptr<Player> player, BaseActorList &actorList) override
+        void Do(ActorPacket &packet, const std::shared_ptr<Player> &player, BaseActorList &actorList) override
         {
             LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Received %s from %s", strPacketID.c_str(), player->npc.mName.c_str());
 

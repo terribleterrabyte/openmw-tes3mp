@@ -17,7 +17,7 @@ namespace mwmp
             BPP_INIT(ID_CHAT_MESSAGE)
         }
 
-        void Do(PlayerPacket &packet, std::shared_ptr<Player> player) override
+        void Do(PlayerPacket &packet, const std::shared_ptr<Player> &player) override
         {
             DEBUG_PRINTF(strPacketID.c_str());
 

@@ -10,7 +10,7 @@ using namespace mwmp;
 template<class T>
 typename BasePacketProcessor<T>::processors_t BasePacketProcessor<T>::processors;
 
-void WorldProcessor::Do(WorldPacket &packet, std::shared_ptr<Player> player, BaseEvent &event)
+void WorldProcessor::Do(WorldPacket &packet, const std::shared_ptr<Player> &player, BaseEvent &event)
 {
     packet.Send(true);
 }

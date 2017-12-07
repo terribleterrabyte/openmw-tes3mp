@@ -14,7 +14,7 @@ namespace mwmp
             BPP_INIT(ID_ACTOR_EQUIPMENT)
         }
 
-        void Do(ActorPacket &packet, std::shared_ptr<Player> player, BaseActorList &actorList) override
+        void Do(ActorPacket &packet, const std::shared_ptr<Player> &player, BaseActorList &actorList) override
         {
             std::vector<std::shared_ptr<Actor>> actors;
 

@@ -17,7 +17,7 @@ namespace mwmp
             BPP_INIT(ID_PLAYER_ATTRIBUTE)
         }
 
-        void Do(PlayerPacket &packet, std::shared_ptr<Player> player) override
+        void Do(PlayerPacket &packet, const std::shared_ptr<Player> &player) override
         {
             if (!player->creatureStats.mDead)
             {

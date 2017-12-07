@@ -14,7 +14,7 @@ namespace mwmp
     {
     public:
 
-        virtual void Do(ActorPacket &packet, std::shared_ptr<Player> player, BaseActorList &actorList);
+        virtual void Do(ActorPacket &packet, const std::shared_ptr<Player> &player, BaseActorList &actorList);
 
         static bool Process(RakNet::Packet &packet, BaseActorList &actorList) noexcept;
     };

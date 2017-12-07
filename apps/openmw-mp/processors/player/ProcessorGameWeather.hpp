@@ -13,9 +13,11 @@ namespace mwmp
             BPP_INIT(ID_GAME_WEATHER)
         }
 
-        void Do(PlayerPacket &packet, std::shared_ptr<Player> player) override
+        void Do(PlayerPacket &packet, const std::shared_ptr<Player> &player) final
         {
-            // Placeholder to be filled in later
+            DEBUG_PRINTF(strPacketID);
+
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_WEATHER>(player);
         }
     };
 }

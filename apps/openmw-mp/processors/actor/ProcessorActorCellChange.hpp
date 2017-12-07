@@ -13,7 +13,7 @@ namespace mwmp
             BPP_INIT(ID_ACTOR_CELL_CHANGE)
         }
 
-        void Do(ActorPacket &packet, std::shared_ptr<Player> player, BaseActorList &actorList) override
+        void Do(ActorPacket &packet, const std::shared_ptr<Player> &player, BaseActorList &actorList) override
         {
             Cell *serverCell = CellController::get()->getCell(&actorList.cell);
 

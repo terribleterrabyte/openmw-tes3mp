@@ -6,7 +6,7 @@ using namespace mwmp;
 template<class T>
 typename BasePacketProcessor<T>::processors_t BasePacketProcessor<T>::processors;
 
-void ActorProcessor::Do(ActorPacket &packet, std::shared_ptr<Player> player, BaseActorList &actorList)
+void ActorProcessor::Do(ActorPacket &packet, const std::shared_ptr<Player> &player, BaseActorList &actorList)
 {
     packet.Send(true);
 }

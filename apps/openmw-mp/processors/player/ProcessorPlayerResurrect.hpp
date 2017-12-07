@@ -17,7 +17,7 @@ namespace mwmp
             BPP_INIT(ID_PLAYER_RESURRECT)
         }
 
-        void Do(PlayerPacket &packet, std::shared_ptr<Player> player) override
+        void Do(PlayerPacket &packet, const std::shared_ptr<Player> &player) override
         {
             LOG_MESSAGE_SIMPLE(Log::LOG_VERBOSE, "Received %s from %s", strPacketID.c_str(), player->npc.mName.c_str());
 
