@@ -105,6 +105,7 @@ namespace mwmp
             unsigned channel;
             std::string channelName;
             MyGUI::UString channelText;
+            bool newMessages;
         };
         std::vector<ChannelData> channels;
         unsigned currentChannel;
@@ -114,6 +115,7 @@ namespace mwmp
         typedef std::vector<ChannelData>::iterator ChannelIter;
         void setChannel(ChannelIter iter, bool saveHistory);
         ChannelIter getChannel(unsigned ch);
+        MyGUI::Colour defaultColor;
     };
 }
 #endif //OPENMW_GUICHAT_HPP

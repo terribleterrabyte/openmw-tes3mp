@@ -68,6 +68,7 @@ namespace mwmp
         addChannel(0, "Default");
         setChannel(0);
         redrawChnnels();
+        defaultColor = mChannelPrevBtn->getTextColour();
     }
 
     void GUIChat::onOpen()
@@ -167,7 +168,10 @@ namespace mwmp
             {
                 auto it = getChannel(channelId);
                 if (it != channels.end())
+                {
                     it->channelText = color + msg;
+                    it->newMessages = true;
+                }
             }
             catch(std::out_of_range &e) {}
         }
@@ -307,6 +311,39 @@ namespace mwmp
             auto rss = Main::get().getNetworking()->getNetworkStatistics();
             mHistory->setCaption(rss);
         }
+        static float time = 0;
+        time += dt;
+        if(time >= 1)
+        {
+            time = 0;
+            static bool phase = false;
+            phase = !phase;
+
+            auto color = phase ? MyGUI::Colour::Blue : defaultColor;
+
+            for(auto it = channels.begin(); it != channels.end(); ++it)
+            {
+                if(!it->newMessages || it->channel == currentChannel)
+                    continue;
+
+                long pos = it - channels.begin();
+
+                if(pos < page * pageM)
+                    mChannelPrevBtn->setTextColour(color);
+                else if(pos >= page * pageM + 3)
+                    mChannelNextBtn->setTextColour(color);
+                else
+                {
+                    for(auto &btn : mChannelBtns)
+                    {
+                        if (it->channelName != btn->getCaption().asUTF8())
+                            continue;
+                        btn->setTextColour(color);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     void GUIChat::setCaption(const std::string &str)
@@ -330,7 +367,7 @@ namespace mwmp
         if(channel == channels.end())
         {
             LOG_MESSAGE_SIMPLE(Log::LOG_VERBOSE, "Adding channel id: %d %s", ch, name);
-            channels.push_back(ChannelData{ch, name.substr(0, 9), ""});
+            channels.push_back(ChannelData{ch, name.substr(0, 9), "", false});
         }
         redrawChnnels();
     }
@@ -368,6 +405,7 @@ namespace mwmp
         if (saveHistory && !mHistory->getCaption().empty())
             getChannel(currentChannel)->channelText = mHistory->getCaption();
 
+        it->newMessages = false;
         mHistory->setCaption(it->channelText);
         currentChannel = it->channel;
 
@@ -394,6 +432,9 @@ namespace mwmp
         mChannelPrevBtn->setVisible(page != 0);
         mChannelNextBtn->setVisible(channels.size() > 3 && page != lastPage());
 
+        mChannelPrevBtn->setTextColour(defaultColor);
+        mChannelNextBtn->setTextColour(defaultColor);
+
         if (page >=lastPage())
             page = lastPage();
         unsigned showElems = page * pageM + 3;
@@ -403,7 +444,6 @@ namespace mwmp
         auto endIt = channels.begin() + showElems;
         for (auto &btn : mChannelBtns)
         {
-            static const auto defaultColour = btn->getTextColour();
             if (it == endIt)
                 btn->setVisible(false);
             else
@@ -419,7 +459,7 @@ namespace mwmp
                 else
                 {
                     btn->setEnabled(true);
-                    btn->setTextColour(defaultColour);
+                    btn->setTextColour(defaultColor);
                 }
                 btn->setCaption(it++->channelName);
             }
