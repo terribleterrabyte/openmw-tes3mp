@@ -78,12 +78,12 @@ public:
 
     void cleanChannel(unsigned channelId);
     void message(unsigned channelId, const std::string &message, bool toAll = false);
-    bool joinToChannel(unsigned channelId, const std::string &name);
+    bool joinChannel(unsigned channelId, const std::string &name);
     void renameChannel(unsigned channelId, const std::string &name);
     void closeChannel(unsigned channelId);
     void leaveChannel(unsigned channelId);
     void setChannel(unsigned channelId);
-    bool isChannelOpened(unsigned channelId);
+    bool isChannelOpen(unsigned channelId);
 
     int getAvgPing();
 

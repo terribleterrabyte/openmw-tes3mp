@@ -123,7 +123,7 @@ void Networking::processPlayerPacket(RakNet::Packet *packet)
     if (packet->data[0] == ID_LOADED)
     {
         player->setLoadState(Player::LOADED);
-        player->joinToChannel(0, "Default");
+        player->joinChannel(0, "Default");
 
         bool result = luaState.getEventCtrl().Call<CoreEvent::ON_PLAYER_CONNECT, bool>(player);
 
@@ -561,9 +561,9 @@ unsigned Networking::createChannel()
 {
     static unsigned lastChatId = 0;
     unsigned id = 0;
-    for(auto &channel : chatChannels)
+    for (auto &channel : chatChannels)
     {
-        if(channel.second == nullptr)
+        if (channel.second == nullptr)
             id = channel.first;
     }
 

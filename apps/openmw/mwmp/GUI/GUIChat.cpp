@@ -35,9 +35,9 @@ namespace mwmp
         getWidget(mCommandLine, "edit_Command");
         getWidget(mHistory, "list_History");
         getWidget(mChannelPrevBtn, "btn_prev_ch");
-        mChannelPrevBtn->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIChat::prevChannels);
+        mChannelPrevBtn->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIChat::prevChannel);
         getWidget(mChannelNextBtn, "btn_next_ch");
-        mChannelNextBtn->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIChat::nextChannels);
+        mChannelNextBtn->eventMouseButtonClick += MyGUI::newDelegate(this, &GUIChat::nextChannel);
         getWidget(mBoxChannels, "box_channels");
 
         for (int i = 0; i < 3; ++i)
@@ -67,7 +67,7 @@ namespace mwmp
         currentChannel = 0;
         addChannel(0, "Default");
         setChannel(0);
-        redrawChnnels();
+        redrawChannels();
         defaultColor = mChannelPrevBtn->getTextColour();
     }
 
@@ -198,12 +198,12 @@ namespace mwmp
 
     void GUIChat::clean(unsigned channelId)
     {
-        if(channelId == currentChannel)
+        if (channelId == currentChannel)
             mHistory->setCaption("");
         else
         {
             auto it = getChannel(channelId);
-            if(it != channels.end())
+            if (it != channels.end())
             {
                 it->channelText.clear();
             }
@@ -313,7 +313,7 @@ namespace mwmp
         }
         static float time = 0;
         time += dt;
-        if(time >= 1)
+        if (time >= 1)
         {
             time = 0;
             static bool phase = false;
@@ -321,20 +321,20 @@ namespace mwmp
 
             auto color = phase ? MyGUI::Colour::Blue : defaultColor;
 
-            for(auto it = channels.begin(); it != channels.end(); ++it)
+            for (auto it = channels.begin(); it != channels.end(); ++it)
             {
-                if(!it->newMessages || it->channel == currentChannel)
+                if (!it->newMessages || it->channel == currentChannel)
                     continue;
 
                 long pos = it - channels.begin();
 
-                if(pos < page * pageM)
+                if (pos < page * pageM)
                     mChannelPrevBtn->setTextColour(color);
-                else if(pos >= page * pageM + 3)
+                else if (pos >= page * pageM + 3)
                     mChannelNextBtn->setTextColour(color);
                 else
                 {
-                    for(auto &btn : mChannelBtns)
+                    for (auto &btn : mChannelBtns)
                     {
                         if (it->channelName != btn->getCaption().asUTF8())
                             continue;
@@ -364,21 +364,21 @@ namespace mwmp
     void GUIChat::addChannel(unsigned ch, const std::string &name)
     {
         auto channel = getChannel(ch);
-        if(channel == channels.end())
+        if (channel == channels.end())
         {
             LOG_MESSAGE_SIMPLE(Log::LOG_VERBOSE, "Adding channel id: %d %s", ch, name);
             channels.push_back(ChannelData{ch, name.substr(0, 9), "", false});
         }
-        redrawChnnels();
+        redrawChannels();
     }
 
     void GUIChat::renameChannel(unsigned ch, const std::string &newName)
     {
         auto it = getChannel(ch);
-        if(it != channels.end())
+        if (it != channels.end())
         {
             it->channelName = newName.substr(0, 9);
-            redrawChnnels();
+            redrawChannels();
         }
     }
 
@@ -409,7 +409,7 @@ namespace mwmp
         mHistory->setCaption(it->channelText);
         currentChannel = it->channel;
 
-        redrawChnnels();
+        redrawChannels();
     }
 
     void GUIChat::closeChannel(unsigned ch)
@@ -424,10 +424,10 @@ namespace mwmp
                 setChannel(0, false); // reset to default channel
             channels.erase(it);
         }
-        redrawChnnels();
+        redrawChannels();
     }
 
-    void GUIChat::redrawChnnels()
+    void GUIChat::redrawChannels()
     {
         mChannelPrevBtn->setVisible(page != 0);
         mChannelNextBtn->setVisible(channels.size() > 3 && page != lastPage());
@@ -466,19 +466,19 @@ namespace mwmp
         }
     }
 
-    void GUIChat::nextChannels(MyGUI::Widget* _sender)
+    void GUIChat::nextChannel(MyGUI::Widget* _sender)
     {
         page++;
         if (page > lastPage())
            page = lastPage();
-        redrawChnnels();
+        redrawChannels();
     }
 
-    void GUIChat::prevChannels(MyGUI::Widget* _sender)
+    void GUIChat::prevChannel(MyGUI::Widget* _sender)
     {
         if (page > 0)
             page--;
-        redrawChnnels();
+        redrawChannels();
     }
 
     void GUIChat::onClickChannel(MyGUI::Widget *_sender)

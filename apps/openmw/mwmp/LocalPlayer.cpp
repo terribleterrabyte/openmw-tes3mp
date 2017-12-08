@@ -477,7 +477,7 @@ void LocalPlayer::updateInventory(bool forceUpdate)
             auto result = ptrInventory.begin();
             for (; result != ptrInventory.end(); ++result)
             {
-                if(setItem(item, *result))
+                if (setItem(item, *result))
                     continue;
 
                 if (item == itemOld)
@@ -495,7 +495,7 @@ void LocalPlayer::updateInventory(bool forceUpdate)
     {
         for (const auto &iter : ptrInventory)
         {
-            if(setItem(item, iter))
+            if (setItem(item, iter))
                 continue;
 
             auto items = inventoryChanges.items;

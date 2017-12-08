@@ -77,10 +77,10 @@ namespace mwmp
         void renameChannel(unsigned ch, const std::string &channel);
         void setChannel(unsigned ch, bool saveHistory = true);
         void closeChannel(unsigned ch);
-        void redrawChnnels();
+        void redrawChannels();
         unsigned lastPage();
-        void nextChannels(MyGUI::Widget* _sender);
-        void prevChannels(MyGUI::Widget* _sender);
+        void nextChannel(MyGUI::Widget* _sender);
+        void prevChannel(MyGUI::Widget* _sender);
         void onClickChannel(MyGUI::Widget* _sender);
 
     protected:

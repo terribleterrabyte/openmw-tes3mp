@@ -190,7 +190,7 @@ void mwmp::GUIController::showInputBox(const BasePlayer::GUIMessageBox &guiMessa
 void mwmp::GUIController::showCustomWindow(const mwmp::BasePlayer::GUIWindow &guiMessageBox)
 {
     MWBase::WindowManager *windowManager = MWBase::Environment::get().getWindowManager();
-    if(mCustomWindow != nullptr)
+    if (mCustomWindow != nullptr)
         LOG_MESSAGE_SIMPLE(Log::LOG_VERBOSE, "Deleting mCustomWindow");
     windowManager->removeDialog(mCustomWindow);
     windowManager->pushGuiMode((MWGui::GuiMode)GM_TES3MP_CustomWindow);
@@ -221,7 +221,7 @@ bool mwmp::GUIController::pressedKey(int key)
     if (mChat == nullptr || windowManager->getMode() != MWGui::GM_None)
         return false;
 
-    if(key == SDL_SCANCODE_F2 && (SDL_GetModState() & KMOD_CTRL) > 0)
+    if (key == SDL_SCANCODE_F2 && (SDL_GetModState() & KMOD_CTRL) > 0)
     {
         mChat->switchNetstat();
         return true;

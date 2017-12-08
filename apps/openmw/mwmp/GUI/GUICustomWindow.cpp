@@ -90,7 +90,7 @@ void GUICustomWindow::addPassiveData(vector<BasePlayer::GUIWindow::Widget> &widg
         if (selected != MyGUI::ITEM_NONE)
         {
             auto name = list->getUserData<string>(false);
-            if(name != nullptr)
+            if (name != nullptr)
             {
                 BasePlayer::GUIWindow::Widget widget;
                 widget.name = *name;
@@ -104,7 +104,7 @@ void GUICustomWindow::addPassiveData(vector<BasePlayer::GUIWindow::Widget> &widg
     for (auto &&slider : sliders)
     {
         auto name = slider->getUserData<string>(false);
-        if(name != nullptr)
+        if (name != nullptr)
         {
             BasePlayer::GUIWindow::Widget widget;
             widget.name = *name;
@@ -161,14 +161,14 @@ void GUICustomWindow::itemActivated(MyGUI::ListPtr sender, size_t index)
 {
     /*printf("---------Item Activated---------\n");
     auto str = sender->getUserData<string>(false);
-    if(str != nullptr)
+    if (str != nullptr)
         printf("ID: %s\n", str->c_str());
     printf("item: %zu\n", index);
     printf("value of item: %s\n", sender->getItemNameAt(index).asUTF8_c_str());
     printf("--------------------------------\n");*/
 
     auto str = sender->getUserData<string>(false);
-    if(str != nullptr)
+    if (str != nullptr)
     {
         BasePlayer::GUIWindow::Widget pressedListBox;
         pressedListBox.name = *str;
@@ -238,7 +238,7 @@ void GUICustomWindow::addEditBox(const BasePlayer::GUIWindow::Widget &widget)
     editBox->setSize(widget.width, widget.height);
     editBox->setUserData(string(widget.name)); // ID
     editBox->setEnabled(!widget.disabled);
-    if(!widget.disabled)
+    if (!widget.disabled)
         boxes.push_back(editBox);
 }
 
@@ -269,7 +269,7 @@ void GUICustomWindow::addListBox(const BasePlayer::GUIWindow::Widget &widget)
             MyGUI::Align::Default
     );
 
-    for(const auto & item : widget.data)
+    for (const auto & item : widget.data)
         lbox->addItem(item);
 
     lbox->setUserData(widget.name);
@@ -278,7 +278,7 @@ void GUICustomWindow::addListBox(const BasePlayer::GUIWindow::Widget &widget)
     lbox->setSize(widget.width, widget.height);
     lbox->setEnabled(!widget.disabled);
 
-    if(!widget.disabled)
+    if (!widget.disabled)
     {
         if (widget.type == BasePlayer::GUIWindow::WidgetType::ListBoxPassive)
             lists.push_back(lbox);

@@ -141,7 +141,7 @@ void EventController::raiseEvent(Event id, sol::table data, const string &module
     {
         if (!moduleName.empty())
         {
-            auto f = std::find_if (iter->second.begin(), iter->second.end(), [&moduleName](const auto &item){
+            auto f = std::find_if(iter->second.begin(), iter->second.end(), [&moduleName](const auto &item){
                 return item.first["ModuleName"]["name"] == moduleName;
             });
             if (f != iter->second.end())

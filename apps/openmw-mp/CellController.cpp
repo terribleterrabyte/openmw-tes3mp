@@ -52,7 +52,7 @@ Cell *CellController::getCell(ESM::Cell *esmCell)
 
 Cell *CellController::getCellByXY(int x, int y)
 {
-    auto it = find_if (cells.begin(), cells.end(), [x, y](const Cell *c)
+    auto it = find_if(cells.begin(), cells.end(), [x, y](const Cell *c)
     {
         return c->cell.mData.mX == x && c->cell.mData.mY == y;
     });
@@ -68,7 +68,7 @@ Cell *CellController::getCellByXY(int x, int y)
 
 Cell *CellController::getCellByName(std::string cellName)
 {
-    auto it = find_if (cells.begin(), cells.end(), [cellName](const Cell *c)
+    auto it = find_if(cells.begin(), cells.end(), [cellName](const Cell *c)
     {
         return c->cell.mName == cellName;
     });
@@ -85,7 +85,7 @@ Cell *CellController::getCellByName(std::string cellName)
 Cell *CellController::addCell(ESM::Cell cellData)
 {
     LOG_APPEND(Log::LOG_INFO, "- Loaded cells: %d", cells.size());
-    auto it = find_if (cells.begin(), cells.end(), [cellData](const Cell *c) {
+    auto it = find_if(cells.begin(), cells.end(), [cellData](const Cell *c) {
         // Currently we cannot compare because plugin lists can be loaded in different order
         //return c->cell.sRecordId == cellData.sRecordId;
         if (c->cell.isExterior() && cellData.isExterior())
