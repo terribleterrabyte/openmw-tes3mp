@@ -365,8 +365,8 @@ namespace mwmp
 
     void GUIChat::setChannel(ChannelIter it, bool saveHistory)
     {
-        if (saveHistory)
-            channels[currentChannel].channelText = mHistory->getCaption();
+        if (saveHistory && !mHistory->getCaption().empty())
+            getChannel(currentChannel)->channelText = mHistory->getCaption();
 
         mHistory->setCaption(it->channelText);
         currentChannel = it->channel;
