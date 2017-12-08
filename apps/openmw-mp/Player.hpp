@@ -186,6 +186,8 @@ public:
 
     void setAuthority();
 
+    bool isMarkedForDeleteion() const;
+
 private:
     CellController::TContainer cells;
     int handshakeCounter;
@@ -200,6 +202,7 @@ private:
     Quests quests;
     Spells spells;
     sol::table customData;
+    bool markedForDeletion;
 };
 
 #endif //OPENMW_PLAYER_HPP

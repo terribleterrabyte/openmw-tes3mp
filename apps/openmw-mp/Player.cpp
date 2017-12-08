@@ -91,7 +91,8 @@ void Player::Init(LuaState &lua)
                                          "cellStateSize", &Player::cellStateSize,
                                          "addCellExplored", &Player::addCellExplored,
                                          "setAuthority", &Player::setAuthority,
-                                         "customData", &Player::customData
+                                         "customData", &Player::customData,
+                                         "markedForDeletion", sol::property(&Player::isMarkedForDeleteion)
     );
 
     lua.getState()->new_enum("ChannelAction",
@@ -116,6 +117,7 @@ Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedM
     npcStats.blank();
     creatureStats.blank();
     charClass.blank();
+    markedForDeletion = false;
     customData = mwmp::Networking::get().getState().getState()->create_table();
 }
 
@@ -806,4 +808,9 @@ void Player::setAuthority()
         // Also send this to everyone else who has the cell loaded
         serverCell->sendToLoaded(authorityPacket, &writeActorList);
     }
+}
+
+bool Player::isMarkedForDeleteion() const
+{
+    return markedForDeletion;
 }
