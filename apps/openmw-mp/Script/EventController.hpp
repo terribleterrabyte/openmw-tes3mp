@@ -40,6 +40,7 @@ namespace CoreEvent
         ON_PLAYER_REST,
         ON_PLAYER_SENDMESSAGE,
         ON_PLAYER_ENDCHARGEN,
+        ON_PLAYER_WEATHER,
 
         ON_CHANNEL_ACTION,
 
