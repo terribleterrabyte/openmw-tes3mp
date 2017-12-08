@@ -123,6 +123,7 @@ void Networking::processPlayerPacket(RakNet::Packet *packet)
     if (packet->data[0] == ID_LOADED)
     {
         player->setLoadState(Player::LOADED);
+        player->joinToChannel(0, "Default");
 
         bool result = luaState.getEventCtrl().Call<CoreEvent::ON_PLAYER_CONNECT, bool>(player);
 
