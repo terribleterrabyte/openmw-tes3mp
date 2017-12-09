@@ -787,6 +787,16 @@ void OMW::Engine::go()
         End of tes3mp change (major)
     */
 
+    /*
+        Start of tes3mp change (major)
+
+        It should not be possible to load the save game in multiplayer, so it has been disabled
+    */
+    mSaveGameFile.clear();
+    /*
+        End of tes3mp change (major)
+    */
+
     if (!mSaveGameFile.empty())
     {
         mEnvironment.getStateManager()->loadGame(mSaveGameFile);
