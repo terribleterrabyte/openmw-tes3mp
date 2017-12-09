@@ -57,7 +57,7 @@ void Cell::addPlayer(Player *player)
 
 void Cell::removePlayer(Player *player)
 {
-    for (Iterator it = begin(); it != end(); it++)
+    for (auto it = begin(); it != end(); it++)
     {
         if (*it == player)
         {
@@ -82,14 +82,12 @@ void Cell::removePlayer(Player *player)
 
 void Cell::readActorList(unsigned char packetID, const mwmp::BaseActorList *newActorList)
 {
-    for (unsigned int i = 0; i < newActorList->count; i++)
+    for (auto &newActor : newActorList->baseActors)
     {
-        auto &newActor = newActorList->baseActors.at(i);
-        mwmp::BaseActor *cellActor;
 
         if (containsActor(newActor->refNumIndex, newActor->mpNum))
         {
-            cellActor = getActor(newActor->refNumIndex, newActor->mpNum);
+            mwmp::BaseActor *cellActor = getActor(newActor->refNumIndex, newActor->mpNum);
 
             switch (packetID)
             {
@@ -135,7 +133,7 @@ mwmp::BaseActor *Cell::getActor(int refNumIndex, int mpNum)
     return nullptr;
 }
 
-void Cell::removeActors(const mwmp::BaseActorList *newActorList)
+void Cell::removeActors(const mwmp::BaseActorList &newActorList)
 {
     for (auto it = cellActorList.baseActors.begin(); it != cellActorList.baseActors.end();)
     {
@@ -144,10 +142,8 @@ void Cell::removeActors(const mwmp::BaseActorList *newActorList)
 
         bool foundActor = false;
 
-        for (unsigned int i = 0; i < newActorList->count; i++)
+        for (const auto &newActor : newActorList.baseActors)
         {
-            auto &newActor = newActorList->baseActors.at(i);
-
             if (newActor->refNumIndex == refNumIndex && newActor->mpNum == mpNum)
             {
                 it = cellActorList.baseActors.erase(it);
@@ -190,7 +186,7 @@ void Cell::sendToLoaded(mwmp::ActorPacket *actorPacket, mwmp::BaseActorList *bas
 
     std::list <Player*> plList;
 
-    for (auto pl : players)
+    for (auto &pl : players)
     {
         if (pl != nullptr && !pl->npc.mName.empty())
             plList.push_back(pl);
@@ -199,7 +195,7 @@ void Cell::sendToLoaded(mwmp::ActorPacket *actorPacket, mwmp::BaseActorList *bas
     plList.sort();
     plList.unique();
 
-    for (auto pl : plList)
+    for (auto &pl : plList)
     {
         if (pl->guid == baseActorList->guid) continue;
 
@@ -217,7 +213,7 @@ void Cell::sendToLoaded(mwmp::WorldPacket *worldPacket, mwmp::BaseEvent *baseEve
 
     std::list <Player*> plList;
 
-    for (auto pl : players)
+    for (auto &pl : players)
     {
         if (pl != nullptr && !pl->npc.mName.empty())
             plList.push_back(pl);
@@ -226,7 +222,7 @@ void Cell::sendToLoaded(mwmp::WorldPacket *worldPacket, mwmp::BaseEvent *baseEve
     plList.sort();
     plList.unique();
 
-    for (auto pl : plList)
+    for (auto &pl : plList)
     {
         if (pl->guid == baseEvent->guid) continue;
 

@@ -299,8 +299,8 @@ void Player::sendToLoaded(mwmp::PlayerPacket *myPacket)
 {
     std::list <Player*> plList;
 
-    for (auto cell : cells)
-        for (auto pl : *cell)
+    for (auto &cell : cells)
+        for (auto &pl : *cell)
             plList.push_back(pl);
 
     plList.sort();
@@ -796,7 +796,7 @@ void Player::setAuthority()
     writeActorList.cell = cell;
     writeActorList.guid = guid;
 
-    Cell *serverCell = CellController::get().getCell(&cell);
+    Cell *serverCell = CellController::get().getCell(cell);
     if (serverCell != nullptr)
     {
         serverCell->setAuthority(guid);

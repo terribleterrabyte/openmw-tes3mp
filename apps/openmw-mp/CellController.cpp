@@ -21,12 +21,12 @@ CellController &CellController::get()
     return cellCtrl;
 }
 
-Cell *CellController::getCell(ESM::Cell *esmCell)
+Cell *CellController::getCell(const ESM::Cell &esmCell)
 {
-    if (esmCell->isExterior())
-        return getCellByXY(esmCell->mData.mX, esmCell->mData.mY);
+    if (esmCell.isExterior())
+        return getCellByXY(esmCell.mData.mX, esmCell.mData.mY);
     else
-        return getCellByName(esmCell->mName);
+        return getCellByName(esmCell.mName);
 }
 
 
@@ -46,7 +46,7 @@ Cell *CellController::getCellByXY(int x, int y)
     return *it;
 }
 
-Cell *CellController::getCellByName(std::string cellName)
+Cell *CellController::getCellByName(const std::string &cellName)
 {
     auto it = find_if(cells.begin(), cells.end(), [cellName](const Cell *c)
     {
@@ -62,7 +62,7 @@ Cell *CellController::getCellByName(std::string cellName)
     return *it;
 }
 
-Cell *CellController::addCell(ESM::Cell cellData)
+Cell *CellController::addCell(const ESM::Cell &cellData)
 {
     LOG_APPEND(Log::LOG_INFO, "- Loaded cells: %d", cells.size());
     auto it = find_if(cells.begin(), cells.end(), [cellData](const Cell *c) {
@@ -132,7 +132,7 @@ void CellController::deletePlayer(Player *player)
 {
     LOG_APPEND(Log::LOG_INFO, "- Iterating through Cells from Player %s", player->npc.mName.c_str());
 
-    for (auto it = player->getCells()->begin(); player->getCells()->size() != 0; ++it)
+    for (auto it = player->getCells()->begin(); !player->getCells()->empty(); ++it)
         removePlayer(*it, player);
 }
 
