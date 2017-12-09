@@ -67,7 +67,6 @@ void Window::call(const BasePlayer::GUIWindow &window)
     auto fnTypeToStr = [](const BasePlayer::GUIWindow::WidgetType &type) {
         switch (type)
         {
-
             case BasePlayer::GUIWindow::WidgetType::Button:
                 return "Button";
             case BasePlayer::GUIWindow::WidgetType::Editbox:
@@ -81,6 +80,7 @@ void Window::call(const BasePlayer::GUIWindow &window)
             case BasePlayer::GUIWindow::WidgetType::Slider:
                 return "Slider";
         }
+        return "Unknown";
     };
 
     for (const auto &widget : window.widgets)
