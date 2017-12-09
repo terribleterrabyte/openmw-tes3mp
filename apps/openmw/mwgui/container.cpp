@@ -129,15 +129,16 @@ namespace MWGui
         containerItem.charge = itemPtr.getCellRef().getCharge();
         containerItem.actionCount = count;
 
-        worldObject.containerItems.push_back(containerItem);
-        worldEvent->addObject(worldObject);
+        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Sending ID_CONTAINER about\n- Ptr cellRef: %s, %i\n- cell: %s\n- item: %s, %i",
+                           worldObject.refId.c_str(), worldObject.refNumIndex, worldEvent->cell.getDescription().c_str(),
+                           containerItem.refId.c_str(), containerItem.count);
+
+        worldObject.containerItems.push_back(std::move(containerItem));
+        worldEvent->worldObjects.push_back(std::move(worldObject));
 
         mwmp::Main::get().getNetworking()->getWorldPacket(ID_CONTAINER)->setEvent(worldEvent);
         mwmp::Main::get().getNetworking()->getWorldPacket(ID_CONTAINER)->Send();
 
-        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Sending ID_CONTAINER about\n- Ptr cellRef: %s, %i\n- cell: %s\n- item: %s, %i",
-                           worldObject.refId.c_str(), worldObject.refNumIndex, worldEvent->cell.getDescription().c_str(),
-                           containerItem.refId.c_str(), containerItem.count);
         /*
             End of tes3mp addition
         */
@@ -176,15 +177,15 @@ namespace MWGui
 
             containerItem.charge = itemPtr.getCellRef().getCharge();
 
-            worldObject.containerItems.push_back(containerItem);
-            worldEvent->addObject(worldObject);
-
-            mwmp::Main::get().getNetworking()->getWorldPacket(ID_CONTAINER)->setEvent(worldEvent);
-            mwmp::Main::get().getNetworking()->getWorldPacket(ID_CONTAINER)->Send();
-
             LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Sending ID_CONTAINER about\n- Ptr cellRef: %s, %i\n- cell: %s\n- item: %s, %i",
                                worldObject.refId.c_str(), worldObject.refNumIndex, worldEvent->cell.getDescription().c_str(),
                                containerItem.refId.c_str(), containerItem.count);
+
+            worldObject.containerItems.push_back(std::move(containerItem));
+            worldEvent->worldObjects.push_back(std::move(worldObject));
+
+            mwmp::Main::get().getNetworking()->getWorldPacket(ID_CONTAINER)->setEvent(worldEvent);
+            mwmp::Main::get().getNetworking()->getWorldPacket(ID_CONTAINER)->Send();
         }
         /*
             End of tes3mp addition
@@ -335,13 +336,14 @@ namespace MWGui
         worldObject.refId = mPtr.getCellRef().getRefId();
         worldObject.refNumIndex = mPtr.getCellRef().getRefNum().mIndex;
         worldObject.mpNum = mPtr.getCellRef().getMpNum();
-        worldEvent->addObject(worldObject);
-
-        mwmp::Main::get().getNetworking()->getWorldPacket(ID_CONTAINER)->setEvent(worldEvent);
-        mwmp::Main::get().getNetworking()->getWorldPacket(ID_CONTAINER)->Send();
 
         LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Sending ID_CONTAINER about\n- Ptr cellRef: %s, %i\n- cell: %s",
                            worldObject.refId.c_str(), worldObject.refNumIndex, worldEvent->cell.getDescription().c_str());
+
+        worldEvent->worldObjects.push_back(std::move(worldObject));
+
+        mwmp::Main::get().getNetworking()->getWorldPacket(ID_CONTAINER)->setEvent(worldEvent);
+        mwmp::Main::get().getNetworking()->getWorldPacket(ID_CONTAINER)->Send();
         /*
             End of tes3mp addition
         */

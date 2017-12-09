@@ -52,18 +52,10 @@ void WorldEvent::reset()
     guid = mwmp::Main::get().getNetworking()->getLocalPlayer()->guid;
 }
 
-void WorldEvent::addObject(WorldObject worldObject)
-{
-    worldObjects.push_back(worldObject);
-}
-
 void WorldEvent::editContainers(MWWorld::CellStore* cellStore)
 {
-    WorldObject worldObject;
-
-    for (unsigned int i = 0; i < worldObjectCount; i++)
+    for (const auto &worldObject : worldObjects)
     {
-        worldObject = worldObjects.at(i);
 
         //LOG_APPEND(Log::LOG_VERBOSE, "- cellRef: %s, %i, %i", worldObject.refId.c_str(), worldObject.refNumIndex, worldObject.mpNum);
 
@@ -547,7 +539,7 @@ void WorldEvent::addObjectPlace(const MWWorld::Ptr& ptr)
     // Get the real count of gold in a stack
     worldObject.goldValue = ptr.getCellRef().getGoldValue();
 
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addObjectSpawn(const MWWorld::Ptr& ptr)
@@ -564,7 +556,7 @@ void WorldEvent::addObjectSpawn(const MWWorld::Ptr& ptr)
     // we actually see on this client
     worldObject.position = ptr.getRefData().getPosition();
 
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addObjectSpawn(const MWWorld::Ptr& ptr, const MWWorld::Ptr& master)
@@ -601,7 +593,7 @@ void WorldEvent::addObjectSpawn(const MWWorld::Ptr& ptr, const MWWorld::Ptr& mas
     // we actually see on this client
     worldObject.position = ptr.getRefData().getPosition();
 
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addObjectDelete(const MWWorld::Ptr& ptr)
@@ -612,7 +604,7 @@ void WorldEvent::addObjectDelete(const MWWorld::Ptr& ptr)
     worldObject.refId = ptr.getCellRef().getRefId();
     worldObject.refNumIndex = ptr.getCellRef().getRefNum().mIndex;
     worldObject.mpNum = ptr.getCellRef().getMpNum();
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addObjectLock(const MWWorld::Ptr& ptr, int lockLevel)
@@ -624,7 +616,7 @@ void WorldEvent::addObjectLock(const MWWorld::Ptr& ptr, int lockLevel)
     worldObject.refNumIndex = ptr.getCellRef().getRefNum().mIndex;
     worldObject.mpNum = ptr.getCellRef().getMpNum();
     worldObject.lockLevel = lockLevel;
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addObjectTrap(const MWWorld::Ptr& ptr, const ESM::Position& pos, bool isDisarmed)
@@ -637,7 +629,7 @@ void WorldEvent::addObjectTrap(const MWWorld::Ptr& ptr, const ESM::Position& pos
     worldObject.mpNum = ptr.getCellRef().getMpNum();
     worldObject.isDisarmed = isDisarmed;
     worldObject.position = pos;
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addObjectScale(const MWWorld::Ptr& ptr, float scale)
@@ -649,7 +641,7 @@ void WorldEvent::addObjectScale(const MWWorld::Ptr& ptr, float scale)
     worldObject.refNumIndex = ptr.getCellRef().getRefNum().mIndex;
     worldObject.mpNum = ptr.getCellRef().getMpNum();
     worldObject.scale = scale;
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addObjectState(const MWWorld::Ptr& ptr, bool objectState)
@@ -661,7 +653,7 @@ void WorldEvent::addObjectState(const MWWorld::Ptr& ptr, bool objectState)
     worldObject.refNumIndex = ptr.getCellRef().getRefNum().mIndex;
     worldObject.mpNum = ptr.getCellRef().getMpNum();
     worldObject.objectState = objectState;
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addObjectAnimPlay(const MWWorld::Ptr& ptr, std::string group, int mode)
@@ -674,7 +666,7 @@ void WorldEvent::addObjectAnimPlay(const MWWorld::Ptr& ptr, std::string group, i
     worldObject.mpNum = ptr.getCellRef().getMpNum();
     worldObject.animGroup = group;
     worldObject.animMode = mode;
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addDoorState(const MWWorld::Ptr& ptr, int state)
@@ -686,14 +678,14 @@ void WorldEvent::addDoorState(const MWWorld::Ptr& ptr, int state)
     worldObject.refNumIndex = ptr.getCellRef().getRefNum().mIndex;
     worldObject.mpNum = ptr.getCellRef().getMpNum();
     worldObject.doorState = state;
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addMusicPlay(std::string filename)
 {
     mwmp::WorldObject worldObject;
     worldObject.filename = filename;
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addVideoPlay(std::string filename, bool allowSkipping)
@@ -701,7 +693,7 @@ void WorldEvent::addVideoPlay(std::string filename, bool allowSkipping)
     mwmp::WorldObject worldObject;
     worldObject.filename = filename;
     worldObject.allowSkipping = allowSkipping;
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addScriptLocalShort(const MWWorld::Ptr& ptr, int index, int shortVal)
@@ -714,7 +706,7 @@ void WorldEvent::addScriptLocalShort(const MWWorld::Ptr& ptr, int index, int sho
     worldObject.mpNum = ptr.getCellRef().getMpNum();
     worldObject.index = index;
     worldObject.shortVal = shortVal;
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addScriptLocalFloat(const MWWorld::Ptr& ptr, int index, float floatVal)
@@ -727,7 +719,7 @@ void WorldEvent::addScriptLocalFloat(const MWWorld::Ptr& ptr, int index, float f
     worldObject.mpNum = ptr.getCellRef().getMpNum();
     worldObject.index = index;
     worldObject.floatVal = floatVal;
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addScriptMemberShort(std::string refId, int index, int shortVal)
@@ -736,7 +728,7 @@ void WorldEvent::addScriptMemberShort(std::string refId, int index, int shortVal
     worldObject.refId = refId;
     worldObject.index = index;
     worldObject.shortVal = shortVal;
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::addScriptGlobalShort(std::string varName, int shortVal)
@@ -744,7 +736,7 @@ void WorldEvent::addScriptGlobalShort(std::string varName, int shortVal)
     mwmp::WorldObject worldObject;
     worldObject.varName = varName;
     worldObject.shortVal = shortVal;
-    addObject(worldObject);
+    worldObjects.push_back(move(worldObject));
 }
 
 void WorldEvent::sendObjectPlace()
@@ -891,19 +883,19 @@ void WorldEvent::sendContainers(MWWorld::CellStore* cellStore)
         worldObject.refNumIndex = container.mRef.getRefNum().mIndex;
         worldObject.mpNum = container.mRef.getMpNum();
 
-        MWWorld::ContainerStore& containerStore = container.mClass->getContainerStore(MWWorld::Ptr(&container, 0));
+        MWWorld::ContainerStore& containerStore = container.mClass->getContainerStore(MWWorld::Ptr(&container, nullptr));
 
-        for (const auto itemPtr : containerStore)
+        for (const auto &itemPtr : containerStore)
         {
             mwmp::ContainerItem containerItem;
             containerItem.refId = itemPtr.getCellRef().getRefId();
             containerItem.count = itemPtr.getRefData().getCount();
             containerItem.charge = itemPtr.getCellRef().getCharge();
 
-            worldObject.containerItems.push_back(containerItem);
+            worldObject.containerItems.push_back(move(containerItem));
         }
 
-        addObject(worldObject);
+        worldObjects.push_back(move(worldObject));
     }
 
     mwmp::Main::get().getNetworking()->getWorldPacket(ID_CONTAINER)->setEvent(this);
