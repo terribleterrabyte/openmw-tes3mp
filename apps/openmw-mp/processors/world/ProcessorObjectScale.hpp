@@ -5,7 +5,7 @@
 
 namespace mwmp
 {
-    class ProcessorObjectScale : public WorldProcessor
+    class ProcessorObjectScale final: public WorldProcessor
     {
     public:
         ProcessorObjectScale()

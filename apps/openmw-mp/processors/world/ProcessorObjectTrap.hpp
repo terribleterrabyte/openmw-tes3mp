@@ -5,7 +5,7 @@
 
 namespace mwmp
 {
-    class ProcessorObjectTrap : public WorldProcessor
+    class ProcessorObjectTrap final: public WorldProcessor
     {
     public:
         ProcessorObjectTrap()

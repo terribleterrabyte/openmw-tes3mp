@@ -11,7 +11,7 @@
 
 namespace mwmp
 {
-    class ProcessorPlayerCellChange : public PlayerProcessor
+    class ProcessorPlayerCellChange final: public PlayerProcessor
     {
         PlayerPacketController *playerController;
     public:

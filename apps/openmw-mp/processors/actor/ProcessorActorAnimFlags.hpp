@@ -5,7 +5,7 @@
 
 namespace mwmp
 {
-    class ProcessorActorAnimFlags : public ActorProcessor
+    class ProcessorActorAnimFlags final: public ActorProcessor
     {
     public:
         ProcessorActorAnimFlags()

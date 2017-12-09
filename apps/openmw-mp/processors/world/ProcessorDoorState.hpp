@@ -5,7 +5,7 @@
 
 namespace mwmp
 {
-    class ProcessorDoorState : public WorldProcessor
+    class ProcessorDoorState final: public WorldProcessor
     {
     public:
         ProcessorDoorState()

@@ -5,7 +5,7 @@
 
 namespace mwmp
 {
-    class ProcessorObjectState : public WorldProcessor
+    class ProcessorObjectState final: public WorldProcessor
     {
     public:
         ProcessorObjectState()

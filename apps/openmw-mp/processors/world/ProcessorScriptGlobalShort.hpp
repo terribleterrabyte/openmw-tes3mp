@@ -5,7 +5,7 @@
 
 namespace mwmp
 {
-    class ProcessorScriptGlobalShort : public WorldProcessor
+    class ProcessorScriptGlobalShort final: public WorldProcessor
     {
     public:
         ProcessorScriptGlobalShort()

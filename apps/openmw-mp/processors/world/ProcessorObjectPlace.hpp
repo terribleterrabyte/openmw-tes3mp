@@ -6,7 +6,7 @@
 
 namespace mwmp
 {
-    class ProcessorObjectPlace : public WorldProcessor
+    class ProcessorObjectPlace final: public WorldProcessor
     {
     public:
         ProcessorObjectPlace()

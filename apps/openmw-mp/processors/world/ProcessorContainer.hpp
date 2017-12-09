@@ -7,7 +7,7 @@
 
 namespace mwmp
 {
-    class ProcessorContainer : public WorldProcessor
+    class ProcessorContainer final: public WorldProcessor
     {
     public:
         ProcessorContainer()

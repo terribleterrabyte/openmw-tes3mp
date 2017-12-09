@@ -5,7 +5,7 @@
 
 namespace mwmp
 {
-    class ProcessorObjectDelete : public WorldProcessor
+    class ProcessorObjectDelete final: public WorldProcessor
     {
     public:
         ProcessorObjectDelete()

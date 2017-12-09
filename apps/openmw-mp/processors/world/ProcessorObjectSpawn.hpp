@@ -6,7 +6,7 @@
 
 namespace mwmp
 {
-    class ProcessorObjectSpawn : public WorldProcessor
+    class ProcessorObjectSpawn final: public WorldProcessor
     {
     public:
         ProcessorObjectSpawn()

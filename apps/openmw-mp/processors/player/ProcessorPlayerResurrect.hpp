@@ -9,7 +9,7 @@
 
 namespace mwmp
 {
-    class ProcessorPlayerResurrect : public PlayerProcessor
+    class ProcessorPlayerResurrect final: public PlayerProcessor
     {
     public:
         ProcessorPlayerResurrect()

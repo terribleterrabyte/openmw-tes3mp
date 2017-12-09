@@ -5,7 +5,7 @@
 
 namespace mwmp
 {
-    class ProcessorPlayerMap : public PlayerProcessor
+    class ProcessorPlayerMap final: public PlayerProcessor
     {
     public:
         ProcessorPlayerMap()
