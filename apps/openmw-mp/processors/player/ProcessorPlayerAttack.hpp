@@ -25,7 +25,7 @@ namespace mwmp
 
             if (!player->creatureStats.mDead)
             {
-                player->sendToLoaded(&packet);
+                player->sendToLoaded(packet);
             }
         }
     };

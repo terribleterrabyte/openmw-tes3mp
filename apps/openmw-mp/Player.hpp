@@ -66,7 +66,7 @@ public:
     virtual ~Player();
 
     CellController::TContainer *getCells();
-    void sendToLoaded(mwmp::PlayerPacket *myPacket);
+    void sendToLoaded(mwmp::PlayerPacket &myPacket);
 
     void forEachLoaded(std::function<void(Player *pl, Player *other)> func);
 

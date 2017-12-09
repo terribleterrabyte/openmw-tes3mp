@@ -22,7 +22,7 @@ namespace mwmp
             if (!player->creatureStats.mDead)
             {
                 //myPacket->Send(player, true);
-                player->sendToLoaded(&packet);
+                player->sendToLoaded(packet);
 
                 Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_SKILL>(player);
             }

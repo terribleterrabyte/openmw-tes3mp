@@ -22,7 +22,7 @@ namespace mwmp
             //DEBUG_PRINTF(strPacketID);
             if (!player->creatureStats.mDead)
             {
-                player->sendToLoaded(&packet);
+                player->sendToLoaded(packet);
             }
         }
     };

@@ -21,7 +21,7 @@ namespace mwmp
         {
             DEBUG_PRINTF(strPacketID.c_str());
 
-            player->sendToLoaded(&packet);
+            player->sendToLoaded(packet);
 
             Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_EQUIPMENT>(player);
         }

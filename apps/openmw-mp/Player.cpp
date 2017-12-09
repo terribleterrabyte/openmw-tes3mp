@@ -295,22 +295,25 @@ void Player::forEachLoaded(std::function<void(Player *pl, Player *other)> func)
     }
 }
 
-void Player::sendToLoaded(mwmp::PlayerPacket *myPacket)
+void Player::sendToLoaded(mwmp::PlayerPacket &myPacket)
 {
-    std::list <Player*> plList;
+    static std::set<Player*> plList;
+    static CellController::TContainer *addrCells = nullptr;
 
-    for (auto &cell : cells)
-        for (auto &pl : *cell)
-            plList.push_back(pl);
+    if (addrCells != &cells)
+    {
+        addrCells = &cells;
+        plList.clear();
+        for (auto &cell : cells)
+            for (auto &pl : *cell)
+                plList.insert(pl);
+    }
 
-    plList.sort();
-    plList.unique();
-
-    for (auto pl : plList)
+    for (auto &pl : plList)
     {
         if (pl == this) continue;
-        myPacket->setPlayer(this);
-        myPacket->Send(pl->guid);
+        myPacket.setPlayer(this);
+        myPacket.Send(pl->guid);
     }
 }
 
