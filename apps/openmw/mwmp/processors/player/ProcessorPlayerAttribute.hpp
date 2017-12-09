@@ -12,7 +12,7 @@
 
 namespace mwmp
 {
-    class ProcessorPlayerAttribute : public PlayerProcessor
+    class ProcessorPlayerAttribute final: public PlayerProcessor
     {
     public:
         ProcessorPlayerAttribute()

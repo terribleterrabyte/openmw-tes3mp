@@ -9,7 +9,7 @@
 
 namespace mwmp
 {
-    class ProcessorHandshake : public PlayerProcessor
+    class ProcessorHandshake final: public PlayerProcessor
     {
     public:
         ProcessorHandshake()

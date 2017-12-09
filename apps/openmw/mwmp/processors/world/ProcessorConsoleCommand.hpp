@@ -5,7 +5,7 @@
 
 namespace mwmp
 {
-    class ProcessorConsoleCommand : public WorldProcessor
+    class ProcessorConsoleCommand final: public WorldProcessor
     {
     public:
         ProcessorConsoleCommand()

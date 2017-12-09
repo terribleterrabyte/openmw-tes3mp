@@ -5,7 +5,7 @@
 
 namespace mwmp
 {
-    class ProcessorPlayerKillCount : public PlayerProcessor
+    class ProcessorPlayerKillCount final: public PlayerProcessor
     {
     public:
         ProcessorPlayerKillCount()

@@ -10,7 +10,7 @@
 
 namespace mwmp
 {
-    class ProcessorPlayerCharClass : public PlayerProcessor
+    class ProcessorPlayerCharClass final: public PlayerProcessor
     {
     public:
         ProcessorPlayerCharClass()

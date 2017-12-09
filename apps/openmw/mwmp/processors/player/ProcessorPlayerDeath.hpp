@@ -10,7 +10,7 @@
 
 namespace mwmp
 {
-    class ProcessorPlayerDeath : public PlayerProcessor
+    class ProcessorPlayerDeath final: public PlayerProcessor
     {
     public:
         ProcessorPlayerDeath()

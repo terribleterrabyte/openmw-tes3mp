@@ -10,7 +10,7 @@
 
 namespace mwmp
 {
-    class ProcessorPlayerSpellbook : public PlayerProcessor
+    class ProcessorPlayerSpellbook final: public PlayerProcessor
     {
     public:
         ProcessorPlayerSpellbook()

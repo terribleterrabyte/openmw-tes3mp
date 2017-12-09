@@ -5,7 +5,7 @@
 
 namespace mwmp
 {
-    class ProcessorMusicPlay : public WorldProcessor
+    class ProcessorMusicPlay final: public WorldProcessor
     {
     public:
         ProcessorMusicPlay()

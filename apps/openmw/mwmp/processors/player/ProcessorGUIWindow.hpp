@@ -8,7 +8,7 @@
 
 namespace mwmp
 {
-    class ProcessorGUIWindow : public PlayerProcessor
+    class ProcessorGUIWindow final: public PlayerProcessor
     {
     public:
         ProcessorGUIWindow()

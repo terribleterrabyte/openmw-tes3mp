@@ -5,7 +5,7 @@
 
 namespace mwmp
 {
-    class ProcessorPlayerRegionAuthority : public PlayerProcessor
+    class ProcessorPlayerRegionAuthority final: public PlayerProcessor
     {
     public:
         ProcessorPlayerRegionAuthority()

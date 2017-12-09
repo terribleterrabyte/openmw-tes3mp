@@ -12,7 +12,7 @@
 
 namespace mwmp
 {
-    class ProcessorGameTime : public PlayerProcessor
+    class ProcessorGameTime final: public PlayerProcessor
     {
     public:
         ProcessorGameTime()

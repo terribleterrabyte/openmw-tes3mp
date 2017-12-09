@@ -9,7 +9,7 @@
 
 namespace mwmp
 {
-    class ProcessorPlayerBaseInfo : public PlayerProcessor
+    class ProcessorPlayerBaseInfo final: public PlayerProcessor
     {
     public:
         ProcessorPlayerBaseInfo()

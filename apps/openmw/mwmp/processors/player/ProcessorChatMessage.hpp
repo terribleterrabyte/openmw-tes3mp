@@ -12,7 +12,7 @@
 
 namespace mwmp
 {
-    class ProcessorChatMessage : public PlayerProcessor
+    class ProcessorChatMessage final: public PlayerProcessor
     {
     public:
         ProcessorChatMessage()

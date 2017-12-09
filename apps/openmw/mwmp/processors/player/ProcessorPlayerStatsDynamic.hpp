@@ -10,7 +10,7 @@
 
 namespace mwmp
 {
-    class ProcessorPlayerStatsDynamic : public PlayerProcessor
+    class ProcessorPlayerStatsDynamic final: public PlayerProcessor
     {
     public:
         ProcessorPlayerStatsDynamic()

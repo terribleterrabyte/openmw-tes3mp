@@ -12,7 +12,7 @@
 
 namespace mwmp
 {
-    class BaseObjectProcessor : public WorldProcessor
+    class BaseObjectProcessor: public WorldProcessor
     {
     public:
         virtual void Do(WorldPacket &packet, WorldEvent &event)

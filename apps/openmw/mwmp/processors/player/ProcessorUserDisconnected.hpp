@@ -12,7 +12,7 @@
 
 namespace mwmp
 {
-    class ProcessorUserDisconnected : public PlayerProcessor
+    class ProcessorUserDisconnected final: public PlayerProcessor
     {
     public:
         ProcessorUserDisconnected()

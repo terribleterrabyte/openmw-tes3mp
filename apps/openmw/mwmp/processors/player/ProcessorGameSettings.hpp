@@ -8,7 +8,7 @@
 
 namespace mwmp
 {
-    class ProcessorGameSettings : public PlayerProcessor
+    class ProcessorGameSettings final: public PlayerProcessor
     {
     public:
         ProcessorGameSettings()
