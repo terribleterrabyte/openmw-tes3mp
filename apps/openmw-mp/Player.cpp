@@ -124,7 +124,7 @@ Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedM
 Player::~Player()
 {
     printf("Player::~Player()\n");
-    CellController::get()->deletePlayer(this);
+    CellController::get().deletePlayer(this);
 }
 
 void Player::update()
@@ -796,7 +796,7 @@ void Player::setAuthority()
     writeActorList.cell = cell;
     writeActorList.guid = guid;
 
-    Cell *serverCell = CellController::get()->getCell(&cell);
+    Cell *serverCell = CellController::get().getCell(&cell);
     if (serverCell != nullptr)
     {
         serverCell->setAuthority(guid);

@@ -21,7 +21,7 @@ namespace mwmp
         {
             LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Received %s from %s", strPacketID.c_str(), player->npc.mName.c_str());
 
-            CellController::get()->update(player.get());
+            CellController::get().update(player.get());
         }
     };
 }

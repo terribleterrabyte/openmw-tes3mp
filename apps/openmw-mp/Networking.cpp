@@ -40,8 +40,6 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
     sThis = this;
     this->peer = peer;
 
-    CellController::create();
-
     playerPacketController = new PlayerPacketController(peer);
     actorPacketController = new ActorPacketController(peer);
     worldPacketController = new WorldPacketController(peer);
@@ -63,10 +61,7 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
 Networking::~Networking()
 {
     luaState.getEventCtrl().Call<CoreEvent::ON_EXIT>(false);
-
-    CellController::destroy();
-
-    sThis = nullptr;
+    
     delete playerPacketController;
     delete actorPacketController;
     delete worldPacketController;

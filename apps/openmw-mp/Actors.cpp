@@ -175,7 +175,7 @@ void ActorController::sendActors(std::shared_ptr<Player> player, std::vector<std
     Cell *serverCell = nullptr;
 
     if (sendToAll)
-        serverCell = CellController::get()->getCell(&actorList.cell);
+        serverCell = CellController::get().getCell(&actorList.cell);
 
     if (positionChanged)
     {
@@ -250,7 +250,7 @@ void ActorController::sendList(std::shared_ptr<Player> player, std::vector<std::
     packet->setActorList(&actorList);
     packet->Send(actorList.guid);
     if (sendToAll)
-        CellController::get()->getCell(&actorList.cell)->sendToLoaded(packet, &actorList);
+        CellController::get().getCell(&actorList.cell)->sendToLoaded(packet, &actorList);
 }
 
 void ActorController::requestList(std::shared_ptr<Player> player, const ESM::Cell &cell)
@@ -266,7 +266,7 @@ void ActorController::requestList(std::shared_ptr<Player> player, const ESM::Cel
 
 std::vector<std::shared_ptr<Actor>> ActorController::getActors(std::shared_ptr<Player> player, const ESM::Cell &cell)
 {
-    Cell *serverCell = CellController::get()->getCell(&player->cell);
+    Cell *serverCell = CellController::get().getCell(&player->cell);
 
     std::vector<std::shared_ptr<Actor>> actorList;
 

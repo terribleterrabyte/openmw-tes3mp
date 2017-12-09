@@ -25,7 +25,7 @@ namespace mwmp
             // only to players who have the container's cell loaded
             if (event.action == BaseEvent::SET && event.worldObjectCount > 1)
             {
-                Cell *serverCell = CellController::get()->getCell(&event.cell);
+                Cell *serverCell = CellController::get().getCell(&event.cell);
 
                 if (serverCell != nullptr)
                     serverCell->sendToLoaded(&packet, &event);

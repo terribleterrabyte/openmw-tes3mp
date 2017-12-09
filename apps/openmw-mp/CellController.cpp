@@ -9,36 +9,16 @@
 
 using namespace std;
 
-CellController::CellController()
-{
-
-}
-
 CellController::~CellController()
 {
     for (auto cell : cells)
         delete cell;
 }
 
-CellController *CellController::sThis = nullptr;
-
-void CellController::create()
+CellController &CellController::get()
 {
-    assert(!sThis);
-    sThis = new CellController;
-}
-
-void CellController::destroy()
-{
-    assert(sThis);
-    delete sThis;
-    sThis = nullptr;
-}
-
-CellController *CellController::get()
-{
-    assert(sThis);
-    return sThis;
+    static CellController cellCtrl;
+    return cellCtrl;
 }
 
 Cell *CellController::getCell(ESM::Cell *esmCell)

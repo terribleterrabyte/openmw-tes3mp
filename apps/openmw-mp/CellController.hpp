@@ -15,14 +15,15 @@ class Cell;
 class CellController
 {
 private:
-    CellController();
+    CellController() = default;
     ~CellController();
-
-    CellController(CellController&); // not used
 public:
-    static void create();
-    static void destroy();
-    static CellController *get();
+    CellController(const CellController&) = delete;
+    CellController(CellController&&) = delete;
+    CellController& operator=(const CellController&) = delete;
+    CellController& operator=(CellController&&) = delete;
+
+    static CellController &get();
 public:
     typedef std::deque<Cell*> TContainer;
     typedef TContainer::iterator TIter;
@@ -40,7 +41,6 @@ public:
     void update(Player *player);
 
 private:
-    static CellController *sThis;
     TContainer cells;
 };
 

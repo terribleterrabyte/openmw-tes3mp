@@ -15,7 +15,7 @@ namespace mwmp
 
         void Do(ActorPacket &packet, const std::shared_ptr<Player> &player, BaseActorList &actorList) override
         {
-            Cell *serverCell = CellController::get()->getCell(&actorList.cell);
+            Cell *serverCell = CellController::get().getCell(&actorList.cell);
 
             if (serverCell != nullptr && *serverCell->getAuthority() == actorList.guid)
             {
