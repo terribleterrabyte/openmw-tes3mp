@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketActorCellChange : public ActorPacket
+    class PacketActorCellChange final: public ActorPacket
     {
     public:
-        PacketActorCellChange(RakNet::RakPeerInterface *peer);
+        explicit PacketActorCellChange(RakNet::RakPeerInterface *peer);
 
-        virtual void Actor(BaseActor &actor, bool send);
+        void Actor(BaseActor &actor, bool send) override;
     };
 }
 

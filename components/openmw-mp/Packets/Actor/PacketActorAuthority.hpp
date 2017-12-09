@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketActorAuthority : public ActorPacket
+    class PacketActorAuthority final: public ActorPacket
     {
     public:
-        PacketActorAuthority(RakNet::RakPeerInterface *peer);
+        explicit PacketActorAuthority(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

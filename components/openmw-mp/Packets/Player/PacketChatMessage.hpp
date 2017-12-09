@@ -9,12 +9,12 @@
 
 namespace mwmp
 {
-    class PacketChatMessage : public PlayerPacket
+    class PacketChatMessage final: public PlayerPacket
     {
     public:
         PacketChatMessage(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

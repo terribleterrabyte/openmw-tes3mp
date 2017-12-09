@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketGameWeather : public PlayerPacket
+    class PacketGameWeather final: public PlayerPacket
     {
     public:
         PacketGameWeather(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

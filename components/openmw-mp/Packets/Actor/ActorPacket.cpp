@@ -14,11 +14,6 @@ ActorPacket::ActorPacket(RakNet::RakPeerInterface *peer) : BasePacket(peer)
     this->peer = peer;
 }
 
-ActorPacket::~ActorPacket()
-{
-
-}
-
 void ActorPacket::setActorList(BaseActorList *actorList)
 {
     this->actorList = actorList;

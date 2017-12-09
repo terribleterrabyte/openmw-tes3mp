@@ -14,11 +14,6 @@ PlayerPacket::PlayerPacket(RakNet::RakPeerInterface *peer) : BasePacket(peer)
     this->peer = peer;
 }
 
-PlayerPacket::~PlayerPacket()
-{
-
-}
-
 void PlayerPacket::setPlayer(BasePlayer *player)
 {
     this->player = player;

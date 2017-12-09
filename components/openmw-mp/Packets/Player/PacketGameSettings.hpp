@@ -6,12 +6,12 @@
 
 namespace mwmp
 {
-    class PacketGameSettings: public PlayerPacket
+    class PacketGameSettings final: public PlayerPacket
     {
     public:
         PacketGameSettings(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

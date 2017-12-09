@@ -11,7 +11,7 @@
 
 namespace mwmp
 {
-    class PacketPlayerDeath: public PlayerPacket
+    class PacketPlayerDeath final: public PlayerPacket
     {
     public:
         PacketPlayerDeath(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)

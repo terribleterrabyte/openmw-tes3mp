@@ -9,12 +9,12 @@
 
 namespace mwmp
 {
-    class PacketPlayerInventory : public PlayerPacket
+    class PacketPlayerInventory final: public PlayerPacket
     {
     public:
         PacketPlayerInventory(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

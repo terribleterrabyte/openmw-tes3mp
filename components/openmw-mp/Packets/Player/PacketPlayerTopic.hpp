@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketPlayerTopic : public PlayerPacket
+    class PacketPlayerTopic final: public PlayerPacket
     {
     public:
         PacketPlayerTopic(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

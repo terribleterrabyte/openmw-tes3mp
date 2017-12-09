@@ -38,7 +38,7 @@ public:
                 throw std::logic_error("processor " + p.second->strPacketID + " already registered. Check " +
                                        processor->className + " and " + p.second->className);
         }
-        processors.insert(typename processors_t::value_type(processor->GetPacketID(), processor));
+        processors.insert(typename processors_t::value_type(processor->GetPacketID(), std::move(processor)));
     }
 protected:
     unsigned char packetID;

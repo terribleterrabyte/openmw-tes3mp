@@ -9,7 +9,7 @@
 
 namespace mwmp
 {
-    class PacketLoaded : public PlayerPacket
+    class PacketLoaded final: public PlayerPacket
     {
     public:
         PacketLoaded(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)

@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketScriptLocalFloat : public WorldPacket
+    class PacketScriptLocalFloat final: public WorldPacket
     {
     public:
-        PacketScriptLocalFloat(RakNet::RakPeerInterface *peer);
+        explicit PacketScriptLocalFloat(RakNet::RakPeerInterface *peer);
 
-        virtual void Object(WorldObject &worldObject, bool send);
+        void Object(WorldObject &worldObject, bool send) override;
     };
 }
 

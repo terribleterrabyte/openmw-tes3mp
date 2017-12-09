@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketScriptMemberShort : public WorldPacket
+    class PacketScriptMemberShort final: public WorldPacket
     {
     public:
-        PacketScriptMemberShort(RakNet::RakPeerInterface *peer);
+        explicit PacketScriptMemberShort(RakNet::RakPeerInterface *peer);
 
-        virtual void Object(WorldObject &obj, bool send);
+        void Object(WorldObject &obj, bool send) override;
     };
 }
 

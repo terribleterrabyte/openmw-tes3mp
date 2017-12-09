@@ -9,12 +9,12 @@
 
 namespace mwmp
 {
-    class PacketPlayerAttack : public PlayerPacket
+    class PacketPlayerAttack final: public PlayerPacket
     {
     public:
         PacketPlayerAttack(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

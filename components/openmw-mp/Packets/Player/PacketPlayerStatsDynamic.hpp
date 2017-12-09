@@ -9,12 +9,12 @@
 
 namespace mwmp
 {
-    class PacketPlayerStatsDynamic : public PlayerPacket
+    class PacketPlayerStatsDynamic final: public PlayerPacket
     {
     public:
         PacketPlayerStatsDynamic(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

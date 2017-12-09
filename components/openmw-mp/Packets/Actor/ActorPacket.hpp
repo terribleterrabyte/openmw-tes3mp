@@ -15,13 +15,13 @@ namespace mwmp
     class ActorPacket : public BasePacket
     {
     public:
-        ActorPacket(RakNet::RakPeerInterface *peer);
+        explicit ActorPacket(RakNet::RakPeerInterface *peer);
 
-        ~ActorPacket();
+        ~ActorPacket() override = default;
 
         void setActorList(BaseActorList *actorList);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     protected:
         bool PacketHeader(RakNet::BitStream *bs, bool send);
         virtual void Actor(BaseActor &actor, bool send) {};

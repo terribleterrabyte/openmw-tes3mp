@@ -5,10 +5,10 @@
 
 namespace mwmp
 {
-    class PacketObjectDelete : public WorldPacket
+    class PacketObjectDelete final: public WorldPacket
     {
     public:
-        PacketObjectDelete(RakNet::RakPeerInterface *peer);
+        explicit PacketObjectDelete(RakNet::RakPeerInterface *peer);
     };
 }
 

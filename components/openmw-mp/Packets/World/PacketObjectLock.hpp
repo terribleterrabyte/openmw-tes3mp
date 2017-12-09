@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketObjectLock : public WorldPacket
+    class PacketObjectLock final: public WorldPacket
     {
     public:
-        PacketObjectLock(RakNet::RakPeerInterface *peer);
+        explicit PacketObjectLock(RakNet::RakPeerInterface *peer);
 
-        virtual void Object(WorldObject &worldObject, bool send);
+        void Object(WorldObject &worldObject, bool send) override;
     };
 }
 

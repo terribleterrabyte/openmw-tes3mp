@@ -12,16 +12,16 @@
 
 namespace mwmp
 {
-    class WorldPacket : public BasePacket
+    class WorldPacket: public BasePacket
     {
     public:
-        WorldPacket(RakNet::RakPeerInterface *peer);
+        explicit WorldPacket(RakNet::RakPeerInterface *peer);
 
-        ~WorldPacket();
+        ~WorldPacket() override = default;
 
         void setEvent(BaseEvent *event);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
 
     protected:
         virtual void Object(WorldObject &worldObject, bool send);

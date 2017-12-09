@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketDoorState : public WorldPacket
+    class PacketDoorState final: public WorldPacket
     {
     public:
-        PacketDoorState(RakNet::RakPeerInterface *peer);
+        explicit PacketDoorState(RakNet::RakPeerInterface *peer);
 
-        virtual void Object(WorldObject &worldObject, bool send);
+        void Object(WorldObject &worldObject, bool send) override;
     };
 }
 

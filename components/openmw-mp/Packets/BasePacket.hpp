@@ -12,9 +12,9 @@ namespace mwmp
     class BasePacket
     {
     public:
-        BasePacket(RakNet::RakPeerInterface *peer);
+        explicit BasePacket(RakNet::RakPeerInterface *peer);
 
-        virtual ~BasePacket();
+        virtual ~BasePacket() = default;
 
         virtual void Packet(RakNet::BitStream *bs, bool send);
         virtual uint32_t Send(bool toOtherPlayers = true);
@@ -29,12 +29,12 @@ namespace mwmp
         void SetStreams(RakNet::BitStream *inStream, RakNet::BitStream *outStream);
         virtual uint32_t RequestData(RakNet::RakNetGUID guid);
 
-        static size_t headerSize()
+        static inline size_t headerSize()
         {
-            return (size_t)(1 + RakNet::RakNetGUID::size()); // packetID + RakNetGUID (uint64_t)
+            return static_cast<size_t>(1 + RakNet::RakNetGUID::size()); // packetID + RakNetGUID (uint64_t)
         }
 
-        unsigned char GetPacketID()
+        unsigned char GetPacketID() const
         {
             return packetID;
         }

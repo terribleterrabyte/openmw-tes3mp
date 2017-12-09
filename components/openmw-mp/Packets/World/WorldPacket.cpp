@@ -15,11 +15,6 @@ WorldPacket::WorldPacket(RakNet::RakPeerInterface *peer) : BasePacket(peer)
     this->peer = peer;
 }
 
-WorldPacket::~WorldPacket()
-{
-
-}
-
 void WorldPacket::setEvent(BaseEvent *event)
 {
     this->event = event;

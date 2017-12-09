@@ -11,16 +11,16 @@
 
 namespace mwmp
 {
-    class PacketPreInit : public BasePacket
+    class PacketPreInit final: public BasePacket
     {
     public:
         typedef std::vector<unsigned> HashList;
         typedef std::pair<std::string, HashList> PluginPair;
         typedef std::vector<PluginPair> PluginContainer;
 
-        PacketPreInit(RakNet::RakPeerInterface *peer);
+        explicit PacketPreInit(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
         void setChecksums(PluginContainer *checksums);
     private:
         PluginContainer *checksums;

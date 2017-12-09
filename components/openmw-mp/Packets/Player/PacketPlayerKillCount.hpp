@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketPlayerKillCount : public PlayerPacket
+    class PacketPlayerKillCount final: public PlayerPacket
     {
     public:
         PacketPlayerKillCount(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

@@ -46,7 +46,7 @@ inline void AddPacket(mwmp::PlayerPacketController::packets_t *packets, RakNet::
 {
     T *packet = new T(peer);
     typedef mwmp::PlayerPacketController::packets_t::value_type value_t;
-    packets->insert(value_t(packet->GetPacketID(), value_t::second_type(packet)));
+    packets->insert(value_t(packet->GetPacketID(), value_t::second_type(std::move(packet))));
 }
 
 mwmp::PlayerPacketController::PlayerPacketController(RakNet::RakPeerInterface *peer)

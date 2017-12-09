@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketMusicPlay : public WorldPacket
+    class PacketMusicPlay final: public WorldPacket
     {
     public:
-        PacketMusicPlay(RakNet::RakPeerInterface *peer);
+        explicit PacketMusicPlay(RakNet::RakPeerInterface *peer);
 
-        virtual void Object(WorldObject &worldObject, bool send);
+        void Object(WorldObject &worldObject, bool send) override;
     };
 }
 

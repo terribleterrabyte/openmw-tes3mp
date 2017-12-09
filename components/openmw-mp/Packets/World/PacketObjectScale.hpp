@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketObjectScale : public WorldPacket
+    class PacketObjectScale final: public WorldPacket
     {
     public:
-        PacketObjectScale(RakNet::RakPeerInterface *peer);
+        explicit PacketObjectScale(RakNet::RakPeerInterface *peer);
 
-        virtual void Object(WorldObject &worldObject, bool send);
+        void Object(WorldObject &worldObject, bool send) override;
     };
 }
 

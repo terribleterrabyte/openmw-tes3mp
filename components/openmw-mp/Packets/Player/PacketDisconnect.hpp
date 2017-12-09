@@ -10,7 +10,7 @@
 
 namespace mwmp
 {
-    class PacketDisconnect : public PlayerPacket
+    class PacketDisconnect final: public PlayerPacket
     {
     public:
         PacketDisconnect(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)

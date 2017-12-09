@@ -9,11 +9,11 @@
 
 namespace mwmp
 {
-    class PacketGUIWindow : public PlayerPacket
+    class PacketGUIWindow final: public PlayerPacket
     {
     public:
         PacketGUIWindow(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }

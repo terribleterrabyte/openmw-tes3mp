@@ -9,13 +9,13 @@
 
 namespace mwmp
 {
-    class PacketPlayerAttribute : public PlayerPacket
+    class PacketPlayerAttribute final: public PlayerPacket
     {
     public:
         const static int AttributeCount = 8;
         PacketPlayerAttribute(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

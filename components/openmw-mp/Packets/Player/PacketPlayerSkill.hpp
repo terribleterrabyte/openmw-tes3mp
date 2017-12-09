@@ -9,14 +9,14 @@
 
 namespace mwmp
 {
-    class PacketPlayerSkill : public PlayerPacket
+    class PacketPlayerSkill final: public PlayerPacket
     {
     public:
         const static int SkillCount = 27;
         const static int AttributeCount = 8;
         PacketPlayerSkill(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

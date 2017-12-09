@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketPlayerShapeshift : public PlayerPacket
+    class PacketPlayerShapeshift final: public PlayerPacket
     {
     public:
         PacketPlayerShapeshift(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

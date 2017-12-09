@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketActorAnimPlay : public ActorPacket
+    class PacketActorAnimPlay final: public ActorPacket
     {
     public:
-        PacketActorAnimPlay(RakNet::RakPeerInterface *peer);
+        explicit PacketActorAnimPlay(RakNet::RakPeerInterface *peer);
 
-        virtual void Actor(BaseActor &actor, bool send);
+        void Actor(BaseActor &actor, bool send) override;
     };
 }
 

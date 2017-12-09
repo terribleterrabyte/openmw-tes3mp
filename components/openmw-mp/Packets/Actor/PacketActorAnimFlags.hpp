@@ -5,10 +5,10 @@
 
 namespace mwmp
 {
-    class PacketActorAnimFlags : public ActorPacket
+    class PacketActorAnimFlags final: public ActorPacket
     {
     public:
-        PacketActorAnimFlags(RakNet::RakPeerInterface *peer);
+        explicit PacketActorAnimFlags(RakNet::RakPeerInterface *peer);
 
         void Actor(BaseActor &actor, bool send) final;
     };

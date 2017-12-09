@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketConsoleCommand : public WorldPacket
+    class PacketConsoleCommand final: public WorldPacket
     {
     public:
-        PacketConsoleCommand(RakNet::RakPeerInterface *peer);
+        explicit PacketConsoleCommand(RakNet::RakPeerInterface *peer);
 
-        virtual void Object(WorldObject &obj, bool send);
+        void Object(WorldObject &obj, bool send) override;
     };
 }
 

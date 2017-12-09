@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketActorTest : public ActorPacket
+    class PacketActorTest final: public ActorPacket
     {
     public:
-        PacketActorTest(RakNet::RakPeerInterface *peer);
+        explicit PacketActorTest(RakNet::RakPeerInterface *peer);
 
-        virtual void Actor(BaseActor &actor, bool send);
+        void Actor(BaseActor &actor, bool send) override;
     };
 }
 

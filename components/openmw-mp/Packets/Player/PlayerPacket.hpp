@@ -16,7 +16,7 @@ namespace mwmp
     public:
         PlayerPacket(RakNet::RakPeerInterface *peer);
 
-        ~PlayerPacket();
+        ~PlayerPacket() override = default;
 
         void setPlayer(BasePlayer *player);
         BasePlayer *getPlayer();

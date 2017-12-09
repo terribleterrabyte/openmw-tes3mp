@@ -5,12 +5,12 @@
 
 namespace mwmp
 {
-    class PacketContainer : public WorldPacket
+    class PacketContainer final: public WorldPacket
     {
     public:
-        PacketContainer(RakNet::RakPeerInterface *peer);
+        explicit PacketContainer(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

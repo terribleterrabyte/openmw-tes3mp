@@ -9,12 +9,12 @@
 
 namespace mwmp
 {
-    class PacketGameTime : public PlayerPacket
+    class PacketGameTime final: public PlayerPacket
     {
     public:
         PacketGameTime(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *bs, bool send);
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 
