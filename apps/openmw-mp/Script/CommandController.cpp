@@ -73,7 +73,7 @@ std::pair<CommandController::ExecResult, std::string> CommandController::exec(co
     if (cmd != commands.end())
     {
         tokens.pop_front();
-        bool result = cmd->second.func(player, sol::as_table(tokens), channel);
+        bool result = cmd->second.func(player, sol::as_table(move(tokens)), channel);
         if (result)
             return make_pair(ExecResult::SUCCESS, "");
 
