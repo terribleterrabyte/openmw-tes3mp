@@ -15,7 +15,7 @@ using namespace std;
 
 Cell::Cell(ESM::Cell cell) : cell(cell)
 {
-    cellActorList.count = 0;
+
 }
 
 Cell::Iterator Cell::begin() const
@@ -109,8 +109,6 @@ void Cell::readActorList(unsigned char packetID, const mwmp::BaseActorList *newA
         else
             cellActorList.baseActors.push_back(newActor);
     }
-
-    cellActorList.count = cellActorList.baseActors.size();
 }
 
 bool Cell::containsActor(int refNumIndex, int mpNum)
@@ -155,8 +153,6 @@ void Cell::removeActors(const mwmp::BaseActorList &newActorList)
         if (!foundActor)
             it++;
     }
-
-    cellActorList.count = cellActorList.baseActors.size();
 }
 
 RakNet::RakNetGUID *Cell::getAuthority()

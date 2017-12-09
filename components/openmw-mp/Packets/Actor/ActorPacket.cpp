@@ -25,23 +25,13 @@ void ActorPacket::Packet(RakNet::BitStream *bs, bool send)
     if (!PacketHeader(bs, send))
         return;
 
-    BaseActor *actor;
-
-    for (unsigned int i = 0; i < actorList->count; i++)
+    for(auto &actor : actorList->baseActors)
     {
-        if (send)
-            actor = actorList->baseActors.at(i).get();
-        else
-            actor = new BaseActor();
-
         RW(actor->refNumIndex, send);
         RW(actor->mpNum, send);
-
         Actor(*actor, send);
-
-        if (!send)
-            actorList->baseActors.push_back(std::shared_ptr<BaseActor>(actor));
     }
+
 }
 
 bool ActorPacket::PacketHeader(RakNet::BitStream *bs, bool send)
@@ -51,14 +41,19 @@ bool ActorPacket::PacketHeader(RakNet::BitStream *bs, bool send)
     RW(actorList->cell.mData, send, true);
     RW(actorList->cell.mName, send, true);
 
+    uint32_t actorCount;
     if (send)
-        actorList->count = (unsigned int)(actorList->baseActors.size());
-    else
+        actorCount = (uint32_t)(actorList->baseActors.size());
+
+    RW(actorCount, send);
+
+    if(!send)
+    {
         actorList->baseActors.clear();
+        actorList->baseActors.resize(actorCount, std::make_shared<BaseActor>());
+    }
 
-    RW(actorList->count, send);
-
-    if (actorList->count > maxActors)
+    if (actorCount > maxActors)
     {
         actorList->isValid = false;
         return false;

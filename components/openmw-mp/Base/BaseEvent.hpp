@@ -82,7 +82,6 @@ namespace mwmp
         RakNet::RakNetGUID guid;
         
         std::vector<WorldObject> worldObjects;
-        unsigned int worldObjectCount;
 
         ESM::Cell cell;
 

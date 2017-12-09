@@ -23,9 +23,9 @@ namespace mwmp
             // Until we have a timestamp-based system, send packets pertaining to more
             // than one container (i.e. replies to server requests for container contents)
             // only to players who have the container's cell loaded
-            if (event.action == BaseEvent::SET && event.worldObjectCount > 1)
+            if (event.action == BaseEvent::SET && event.worldObjects.size() > 1)
             {
-                Cell *serverCell = CellController::get().getCell(&event.cell);
+                Cell *serverCell = CellController::get().getCell(event.cell);
 
                 if (serverCell != nullptr)
                     serverCell->sendToLoaded(&packet, &event);

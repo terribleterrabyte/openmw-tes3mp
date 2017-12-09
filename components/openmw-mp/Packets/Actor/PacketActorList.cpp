@@ -15,15 +15,8 @@ void PacketActorList::Packet(RakNet::BitStream *bs, bool send)
 
     RW(actorList->action, send);
 
-    BaseActor *actor;
-
-    for (unsigned int i = 0; i < actorList->count; i++)
+    for(auto &actor : actorList->baseActors)
     {
-        if (send)
-            actor = actorList->baseActors.at(i).get();
-        else
-            actor = new BaseActor();
-
         RW(actor->refId, send);
         RW(actor->refNumIndex, send);
         RW(actor->mpNum, send);
@@ -33,8 +26,5 @@ void PacketActorList::Packet(RakNet::BitStream *bs, bool send)
             actorList->isValid = false;
             return;
         }
-
-        if (!send)
-            actorList->baseActors.push_back(std::shared_ptr<BaseActor>(actor));
     }
 }

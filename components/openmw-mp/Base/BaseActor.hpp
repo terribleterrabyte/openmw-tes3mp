@@ -59,8 +59,6 @@ namespace mwmp
 
         std::vector<std::shared_ptr<BaseActor>> baseActors;
 
-        unsigned int count;
-
         ESM::Cell cell;
 
         unsigned char action; // 0 - Clear and set in entirety, 1 - Add item, 2 - Remove item, 3 - Request items

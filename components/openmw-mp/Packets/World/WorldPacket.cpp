@@ -36,14 +36,14 @@ bool WorldPacket::PacketHeader(RakNet::BitStream *bs, bool send)
 {
     BasePacket::Packet(bs, send);
 
+    uint32_t worldObjectCount;
+
     if (send)
-        event->worldObjectCount = (unsigned int)(event->worldObjects.size());
-    else
-        event->worldObjects.clear();
+        worldObjectCount = (uint32_t) (event->worldObjects.size());
 
-    RW(event->worldObjectCount, send);
+    RW(worldObjectCount, send);
 
-    if (event->worldObjectCount > maxObjects)
+    if (worldObjectCount > maxObjects)
     {
         event->isValid = false;
         return false;
@@ -51,7 +51,8 @@ bool WorldPacket::PacketHeader(RakNet::BitStream *bs, bool send)
 
     if (!send)
     {
-        event->worldObjects.resize(event->worldObjectCount);
+        event->worldObjects.clear();
+        event->worldObjects.resize(worldObjectCount);
     }
 
     if (hasCellData)
