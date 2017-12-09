@@ -129,8 +129,8 @@ void Inventory::removeItem(const std::string &refId, unsigned short count)
 
 bool Inventory::hasItemEquipped(const std::string &refId) const
 {
-    for (int slot = 0; slot < MWWorld::InventoryStore::Slots; slot++)
-        if (Misc::StringUtils::ciEqual(netActor->getNetCreature()->equipmentItems[slot].refId, refId))
+    for (const auto &equipmentItem : netActor->getNetCreature()->equipmentItems)
+        if (Misc::StringUtils::ciEqual(equipmentItem.refId, refId))
             return true;
     return false;
 }
