@@ -1037,9 +1037,6 @@ void LocalPlayer::setBooks()
 
 void LocalPlayer::setMapExplored()
 {
-    MWWorld::Ptr ptrPlayer = getPlayerPtr();
-    MWMechanics::NpcStats &ptrNpcStats = ptrPlayer.getClass().getNpcStats(ptrPlayer);
-
     for (const auto &cellExplored : mapChanges.cellsExplored)
     {
         MWWorld::CellStore *ptrCellStore = Main::get().getCellController()->getCellStore(cellExplored);
