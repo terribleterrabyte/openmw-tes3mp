@@ -13,5 +13,5 @@ void PacketGameWeather::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
 
-    // Placeholder to be filled in later
+    RW(player->weather, send);
 }

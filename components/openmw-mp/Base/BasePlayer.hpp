@@ -288,6 +288,12 @@ namespace mwmp
         unsigned int resurrectType;
 
         bool diedSinceArrestAttempt;
+
+        struct
+        {
+            int currentWeather, nextWeather;
+            float updateTime, transitionFactor;
+        } weather;
     };
 }
 
