@@ -38,11 +38,11 @@ namespace Utils
 {
     const std::vector<std::string> split(const std::string &str, int delimiter);
 
-    ESM::Cell getCellFromDescription(std::string cellDescription);
+    ESM::Cell getCellFromDescription(const std::string &cellDescription);
 
     const std::string getLastError();
 
-    void throwError(std::string errorMessage);
+    void throwError(const std::string &errorMessage);
 
     template<size_t N>
     constexpr unsigned int hash(const char(&str)[N], size_t I = N)

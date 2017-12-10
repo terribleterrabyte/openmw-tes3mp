@@ -27,7 +27,7 @@ const vector<string> Utils::split(const string &str, int delimiter)
     return result;
 }
 
-ESM::Cell Utils::getCellFromDescription(std::string cellDescription)
+ESM::Cell Utils::getCellFromDescription(const std::string &cellDescription)
 {
     ESM::Cell cell;
     cell.blank();
@@ -60,7 +60,7 @@ const std::string Utils::getLastError()
     return lastErrorMessage;
 }
 
-void Utils::throwError(const std::string errorMessage)
+void Utils::throwError(const std::string &errorMessage)
 {
 #ifdef _WIN32
     // Throwing exceptions makes them show up as "bad exception" on Windows with
