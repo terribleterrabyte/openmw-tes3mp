@@ -236,7 +236,7 @@ void Main::updateWorld(float dt) const
     }
 }
 
-const Main &Main::get()
+Main &Main::get()
 {
     return *pMain;
 }
@@ -344,4 +344,14 @@ bool Main::isValidPacketScript(std::string script)
 
     return true;
     */
+}
+
+void Main::setWeatherManager(MWWorld::WeatherManager* manager)
+{
+    mWeatherManager = manager;
+}
+
+MWWorld::WeatherManager *Main::getWeatherManager()
+{
+    return mWeatherManager;
 }

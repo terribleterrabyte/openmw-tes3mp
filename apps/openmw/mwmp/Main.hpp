@@ -5,6 +5,11 @@
 #include <boost/program_options.hpp>
 #include <components/files/collections.hpp>
 
+namespace MWWorld
+{
+    class WeatherManager;
+}
+
 namespace mwmp
 {
     class GUIController;
@@ -23,7 +28,7 @@ namespace mwmp
         static bool init(std::vector<std::string> &content, Files::Collections &collections);
         static void postInit();
         static void destroy();
-        static const Main &get();
+        static Main &get();
         static void frame(float dt);
         static void pressedKey(int key);
 
@@ -36,6 +41,9 @@ namespace mwmp
         CellController *getCellController() const;
 
         void updateWorld(float dt) const;
+
+        void setWeatherManager(MWWorld::WeatherManager* manager);
+        MWWorld::WeatherManager* getWeatherManager();
 
     private:
         static std::string resourceDir;
@@ -54,6 +62,7 @@ namespace mwmp
 
         std::string server;
         unsigned short port;
+        MWWorld::WeatherManager* mWeatherManager;
     };
 }
 

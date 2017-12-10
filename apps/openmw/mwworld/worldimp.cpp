@@ -210,6 +210,7 @@ namespace MWWorld
         mSwimHeightScale = mStore.get<ESM::GameSetting>().find("fSwimHeightScale")->getFloat();
 
         mWeatherManager = new MWWorld::WeatherManager(*mRendering, mFallback, mStore);
+        mwmp::Main::get().setWeatherManager(mWeatherManager);
 
         mWorldScene = new Scene(*mRendering, mPhysics);
     }
@@ -246,6 +247,7 @@ namespace MWWorld
         // Note that if reset later, the initial ChangeWeather that the chargen script calls will be lost.
         delete mWeatherManager;
         mWeatherManager = new MWWorld::WeatherManager(*mRendering, mFallback, mStore);
+        mwmp::Main::get().setWeatherManager(mWeatherManager);
 
         if (!bypass)
         {
