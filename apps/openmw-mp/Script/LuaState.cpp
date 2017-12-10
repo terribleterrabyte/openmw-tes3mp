@@ -434,12 +434,20 @@ vector<vector<ServerModuleInfo>::iterator> loadOrderSolver(vector<ServerModuleIn
     vector<vector<ServerModuleInfo>::iterator> notResolved;
     vector<vector<ServerModuleInfo>::iterator> result;
 
+    int currentIndex = 1;
+    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Using automated order for server modules:");
+
     for (auto it = modules.begin(); it != modules.end(); ++it)
     {
         checkDependencies(modules, *it);
 
         if (it->dependencies.empty()) // if the server module doesn't have any dependencies, we can safely add it to the result
+        {
+            LOG_APPEND(Log::LOG_INFO, "- %i) %s", currentIndex, it->name.c_str());
+            currentIndex++;
+
             result.push_back(it);
+        }
         else
             notResolved.push_back(it);
     }
@@ -483,6 +491,9 @@ vector<vector<ServerModuleInfo>::iterator> loadOrderSolver(vector<ServerModuleIn
             }
             if (resolved)
             {
+                LOG_APPEND(Log::LOG_INFO, "- %i) %s", currentIndex, (*it)->name.c_str());
+                currentIndex++;
+
                 result.push_back(*it);
                 it = notResolved.erase(it);
             }
@@ -549,6 +560,10 @@ void LuaState::loadModules(const std::string &moduleDir, std::vector<std::string
     vector<vector<ServerModuleInfo>::iterator> sortedModuleList;
     if (list != nullptr && !list->empty()) // manual sorted list
     {
+        int currentIndex = 1;
+
+        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Using manual order for server modules:");
+
         for (const auto &mssp : *list)
         {
             bool found = false;
@@ -557,7 +572,12 @@ void LuaState::loadModules(const std::string &moduleDir, std::vector<std::string
                 if (it->name == mssp)
                 {
                     checkDependencies(modules, *it, false); // check dependencies, but do not throw exceptions
+
+                    LOG_APPEND(Log::LOG_INFO, "- %i) %s", currentIndex, mssp.c_str());
+                    currentIndex++;
+
                     sortedModuleList.push_back(it);
+                    
                     found = true;
                     break;
                 }
