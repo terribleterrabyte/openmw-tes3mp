@@ -1,6 +1,5 @@
 project(tes3mp-server)
 
-option(BUILD_WITH_PAWN "Enable Pawn language" OFF)
 option(ENABLE_BREAKPAD "Enable Google Breakpad for Crash reporting" OFF)
 
 if(ENABLE_BREAKPAD)
