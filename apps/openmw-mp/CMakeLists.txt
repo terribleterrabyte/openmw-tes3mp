@@ -15,21 +15,14 @@ if(ENABLE_BREAKPAD)
     include_directories(${CMAKE_SOURCE_DIR}/extern/breakpad/src ${Breakpad_Headers})
 endif(ENABLE_BREAKPAD)
 
-option(BUILD_WITH_LUA "Enable Terra/Lua language" ON)
-option(FORCE_LUA "Use Lua instead Terra" OFF)
 
 
-#set(Terra_ROOT ${CMAKE_SOURCE_DIR}/external/terra/)
-#if(WIN32 OR FORCE_LUA)
-    find_package(LuaJit REQUIRED)
-#[[else()
-    find_package(Terra REQUIRED)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_TERRA")]]
-#endif()
-set(LuaScript_Headers ${Terra_INCLUDES} ${LUA_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/extern/sol/sol.hpp)
+find_package(LuaJit REQUIRED)
+
+set(LuaScript_Headers ${LUA_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/extern/sol/sol.hpp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_LUA")
-include_directories(${Terra_INCLUDES} ${LUA_INCLUDE_DIR} ${LUAJIT_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/extern/sol)
+include_directories(${LUA_INCLUDE_DIR} ${LUAJIT_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/extern/sol)
 
 
 # local files
@@ -151,7 +144,6 @@ target_link_libraries(tes3mp-server
     #${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${RakNet_LIBRARY}
     components
-    ${Terra_LIBRARY}
     ${LUA_LIBRARIES}
     ${LUAJIT_LIBRARY}
     ${Breakpad_Library}
