@@ -92,6 +92,7 @@ void Player::Init(LuaState &lua)
                                          "cellStateSize", &Player::cellStateSize,
                                          "addCellExplored", &Player::addCellExplored,
                                          "setAuthority", &Player::setAuthority,
+                                         "storedData", &Player::storedData,
                                          "customData", &Player::customData,
                                          "markedForDeletion", sol::property(&Player::isMarkedForDeleteion)
     );
@@ -119,6 +120,7 @@ Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedM
     creatureStats.blank();
     charClass.blank();
     markedForDeletion = false;
+    storedData = mwmp::Networking::get().getState().getState()->create_table();
     customData = mwmp::Networking::get().getState().getState()->create_table();
 }
 

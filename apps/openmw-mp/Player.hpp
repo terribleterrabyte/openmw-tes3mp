@@ -204,6 +204,7 @@ private:
     Quests quests;
     Spells spells;
     WeatherMgr weatherMgr;
+    sol::table storedData;
     sol::table customData;
     bool markedForDeletion;
 };
