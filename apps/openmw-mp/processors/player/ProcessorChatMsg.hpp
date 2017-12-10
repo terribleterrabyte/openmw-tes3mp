@@ -35,7 +35,7 @@ namespace mwmp
                 case CommandController::ExecResult::SUCCESS: // returned true from function
                     break;
                 case CommandController::ExecResult::FAIL: // returned false from function
-                    player->message(player->chat.channel, "#B8860B"+cmdExecResult.second); // show "help msg" to player
+                    player->message(player->chat.channel, "#B8860B"+cmdExecResult.second + "\n"); // show "help msg" to player
                     break;
             }
         }
