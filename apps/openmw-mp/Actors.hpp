@@ -20,11 +20,11 @@ public:
     Actor();
     std::string getRefId() const;
     void setRefId(const std::string &refId);
-    
-    int getRefNumIndex() const;
-    void setRefNumIndex(int refNumIndex);
-    int getMpNum() const;
-    void setMpNum(int mpNum);
+
+    unsigned getRefNumIndex() const;
+    void setRefNumIndex(unsigned refNumIndex);
+    unsigned getMpNum() const;
+    void setMpNum(unsigned mpNum);
     bool doesHavePosition() const; // ????
     bool doesHaveStatsDynamic() const; // ????
     

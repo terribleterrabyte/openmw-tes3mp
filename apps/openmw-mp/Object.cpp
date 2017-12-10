@@ -89,23 +89,23 @@ void BaseObject::setRefId(const string &refId)
     object.refId = refId;
 }
 
-int BaseObject::getRefNum() const
+unsigned BaseObject::getRefNum() const
 {
     return object.refNumIndex;
 }
 
-void BaseObject::setRefNum(int refNum)
+void BaseObject::setRefNum(unsigned refNum)
 {
     changedBase = true;
     object.refNumIndex = refNum;
 }
 
-int BaseObject::getMpNum() const
+unsigned BaseObject::getMpNum() const
 {
     return object.mpNum;
 }
 
-void BaseObject::setMpNum(int mpNum)
+void BaseObject::setMpNum(unsigned mpNum)
 {
     changedBase = true;
     object.mpNum = mpNum;

@@ -54,22 +54,22 @@ void Actor::setRefId(const std::string &refId)
     actor->refId = refId;
 }
 
-int Actor::getRefNumIndex() const
+unsigned Actor::getRefNumIndex() const
 {
     return actor->refNumIndex;
 }
 
-void Actor::setRefNumIndex(int refNumIndex)
+void Actor::setRefNumIndex(unsigned refNumIndex)
 {
     actor->refNumIndex = refNumIndex;
 }
 
-int Actor::getMpNum() const
+unsigned Actor::getMpNum() const
 {
     return actor->mpNum;
 }
 
-void Actor::setMpNum(int mpNum)
+void Actor::setMpNum(unsigned mpNum)
 {
     actor->mpNum = mpNum;
 }

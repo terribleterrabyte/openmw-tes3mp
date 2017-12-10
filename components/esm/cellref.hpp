@@ -43,7 +43,7 @@ namespace ESM
 
                 Keep track of a multiplayer-only number unique to this object
             */
-            int mMpNum;
+            unsigned mMpNum;
             /*
                 End of tes3mp addition
             */

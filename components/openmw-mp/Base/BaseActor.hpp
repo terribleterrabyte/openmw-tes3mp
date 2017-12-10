@@ -26,8 +26,8 @@ namespace mwmp
         }
 
         std::string refId;
-        int refNumIndex;
-        int mpNum;
+        unsigned refNumIndex;
+        unsigned mpNum;
 
         std::string response;
         std::string sound;

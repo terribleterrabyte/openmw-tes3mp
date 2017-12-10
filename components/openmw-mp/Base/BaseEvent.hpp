@@ -24,8 +24,8 @@ namespace mwmp
     struct WorldObject
     {
         std::string refId;
-        int refNumIndex;
-        int mpNum;
+        unsigned refNumIndex;
+        unsigned mpNum;
         int count;
         int charge;
         int goldValue;

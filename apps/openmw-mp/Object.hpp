@@ -18,11 +18,11 @@ public:
     std::string getRefId() const;
     void setRefId(const std::string &refId);
 
-    int getRefNum() const;
-    void setRefNum(int refNum);
+    unsigned getRefNum() const;
+    void setRefNum(unsigned refNum);
 
-    int getMpNum() const;
-    void setMpNum(int mpNum);
+    unsigned getMpNum() const;
+    void setMpNum(unsigned mpNum);
 
     //void setEventCell(const std::string &cellDescription);
 

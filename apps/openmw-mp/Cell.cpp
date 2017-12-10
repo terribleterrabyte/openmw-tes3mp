@@ -13,7 +13,7 @@
 
 using namespace std;
 
-Cell::Cell(ESM::Cell cell) : cell(cell)
+Cell::Cell(const ESM::Cell &cell) : cell(cell)
 {
 
 }
@@ -111,7 +111,7 @@ void Cell::readActorList(unsigned char packetID, const mwmp::BaseActorList *newA
     }
 }
 
-bool Cell::containsActor(int refNumIndex, int mpNum)
+bool Cell::containsActor(unsigned refNumIndex, unsigned mpNum)
 {
     for (const auto &actor : cellActorList.baseActors)
     {
@@ -121,7 +121,7 @@ bool Cell::containsActor(int refNumIndex, int mpNum)
     return false;
 }
 
-mwmp::BaseActor *Cell::getActor(int refNumIndex, int mpNum)
+mwmp::BaseActor *Cell::getActor(unsigned refNumIndex, unsigned mpNum)
 {
     for (const auto &actor : cellActorList.baseActors)
     {
@@ -135,8 +135,8 @@ void Cell::removeActors(const mwmp::BaseActorList &newActorList)
 {
     for (auto it = cellActorList.baseActors.begin(); it != cellActorList.baseActors.end();)
     {
-        int refNumIndex = (*it)->refNumIndex;
-        int mpNum = (*it)->mpNum;
+        unsigned refNumIndex = (*it)->refNumIndex;
+        unsigned mpNum = (*it)->mpNum;
 
         bool foundActor = false;
 

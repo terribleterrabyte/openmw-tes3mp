@@ -20,7 +20,7 @@ class Cell
 {
     friend class CellController;
 public:
-    Cell(ESM::Cell cell);
+    Cell(const ESM::Cell &cell);
     typedef std::deque<Player*> TPlayers;
     typedef TPlayers::const_iterator Iterator;
 
@@ -31,8 +31,8 @@ public:
     void removePlayer(Player *player);
 
     void readActorList(unsigned char packetID, const mwmp::BaseActorList *newActorList);
-    bool containsActor(int refNumIndex, int mpNum);
-    mwmp::BaseActor *getActor(int refNumIndex, int mpNum);
+    bool containsActor(unsigned refNumIndex, unsigned mpNum);
+    mwmp::BaseActor *getActor(unsigned refNumIndex, unsigned mpNum);
     void removeActors(const mwmp::BaseActorList &newActorList);
 
     RakNet::RakNetGUID *getAuthority();
