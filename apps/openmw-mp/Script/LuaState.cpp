@@ -33,6 +33,7 @@
 #include "../Quests.hpp"
 #include "../Settings.hpp"
 #include "../Spells.hpp"
+#include "../Weather.hpp"
 
 using namespace std;
 
@@ -91,6 +92,7 @@ LuaState::LuaState()
     Effect::Init(*this);
     Spell::Init(*this);
     Spells::Init(*this);
+    WeatherMgr::Init(*this);
 
     Players::Init(*this);
 

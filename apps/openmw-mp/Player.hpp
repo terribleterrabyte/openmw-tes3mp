@@ -34,6 +34,7 @@
 #include "Spells.hpp"
 #include "NetActor.hpp"
 #include "CellState.hpp"
+#include "Weather.hpp"
 
 class Player : public mwmp::BasePlayer, public NetActor
 {
@@ -183,6 +184,7 @@ public:
     Factions &getFactions();
     Quests &getQuests();
     Spells &getSpells();
+    WeatherMgr &getWeatherMgr();
 
     void setAuthority();
 
@@ -201,6 +203,7 @@ private:
     Factions factions;
     Quests quests;
     Spells spells;
+    WeatherMgr weatherMgr;
     sol::table customData;
     bool markedForDeletion;
 };

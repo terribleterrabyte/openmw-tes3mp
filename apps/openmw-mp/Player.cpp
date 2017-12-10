@@ -86,6 +86,7 @@ void Player::Init(LuaState &lua)
                                          "getFactions", &Player::getFactions,
                                          "getQuests", &Player::getQuests,
                                          "getSpells", &Player::getSpells,
+                                         "getWeatherMgr", &Player::getWeatherMgr,
 
                                          "getCellState", &Player::getCellState,
                                          "cellStateSize", &Player::cellStateSize,
@@ -104,7 +105,7 @@ void Player::Init(LuaState &lua)
 
 Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedMap(false), cClass(this),
                                           settings(this), books(this), gui(this), dialogue(this), factions(this),
-                                          quests(this), spells(this)
+                                          quests(this), spells(this), weatherMgr(this)
 {
     basePlayer = this;
     netCreature = this;
@@ -228,6 +229,7 @@ void Player::update()
     factions.update();
     quests.update();
     spells.update();
+    weatherMgr.update();
 
     resetUpdateFlags();
 }
@@ -730,6 +732,11 @@ Quests &Player::getQuests()
 Spells &Player::getSpells()
 {
     return spells;
+}
+
+WeatherMgr &Player::getWeatherMgr()
+{
+    return weatherMgr;
 }
 
 std::tuple<float, float, float> Player::getPreviousCellPos() const
