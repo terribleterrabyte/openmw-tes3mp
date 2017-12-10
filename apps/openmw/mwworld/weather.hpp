@@ -34,6 +34,11 @@ namespace Fallback
     class Map;
 }
 
+namespace mwmp
+{
+    class ProcessorGameWeather;
+}
+
 namespace MWWorld
 {
     class TimeStamp;
@@ -204,6 +209,7 @@ namespace MWWorld
     /// Interface for weather settings
     class WeatherManager
     {
+        friend class mwmp::ProcessorGameWeather;
     public:
         // Have to pass fallback and Store, can't use singleton since World isn't fully constructed yet at the time
         WeatherManager(MWRender::RenderingManager& rendering,
