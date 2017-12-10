@@ -58,6 +58,7 @@ set(SERVER
     Object.cpp
     stacktrace.cpp
     Window.cpp
+    Weather.cpp
     Script/CommandController.cpp Script/EventController.cpp Script/LuaState.cpp Script/luaUtils.cpp
 )
 
