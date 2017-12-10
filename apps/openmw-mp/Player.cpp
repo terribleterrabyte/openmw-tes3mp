@@ -746,7 +746,7 @@ std::tuple<float, float, float> Player::getPreviousCellPos() const
 
 void Player::resurrect(unsigned int type)
 {
-    resurrectType = type;
+    resurrectType = static_cast<mwmp::ResurrectType>(type);
 
     auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_RESURRECT);
     packet->setPlayer(this);

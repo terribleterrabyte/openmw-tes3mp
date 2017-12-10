@@ -151,11 +151,11 @@ namespace mwmp
         std::vector<CellState> cellStates;
     };
 
-    enum RESURRECT_TYPE
+    enum class ResurrectType : uint8_t
     {
-        REGULAR = 0,
-        IMPERIAL_SHRINE,
-        TRIBUNAL_TEMPLE
+        Regular = 0,
+        ImperialShrine,
+        TribunalTemple
     };
 
     class BasePlayer : public mwmp::BaseNetCreature
@@ -285,7 +285,7 @@ namespace mwmp
         std::string jailProgressText;
         std::string jailEndText;
 
-        unsigned int resurrectType;
+        ResurrectType resurrectType;
 
         bool diedSinceArrestAttempt;
 

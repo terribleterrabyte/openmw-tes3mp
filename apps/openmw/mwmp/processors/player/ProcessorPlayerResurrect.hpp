@@ -25,16 +25,26 @@ namespace mwmp
             
             if (isLocal())
             {
-                LOG_APPEND(Log::LOG_INFO, "- Packet was about me with resurrectType of %i", player->resurrectType);
+                LOG_APPEND(Log::LOG_INFO, "- Packet was about me with resurrectType of %i", (int) player->resurrectType);
 
                 player->creatureStats.mDead = false;
-                
-                MWWorld::Ptr playerPtr = MWBase::Environment::get().getWorld()->getPlayerPtr();
 
-                if (player->resurrectType == mwmp::RESURRECT_TYPE::IMPERIAL_SHRINE)
-                    MWBase::Environment::get().getWorld()->teleportToClosestMarker(playerPtr, "divinemarker");
-                else if (player->resurrectType == mwmp::RESURRECT_TYPE::TRIBUNAL_TEMPLE)
-                    MWBase::Environment::get().getWorld()->teleportToClosestMarker(playerPtr, "templemarker");
+                MWBase::World *world = MWBase::Environment::get().getWorld();
+                MWWorld::Ptr playerPtr = world->getPlayerPtr();
+
+
+                switch(player->resurrectType)
+                {
+                    case ResurrectType::Regular:
+                        break;
+                    case ResurrectType::ImperialShrine:
+                        world->teleportToClosestMarker(playerPtr, "divinemarker");
+                        break;
+                    case ResurrectType::TribunalTemple:
+                        world->teleportToClosestMarker(playerPtr, "templemarker");
+                        break;
+                }
+
 
                 playerPtr.getClass().getCreatureStats(playerPtr).resurrect();
 
