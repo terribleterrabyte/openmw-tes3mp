@@ -7,10 +7,13 @@
 #include <apps/openmw/mwmechanics/steering.hpp>
 
 #include "../mwbase/environment.hpp"
-
-#include "../mwgui/windowmanagerimp.hpp"
+#include "../mwbase/soundmanager.hpp"
 
 #include "../mwclass/npc.hpp"
+
+#include "../mwdialogue/dialoguemanagerimp.hpp"
+
+#include "../mwgui/windowmanagerimp.hpp"
 
 #include "../mwinput/inputmanagerimp.hpp"
 
@@ -281,6 +284,21 @@ void DedicatedPlayer::setMarkerState(bool state)
     }
     else
         removeMarker();
+}
+
+void DedicatedPlayer::playAnimation()
+{
+    MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(getPtr(),
+        animation.groupname, animation.mode, animation.count, animation.persist);
+}
+
+void DedicatedPlayer::playSpeech()
+{
+    MWBase::Environment::get().getSoundManager()->say(getPtr(), sound);
+
+    MWBase::WindowManager *winMgr = MWBase::Environment::get().getWindowManager();
+    if (winMgr->getSubtitlesEnabled())
+        winMgr->messageBox(MWBase::Environment::get().getDialogueManager()->getVoiceCaption(sound), MWGui::ShowInDialogueMode_Never);
 }
 
 MWWorld::Ptr DedicatedPlayer::getPtr()

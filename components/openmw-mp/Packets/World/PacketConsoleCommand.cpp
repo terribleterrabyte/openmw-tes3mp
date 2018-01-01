@@ -8,7 +8,21 @@ PacketConsoleCommand::PacketConsoleCommand(RakNet::RakPeerInterface *peer) : Wor
     packetID = ID_CONSOLE_COMMAND;
 }
 
-void PacketConsoleCommand::Object(WorldObject &worldObject, bool send)
+void PacketConsoleCommand::Packet(RakNet::BitStream *bs, bool send)
 {
-    WorldPacket::Object(worldObject, send);
+    if (!PacketHeader(bs, send))
+        return;
+
+    RW(event->consoleCommand, send);
+
+    WorldObject worldObject;
+    for (auto &&worldObject : event->worldObjects)
+    {
+        RW(worldObject.isPlayer, send);
+
+        if (worldObject.isPlayer)
+            RW(worldObject.guid, send);
+        else
+            Object(worldObject, send);
+    }
 }

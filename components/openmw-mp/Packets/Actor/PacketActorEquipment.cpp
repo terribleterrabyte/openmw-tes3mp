@@ -16,5 +16,6 @@ void PacketActorEquipment::Actor(BaseActor &actor, bool send)
         RW(equipmentItem.refId, send);
         RW(equipmentItem.count, send);
         RW(equipmentItem.charge, send);
+        RW(equipmentItem.enchantmentCharge, send);
     }
 }

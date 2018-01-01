@@ -16,25 +16,16 @@ public:
 
     explicit GameSettings(Player *player);
     ~GameSettings();
-    /**
-    * \brief Set whether the console is allowed for a player.
-    *
-    * This changes the console permission for that player in the server memory, but does not
-    * by itself send a packet.
-    *
-    * \param The console permission state.
-    */
-    void SetConsoleAllow(bool state);
 
-    /**
-    * \brief Set the difficulty for a player.
-    *
-    * This changes the difficulty for that player in the server memory, but does not by itself
-    * send a packet.
-    *
-    * \param The difficulty.
-    */
-    void SetDifficulty(int difficulty);
+    void setConsoleAllowed(bool state);
+
+    void setDifficulty(int difficulty);
+
+    void setBedRestAllowed(bool state);
+
+    void setWildernessRestAllowed(bool state);
+
+    void setWaitAllowed(bool state);
 
     void update();
 private:

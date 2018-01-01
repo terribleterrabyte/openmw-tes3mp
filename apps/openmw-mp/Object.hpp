@@ -24,6 +24,9 @@ public:
     unsigned getMpNum() const;
     void setMpNum(unsigned mpNum);
 
+    RakNet::RakNetGUID getGuid() const;
+    void setGuid(const RakNet::RakNetGUID &guid);
+
     //void setEventCell(const std::string &cellDescription);
 
 
@@ -63,6 +66,9 @@ public:
     int getCharge() const;
     void setCharge(int charge);
 
+    int getEnchantmentCharge() const;
+    void setEnchantmentCharge(int enchantmentCharge);
+
     int getGoldValue() const;
     void setGoldValue(int gold);
 
@@ -92,10 +98,10 @@ public:
 public:
     Container();
 
-    std::tuple<std::string, int, int> getItem(int i) const;
-    void addItem(const std::string &refId, int count, int charge);
+    std::tuple<std::string, int, int, int> getItem(int i) const;
+    void addItem(const std::string &refId, int count, int charge, int enchantmentCharge);
 
-    void setItem(int i, const std::string &refId, int count, int charge);
+    void setItem(int i, const std::string &refId, int count, int charge, int enchantmentCharge);
     int getActionCount(int i) const;
 
     size_t size() const;
@@ -112,8 +118,12 @@ public:
     std::shared_ptr<std::vector<std::shared_ptr<Object>>> copyObjects(mwmp::BaseEvent &event);
     std::shared_ptr<std::vector<std::shared_ptr<Container>>> copyContainers(mwmp::BaseEvent &event);
 
-    void sendObjects(std::shared_ptr<Player> player, std::shared_ptr<std::vector<std::shared_ptr<Object>>> objects, const ESM::Cell &cell);
-    void sendContainers(std::shared_ptr<Player> player, std::shared_ptr<std::vector<std::shared_ptr<Container>>> objects, const ESM::Cell &cell);
+    void sendObjects(std::shared_ptr<Player> player, std::shared_ptr<std::vector<std::shared_ptr<Object>>> objects,
+        const ESM::Cell &cell, bool broadcast = false);
+    void sendConsoleCommand(std::shared_ptr<Player> player, std::shared_ptr<std::vector<std::shared_ptr<Object>>> objects,
+        const ESM::Cell &cell, const std::string &consoleCommand, bool broadcast = false);
+    void sendContainers(std::shared_ptr<Player> player, std::shared_ptr<std::vector<std::shared_ptr<Container>>> objects,
+        const ESM::Cell &cell, bool broadcast = false);
 
     void requestContainers(std::shared_ptr<Player> player);
 };

@@ -191,6 +191,29 @@ namespace MWGui
 
     virtual void setConsoleSelectedObject(const MWWorld::Ptr& object);
 
+    /*
+        Start of tes3mp addition
+
+        Allow the direct setting of a console's Ptr, without the assumption that an object
+        was clicked and that key focus should be restored to the console window, for console
+        commands executed via server scripts
+    */
+    virtual void setConsolePtr(const MWWorld::Ptr& object);
+    /*
+        End of tes3mp addition
+    */
+
+    /*
+        Start of tes3mp addition
+
+        Allow the clearing of the console's Ptr from elsewhere in the code, so that
+        Ptrs used in console commands run from server scripts do not stay selected
+    */
+    virtual void clearConsolePtr();
+    /*
+        End of tes3mp addition
+    */
+
     ///< Set value for the given ID.
     virtual void setValue (const std::string& id, const MWMechanics::AttributeValue& value);
     virtual void setValue (int parSkill, const MWMechanics::SkillValue& value);
@@ -225,6 +248,17 @@ namespace MWGui
     virtual void getMousePosition(int &x, int &y);
     virtual void getMousePosition(float &x, float &y);
     virtual void setDragDrop(bool dragDrop);
+
+    /*
+        Start of tes3mp addition
+
+        Allow the completion of a drag and drop from elsewhere in the code
+    */
+    virtual void finishDragDrop();
+    /*
+        End of tes3mp addition
+    */
+
     virtual bool getWorldMouseOver();
 
     virtual bool toggleFogOfWar();
@@ -249,6 +283,16 @@ namespace MWGui
     virtual void activateQuickKey (int index);
     /// update activated quick key state (if action executing was delayed for some reason)
     virtual void updateActivatedQuickKey ();
+
+    /*
+        Start of tes3mp addition
+
+        Make it possible to add quickKeys from elsewhere in the code
+    */
+    virtual void setQuickKey(int slot, int quickKeyType, MWWorld::Ptr item, const std::string& spellId = "");
+    /*
+        End of tes3mp addition
+    */
 
     virtual std::string getSelectedSpell() { return mSelectedSpell; }
     virtual void setSelectedSpell(const std::string& spellId, int successChancePercent);
@@ -317,6 +361,16 @@ namespace MWGui
     virtual void windowResized(int x, int y);
 
     virtual void executeInConsole (const std::string& path);
+
+    /*
+        Start of tes3mp addition
+
+        Allow the execution of console commands from elsewhere in the code
+    */
+    virtual void executeCommandInConsole(const std::string& command);
+    /*
+        End of tes3mp addition
+    */
 
     virtual void enableRest() { mRestAllowed = true; }
     virtual bool getRestEnabled();

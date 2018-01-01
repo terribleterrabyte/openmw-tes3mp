@@ -19,22 +19,7 @@ void Factions::Init(LuaState &lua)
                                            "setFaction", &Factions::setFaction,
                                            "clear", &Factions::clear,
                                            "size", &Factions::size
-
     );
-/*"InitializeFactionChanges", FactionFunctions::InitializeFactionChanges,
-    "GetFactionChangesSize",    FactionFunctions::GetFactionChangesSize,
-    "GetFactionChangesAction",  FactionFunctions::GetFactionChangesAction,
-    "GetFactionId",             FactionFunctions::GetFactionId,
-    "GetFactionRank",           FactionFunctions::GetFactionRank,
-    "GetFactionExpulsionState", FactionFunctions::GetFactionExpulsionState,
-    "GetFactionReputation",     FactionFunctions::GetFactionReputation,
-    "SetFactionChangesAction",  FactionFunctions::SetFactionChangesAction,
-    "SetFactionId",             FactionFunctions::SetFactionId,
-    "SetFactionRank",           FactionFunctions::SetFactionRank,
-    "SetFactionExpulsionState", FactionFunctions::SetFactionExpulsionState,
-    "SetFactionReputation",     FactionFunctions::SetFactionReputation,
-    "AddFaction",               FactionFunctions::AddFaction,
-    "SendFactionChanges",       FactionFunctions::SendFactionChanges*/
 }
 
 Factions::Factions(Player *player): player(player), changed(false)

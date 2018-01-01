@@ -9,8 +9,8 @@ namespace mwmp
     {
     public:
         explicit PacketConsoleCommand(RakNet::RakPeerInterface *peer);
-
-        void Object(WorldObject &obj, bool send) override;
+        
+        void Packet(RakNet::BitStream *bs, bool send) override;
     };
 }
 

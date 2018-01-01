@@ -46,6 +46,7 @@ void PacketContainer::Packet(RakNet::BitStream *bs, bool send)
             RW(containerItem.refId, send);
             RW(containerItem.count, send);
             RW(containerItem.charge, send);
+            RW(containerItem.enchantmentCharge, send);
             RW(containerItem.actionCount, send);
         }
     }

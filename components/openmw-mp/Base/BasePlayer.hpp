@@ -81,6 +81,22 @@ namespace mwmp
         std::string bookId;
     };
 
+    struct QuickKey
+    {
+        std::string itemId;
+
+        enum QUICKKEY_TYPE
+        {   
+            ITEM = 0,
+            MAGIC = 1,
+            ITEM_MAGIC = 2,
+            UNASSIGNED = 3
+        };
+
+        unsigned short slot;
+        int type;
+    };
+
     struct CellState
     {
         ESM::Cell cell;
@@ -144,6 +160,11 @@ namespace mwmp
             REMOVE
         };
         int action; // 0 - Clear and set in entirety, 1 - Add spell, 2 - Remove spell
+    };
+
+    struct QuickKeyChanges
+    {
+        std::vector<QuickKey> quickKeys;
     };
 
     struct CellStateChanges
@@ -248,6 +269,7 @@ namespace mwmp
         std::vector<int> skillIndexChanges;
 
         SpellbookChanges spellbookChanges;
+        QuickKeyChanges quickKeyChanges;
         JournalChanges journalChanges;
         FactionChanges factionChanges;
         TopicChanges topicChanges;
@@ -259,8 +281,17 @@ namespace mwmp
         ESM::ActiveSpells activeSpells;
         CurrentContainer currentContainer;
 
-        bool consoleAllowed;
+        struct
+        {
+            int currentWeather, nextWeather;
+            float updateTime, transitionFactor;
+        } weather;
+
         int difficulty;
+        bool consoleAllowed;
+        bool bedRestAllowed;
+        bool wildernessRestAllowed;
+        bool waitAllowed;
 
         bool ignorePosPacket;
 
@@ -272,6 +303,9 @@ namespace mwmp
         Chat chat;
         CharGenState charGenState;
         std::string passw;
+
+        std::string sound;
+        Animation animation;
 
         bool isWerewolf;
         std::string creatureModel;
@@ -288,12 +322,8 @@ namespace mwmp
         ResurrectType resurrectType;
 
         bool diedSinceArrestAttempt;
-
-        struct
-        {
-            int currentWeather, nextWeather;
-            float updateTime, transitionFactor;
-        } weather;
+        bool isReceivingQuickKeys;
+        bool isPlayingAnimation;
     };
 }
 

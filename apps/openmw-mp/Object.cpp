@@ -17,6 +17,7 @@ void Object::Init(LuaState &lua)
                                          "refId", sol::property(&BaseObject::getRefId, &BaseObject::setRefId),
                                          "refNum", sol::property(&BaseObject::getRefNum, &BaseObject::setRefNum),
                                          "mpNum", sol::property(&BaseObject::getMpNum, &BaseObject::setMpNum),
+                                         "guid", sol::property(&BaseObject::getGuid, &BaseObject::setGuid),
                                          "getPosition", &Object::getPosition,
                                          "setPosition", &Object::setPosition,
                                          "getRotation", &Object::getRotation,
@@ -111,6 +112,18 @@ void BaseObject::setMpNum(unsigned mpNum)
     object.mpNum = mpNum;
 }
 
+RakNet::RakNetGUID BaseObject::getGuid() const
+{
+    return object.guid;
+}
+
+void BaseObject::setGuid(const RakNet::RakNetGUID &guid)
+{
+    changedBase = true;
+    object.guid = guid;
+    object.isPlayer = true;
+}
+
 int Object::getCount() const
 {
     return object.count;
@@ -131,6 +144,18 @@ void Object::setCharge(int charge)
 {
     changedObjectPlace = true;
     object.charge = charge;
+
+}
+
+int Object::getEnchantmentCharge() const
+{
+    return object.enchantmentCharge;
+}
+
+void Object::setEnchantmentCharge(int enchantmentCharge)
+{
+    changedObjectPlace = true;
+    object.enchantmentCharge = enchantmentCharge;
 
 }
 
@@ -220,27 +245,29 @@ Container::Container()
 
 }
 
-tuple<string, int, int> Container::getItem(int i) const
+tuple<string, int, int, int> Container::getItem(int i) const
 {
     auto &item = object.containerItems.at(i);
-    return make_tuple(item.refId, item.count, item.charge);
+    return make_tuple(item.refId, item.count, item.charge, item.enchantmentCharge);
 }
 
-void Container::setItem(int i, const string &refId, int count, int charge)
+void Container::setItem(int i, const string &refId, int count, int charge, int enchantmentCharge)
 {
     auto &item = object.containerItems.at(i);
     item.refId = refId;
     item.count = count;
     item.charge = charge;
+    item.enchantmentCharge = enchantmentCharge;
     changed = true;
 }
 
-void Container::addItem(const string &refId, int count, int charge)
+void Container::addItem(const string &refId, int count, int charge, int enchantmentCharge)
 {
     mwmp::ContainerItem item;
     item.refId = refId;
     item.count = count;
     item.charge = charge;
+    item.enchantmentCharge = enchantmentCharge;
     object.containerItems.push_back(item);
     changed = true;
 }
@@ -304,7 +331,7 @@ shared_ptr<vector<shared_ptr<Container>>> ObjectController::copyContainers(mwmp:
     return containers;
 }
 
-void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Object>>> objects, const ESM::Cell &cell)
+void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Object>>> objects, const ESM::Cell &cell, bool broadcast)
 {
     enum Type
     {
@@ -384,60 +411,105 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
         auto packet = worldCtrl->GetPacket(ID_DOOR_STATE);
         auto &event = events[Type::DOOR_STATE];
         packet->setEvent(&event);
-        packet->Send(event.guid);
+        packet->Send(false);
+
+        if (broadcast)
+            packet->Send(true);
     }
     if (changed[Type::OBJECT_STATE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_STATE);
         auto &event = events[Type::OBJECT_STATE];
         packet->setEvent(&event);
-        packet->Send(event.guid);
+        packet->Send(false);
+
+        if (broadcast)
+            packet->Send(true);
     }
     if (changed[Type::OBJECT_SCALE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_SCALE);
         auto &event = events[Type::OBJECT_SCALE];
         packet->setEvent(&event);
-        packet->Send(event.guid);
+        packet->Send(false);
+
+        if (broadcast)
+            packet->Send(true);
     }
     if (changed[Type::OBJECT_TRAP])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_TRAP);
         auto &event = events[Type::OBJECT_TRAP];
         packet->setEvent(&event);
-        packet->Send(event.guid);
+        packet->Send(false);
+
+        if (broadcast)
+            packet->Send(true);
     }
     if (changed[Type::OBJECT_LOCK])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_LOCK);
         auto &event = events[Type::OBJECT_LOCK];
         packet->setEvent(&event);
-        packet->Send(event.guid);
+        packet->Send(false);
+
+        if (broadcast)
+            packet->Send(true);
     }
     if (changed[Type::OBJECT_DELETE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_DELETE);
         auto &event = events[Type::OBJECT_DELETE];
         packet->setEvent(&event);
-        packet->Send(event.guid);
+        packet->Send(false);
+
+        if (broadcast)
+            packet->Send(true);
     }
     if (changed[Type::OBJECT_SCALE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_SPAWN);
         auto &event = events[Type::OBJECT_SCALE];
         packet->setEvent(&event);
-        packet->Send(event.guid);
+        packet->Send(false);
+
+        if (broadcast)
+            packet->Send(true);
     }
     if (changed[Type::OBJECT_PLACE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_PLACE);
         auto &event = events[Type::OBJECT_PLACE];
         packet->setEvent(&event);
-        packet->Send(event.guid);
+        packet->Send(false);
+
+        if (broadcast)
+            packet->Send(true);
     }
 }
 
-void ObjectController::sendContainers(shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Container>>> objects, const ESM::Cell &cell)
+void ObjectController::sendConsoleCommand(shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Object>>> objects,
+    const ESM::Cell &cell, const std::string &consoleCommand, bool broadcast)
+{
+
+    mwmp::BaseEvent event;
+    event.cell = cell;
+    event.consoleCommand = consoleCommand;
+    event.guid = player->guid;
+
+    for (auto &object : *objects)
+        event.worldObjects.push_back(object->object);
+
+    auto packet = mwmp::Networking::get().getWorldPacketController()->GetPacket(ID_CONSOLE_COMMAND);
+    packet->setEvent(&event);
+    packet->Send(false);
+
+    if (broadcast)
+        packet->Send(true);
+}
+
+void ObjectController::sendContainers(shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Container>>> objects,
+    const ESM::Cell &cell, bool broadcast)
 {
 
     mwmp::BaseEvent event;
@@ -454,7 +526,10 @@ void ObjectController::sendContainers(shared_ptr<Player> player, shared_ptr<vect
 
     auto packet = mwmp::Networking::get().getWorldPacketController()->GetPacket(ID_CONTAINER);
     packet->setEvent(&event);
-    packet->Send(event.guid);
+    packet->Send(false);
+
+    if (broadcast)
+        packet->Send(true);
 }
 
 void ObjectController::requestContainers(shared_ptr<Player> player)

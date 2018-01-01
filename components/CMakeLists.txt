@@ -187,9 +187,8 @@ add_component_dir (openmw-mp/Packets/Player
         PacketPlayerAttack PacketPlayerAttribute PacketPlayerBook PacketPlayerBounty PacketPlayerCellChange
         PacketPlayerCellState PacketPlayerClass PacketPlayerDeath PacketPlayerEquipment PacketPlayerFaction
         PacketPlayerInventory PacketPlayerJail PacketPlayerJournal PacketPlayerKillCount PacketPlayerLevel
-        PacketPlayerMap PacketPlayerPosition PacketPlayerRegionAuthority PacketPlayerRest PacketPlayerResurrect
-        PacketPlayerShapeshift PacketPlayerSkill PacketPlayerSpeech PacketPlayerSpellbook PacketPlayerStatsDynamic
-        PacketPlayerTopic PacketGUIWindow
+        PacketPlayerMap PacketPlayerPosition PacketPlayerQuickKeys PacketPlayerRegionAuthority PacketPlayerRest
+        PacketPlayerResurrect PacketPlayerShapeshift PacketPlayerSkill PacketPlayerSpeech PacketPlayerSpellbook PacketPlayerStatsDynamic PacketPlayerTopic PacketGUIWindow
         )
 
 add_component_dir (openmw-mp/Packets/World

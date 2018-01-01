@@ -25,19 +25,19 @@ public:
 
     //inventory
     int getChangesSize() const;
-    void addItem(const std::string& refId, unsigned int count, int charge);
+    void addItem(const std::string& refId, unsigned int count, int charge, int enchantmentCharge);
     void removeItem(const std::string& refId, unsigned short count);
 
     /**
      *
      * @param slot
-     * @return refid, count, charge
+     * @return refid, count, charge, enchantmentCharge
      */
-    std::tuple<std::string,int, int> getInventoryItem(unsigned int slot) const;
+    std::tuple<std::string,int, int, int> getInventoryItem(unsigned int slot) const;
 
 
     // equipment
-    void equipItem(unsigned short slot, const std::string& refId, unsigned int count, int charge);
+    void equipItem(unsigned short slot, const std::string& refId, unsigned int count, int charge, int enchantmentCharge);
     void unequipItem(unsigned short slot);
 
     bool hasItemEquipped(const std::string& refId) const;
@@ -45,9 +45,9 @@ public:
     /**
      *
      * @param slot
-     * @return refid, count, charge
+     * @return refid, count, charge, enchantmentCharge
      */
-    std::tuple<std::string,int, int> getEquipmentItem(unsigned short slot) const;
+    std::tuple<std::string,int, int, int> getEquipmentItem(unsigned short slot) const;
 
 
 private:

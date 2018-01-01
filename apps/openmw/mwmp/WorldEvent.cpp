@@ -87,6 +87,9 @@ void WorldEvent::editContainers(MWWorld::CellStore* cellStore)
                     if (containerItem.charge > -1)
                         newPtr.getCellRef().setCharge(containerItem.charge);
 
+                    if (containerItem.enchantmentCharge > -1)
+                        newPtr.getCellRef().setEnchantmentCharge(containerItem.enchantmentCharge);
+
                     containerStore.add(newPtr, containerItem.count, ownerPtr, true);
                 }
                 else if (action == BaseEvent::REMOVE)
@@ -97,8 +100,9 @@ void WorldEvent::editContainers(MWWorld::CellStore* cellStore)
                     {
                         if (Misc::StringUtils::ciEqual(ptr.getCellRef().getRefId(), containerItem.refId))
                         {
-                            if (ptr.getCellRef().getCharge() == containerItem.charge &&
-                                    ptr.getRefData().getCount() == containerItem.count)
+                            if (ptr.getRefData().getCount() == containerItem.count &&
+                                ptr.getCellRef().getCharge() == containerItem.charge &&
+                                ptr.getCellRef().getEnchantmentCharge() == containerItem.enchantmentCharge)
                             {
                                 // Is this an actor's container? If so, unequip this item if it was equipped
                                 if (ptrFound.getClass().isActor())
@@ -145,8 +149,8 @@ void WorldEvent::placeObjects(MWWorld::CellStore* cellStore)
 {
     for (const auto &worldObject : worldObjects)
     {
-        LOG_APPEND(Log::LOG_VERBOSE, "- cellRef: %s, %i, %i, charge: %i, count: %i", worldObject.refId.c_str(),
-                   worldObject.refNumIndex, worldObject.mpNum, worldObject.charge, worldObject.count);
+        LOG_APPEND(Log::LOG_VERBOSE, "- cellRef: %s, %i, %i, count: %i, charge: %i, enchantmentCharge: %i", worldObject.refId.c_str(),
+                   worldObject.refNumIndex, worldObject.mpNum, worldObject.count, worldObject.charge, worldObject.enchantmentCharge);
 
         MWWorld::Ptr ptrFound = cellStore->searchExact(0, worldObject.mpNum);
 
@@ -156,11 +160,14 @@ void WorldEvent::placeObjects(MWWorld::CellStore* cellStore)
             MWWorld::ManualRef ref(MWBase::Environment::get().getWorld()->getStore(), worldObject.refId, 1);
             MWWorld::Ptr newPtr = ref.getPtr();
 
+            if (worldObject.count > 1)
+                newPtr.getRefData().setCount(worldObject.count);
+
             if (worldObject.charge > -1)
                 newPtr.getCellRef().setCharge(worldObject.charge);
 
-            if (worldObject.count > 1)
-                newPtr.getRefData().setCount(worldObject.count);
+            if (worldObject.enchantmentCharge > -1)
+                newPtr.getCellRef().setEnchantmentCharge(worldObject.enchantmentCharge);
 
             newPtr.getCellRef().setGoldValue(worldObject.goldValue);
             newPtr = MWBase::Environment::get().getWorld()->placeObject(newPtr, cellStore, worldObject.position);
@@ -424,6 +431,67 @@ void WorldEvent::activateDoors(MWWorld::CellStore* cellStore)
     }
 }
 
+void WorldEvent::runConsoleCommands(MWWorld::CellStore* cellStore)
+{
+    MWBase::WindowManager *windowManager = MWBase::Environment::get().getWindowManager();
+
+    LOG_APPEND(Log::LOG_VERBOSE, "- console command: %s", consoleCommand.c_str());
+
+    if (worldObjects.empty())
+    {
+        windowManager->clearConsolePtr();
+
+        LOG_APPEND(Log::LOG_VERBOSE, "-- running with no object reference");
+        windowManager->executeCommandInConsole(consoleCommand);
+    }
+    else
+    {
+        for (const auto &worldObject : worldObjects)
+        {
+            windowManager->clearConsolePtr();
+
+            if (worldObject.isPlayer)
+            {
+                BasePlayer *player = 0;
+                
+                if (worldObject.guid == Main::get().getLocalPlayer()->guid)
+                {
+                    player = Main::get().getLocalPlayer();
+
+                    LOG_APPEND(Log::LOG_VERBOSE, "-- running on local player");
+                    windowManager->setConsolePtr(static_cast<LocalPlayer*>(player)->getPlayerPtr());
+                    windowManager->executeCommandInConsole(consoleCommand);
+                }
+                else if (player != 0)
+                {
+                    player = PlayerList::getPlayer(guid);
+
+                    LOG_APPEND(Log::LOG_VERBOSE, "-- running on player %s", player->npc.mName.c_str());
+                    windowManager->setConsolePtr(static_cast<DedicatedPlayer*>(player)->getPtr());
+                    windowManager->executeCommandInConsole(consoleCommand);
+                }
+            }
+            else
+            {
+                LOG_APPEND(Log::LOG_VERBOSE, "-- running on cellRef: %s, %i, %i", worldObject.refId.c_str(), worldObject.refNumIndex, worldObject.mpNum);
+
+                MWWorld::Ptr ptrFound = cellStore->searchExact(worldObject.refNumIndex, worldObject.mpNum);
+
+                if (ptrFound)
+                {
+                    LOG_APPEND(Log::LOG_VERBOSE, "-- Found %s, %i, %i", ptrFound.getCellRef().getRefId().c_str(),
+                        ptrFound.getCellRef().getRefNum(), ptrFound.getCellRef().getMpNum());
+
+                    windowManager->setConsolePtr(ptrFound);
+                    windowManager->executeCommandInConsole(consoleCommand);
+                }
+            }
+        }
+
+        windowManager->clearConsolePtr();
+    } 
+}
+
 void WorldEvent::setLocalShorts(MWWorld::CellStore* cellStore)
 {
     for (const auto &worldObject : worldObjects)
@@ -527,6 +595,7 @@ void WorldEvent::addObjectPlace(const MWWorld::Ptr& ptr)
     worldObject.refNumIndex = ptr.getCellRef().getRefNum().mIndex;
     worldObject.mpNum = 0;
     worldObject.charge = ptr.getCellRef().getCharge();
+    worldObject.enchantmentCharge = ptr.getCellRef().getEnchantmentCharge();
 
     // Make sure we send the RefData position instead of the CellRef one, because that's what
     // we actually see on this client
@@ -891,6 +960,7 @@ void WorldEvent::sendContainers(MWWorld::CellStore* cellStore)
             containerItem.refId = itemPtr.getCellRef().getRefId();
             containerItem.count = itemPtr.getRefData().getCount();
             containerItem.charge = itemPtr.getCellRef().getCharge();
+            containerItem.enchantmentCharge = itemPtr.getCellRef().getEnchantmentCharge();
 
             worldObject.containerItems.push_back(move(containerItem));
         }

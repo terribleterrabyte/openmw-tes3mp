@@ -1,12 +1,9 @@
-//
-// Created by koncord on 14.01.16.
-//
-
 #include <components/esm/esmwriter.hpp>
 #include <components/openmw-mp/Log.hpp>
 
 #include "../mwbase/environment.hpp"
 #include "../mwbase/journal.hpp"
+#include "../mwbase/soundmanager.hpp"
 
 #include "../mwclass/creature.hpp"
 #include "../mwclass/npc.hpp"
@@ -18,6 +15,7 @@
 
 #include "../mwinput/inputmanagerimp.hpp"
 
+#include "../mwmechanics/activespells.hpp"
 #include "../mwmechanics/aitravel.hpp"
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwmechanics/mechanicsmanagerimp.hpp"
@@ -48,8 +46,11 @@ LocalPlayer::LocalPlayer()
     charGenState.endStage = 1;
     charGenState.isFinished = false;
 
-    consoleAllowed = false;
     difficulty = 0;
+    consoleAllowed = false;
+    bedRestAllowed = true;
+    wildernessRestAllowed = true;
+    waitAllowed = true;
 
     ignorePosPacket = false;
     ignoreJailTeleportation = false;
@@ -66,6 +67,8 @@ LocalPlayer::LocalPlayer()
     isWerewolf = false;
 
     diedSinceArrestAttempt = false;
+    isReceivingQuickKeys = false;
+    isPlayingAnimation = false;
 }
 
 LocalPlayer::~LocalPlayer()
@@ -241,6 +244,7 @@ void LocalPlayer::updateAttributes(bool forceUpdate)
     for (int i = 0; i < 8; ++i)
     {
         if (ptrNpcStats.getAttribute(i).getBase() != creatureStats.mAttributes[i].mBase ||
+            ptrNpcStats.getAttribute(i).getModifier() != creatureStats.mAttributes[i].mMod ||
             ptrNpcStats.getSkillIncrease(i) != npcStats.mSkillIncrease[i] ||
             forceUpdate)
         {
@@ -271,6 +275,7 @@ void LocalPlayer::updateSkills(bool forceUpdate)
     {
         // Update a skill if its base value has changed at all or its progress has changed enough
         if (ptrNpcStats.getSkill(i).getBase() != npcStats.mSkills[i].mBase ||
+            ptrNpcStats.getSkill(i).getModifier() != npcStats.mSkills[i].mMod ||
             ptrNpcStats.getSkill(i).getProgress() != npcStats.mSkills[i].mProgress ||
             forceUpdate)
         {
@@ -330,6 +335,16 @@ void LocalPlayer::updatePosition(bool forceUpdate)
 
     bool posIsChanging = (direction.pos[0] != 0 || direction.pos[1] != 0 ||
             position.rot[0] != oldRot[0] || position.rot[2] != oldRot[1]);
+
+    // Animations can change a player's position without actually creating directional movement,
+    // so update positions accordingly
+    if (!posIsChanging && isPlayingAnimation)
+    {
+        if (MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(ptrPlayer, animation.groupname))
+            posIsChanging = true;
+        else
+            isPlayingAnimation = false;
+    }
 
     if (forceUpdate || posIsChanging || posWasChanged)
     {
@@ -420,6 +435,7 @@ void LocalPlayer::updateEquipment(bool forceUpdate)
                 equipmentIndexChanges.push_back(slot);
                 item.refId = it->getCellRef().getRefId();
                 item.charge = it->getCellRef().getCharge();
+                item.enchantmentCharge = it->getCellRef().getEnchantmentCharge();
 
                 if (slot == MWWorld::InventoryStore::Slot_CarriedRight)
                 {
@@ -438,7 +454,8 @@ void LocalPlayer::updateEquipment(bool forceUpdate)
             equipmentIndexChanges.push_back(slot);
             item.refId = "";
             item.count = 0;
-            item.charge = 0;
+            item.charge = -1;
+            item.enchantmentCharge = -1;
         }
     }
 
@@ -467,6 +484,7 @@ void LocalPlayer::updateInventory(bool forceUpdate)
             return true;
         item.count = iter.getRefData().getCount();
         item.charge = iter.getCellRef().getCharge();
+        item.enchantmentCharge = iter.getCellRef().getEnchantmentCharge();
         return false;
     };
 
@@ -642,6 +660,9 @@ void LocalPlayer::addItems()
             MWWorld::Ptr itemPtr = *ptrStore.add(item.refId, item.count, ptrPlayer);
             if (item.charge != -1)
                 itemPtr.getCellRef().setCharge(item.charge);
+
+            if (item.enchantmentCharge != -1)
+                itemPtr.getCellRef().setEnchantmentCharge(item.enchantmentCharge);
         }
         catch (std::exception&)
         {
@@ -732,6 +753,15 @@ void LocalPlayer::removeSpells()
     }
 }
 
+void LocalPlayer::closeInventoryWindows()
+{
+    if (MWBase::Environment::get().getWindowManager()->containsMode(MWGui::GM_Container) ||
+        MWBase::Environment::get().getWindowManager()->containsMode(MWGui::GM_Inventory))
+        MWBase::Environment::get().getWindowManager()->popGuiMode();
+
+    MWBase::Environment::get().getWindowManager()->finishDragDrop();
+}
+
 void LocalPlayer::setDynamicStats()
 {
     MWBase::World *world = MWBase::Environment::get().getWorld();
@@ -759,6 +789,12 @@ void LocalPlayer::setAttributes()
 
     for (int i = 0; i < 8; ++i)
     {
+        // If the server wants to clear our attribute's non-zero modifier, we need to remove
+        // the spell effect causing it, to avoid an infinite loop where the effect keeps resetting
+        // the modifier
+        if (creatureStats.mAttributes[i].mMod == 0 && ptrCreatureStats->getAttribute(i).getModifier() > 0)
+            ptrCreatureStats->getActiveSpells().purgeEffectByArg(ESM::MagicEffect::FortifyAttribute, i);
+
         attributeValue.readState(creatureStats.mAttributes[i]);
         ptrCreatureStats->setAttribute(i, attributeValue);
     }
@@ -774,6 +810,12 @@ void LocalPlayer::setSkills()
 
     for (int i = 0; i < 27; ++i)
     {
+        // If the server wants to clear our skill's non-zero modifier, we need to remove
+        // the spell effect causing it, to avoid an infinite loop where the effect keeps resetting
+        // the modifier
+        if (npcStats.mSkills[i].mMod == 0 && ptrNpcStats->getSkill(i).getModifier() > 0)
+            ptrNpcStats->getActiveSpells().purgeEffectByArg(ESM::MagicEffect::FortifySkill, i);
+
         skillValue.readState(npcStats.mSkills[i]);
         ptrNpcStats->setSkill(i, skillValue);
     }
@@ -832,12 +874,8 @@ void LocalPlayer::setCell()
     MWWorld::Ptr ptrPlayer = world->getPlayerPtr();
     ESM::Position pos;
 
-    // To avoid crashes, close any container menus this player may be in
-    if (MWBase::Environment::get().getWindowManager()->containsMode(MWGui::GM_Container))
-    {
-        MWBase::Environment::get().getWindowManager()->removeGuiMode(MWGui::GM_Container);
-        MWBase::Environment::get().getWindowManager()->setDragDrop(false);
-    }
+    // To avoid crashes, close container windows this player may be in
+    closeInventoryWindows();
 
     world->getPlayer().setTeleported(true);
 
@@ -940,6 +978,9 @@ void LocalPlayer::setInventory()
     MWWorld::Ptr ptrPlayer = getPlayerPtr();
     MWWorld::ContainerStore &ptrStore = ptrPlayer.getClass().getContainerStore(ptrPlayer);
 
+    // Ensure no item is being drag and dropped
+    MWBase::Environment::get().getWindowManager()->finishDragDrop();
+
     // Clear items in inventory
     ptrStore.clear();
 
@@ -977,6 +1018,57 @@ void LocalPlayer::setSpellbook()
 
     // Proceed by adding spells
     addSpells();
+}
+
+void LocalPlayer::setQuickKeys()
+{
+    MWWorld::Ptr ptrPlayer = getPlayerPtr();
+
+    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Received ID_PLAYER_QUICKKEYS from server");
+
+    // Because we send QuickKeys packets from the same OpenMW methods that we use to set received ones with,
+    // we need a boolean to prevent their sending here
+    isReceivingQuickKeys = true;
+
+    for (const auto &quickKey : quickKeyChanges.quickKeys)
+    {
+        LOG_APPEND(Log::LOG_INFO, "- slot: %i, type: %i, itemId: %s", quickKey.slot, quickKey.type, quickKey.itemId.c_str());
+
+        if (quickKey.type == QuickKey::ITEM || quickKey.type == QuickKey::ITEM_MAGIC)
+        {
+            MWWorld::InventoryStore &ptrInventory = ptrPlayer.getClass().getInventoryStore(ptrPlayer);
+
+            auto it = find_if(ptrInventory.begin(), ptrInventory.end(), [&quickKey](const MWWorld::Ptr &inventoryItem) {
+                return Misc::StringUtils::ciEqual(inventoryItem.getCellRef().getRefId(), quickKey.itemId);
+            });
+
+            if (it != ptrInventory.end())
+                MWBase::Environment::get().getWindowManager()->setQuickKey(quickKey.slot, quickKey.type, (*it));
+        }
+        else if (quickKey.type == QuickKey::MAGIC)
+        {
+            MWMechanics::Spells &ptrSpells = ptrPlayer.getClass().getCreatureStats(ptrPlayer).getSpells();
+            bool hasSpell = false;
+
+            MWMechanics::Spells::TIterator iter = ptrSpells.begin();
+            for (; iter != ptrSpells.end(); iter++)
+            {
+                const ESM::Spell *spell = iter->first;
+                if (Misc::StringUtils::ciEqual(spell->mId, quickKey.itemId))
+                {
+                    hasSpell = true;
+                    break;
+                }
+            }
+
+            if (hasSpell)
+                MWBase::Environment::get().getWindowManager()->setQuickKey(quickKey.slot, quickKey.type, 0, quickKey.itemId);
+        }
+        else
+            MWBase::Environment::get().getWindowManager()->setQuickKey(quickKey.slot, quickKey.type, 0);
+    }
+
+    isReceivingQuickKeys = false;
 }
 
 void LocalPlayer::setFactions()
@@ -1088,6 +1180,7 @@ void LocalPlayer::sendInventory()
 
         item.count = iter.getRefData().getCount();
         item.charge = iter.getCellRef().getCharge();
+        item.enchantmentCharge = iter.getCellRef().getEnchantmentCharge();
 
         inventoryChanges.items.push_back(item);
     }
@@ -1179,6 +1272,24 @@ void LocalPlayer::sendSpellRemoval(const ESM::Spell &spell)
     getNetworking()->getPlayerPacket(ID_PLAYER_SPELLBOOK)->setPlayer(this);
     getNetworking()->getPlayerPacket(ID_PLAYER_SPELLBOOK)->Send();
     */
+}
+
+void LocalPlayer::sendQuickKey(unsigned short slot, int type, const std::string& itemId)
+{
+    quickKeyChanges.quickKeys.clear();
+
+    mwmp::QuickKey quickKey;
+    quickKey.slot = slot;
+    quickKey.type = type;
+    quickKey.itemId = itemId;
+
+    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Sending ID_PLAYER_QUICKKEYS", itemId.c_str());
+    LOG_APPEND(Log::LOG_INFO, "- slot: %i, type: %i, itemId: %s", quickKey.slot, quickKey.type, quickKey.itemId.c_str());
+
+    quickKeyChanges.quickKeys.push_back(quickKey);
+
+    getNetworking()->getPlayerPacket(ID_PLAYER_QUICKKEYS)->setPlayer(this);
+    getNetworking()->getPlayerPacket(ID_PLAYER_QUICKKEYS)->Send();
 }
 
 void LocalPlayer::sendJournalEntry(const std::string& quest, int index, const MWWorld::Ptr& actor)
@@ -1356,4 +1467,21 @@ void LocalPlayer::storeCurrentContainer(const MWWorld::Ptr &container)
     currentContainer.refId = container.getCellRef().getRefId();
     currentContainer.refNumIndex = container.getCellRef().getRefNum().mIndex;
     currentContainer.mpNum = container.getCellRef().getMpNum();
+}
+
+void LocalPlayer::playAnimation()
+{
+    MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(getPlayerPtr(),
+        animation.groupname, animation.mode, animation.count, animation.persist);
+
+    isPlayingAnimation = true;
+}
+
+void LocalPlayer::playSpeech()
+{
+    MWBase::Environment::get().getSoundManager()->say(getPlayerPtr(), sound);
+
+    MWBase::WindowManager *winMgr = MWBase::Environment::get().getWindowManager();
+    if (winMgr->getSubtitlesEnabled())
+        winMgr->messageBox(MWBase::Environment::get().getDialogueManager()->getVoiceCaption(sound), MWGui::ShowInDialogueMode_Never);
 }

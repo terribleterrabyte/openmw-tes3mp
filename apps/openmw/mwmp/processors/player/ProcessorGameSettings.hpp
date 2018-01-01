@@ -23,9 +23,10 @@ namespace mwmp
                 if (MWBase::Environment::get().getWindowManager()->isGuiMode())
                 {
                     if (MWBase::Environment::get().getWindowManager()->getMode() == MWGui::GM_Console && !player->consoleAllowed)
-                    {
                         MWBase::Environment::get().getWindowManager()->popGuiMode();
-                    }
+                    else if (MWBase::Environment::get().getWindowManager()->getMode() == MWGui::GM_Rest &&
+                        (!player->bedRestAllowed || !player->wildernessRestAllowed || !player->waitAllowed))
+                        MWBase::Environment::get().getWindowManager()->popGuiMode();
                 }
             }
         }

@@ -18,7 +18,10 @@ public:
 
     void addTopic(const std::string &topicId);
     std::string getTopicId(unsigned int i) const;
-    unsigned int getChanges() const;
+    size_t size() const;
+
+    void playAnimation(const std::string &groupname, int mode, int count, bool persist);
+    void playSpeech(const std::string &sound);
 
     void reset();
     void update();

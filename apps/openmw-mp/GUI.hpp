@@ -34,6 +34,11 @@ public:
     std::shared_ptr<Window> createWindow(short x, short y, sol::function fn, sol::this_environment te);
     void deleteWindow(std::shared_ptr<Window> window);
     void onGUIWindowAction();
+
+    void addQuickKey(unsigned short slot, int type, const std::string &itemId);
+    std::string getTopicId(unsigned int i) const;
+    unsigned int getChanges() const;
+
 private:
     Player *player;
     bool changed;
@@ -41,4 +46,44 @@ private:
     int lastWindowId;
 };
 
+class QuickKey
+{
+    friend class QuickKeys;
+public:
+    static void Init(LuaState &lua);
+public:
+    explicit QuickKey(mwmp::QuickKey &quickKey);
 
+    int getSlot() const;
+    void setSlot(unsigned short slot);
+
+    int getType() const;
+    void setType(int slot);
+
+    std::string getItemId() const;
+    void setItemId(const std::string &itemId);
+
+    mwmp::QuickKey quickKey;
+};
+
+class QuickKeys
+{
+public:
+    static void Init(LuaState &lua);
+public:
+    explicit QuickKeys(Player *player);
+    ~QuickKeys();
+
+    void update();
+
+    void addQuickKey(QuickKey quickKey);
+    QuickKey getQuickKey(int id) const;
+    void setQuickKey(int id, QuickKey quickKey);
+    size_t size() const;
+    void clear();
+
+private:
+    mwmp::QuickKey tempQuickKey;
+    Player *player;
+    bool changed;
+};

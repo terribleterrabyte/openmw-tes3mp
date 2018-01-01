@@ -160,14 +160,14 @@ public:
      * @return base, current
      */
     std::tuple<int, int> getAttribute(unsigned short id) const;
-    void setAttribute(unsigned short id, int base, int current);
+    void setAttribute(unsigned short id, int base, bool clearModifier);
 
     /**
      *
      * @return base, current, progress, increase
      */
     std::tuple<int, int, float> getSkill(unsigned short id) const;
-    void setSkill(unsigned short id, int base, int current, float progress);
+    void setSkill(unsigned short id, int base, bool clearModifier, float progress);
 
     int getSkillIncrease(unsigned short attributeId) const;
     void setSkillIncrease(unsigned short attributeId, int increase);
@@ -184,6 +184,7 @@ public:
     Factions &getFactions();
     Quests &getQuests();
     Spells &getSpells();
+    QuickKeys &getQuickKeys();
     WeatherMgr &getWeatherMgr();
 
     void setAuthority();
@@ -203,6 +204,7 @@ private:
     Factions factions;
     Quests quests;
     Spells spells;
+    QuickKeys quickKeys;
     WeatherMgr weatherMgr;
     sol::table storedData;
     sol::table customData;

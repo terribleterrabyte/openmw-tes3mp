@@ -86,6 +86,7 @@ void Player::Init(LuaState &lua)
                                          "getFactions", &Player::getFactions,
                                          "getQuests", &Player::getQuests,
                                          "getSpells", &Player::getSpells,
+                                         "getQuickKeys", &Player::getQuickKeys,
                                          "getWeatherMgr", &Player::getWeatherMgr,
 
                                          "getCellState", &Player::getCellState,
@@ -106,7 +107,7 @@ void Player::Init(LuaState &lua)
 
 Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedMap(false), cClass(this),
                                           settings(this), books(this), gui(this), dialogue(this), factions(this),
-                                          quests(this), spells(this), weatherMgr(this)
+                                          quests(this), spells(this), quickKeys(this), weatherMgr(this)
 {
     basePlayer = this;
     netCreature = this;
@@ -231,6 +232,7 @@ void Player::update()
     factions.update();
     quests.update();
     spells.update();
+    quickKeys.update();
     weatherMgr.update();
 
     resetUpdateFlags();
@@ -635,16 +637,18 @@ std::tuple<int, int> Player::getAttribute(unsigned short attributeId) const
     if (attributeId >= ESM::Attribute::Length)
         return make_tuple(0, 0);
 
-    return make_tuple(creatureStats.mAttributes[attributeId].mBase, creatureStats.mAttributes[attributeId].mCurrent);
+    return make_tuple(creatureStats.mAttributes[attributeId].mBase, creatureStats.mAttributes[attributeId].mMod);
 }
 
-void Player::setAttribute(unsigned short attributeId, int base, int current)
+void Player::setAttribute(unsigned short attributeId, int base, bool clearModifier)
 {
     if (attributeId >= ESM::Attribute::Length)
         return;
 
     creatureStats.mAttributes[attributeId].mBase = base;
-    creatureStats.mAttributes[attributeId].mCurrent = current;
+
+    if (clearModifier)
+        creatureStats.mAttributes[attributeId].mMod = 0;
 
     if (!Utils::vectorContains(&attributeIndexChanges, attributeId))
         attributeIndexChanges.push_back(attributeId);
@@ -659,17 +663,18 @@ std::tuple<int, int, float> Player::getSkill(unsigned short skillId) const
 
     const auto &skill = npcStats.mSkills[skillId];
 
-    return make_tuple(skill.mBase, skill.mCurrent, skill.mProgress);
+    return make_tuple(skill.mBase, skill.mMod, skill.mProgress);
 }
 
-void Player::setSkill(unsigned short skillId, int base, int current, float progress)
+void Player::setSkill(unsigned short skillId, int base, bool clearModifier, float progress)
 {
     if (skillId >= ESM::Skill::Length)
         return;
 
     auto &skill = npcStats.mSkills[skillId];
     skill.mBase = base;
-    skill.mCurrent = current;
+    if (clearModifier)
+        skill.mMod = 0;
     skill.mProgress = progress;
 
     if (!Utils::vectorContains(&skillIndexChanges, skillId))
@@ -734,6 +739,11 @@ Quests &Player::getQuests()
 Spells &Player::getSpells()
 {
     return spells;
+}
+
+QuickKeys &Player::getQuickKeys()
+{
+    return quickKeys;
 }
 
 WeatherMgr &Player::getWeatherMgr()

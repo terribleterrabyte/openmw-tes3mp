@@ -26,6 +26,7 @@
 
     Include additional headers for multiplayer purposes
 */
+#include <components/openmw-mp/Log.hpp>
 #include "../mwmp/Main.hpp"
 #include "../mwmp/GUIController.hpp"
 /*
@@ -1061,6 +1062,20 @@ namespace MWGui
         MWBase::Environment::get().getInputManager()->setDragDrop(dragDrop);
     }
 
+    /*
+        Start of tes3mp addition
+
+        Allow the completion of a drag and drop from elsewhere in the code
+    */
+    void WindowManager::finishDragDrop()
+    {
+        if (mDragAndDrop->mIsOnDragAndDrop)
+            mDragAndDrop->finish();
+    }
+    /*
+        End of tes3mp addition
+    */
+
     void WindowManager::setCursorVisible(bool visible)
     {
         if (visible == mCursorVisible)
@@ -1347,6 +1362,19 @@ namespace MWGui
         mConsole->executeFile (path);
     }
 
+    /*
+        Start of tes3mp addition
+
+        Allow the execution of console commands from elsewhere in the code
+    */
+    void WindowManager::executeCommandInConsole(const std::string& command)
+    {
+        mConsole->execute(command);
+    }
+    /*
+        End of tes3mp addition
+    */
+
     MWGui::InventoryWindow* WindowManager::getInventoryWindow() { return mInventoryWindow; }
     MWGui::CountDialog* WindowManager::getCountDialog() { return mCountDialog; }
     MWGui::ConfirmationDialog* WindowManager::getConfirmationDialog() { return mConfirmationDialog; }
@@ -1486,6 +1514,35 @@ namespace MWGui
     {
         mQuickKeysMenu->activateQuickKey(index);
     }
+
+    /*
+        Start of tes3mp addition
+
+        Make it possible to add quickKeys from elsewhere in the code
+    */
+    void WindowManager::setQuickKey(int slot, int quickKeyType, MWWorld::Ptr item, const std::string& spellId)
+    {
+        mQuickKeysMenu->setSelectedIndex(slot);
+
+        switch (quickKeyType)
+        {
+            case QuickKeysMenu::Type_Unassigned:
+                mQuickKeysMenu->unassignIndex(slot);
+                break;
+            case QuickKeysMenu::Type_Item:
+                mQuickKeysMenu->onAssignItem(item);
+                break;
+            case QuickKeysMenu::Type_MagicItem:
+                mQuickKeysMenu->onAssignMagicItem(item);
+                break;
+            case QuickKeysMenu::Type_Magic:
+                mQuickKeysMenu->onAssignMagic(spellId);
+                break;
+        }
+    }
+    /*
+        End of tes3mp addition
+    */
 
     bool WindowManager::getSubtitlesEnabled ()
     {
@@ -1963,6 +2020,35 @@ namespace MWGui
     {
         mConsole->setSelectedObject(object);
     }
+
+    /*
+        Start of tes3mp addition
+
+        Allow the direct setting of a console's Ptr, without the assumption that an object
+        was clicked and that key focus should be restored to the console window, for console
+        commands executed via server scripts
+    */
+    void WindowManager::setConsolePtr(const MWWorld::Ptr &object)
+    {
+        mConsole->setPtr(object);
+    }
+    /*
+        End of tes3mp addition
+    */
+
+    /*
+        Start of tes3mp addition
+
+        Allow the clearing of the console's Ptr from elsewhere in the code, so that
+        Ptrs used in console commands run from server scripts do not stay selected
+    */
+    void WindowManager::clearConsolePtr()
+    {
+        mConsole->resetReference();
+    }
+    /*
+        End of tes3mp addition
+    */
 
     std::string WindowManager::correctIconPath(const std::string& path)
     {

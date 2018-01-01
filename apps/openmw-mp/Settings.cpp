@@ -13,8 +13,11 @@
 void GameSettings::Init(LuaState &lua)
 {
     lua.getState()->new_usertype<GameSettings>("Settings",
-                                           "setConsoleAllow", &GameSettings::SetConsoleAllow,
-                                           "setDifficulty", &GameSettings::SetDifficulty
+                                           "setDifficulty", &GameSettings::setDifficulty,
+                                           "setConsoleAllowed", &GameSettings::setConsoleAllowed,
+                                           "setBedRestAllowed", &GameSettings::setConsoleAllowed,
+                                           "setWildernessRestAllowed", &GameSettings::setWildernessRestAllowed,
+                                           "setWaitAllowed", &GameSettings::setWaitAllowed
     );
 }
 
@@ -27,15 +30,33 @@ GameSettings::~GameSettings()
 {
 }
 
-void GameSettings::SetConsoleAllow(bool state)
+void GameSettings::setConsoleAllowed(bool state)
 {
     player->consoleAllowed = state;
     changed = true;
 }
 
-void GameSettings::SetDifficulty(int difficulty)
+void GameSettings::setDifficulty(int difficulty)
 {
     player->difficulty = difficulty;
+    changed = true;
+}
+
+void GameSettings::setBedRestAllowed(bool state)
+{
+    player->bedRestAllowed = state;
+    changed = true;
+}
+
+void GameSettings::setWildernessRestAllowed(bool state)
+{
+    player->wildernessRestAllowed = state;
+    changed = true;
+}
+
+void GameSettings::setWaitAllowed(bool state)
+{
+    player->waitAllowed = state;
     changed = true;
 }
 

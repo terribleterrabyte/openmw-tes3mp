@@ -152,6 +152,29 @@ namespace MWBase
 
             virtual void setConsoleSelectedObject(const MWWorld::Ptr& object) = 0;
 
+            /*
+                Start of tes3mp addition
+
+                Allow the direct setting of a console's Ptr, without the assumption that an object
+                was clicked and that key focus should be restored to the console window, for console
+                commands executed via server scripts
+            */
+            virtual void setConsolePtr(const MWWorld::Ptr& object) = 0;
+            /*
+                End of tes3mp addition
+            */
+
+            /*
+                Start of tes3mp addition
+
+                Allow the clearing of the console's Ptr from elsewhere in the code, so that
+                Ptrs used in console commands run from server scripts do not stay selected
+            */
+            virtual void clearConsolePtr() = 0;
+            /*
+                End of tes3mp addition
+            */
+
             /// Set value for the given ID.
             virtual void setValue (const std::string& id, const MWMechanics::AttributeValue& value) = 0;
             virtual void setValue (int parSkill, const MWMechanics::SkillValue& value) = 0;
@@ -194,6 +217,17 @@ namespace MWBase
             virtual void getMousePosition(int &x, int &y) = 0;
             virtual void getMousePosition(float &x, float &y) = 0;
             virtual void setDragDrop(bool dragDrop) = 0;
+
+            /*
+                Start of tes3mp addition
+
+                Allow the completion of a drag and drop from elsewhere in the code
+            */
+            virtual void finishDragDrop() = 0;
+            /*
+                End of tes3mp addition
+            */
+
             virtual bool getWorldMouseOver() = 0;
 
             virtual bool toggleFogOfWar() = 0;
@@ -222,6 +256,16 @@ namespace MWBase
             virtual void activateQuickKey (int index) = 0;
             /// update activated quick key state (if action executing was delayed for some reason)
             virtual void updateActivatedQuickKey () = 0;
+
+            /*
+                Start of tes3mp addition
+
+                Make it possible to add quickKeys from elsewhere in the code
+            */
+            virtual void setQuickKey(int slot, int quickKeyType, MWWorld::Ptr item, const std::string& spellId = "") = 0;
+            /*
+                End of tes3mp addition
+            */
 
             virtual std::string getSelectedSpell() = 0;
             virtual void setSelectedSpell(const std::string& spellId, int successChancePercent) = 0;
@@ -290,6 +334,16 @@ namespace MWBase
             virtual void windowResized(int x, int y) = 0;
 
             virtual void executeInConsole (const std::string& path) = 0;
+
+            /*
+                Start of tes3mp addition
+
+                Allow the execution of console commands from elsewhere in the code
+            */
+            virtual void executeCommandInConsole(const std::string& command) = 0;
+            /*
+                End of tes3mp addition
+            */
 
             virtual void enableRest() = 0;
             virtual bool getRestEnabled() = 0;

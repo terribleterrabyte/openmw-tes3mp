@@ -33,6 +33,7 @@ namespace CoreEvent
         ON_PLAYER_FACTION,
         ON_PLAYER_SHAPESHIFT,
         ON_PLAYER_SPELLBOOK,
+        ON_PLAYER_QUICKKEYS,
         ON_PLAYER_TOPIC,
         ON_PLAYER_DISPOSITION,
         ON_PLAYER_BOOK,

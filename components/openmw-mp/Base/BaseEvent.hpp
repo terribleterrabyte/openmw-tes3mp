@@ -12,12 +12,13 @@ namespace mwmp
         std::string refId;
         int count;
         int charge;
+        int enchantmentCharge;
 
         int actionCount;
 
         inline bool operator==(const ContainerItem& rhs)
         {
-            return refId == rhs.refId && count == rhs.count && charge == rhs.charge;
+            return refId == rhs.refId && count == rhs.count && charge == rhs.charge && enchantmentCharge == rhs.enchantmentCharge;
         }
     };
 
@@ -28,6 +29,7 @@ namespace mwmp
         unsigned mpNum;
         int count;
         int charge;
+        int enchantmentCharge;
         int goldValue;
 
         ESM::Position position;
@@ -55,6 +57,9 @@ namespace mwmp
 
         std::vector<ContainerItem> containerItems;
         unsigned int containerItemCount;
+
+        RakNet::RakNetGUID guid; // only for events that can also affect players
+        bool isPlayer;
     };
 
     class BaseEvent
@@ -84,6 +89,7 @@ namespace mwmp
         std::vector<WorldObject> worldObjects;
 
         ESM::Cell cell;
+        std::string consoleCommand;
 
         unsigned char action; // 0 - Clear and set in entirety, 1 - Add item, 2 - Remove item, 3 - Request items
 

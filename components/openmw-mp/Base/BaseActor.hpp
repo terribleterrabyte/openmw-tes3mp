@@ -29,7 +29,6 @@ namespace mwmp
         unsigned refNumIndex;
         unsigned mpNum;
 
-        std::string response;
         std::string sound;
 
         Animation animation;

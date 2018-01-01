@@ -1050,6 +1050,28 @@ namespace MWInput
             MWBase::Environment::get().getWindowManager()->messageBox("#{sNotifyMessage2}"); //Nope,
             return;
         }
+
+        /*
+            Start of tes3mp addition
+
+            Prevent resting and waiting if they have been disabled by the server for the local player
+        */
+        int canRest = MWBase::Environment::get().getWorld()->canRest();
+
+        if (canRest == 0 && !mwmp::Main::get().getLocalPlayer()->wildernessRestAllowed)
+        {
+            MWBase::Environment::get().getWindowManager()->messageBox("You are not allowed to rest in the wilderness.");
+            return;
+        }
+        else if (canRest == 1 && !mwmp::Main::get().getLocalPlayer()->waitAllowed)
+        {
+            MWBase::Environment::get().getWindowManager()->messageBox("You are not allowed to wait.");
+            return;
+        }
+        /*
+            End of tes3mp addition
+        */
+
         MWBase::Environment::get().getWindowManager()->pushGuiMode (MWGui::GM_Rest); //Open rest GUI
 
     }

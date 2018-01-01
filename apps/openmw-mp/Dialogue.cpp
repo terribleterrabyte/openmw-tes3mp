@@ -15,7 +15,7 @@ void Dialogue::Init(LuaState &lua)
     lua.getState()->new_usertype<Dialogue>("Dialogue",
     "addTopic", &Dialogue::addTopic,
     "getTopicId", &Dialogue::getTopicId,
-    "getChanges", &Dialogue::getChanges,
+    "size", &Dialogue::size,
     "reset", &Dialogue::reset);
 }
 
@@ -57,7 +57,30 @@ std::string Dialogue::getTopicId(unsigned int i) const
     return player->topicChanges.topics.at(i).topicId;
 }
 
-unsigned int Dialogue::getChanges() const
+size_t Dialogue::size() const
 {
     return player->topicChanges.topics.size();
+}
+
+void Dialogue::playAnimation(const std::string &groupname, int mode, int count, bool persist)
+{
+    player->animation.groupname = groupname;
+    player->animation.mode = mode;
+    player->animation.count = count;
+    player->animation.persist = persist;
+
+    auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_ANIM_PLAY);
+    packet->setPlayer(player);
+    packet->Send(false);
+    player->sendToLoaded(*packet);
+}
+
+void Dialogue::playSpeech(const std::string &sound)
+{
+    player->sound = sound;
+
+    auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_SPEECH);
+    packet->setPlayer(player);
+    packet->Send(false);
+    player->sendToLoaded(*packet);
 }
