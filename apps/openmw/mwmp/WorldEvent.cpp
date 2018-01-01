@@ -480,7 +480,7 @@ void WorldEvent::runConsoleCommands(MWWorld::CellStore* cellStore)
                 if (ptrFound)
                 {
                     LOG_APPEND(Log::LOG_VERBOSE, "-- Found %s, %i, %i", ptrFound.getCellRef().getRefId().c_str(),
-                        ptrFound.getCellRef().getRefNum(), ptrFound.getCellRef().getMpNum());
+                        ptrFound.getCellRef().getRefNum().mIndex, ptrFound.getCellRef().getMpNum());
 
                     windowManager->setConsolePtr(ptrFound);
                     windowManager->executeCommandInConsole(consoleCommand);
