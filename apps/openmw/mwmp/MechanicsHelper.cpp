@@ -167,7 +167,7 @@ void MechanicsHelper::processAttack(Attack attack, const MWWorld::Ptr& attacker)
     }
 
     // Get the weapon used (if hand-to-hand, weapon = inv.end())
-    if (attack.type == attack.MELEE)
+    if (attack.type == Attack::Type::Melee)
     {
         MWWorld::Ptr weapon;
 
@@ -201,7 +201,7 @@ void MechanicsHelper::processAttack(Attack attack, const MWWorld::Ptr& attacker)
                 attack.success);
         }
     }
-    else if (attack.type == attack.MAGIC)
+    else if (attack.type == Attack::Type::Magic)
     {
         if (attack.instant)
         {

@@ -1330,7 +1330,7 @@ namespace MWMechanics
                         if (localAttack->pressed != state)
                         {
                             MechanicsHelper::resetAttack(localAttack);
-                            localAttack->type = mwmp::Attack::MELEE;
+                            localAttack->type = mwmp::Attack::Type::Melee;
                             localAttack->pressed = state;
                             localAttack->shouldSend = true;
                         }

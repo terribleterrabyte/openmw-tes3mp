@@ -350,7 +350,7 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
 
     for (auto &e : events)
     {
-        e.action = mwmp::BaseEvent::SET;
+        e.action = mwmp::BaseEvent::Action::Set;
         e.guid = player->guid;
         e.cell = cell;
     }
@@ -514,7 +514,7 @@ void ObjectController::sendContainers(shared_ptr<Player> player, shared_ptr<vect
 
     mwmp::BaseEvent event;
     event.cell = cell;
-    event.action = mwmp::BaseEvent::SET;
+    event.action = mwmp::BaseEvent::Action::Set;
     event.guid = player->guid;
 
     for (auto &object : *objects)
@@ -535,7 +535,7 @@ void ObjectController::sendContainers(shared_ptr<Player> player, shared_ptr<vect
 void ObjectController::requestContainers(shared_ptr<Player> player)
 {
     mwmp::BaseEvent event;
-    event.action = mwmp::BaseEvent::REQUEST;
+    event.action = mwmp::BaseEvent::Action::Request;
     event.guid = player->guid;
     event.cell = player->cell;
 

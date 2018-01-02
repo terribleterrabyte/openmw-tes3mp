@@ -28,11 +28,10 @@ namespace mwmp
             else
             {
                 LocalPlayer &localPlayer = static_cast<LocalPlayer&>(*player);
-                int inventoryAction = localPlayer.inventoryChanges.action;
 
-                if (inventoryAction == InventoryChanges::ADD)
+                if (localPlayer.inventoryChanges.action == InventoryChanges::Type::Add)
                     localPlayer.addItems();
-                else if (inventoryAction == InventoryChanges::REMOVE)
+                else if (localPlayer.inventoryChanges.action == InventoryChanges::Type::Remove)
                     localPlayer.removeItems();
                 else // InventoryChanges::SET
                     localPlayer.setInventory();

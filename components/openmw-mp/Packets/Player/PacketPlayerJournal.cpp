@@ -32,7 +32,7 @@ void PacketPlayerJournal::Packet(RakNet::BitStream *bs, bool send)
         RW(journalItem.quest, send, true);
         RW(journalItem.index, send);
 
-        if (journalItem.type == JournalItem::ENTRY)
+        if (journalItem.type == JournalItem::Type::Entry)
             RW(journalItem.actorRefId, send, true);
     }
 }

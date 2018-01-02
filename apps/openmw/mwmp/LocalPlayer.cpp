@@ -538,7 +538,7 @@ void LocalPlayer::updateAttack()
 {
     if (attack.shouldSend)
     {
-        if (attack.type == Attack::MAGIC)
+        if (attack.type == Attack::Type::Magic)
         {
             attack.spellId = MWBase::Environment::get().getWindowManager()->getSelectedSpell();
 
@@ -690,7 +690,7 @@ void LocalPlayer::addJournalItems()
     {
         MWWorld::Ptr ptrFound;
 
-        if (journalItem.type == JournalItem::ENTRY)
+        if (journalItem.type == JournalItem::Type::Entry)
         {
             ptrFound = MWBase::Environment::get().getWorld()->searchPtr(journalItem.actorRefId, false);
 
@@ -700,7 +700,7 @@ void LocalPlayer::addJournalItems()
 
         try
         {
-            if (journalItem.type == JournalItem::ENTRY)
+            if (journalItem.type == JournalItem::Type::Entry)
                 MWBase::Environment::get().getJournal()->addEntry(journalItem.quest, journalItem.index, ptrFound);
             else
                 MWBase::Environment::get().getJournal()->setJournalIndex(journalItem.quest, journalItem.index);
@@ -1080,7 +1080,7 @@ void LocalPlayer::setFactions()
         if (!ptrNpcStats.isInFaction(faction.factionId))
             ptrNpcStats.joinFaction(faction.factionId);
 
-        if (factionChanges.action == mwmp::FactionChanges::RANK)
+        if (factionChanges.action == mwmp::FactionChanges::Type::Rank)
         {
             // While the faction rank is different in the packet than in the NpcStats,
             // adjust the NpcStats accordingly
@@ -1092,7 +1092,7 @@ void LocalPlayer::setFactions()
                     ptrNpcStats.lowerRank(faction.factionId);
             }
         }
-        else if (factionChanges.action == mwmp::FactionChanges::EXPULSION)
+        else if (factionChanges.action == mwmp::FactionChanges::Type::Expulsion)
         {
             // If the expelled state is different in the packet than in the NpcStats,
             // adjust the NpcStats accordingly
@@ -1105,7 +1105,7 @@ void LocalPlayer::setFactions()
             }
         }
 
-        else if (factionChanges.action == mwmp::FactionChanges::REPUTATION)
+        else if (factionChanges.action == mwmp::FactionChanges::Type::Reputation)
             ptrNpcStats.setFactionReputation(faction.factionId, faction.reputation);
     }
 }
@@ -1183,7 +1183,7 @@ void LocalPlayer::sendInventory()
         inventoryChanges.items.push_back(item);
     }
 
-    inventoryChanges.action = InventoryChanges::SET;
+    inventoryChanges.action = InventoryChanges::Type::Set;
     getNetworking()->getPlayerPacket(ID_PLAYER_INVENTORY)->setPlayer(this);
     getNetworking()->getPlayerPacket(ID_PLAYER_INVENTORY)->Send();
 }
@@ -1202,7 +1202,7 @@ void LocalPlayer::sendSpellbook()
             spellbookChanges.spells.push_back(*spell.first);
     }
 
-    spellbookChanges.action = SpellbookChanges::SET;
+    spellbookChanges.action = SpellbookChanges::Type::Set;
     getNetworking()->getPlayerPacket(ID_PLAYER_SPELLBOOK)->setPlayer(this);
     getNetworking()->getPlayerPacket(ID_PLAYER_SPELLBOOK)->Send();
 }
@@ -1225,7 +1225,7 @@ void LocalPlayer::sendSpellAddition(std::string id)
     spell.mId = id;
     spellbookChanges.spells.push_back(spell);
 
-    spellbookChanges.action = SpellbookChanges::ADD;
+    spellbookChanges.action = SpellbookChanges::Type::Add;
     getNetworking()->getPlayerPacket(ID_PLAYER_SPELLBOOK)->setPlayer(this);
     getNetworking()->getPlayerPacket(ID_PLAYER_SPELLBOOK)->Send();
 }
@@ -1241,7 +1241,7 @@ void LocalPlayer::sendSpellRemoval(std::string id)
     spell.mId = id;
     spellbookChanges.spells.push_back(spell);
 
-    spellbookChanges.action = SpellbookChanges::REMOVE;
+    spellbookChanges.action = SpellbookChanges::Type::Remove;
     getNetworking()->getPlayerPacket(ID_PLAYER_SPELLBOOK)->setPlayer(this);
     getNetworking()->getPlayerPacket(ID_PLAYER_SPELLBOOK)->Send();
 }
@@ -1295,7 +1295,7 @@ void LocalPlayer::sendJournalEntry(const std::string& quest, int index, const MW
     journalChanges.journalItems.clear();
 
     mwmp::JournalItem journalItem;
-    journalItem.type = JournalItem::ENTRY;
+    journalItem.type = JournalItem::Type::Entry;
     journalItem.quest = quest;
     journalItem.index = index;
     journalItem.actorRefId = actor.getCellRef().getRefId();
@@ -1311,7 +1311,7 @@ void LocalPlayer::sendJournalIndex(const std::string& quest, int index)
     journalChanges.journalItems.clear();
 
     mwmp::JournalItem journalItem;
-    journalItem.type = JournalItem::INDEX;
+    journalItem.type = JournalItem::Type::Index;
     journalItem.quest = quest;
     journalItem.index = index;
 
@@ -1324,7 +1324,7 @@ void LocalPlayer::sendJournalIndex(const std::string& quest, int index)
 void LocalPlayer::sendFactionRank(const std::string& factionId, int rank)
 {
     factionChanges.factions.clear();
-    factionChanges.action = FactionChanges::RANK;
+    factionChanges.action = FactionChanges::Type::Rank;
 
     mwmp::Faction faction;
     faction.factionId = factionId;
@@ -1339,7 +1339,7 @@ void LocalPlayer::sendFactionRank(const std::string& factionId, int rank)
 void LocalPlayer::sendFactionExpulsionState(const std::string& factionId, bool isExpelled)
 {
     factionChanges.factions.clear();
-    factionChanges.action = FactionChanges::EXPULSION;
+    factionChanges.action = FactionChanges::Type::Expulsion;
 
     mwmp::Faction faction;
     faction.factionId = factionId;
@@ -1354,7 +1354,7 @@ void LocalPlayer::sendFactionExpulsionState(const std::string& factionId, bool i
 void LocalPlayer::sendFactionReputation(const std::string& factionId, int reputation)
 {
     factionChanges.factions.clear();
-    factionChanges.action = FactionChanges::REPUTATION;
+    factionChanges.action = FactionChanges::Type::Reputation;
 
     mwmp::Faction faction;
     faction.factionId = factionId;
@@ -1439,7 +1439,7 @@ void LocalPlayer::clearCurrentContainer()
     currentContainer.mpNum = 0;
 }
 
-void LocalPlayer::storeCellState(const ESM::Cell& cell, int stateType)
+void LocalPlayer::storeCellState(const ESM::Cell& cell, mwmp::CellState::Type stateType)
 {
     std::vector<CellState>::iterator iter;
 

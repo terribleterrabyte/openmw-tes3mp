@@ -46,15 +46,15 @@ namespace mwmp
     {
         std::string quest;
         int index;
-        enum JOURNAL_ITEM_TYPE
+        enum class Type
         {
-            ENTRY = 0,
-            INDEX = 1
+            Entry = 0,
+            Index = 1
         };
 
         std::string actorRefId;
 
-        int type; // 0 - An entire entry, 1 - An index
+        Type type;
     };
 
     struct Faction
@@ -101,13 +101,13 @@ namespace mwmp
     {
         ESM::Cell cell;
 
-        enum CELL_STATE_ACTION
+        enum class Type: uint8_t
         {
-            LOAD = 0,
-            UNLOAD = 1
+            Load = 0,
+            Unload
         };
 
-        int type; // 0 - Cell load, 1 - Cell unload
+        Type type;
     };
 
     struct JournalChanges
@@ -119,14 +119,14 @@ namespace mwmp
     {
         std::vector<Faction> factions;
 
-        enum FACTION_ACTION
+        enum class Type: uint8_t
         {
-            RANK = 0,
-            EXPULSION = 1,
-            REPUTATION = 2
+            Rank = 0,
+            Expulsion,
+            Reputation
         };
 
-        int action; // 0 - Rank, 1 - Expulsion state, 2 - Both
+        Type action;
     };
 
     struct TopicChanges
@@ -153,13 +153,14 @@ namespace mwmp
     {
         std::vector<ESM::Spell> spells;
 
-        enum ACTION_TYPE
+        enum class Type: int8_t
         {
-            SET = 0,
-            ADD,
-            REMOVE
+            None = -1,
+            Set = 0,
+            Add,
+            Remove
         };
-        int action; // 0 - Clear and set in entirety, 1 - Add spell, 2 - Remove spell
+        Type action;
     };
 
     struct QuickKeyChanges
@@ -191,9 +192,7 @@ namespace mwmp
 
         struct GUIMessageBox
         {
-            int id;
-            int type;
-            enum GUI_TYPE
+            enum class Type: uint8_t
             {
                 MessageBox = 0,
                 CustomMessageBox,
@@ -201,6 +200,10 @@ namespace mwmp
                 PasswordDialog,
                 ListBox
             };
+
+            int id;
+            Type type;
+
             std::string label;
             std::string note;
             std::string buttons;
@@ -237,8 +240,8 @@ namespace mwmp
 
         BasePlayer(RakNet::RakNetGUID guid) : guid(guid)
         {
-            inventoryChanges.action = 0;
-            spellbookChanges.action = 0;
+            inventoryChanges.action = InventoryChanges::Type::None;
+            spellbookChanges.action = SpellbookChanges::Type::None;
             useCreatureName = false;
             isWerewolf = false;
         }

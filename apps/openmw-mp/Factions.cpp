@@ -40,12 +40,12 @@ void Factions::processUpdate()
     clear();
 }
 
-int Factions::getFactionChangesAction() const
+mwmp::FactionChanges::Type Factions::getFactionChangesAction() const
 {
     return player->factionChanges.action;
 }
 
-void Factions::setFactionChangesAction(int action)
+void Factions::setFactionChangesAction(mwmp::FactionChanges::Type action)
 {
     player->factionChanges.action = action;
     setChanged();

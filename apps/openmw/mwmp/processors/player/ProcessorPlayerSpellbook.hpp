@@ -29,12 +29,11 @@ namespace mwmp
             else
             {
                 LocalPlayer &localPlayer = static_cast<LocalPlayer&>(*player);
-                
-                int spellbookAction = localPlayer.spellbookChanges.action;
 
-                if (spellbookAction == SpellbookChanges::ADD)
+
+                if (localPlayer.spellbookChanges.action == SpellbookChanges::Type::Add)
                     localPlayer.addSpells();
-                else if (spellbookAction == SpellbookChanges::REMOVE)
+                else if (localPlayer.spellbookChanges.action == SpellbookChanges::Type::Remove)
                     localPlayer.removeSpells();
                 else // SpellbookChanges::SET
                     localPlayer.setSpellbook();

@@ -89,7 +89,7 @@ namespace mwmp
         void clearCurrentContainer();
 
         void storeCurrentContainer(const MWWorld::Ptr& container);
-        void storeCellState(const ESM::Cell& cell, int stateType);
+        void storeCellState(const ESM::Cell& cell, mwmp::CellState::Type stateType);
 
         void playAnimation();
         void playSpeech();

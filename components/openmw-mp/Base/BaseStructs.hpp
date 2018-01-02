@@ -23,13 +23,14 @@ namespace mwmp
     struct InventoryChanges
     {
         std::vector<Item> items;
-        enum ACTION_TYPE
+        enum class Type: int8_t
         {
-            SET = 0,
-            ADD,
-            REMOVE
+            None = -1,
+            Set = 0,
+            Add,
+            Remove
         };
-        int action; // 0 - Clear and set in entirety, 1 - Add item, 2 - Remove item
+        Type action; // 0 - Clear and set in entirety, 1 - Add item, 2 - Remove item
     };
     
     struct Target
@@ -47,13 +48,14 @@ namespace mwmp
 
         Target target;
 
-        char type; // 0 - melee, 1 - magic, 2 - throwable
-        enum TYPE
+        enum class Type: uint8_t
         {
-            MELEE = 0,
-            MAGIC,
-            THROWABLE
+            Melee = 0,
+            Magic,
+            Throwable
         };
+
+        Type type;
 
         std::string spellId; // id of spell (e.g. "fireball")
 

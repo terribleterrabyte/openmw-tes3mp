@@ -33,7 +33,7 @@ void Inventory::Init(LuaState &lua)
     );
 }
 
-Inventory::Inventory(NetActor *actor) : netActor(actor), equipmentChanged(false), inventoryChanged(0)
+Inventory::Inventory(NetActor *actor) : netActor(actor), equipmentChanged(false), inventoryChanged(mwmp::InventoryChanges::Type::None)
 {
     printf("Inventory::Inventory()\n");
 }
@@ -89,7 +89,7 @@ void Inventory::update()
 void Inventory::InitializeInventoryChanges()
 {
     netActor->getNetCreature()->inventoryChanges.items.clear();
-    netActor->getNetCreature()->inventoryChanges.action = mwmp::InventoryChanges::SET;
+    netActor->getNetCreature()->inventoryChanges.action = mwmp::InventoryChanges::Type::Set;
 }
 
 int Inventory::getChangesSize() const
@@ -121,9 +121,9 @@ void Inventory::unequipItem( unsigned short slot)
 
 void Inventory::addItem(const std::string &refId, unsigned int count, int charge, int enchantmentCharge)
 {
-    if (inventoryChanged == mwmp::InventoryChanges::REMOVE)
+    if (inventoryChanged == mwmp::InventoryChanges::Type::Remove)
         return;
-    if (inventoryChanged == 0)
+    if (inventoryChanged == mwmp::InventoryChanges::Type::None)
         InitializeInventoryChanges();
 
     mwmp::Item item;
@@ -133,17 +133,17 @@ void Inventory::addItem(const std::string &refId, unsigned int count, int charge
     item.enchantmentCharge = enchantmentCharge;
 
     netActor->getNetCreature()->inventoryChanges.items.push_back(item);
-    netActor->getNetCreature()->inventoryChanges.action = mwmp::InventoryChanges::ADD;
-    if (inventoryChanged == 0 && netActor->isPlayer())
+    netActor->getNetCreature()->inventoryChanges.action = mwmp::InventoryChanges::Type::Add;
+    if (inventoryChanged == mwmp::InventoryChanges::Type::None && netActor->isPlayer())
         netActor->toPlayer()->addToUpdateQueue();
     inventoryChanged = netActor->getNetCreature()->inventoryChanges.action;
 }
 
 void Inventory::removeItem(const std::string &refId, unsigned short count)
 {
-    if (inventoryChanged == mwmp::InventoryChanges::ADD)
+    if (inventoryChanged == mwmp::InventoryChanges::Type::Add)
         return;
-    if (inventoryChanged == 0)
+    if (inventoryChanged == mwmp::InventoryChanges::Type::None)
         InitializeInventoryChanges();
 
     mwmp::Item item;
@@ -151,8 +151,8 @@ void Inventory::removeItem(const std::string &refId, unsigned short count)
     item.count = count;
 
     netActor->getNetCreature()->inventoryChanges.items.push_back(item);
-    netActor->getNetCreature()->inventoryChanges.action = mwmp::InventoryChanges::REMOVE;
-    if (inventoryChanged == 0 && netActor->isPlayer())
+    netActor->getNetCreature()->inventoryChanges.action = mwmp::InventoryChanges::Type::Remove;
+    if (inventoryChanged == mwmp::InventoryChanges::Type::None && netActor->isPlayer())
         netActor->toPlayer()->addToUpdateQueue();
     inventoryChanged = netActor->getNetCreature()->inventoryChanges.action;
 }
@@ -191,10 +191,10 @@ bool Inventory::isEquipmentChanged()
 
 void Inventory::resetInventoryFlag()
 {
-    inventoryChanged = 0;
+    inventoryChanged = mwmp::InventoryChanges::Type::None;
 }
 
-int Inventory::inventoryChangeType()
+mwmp::InventoryChanges::Type Inventory::inventoryChangeType()
 {
     return inventoryChanged;
 }

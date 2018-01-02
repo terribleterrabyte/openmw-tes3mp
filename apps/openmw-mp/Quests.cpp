@@ -50,12 +50,12 @@ void JournalItem::setIndex(int index)
     item.index = index;
 }
 
-int JournalItem::getType() const
+mwmp::JournalItem::Type JournalItem::getType() const
 {
     return item.type;
 }
 
-void JournalItem::setType(int type)
+void JournalItem::setType(mwmp::JournalItem::Type type)
 {
     item.type = type;
 }

@@ -16,7 +16,7 @@ public:
 
     explicit CellState(mwmp::CellState state);
 public:
-    int getStateType() const;
+    mwmp::CellState::Type getStateType() const;
     std::string getDescription() const;
 
 private:

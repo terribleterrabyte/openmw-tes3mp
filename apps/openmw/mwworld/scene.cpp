@@ -266,7 +266,7 @@ namespace MWWorld
 
             Store a cell unload for the LocalPlayer
         */
-        mwmp::Main::get().getLocalPlayer()->storeCellState(*(*iter)->getCell(), mwmp::CellState::UNLOAD);
+        mwmp::Main::get().getLocalPlayer()->storeCellState(*(*iter)->getCell(), mwmp::CellState::Type::Unload);
         /*
             End of tes3mp addition
         */
@@ -347,7 +347,7 @@ namespace MWWorld
 
                 Store a cell load for the LocalPlayer
             */
-            mwmp::Main::get().getLocalPlayer()->storeCellState(*cell->getCell(), mwmp::CellState::LOAD);
+            mwmp::Main::get().getLocalPlayer()->storeCellState(*cell->getCell(), mwmp::CellState::Type::Load);
             /*
                 End of tes3mp addition
             */

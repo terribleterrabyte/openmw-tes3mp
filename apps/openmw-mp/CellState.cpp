@@ -6,6 +6,8 @@
 
 #include "CellState.hpp"
 
+#include <utility>
+
 void CellState::Init(LuaState &lua)
 {
     lua.getState()->new_usertype<CellState>("CellState",
@@ -14,12 +16,12 @@ void CellState::Init(LuaState &lua)
     );
 }
 
-CellState::CellState(mwmp::CellState state) : state(state)
+CellState::CellState(mwmp::CellState state) : state(std::move(state))
 {
 
 }
 
-int CellState::getStateType() const
+mwmp::CellState::Type CellState::getStateType() const
 {
     return state.type;
 }

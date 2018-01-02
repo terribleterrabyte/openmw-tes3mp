@@ -16,7 +16,7 @@ public:
     static void Init(LuaState &lua);
     bool isEquipmentChanged();
     void resetEquipmentFlag();
-    int inventoryChangeType();
+    mwmp::InventoryChanges::Type inventoryChangeType();
     void resetInventoryFlag();
 public:
     explicit Inventory(NetActor *netActor);
@@ -57,7 +57,7 @@ private:
     // not controlled pointer
     NetActor *netActor;
     bool equipmentChanged;
-    int inventoryChanged;
+    mwmp::InventoryChanges::Type inventoryChanged;
 };
 
 

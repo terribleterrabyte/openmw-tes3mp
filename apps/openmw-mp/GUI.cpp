@@ -39,7 +39,7 @@ void GUI::messageBox(int id, const char *label)
 {
     player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
-    player->guiMessageBox.type = Player::GUIMessageBox::MessageBox;
+    player->guiMessageBox.type = Player::GUIMessageBox::Type::MessageBox;
 
     setChanged();
 }
@@ -49,7 +49,7 @@ void GUI::customMessageBox(int id, const char *label, const char *buttons)
     player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
     player->guiMessageBox.buttons = buttons;
-    player->guiMessageBox.type = Player::GUIMessageBox::CustomMessageBox;
+    player->guiMessageBox.type = Player::GUIMessageBox::Type::CustomMessageBox;
 
     setChanged();
 }
@@ -58,7 +58,7 @@ void GUI::inputDialog(int id, const char *label)
 {
     player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
-    player->guiMessageBox.type = Player::GUIMessageBox::InputDialog;
+    player->guiMessageBox.type = Player::GUIMessageBox::Type::InputDialog;
 
     setChanged();
 }
@@ -68,7 +68,7 @@ void GUI::passwordDialog(int id, const char *label, const char *note)
     player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
     player->guiMessageBox.note = note;
-    player->guiMessageBox.type = Player::GUIMessageBox::PasswordDialog;
+    player->guiMessageBox.type = Player::GUIMessageBox::Type::PasswordDialog;
 
     setChanged();
 }
@@ -78,7 +78,7 @@ void GUI::listBox(int id, const char *label, const char *items)
     player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
     player->guiMessageBox.data = items;
-    player->guiMessageBox.type = Player::GUIMessageBox::ListBox;
+    player->guiMessageBox.type = Player::GUIMessageBox::Type::ListBox;
 
     setChanged();
 }

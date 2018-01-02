@@ -31,7 +31,7 @@ LocalActor::LocalActor()
     wasForceMoveJumping = false;
     wasFlying = false;
 
-    attack.type = Attack::MELEE;
+    attack.type = Attack::Type::Melee;
     attack.shouldSend = false;
     attack.instant = false;
 
@@ -237,7 +237,7 @@ void LocalActor::updateAttack()
 {
     if (attack.shouldSend)
     {
-        if (attack.type == Attack::MAGIC)
+        if (attack.type == Attack::Type::Magic)
         {
             MWMechanics::CreatureStats &attackerStats = ptr.getClass().getCreatureStats(ptr);
             attack.spellId = attackerStats.getSpells().getSelectedSpell();

@@ -1098,7 +1098,7 @@ bool CharacterController::updateCreatureState()
                     if (localAttack)
                     {
                         MechanicsHelper::resetAttack(localAttack);
-                        localAttack->type = mwmp::Attack::MAGIC;
+                        localAttack->type = mwmp::Attack::Type::Magic;
                         localAttack->pressed = true;
                         localAttack->shouldSend = true;
                     }
@@ -1379,7 +1379,7 @@ bool CharacterController::updateWeaponState()
                     if (localAttack)
                     {
                         MechanicsHelper::resetAttack(localAttack);
-                        localAttack->type = mwmp::Attack::MAGIC;
+                        localAttack->type = mwmp::Attack::Type::Magic;
                         localAttack->pressed = true;
                         localAttack->shouldSend = true;
                     }

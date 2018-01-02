@@ -15,30 +15,37 @@ void mwmp::PacketPreInit::Packet(RakNet::BitStream *bs, bool send)
 {
     BasePacket::Packet(bs, send);
 
-    size_t size = checksums->size();
+    uint16_t size = checksums->size();
     RW(size, send);
 
-    for (size_t i = 0; i < size; i++)
+    if(!send)
     {
-        PluginPair ppair;
-        if (send)
-            ppair = (*checksums)[i];
+        if(size > 256)
+            return;
+        checksums->clear();
+        checksums->resize(size);
+    }
 
+
+    for (auto &&ppair : *checksums)
+    {
         RW(ppair.first, send);
 
-        size_t hashSize = ppair.second.size();
+        uint8_t hashSize = ppair.second.size();
+
         RW(hashSize, send);
-        for (size_t j = 0; j < hashSize; j++)
+
+        if(!send)
         {
-            unsigned hash;
-            if (send)
-                hash = ppair.second[j];
-            RW(hash, send);
-            if (!send)
-                ppair.second.push_back(hash);
+            if(hashSize > 16)
+                return;
+            ppair.second.resize(hashSize);
         }
-        if (!send)
-            checksums->push_back(ppair);
+
+        for (auto &&hash :ppair.second)
+        {
+            RW(hash, send);
+        }
     }
 }
 

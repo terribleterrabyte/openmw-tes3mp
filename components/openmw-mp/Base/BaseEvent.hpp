@@ -76,12 +76,12 @@ namespace mwmp
 
         }
 
-        enum WORLD_ACTION
+        enum class Action : uint8_t
         {
-            SET = 0,
-            ADD = 1,
-            REMOVE = 2,
-            REQUEST = 3
+            Set = 0,
+            Add,
+            Remove,
+            Request
         };
 
         RakNet::RakNetGUID guid;
@@ -91,7 +91,7 @@ namespace mwmp
         ESM::Cell cell;
         std::string consoleCommand;
 
-        unsigned char action; // 0 - Clear and set in entirety, 1 - Add item, 2 - Remove item, 3 - Request items
+        Action action;
 
         bool isValid;
     };

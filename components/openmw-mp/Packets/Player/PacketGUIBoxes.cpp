@@ -23,9 +23,9 @@ void PacketGUIBoxes::Packet(RakNet::BitStream *bs, bool send)
 
     RW(player->guiMessageBox.data, send);
 
-    if (player->guiMessageBox.type == BasePlayer::GUIMessageBox::CustomMessageBox)
+    if (player->guiMessageBox.type == BasePlayer::GUIMessageBox::Type::CustomMessageBox)
         RW(player->guiMessageBox.buttons, send);
-    else if (player->guiMessageBox.type == BasePlayer::GUIMessageBox::PasswordDialog)
+    else if (player->guiMessageBox.type == BasePlayer::GUIMessageBox::Type::PasswordDialog)
         RW(player->guiMessageBox.note, send);
 }
 

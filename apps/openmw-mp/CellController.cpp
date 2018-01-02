@@ -140,7 +140,7 @@ void CellController::update(Player *player)
 {
     for (auto cell : player->cellStateChanges.cellStates)
     {
-        if (cell.type == mwmp::CellState::LOAD)
+        if (cell.type == mwmp::CellState::Type::Load)
         {
             Cell *c = addCell(cell.cell);
             c->addPlayer(player);

@@ -114,7 +114,7 @@ namespace MWGui
         mwmp::WorldEvent *worldEvent = mwmp::Main::get().getNetworking()->getWorldEvent();
         worldEvent->reset();
         worldEvent->cell = *mPtr.getCell()->getCell();
-        worldEvent->action = mwmp::BaseEvent::REMOVE;
+        worldEvent->action = mwmp::BaseEvent::Action::Remove;
 
         mwmp::WorldObject worldObject;
         worldObject.refId = mPtr.getCellRef().getRefId();
@@ -160,7 +160,7 @@ namespace MWGui
             mwmp::WorldEvent *worldEvent = mwmp::Main::get().getNetworking()->getWorldEvent();
             worldEvent->reset();
             worldEvent->cell = *mPtr.getCell()->getCell();
-            worldEvent->action = mwmp::BaseEvent::ADD;
+            worldEvent->action = mwmp::BaseEvent::Action::Add;
 
             mwmp::WorldObject worldObject;
             worldObject.refId = mPtr.getCellRef().getRefId();
@@ -330,7 +330,7 @@ namespace MWGui
         mwmp::WorldEvent *worldEvent = mwmp::Main::get().getNetworking()->getWorldEvent();
         worldEvent->reset();
         worldEvent->cell = *mPtr.getCell()->getCell();
-        worldEvent->action = mwmp::BaseEvent::SET;
+        worldEvent->action = mwmp::BaseEvent::Action::Set;
 
         mwmp::WorldObject worldObject;
         worldObject.refId = mPtr.getCellRef().getRefId();

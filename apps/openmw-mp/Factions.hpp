@@ -43,8 +43,8 @@ public:
     ~Factions();
 
 
-    int getFactionChangesAction() const;
-    void setFactionChangesAction(int action);
+    mwmp::FactionChanges::Type getFactionChangesAction() const;
+    void setFactionChangesAction(mwmp::FactionChanges::Type action);
 
     void addFaction(Faction faction);
     Faction getFaction(int id) const;

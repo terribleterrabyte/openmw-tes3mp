@@ -222,7 +222,7 @@ namespace MWMechanics
             if (localAttack && localAttack->pressed != storage.mAttack)
             {
                 MechanicsHelper::resetAttack(localAttack);
-                localAttack->type = mwmp::Attack::MELEE;
+                localAttack->type = mwmp::Attack::Type::Melee;
                 localAttack->pressed = storage.mAttack;
                 localAttack->shouldSend = true;
             }
@@ -291,10 +291,10 @@ namespace MWMechanics
             */
             mwmp::Attack *localAttack = MechanicsHelper::getLocalAttack(actor);
 
-            if (localAttack && localAttack->pressed != false)
+            if (localAttack && localAttack->pressed)
             {
                 MechanicsHelper::resetAttack(localAttack);
-                localAttack->type = mwmp::Attack::MELEE;
+                localAttack->type = mwmp::Attack::Type::Melee;
                 localAttack->pressed = false;
                 localAttack->shouldSend = true;
             }
@@ -644,10 +644,10 @@ namespace MWMechanics
                 */
                 mwmp::Attack *localAttack = MechanicsHelper::getLocalAttack(actor);
 
-                if (localAttack && localAttack->pressed != true)
+                if (localAttack && !localAttack->pressed)
                 {
                     MechanicsHelper::resetAttack(localAttack);
-                    localAttack->type = mwmp::Attack::MELEE;
+                    localAttack->type = mwmp::Attack::Type::Melee;
                     localAttack->pressed = true;
                     localAttack->shouldSend = true;
                 }

@@ -18,12 +18,12 @@ namespace mwmp
         void Do(WorldPacket &packet, const std::shared_ptr<Player> &player, BaseEvent &event) override
         {
             LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Received %s from %s", strPacketID.c_str(), player->npc.mName.c_str());
-            LOG_APPEND(Log::LOG_INFO, "- action: %i", event.action);
+            LOG_APPEND(Log::LOG_INFO, "- action: %i", (int) event.action);
 
             // Until we have a timestamp-based system, send packets pertaining to more
             // than one container (i.e. replies to server requests for container contents)
             // only to players who have the container's cell loaded
-            if (event.action == BaseEvent::SET && event.worldObjects.size() > 1)
+            if (event.action == BaseEvent::Action::Set && event.worldObjects.size() > 1)
             {
                 Cell *serverCell = CellController::get().getCell(event.cell);
 

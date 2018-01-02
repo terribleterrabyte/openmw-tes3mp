@@ -25,8 +25,8 @@ public:
     int getIndex() const;
     void setIndex(int index);
 
-    int getType() const;
-    void setType(int type);
+    mwmp::JournalItem::Type getType() const;
+    void setType(mwmp::JournalItem::Type type);
 
     std::string getActorRefId() const;
     void setActorRefId(const std::string &refid);

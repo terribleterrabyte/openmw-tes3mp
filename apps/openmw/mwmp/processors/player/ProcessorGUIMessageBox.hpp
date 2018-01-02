@@ -22,22 +22,22 @@ namespace mwmp
         {
             if (isLocal())
             {
-                LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "ID_GUI_MESSAGEBOX, Type %d, MSG %s", player->guiMessageBox.type,
+                LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "ID_GUI_MESSAGEBOX, Type %d, MSG %s", (int) player->guiMessageBox.type,
                                    player->guiMessageBox.label.c_str());
 
                 switch(player->guiMessageBox.type)
                 {
-                    case BasePlayer::GUIMessageBox::MessageBox:
+                    case BasePlayer::GUIMessageBox::Type::MessageBox:
                         Main::get().getGUIController()->showMessageBox(player->guiMessageBox);
                         break;
-                    case BasePlayer::GUIMessageBox::CustomMessageBox:
+                    case BasePlayer::GUIMessageBox::Type::CustomMessageBox:
                         Main::get().getGUIController()->showCustomMessageBox(player->guiMessageBox);
                         break;
-                    case BasePlayer::GUIMessageBox::InputDialog:
-                    case BasePlayer::GUIMessageBox::PasswordDialog:
+                    case BasePlayer::GUIMessageBox::Type::InputDialog:
+                    case BasePlayer::GUIMessageBox::Type::PasswordDialog:
                         Main::get().getGUIController()->showInputBox(player->guiMessageBox);
                         break;
-                    case BasePlayer::GUIMessageBox::ListBox:
+                    case BasePlayer::GUIMessageBox::Type::ListBox:
                         Main::get().getGUIController()->showDialogList(player->guiMessageBox);
                         break;
                 }

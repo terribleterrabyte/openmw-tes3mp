@@ -69,13 +69,13 @@ void WorldEvent::editContainers(MWWorld::CellStore* cellStore)
             MWWorld::ContainerStore& containerStore = ptrFound.getClass().getContainerStore(ptrFound);
 
             // If we are setting the entire contents, clear the current ones
-            if (action == BaseEvent::SET)
+            if (action == BaseEvent::Action::Set)
                 containerStore.clear();
 
             MWWorld::Ptr ownerPtr = MWBase::Environment::get().getWorld()->getPlayerPtr();
             for (const auto &containerItem : worldObject.containerItems)
             {
-                if (action == BaseEvent::ADD || action == BaseEvent::SET)
+                if (action == BaseEvent::Action::Add || action == BaseEvent::Action::Set)
                 {
                     // Create a ManualRef to be able to set item charge
                     MWWorld::ManualRef ref(MWBase::Environment::get().getWorld()->getStore(), containerItem.refId, 1);
@@ -92,7 +92,7 @@ void WorldEvent::editContainers(MWWorld::CellStore* cellStore)
 
                     containerStore.add(newPtr, containerItem.count, ownerPtr, true);
                 }
-                else if (action == BaseEvent::REMOVE)
+                else if (action == BaseEvent::Action::Remove)
                 {
                     // We have to find the right item ourselves because ContainerStore has no method
                     // accounting for charge
@@ -122,8 +122,8 @@ void WorldEvent::editContainers(MWWorld::CellStore* cellStore)
 
             // Was this a SET or ADD action on an actor's container, and are we the authority
             // over the actor? If so, autoequip the actor
-            if ((action == BaseEvent::ADD || action == BaseEvent::SET) && ptrFound.getClass().isActor() &&
-                mwmp::Main::get().getCellController()->isLocalActor(ptrFound))
+            if ((action == BaseEvent::Action::Add || action == BaseEvent::Action::Set) && ptrFound.getClass().isActor()
+                && mwmp::Main::get().getCellController()->isLocalActor(ptrFound))
             {
                 MWWorld::InventoryStore& invStore = ptrFound.getClass().getInventoryStore(ptrFound);
                 invStore.autoEquip(ptrFound);
@@ -941,7 +941,7 @@ void WorldEvent::sendContainers(MWWorld::CellStore* cellStore)
 {
     reset();
     cell = *cellStore->getCell();
-    action = BaseEvent::SET;
+    action = BaseEvent::Action::Set;
 
     MWWorld::CellRefList<ESM::Container> *containerList = cellStore->getContainers();
 
