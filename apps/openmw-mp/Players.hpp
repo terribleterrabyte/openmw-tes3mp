@@ -11,6 +11,7 @@
 #include <boost/multi_index/global_fun.hpp>
 #include <boost/multi_index/mem_fun.hpp>
 #include <boost/multi_index/random_access_index.hpp>
+#include <queue>
 #include "Player.hpp"
 
 class LuaState;
@@ -18,6 +19,7 @@ class LuaState;
 
 class Players
 {
+    friend class Player;
 public:
     static void Init(LuaState &lua);
 public:
@@ -47,7 +49,11 @@ public:
 
     static void for_each(std::function<void(std::shared_ptr<Player>)> func);
 
+    static void processUpdated();
 private:
+    static void addToQueue(Player *player);
+
     static Store store;
+    static std::queue<Player*> updateQueue;
 };
 

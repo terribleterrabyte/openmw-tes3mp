@@ -7,6 +7,7 @@
 using namespace std;
 
 Players::Store Players::store;
+std::queue<Player*> Players::updateQueue;
 
 void Players::Init(LuaState &lua)
 {
@@ -123,4 +124,20 @@ Players::Store::const_iterator Players::end()
 size_t Players::size()
 {
     return store.size();
+}
+
+void Players::processUpdated()
+{
+    while (!updateQueue.empty())
+    {
+        Player *player = updateQueue.front();
+        updateQueue.pop();
+        player->update();
+    }
+}
+
+
+void Players::addToQueue(Player *player)
+{
+    updateQueue.push(player);
 }

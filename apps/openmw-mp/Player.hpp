@@ -191,6 +191,8 @@ public:
 
     bool isMarkedForDeleteion() const;
 
+    void addToUpdateQueue();
+
 private:
     CellController::TContainer cells;
     int handshakeCounter;
@@ -209,6 +211,7 @@ private:
     sol::table storedData;
     sol::table customData;
     bool markedForDeletion;
+    bool inUpdateQueue;
 };
 
 #endif //OPENMW_PLAYER_HPP

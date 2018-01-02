@@ -21,51 +21,43 @@ void GameSettings::Init(LuaState &lua)
     );
 }
 
-GameSettings::GameSettings(Player *player) : player(player), changed(false)
+GameSettings::GameSettings(Player *player) : BaseMgr(player)
 {
 
-}
-
-GameSettings::~GameSettings()
-{
 }
 
 void GameSettings::setConsoleAllowed(bool state)
 {
     player->consoleAllowed = state;
-    changed = true;
+    setChanged();
 }
 
 void GameSettings::setDifficulty(int difficulty)
 {
     player->difficulty = difficulty;
-    changed = true;
+    setChanged();
 }
 
 void GameSettings::setBedRestAllowed(bool state)
 {
     player->bedRestAllowed = state;
-    changed = true;
+    setChanged();
 }
 
 void GameSettings::setWildernessRestAllowed(bool state)
 {
     player->wildernessRestAllowed = state;
-    changed = true;
+    setChanged();
 }
 
 void GameSettings::setWaitAllowed(bool state)
 {
     player->waitAllowed = state;
-    changed = true;
+    setChanged();
 }
 
-void GameSettings::update()
+void GameSettings::processUpdate()
 {
-    if (!changed)
-        return;
-    changed = false;
-
     auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_GAME_SETTINGS);
     packet->setPlayer(player);
     packet->Send(false);

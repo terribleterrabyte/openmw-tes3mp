@@ -6,6 +6,7 @@
 
 #include <cstddef>
 #include <components/openmw-mp/Base/BasePlayer.hpp>
+#include "BaseMgr.hpp"
 
 class LuaState;
 class Player;
@@ -34,15 +35,13 @@ public:
     mwmp::JournalItem item;
 };
 
-class Quests
+class Quests final: public BaseMgr
 {
 public:
     static void Init(LuaState &lua);
 public:
     explicit Quests(Player *player);
-    ~Quests();
 
-    void update();
 
     size_t getJournalChangesSize() const;
     size_t getKillChangesSize() const;
@@ -55,7 +54,7 @@ public:
     std::tuple<std::string, int> getKill(unsigned int i) const;
 
 private:
-    Player *player;
+    void processUpdate() final;
     bool changedKills, changedJournal;
 };
 

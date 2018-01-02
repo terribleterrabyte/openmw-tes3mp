@@ -5,6 +5,7 @@
 #pragma once
 
 #include <components/esm/records.hpp>
+#include "BaseMgr.hpp"
 
 class LuaState;
 class Player;
@@ -72,15 +73,12 @@ public:
     ESM::Spell spell;
 };
 
-class Spells
+class Spells final: public BaseMgr
 {
 public:
     static void Init(LuaState &lua);
 public:
     explicit Spells(Player *player);
-    ~Spells();
-    
-    void update();
 
     void addCustomSpell(Spell spell);
     Spell getCustomSpell(unsigned int i);
@@ -90,9 +88,7 @@ public:
     
 private:
     void clear();
-
-    Player *player;
-    bool changed;
+    void processUpdate() final;
 };
 
 

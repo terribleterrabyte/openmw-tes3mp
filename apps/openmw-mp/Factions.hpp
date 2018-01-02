@@ -6,6 +6,7 @@
 
 #include <string>
 #include <components/openmw-mp/Base/BasePlayer.hpp>
+#include "BaseMgr.hpp"
 
 class LuaState;
 class Player;
@@ -33,7 +34,7 @@ public:
     mwmp::Faction faction;
 };
 
-class Factions
+class Factions final: public BaseMgr
 {
 public:
     static void Init(LuaState &lua);
@@ -41,7 +42,6 @@ public:
     explicit Factions(Player *player);
     ~Factions();
 
-    void update();
 
     int getFactionChangesAction() const;
     void setFactionChangesAction(int action);
@@ -53,7 +53,5 @@ public:
     void clear();
 
 private:
-    mwmp::Faction tempFaction;
-    Player *player;
-    bool changed;
+    void processUpdate() final;
 };

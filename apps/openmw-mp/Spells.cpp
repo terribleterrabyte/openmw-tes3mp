@@ -217,22 +217,13 @@ void Spells::Init(LuaState &lua)
     );
 }
 
-Spells::Spells(Player *player) : player(player), changed(false)
+Spells::Spells(Player *player) : BaseMgr(player)
 {
 
 }
 
-Spells::~Spells()
+void Spells::processUpdate()
 {
-
-}
-
-void Spells::update()
-{
-    if (!changed)
-        return;
-    changed = false;
-
     auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_SPELLBOOK);
     packet->setPlayer(player);
     packet->Send(false);
@@ -240,18 +231,18 @@ void Spells::update()
 
 void Spells::addCustomSpell(Spell spell)
 {
-    if (!changed)
+    if (!isChanged())
         clear();
-    changed = true;
+    setChanged();
 
     player->spellbookChanges.spells.push_back(spell.spell);
 }
 
 void Spells::addDefaultSpell(const std::string &spell)
 {
-    if (!changed)
+    if (!isChanged())
         clear();
-    changed = true;
+    setChanged();
 
     ESM::Spell s;
     s.mId = spell;

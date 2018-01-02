@@ -23,22 +23,13 @@ void GUI::Init(LuaState &lua)
     Window::Init(lua);
 }
 
-GUI::GUI(Player *player): player(player), changed(false)
+GUI::GUI(Player *player): BaseMgr(player)
 {
 
 }
 
-GUI::~GUI()
+void GUI::processUpdate()
 {
-
-}
-
-void GUI::update()
-{
-    if (!changed)
-        return;
-    changed = false;
-
     auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_GUI_MESSAGEBOX);
     packet->setPlayer(player);
     packet->Send(false);
@@ -50,7 +41,7 @@ void GUI::messageBox(int id, const char *label)
     player->guiMessageBox.label = label;
     player->guiMessageBox.type = Player::GUIMessageBox::MessageBox;
 
-    changed = true;
+    setChanged();
 }
 
 void GUI::customMessageBox(int id, const char *label, const char *buttons)
@@ -60,7 +51,7 @@ void GUI::customMessageBox(int id, const char *label, const char *buttons)
     player->guiMessageBox.buttons = buttons;
     player->guiMessageBox.type = Player::GUIMessageBox::CustomMessageBox;
 
-    changed = true;
+    setChanged();
 }
 
 void GUI::inputDialog(int id, const char *label)
@@ -69,7 +60,7 @@ void GUI::inputDialog(int id, const char *label)
     player->guiMessageBox.label = label;
     player->guiMessageBox.type = Player::GUIMessageBox::InputDialog;
 
-    changed = true;
+    setChanged();
 }
 
 void GUI::passwordDialog(int id, const char *label, const char *note)
@@ -79,7 +70,7 @@ void GUI::passwordDialog(int id, const char *label, const char *note)
     player->guiMessageBox.note = note;
     player->guiMessageBox.type = Player::GUIMessageBox::PasswordDialog;
 
-    changed = true;
+    setChanged();
 }
 
 void GUI::listBox(int id, const char *label, const char *items)
@@ -89,7 +80,7 @@ void GUI::listBox(int id, const char *label, const char *items)
     player->guiMessageBox.data = items;
     player->guiMessageBox.type = Player::GUIMessageBox::ListBox;
 
-    changed = true;
+    setChanged();
 }
 
 void GUI::setMapVisibility(unsigned short targetPID, unsigned short affectedPID, unsigned short state)
@@ -155,32 +146,23 @@ void QuickKeys::Init(LuaState &lua)
         );
 }
 
-QuickKeys::QuickKeys(Player *player) : player(player), changed(false)
+QuickKeys::QuickKeys(Player *player) : BaseMgr(player)
 {
 
 }
 
-QuickKeys::~QuickKeys()
+void QuickKeys::processUpdate()
 {
-
-}
-
-void QuickKeys::update()
-{
-    if (!changed)
-        return;
-    changed = false;
-
     auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_QUICKKEYS);
     packet->setPlayer(player);
     packet->Send(false);
     clear();
 }
 
-void QuickKeys::addQuickKey(QuickKey quickKey)
+void QuickKeys::addQuickKey(const QuickKey &quickKey)
 {
     player->quickKeyChanges.quickKeys.push_back(quickKey.quickKey);
-    changed = true;
+    setChanged();
 }
 
 
@@ -192,13 +174,13 @@ QuickKey QuickKeys::getQuickKey(int id) const
 void QuickKeys::setQuickKey(int id, const QuickKey &quickKey)
 {
     player->quickKeyChanges.quickKeys.at(id) = quickKey.quickKey;
-    changed = true;
+    setChanged();
 }
 
 void QuickKeys::clear()
 {
     player->quickKeyChanges.quickKeys.clear();
-    changed = true;
+    setChanged();
 }
 
 size_t QuickKeys::size() const

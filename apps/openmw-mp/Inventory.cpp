@@ -12,6 +12,7 @@
 
 #include "Inventory.hpp"
 #include "NetActor.hpp"
+#include <Player.hpp>
 
 using namespace std;
 
@@ -45,6 +46,26 @@ Inventory::~Inventory()
 void Inventory::update()
 {
     printf("Inventory::update()");
+    /*if(isEquipmentChanged())
+    {
+        if (netActor->isPlayer())
+        {
+            auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_EQUIPMENT);
+            packet->setPlayer(dynamic_cast<Player *>(netActor));
+            packet->Send(false);
+            packet->Send(true);
+        }
+        else
+        {
+            auto packet = mwmp::Networking::get().getActorPacketController()->GetPacket(ID_ACTOR_EQUIPMENT);
+            packet->setActorList(&actorList);
+            packet->Send(actorList.guid);
+
+            if (sendToAll)
+                serverCell->sendToLoaded(packet, &actorList);
+        }
+        resetEquipmentFlag();
+    }*/
     /*if (equipmentChanged)
     {
         auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_EQUIPMENT);
@@ -86,6 +107,9 @@ void Inventory::equipItem(unsigned short slot, const std::string& refId, unsigne
     if (!Utils::vectorContains(&netActor->getNetCreature()->equipmentIndexChanges, slot))
         netActor->getNetCreature()->equipmentIndexChanges.push_back(slot);
 
+    if(!equipmentChanged && netActor->isPlayer())
+        netActor->toPlayer()->addToUpdateQueue();
+
     equipmentChanged = true;
 }
 
@@ -110,6 +134,8 @@ void Inventory::addItem(const std::string &refId, unsigned int count, int charge
 
     netActor->getNetCreature()->inventoryChanges.items.push_back(item);
     netActor->getNetCreature()->inventoryChanges.action = mwmp::InventoryChanges::ADD;
+    if (inventoryChanged == 0 && netActor->isPlayer())
+        netActor->toPlayer()->addToUpdateQueue();
     inventoryChanged = netActor->getNetCreature()->inventoryChanges.action;
 }
 
@@ -126,6 +152,8 @@ void Inventory::removeItem(const std::string &refId, unsigned short count)
 
     netActor->getNetCreature()->inventoryChanges.items.push_back(item);
     netActor->getNetCreature()->inventoryChanges.action = mwmp::InventoryChanges::REMOVE;
+    if (inventoryChanged == 0 && netActor->isPlayer())
+        netActor->toPlayer()->addToUpdateQueue();
     inventoryChanged = netActor->getNetCreature()->inventoryChanges.action;
 }
 

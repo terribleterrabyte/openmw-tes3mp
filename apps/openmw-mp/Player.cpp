@@ -123,12 +123,21 @@ Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedM
     markedForDeletion = false;
     storedData = mwmp::Networking::get().getState().getState()->create_table();
     customData = mwmp::Networking::get().getState().getState()->create_table();
+    isActorPlayer = true;
 }
 
 Player::~Player()
 {
     printf("Player::~Player()\n");
     CellController::get().deletePlayer(this);
+}
+
+void Player::addToUpdateQueue()
+{
+    if (inUpdateQueue)
+        return;
+    inUpdateQueue = true;
+    Players::addToQueue(this);
 }
 
 void Player::update()
@@ -236,6 +245,7 @@ void Player::update()
     weatherMgr.update();
 
     resetUpdateFlags();
+    inUpdateQueue = false;
 }
 
 unsigned short Player::getId()

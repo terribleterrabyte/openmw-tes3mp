@@ -6,16 +6,16 @@
 
 #include <components/openmw-mp/Base/BasePlayer.hpp>
 #include <apps/openmw-mp/Script/LuaState.hpp>
+#include "BaseMgr.hpp"
 
 class Player;
 
-class Window
+class Window final: public BaseMgr
 {
 public:
     static void Init(LuaState &lua);
 public:
     Window(Player *player, int id);
-    ~Window();
 
 
     void setSize(short x, short y);
@@ -34,10 +34,9 @@ public:
     void addPassiveListBox(short x, short y, short w, short h,const std::string &id, sol::table data, sol::optional<bool> active);
     void addActiveListBox(short x, short y, short w, short h,const std::string &id, sol::table data, sol::optional<bool> active);
     void addSlider(short x, short y, short w, short h,const std::string &id, sol::optional<bool> active);
-private:
-    Player *player;
-    bool changed;
 
+private:
+    void processUpdate() final;
     sol::function callback;
     mwmp::BasePlayer::GUIWindow guiWindow;
 };

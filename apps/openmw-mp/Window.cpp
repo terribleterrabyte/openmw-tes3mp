@@ -26,14 +26,9 @@ void Window::Init(LuaState &lua)
     );
 }
 
-Window::Window(Player *player, int id) : player(player)
+Window::Window(Player *player, int id) : BaseMgr(player)
 {
     guiWindow.id = id;
-}
-
-Window::~Window()
-{
-
 }
 
 void Window::show()
@@ -212,4 +207,9 @@ void Window::addSlider(short x, short y, short w, short h, const std::string &id
     else
         widget.disabled = false;
     guiWindow.widgets.push_back(widget);
+}
+
+void Window::processUpdate()
+{
+    // Currently not used
 }

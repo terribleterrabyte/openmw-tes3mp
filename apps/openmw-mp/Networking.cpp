@@ -474,13 +474,7 @@ int Networking::mainLoop()
         }
         timerCtrl.tick();
         if (updated)
-        {
-            // fixme: not good to call for_each every frame. Maybe for_each_Updated will be better
-            Players::for_each([](shared_ptr<Player> pl) {
-                pl->update();
-            });
-        }
-        this_thread::sleep_for (chrono::milliseconds(1));
+            Players::processUpdated();
     }
 
     timerCtrl.terminate();

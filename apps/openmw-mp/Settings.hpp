@@ -4,18 +4,19 @@
 
 #pragma once
 
+#include "BaseMgr.hpp"
+
 class LuaState;
 class Player;
 
 
-class GameSettings
+class GameSettings final: public BaseMgr
 {
 public:
     static void Init(LuaState &lua);
 public:
 
     explicit GameSettings(Player *player);
-    ~GameSettings();
 
     void setConsoleAllowed(bool state);
 
@@ -27,8 +28,7 @@ public:
 
     void setWaitAllowed(bool state);
 
-    void update();
+
 private:
-    Player *player;
-    bool changed;
+    void processUpdate() final;
 };

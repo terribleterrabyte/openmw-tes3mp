@@ -35,9 +35,11 @@ public:
     bool isChangedCell() const;
     void resetChangedCell();
 
+
 private:
     NetActor *netActor;
     bool changedCell;
+    void setChanged();
 };
 
 

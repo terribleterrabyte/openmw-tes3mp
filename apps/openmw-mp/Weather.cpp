@@ -25,25 +25,22 @@ void WeatherMgr::Init(LuaState &lua)
     );
 }
 
-WeatherMgr::WeatherMgr(Player *player) : player(player), changed(false)
+WeatherMgr::WeatherMgr(Player *player) : BaseMgr(player)
 {
 
 }
 
 void WeatherMgr::setWeather(int weather)
 {
-    changed = true;
+    setChanged();
 
     player->weather.nextWeather = weather;
     player->weather.transitionFactor = 0.0f;
     player->weather.updateTime = 0.0f;
 }
 
-void WeatherMgr::update()
+void WeatherMgr::processUpdate()
 {
-    if (!changed)
-        return;
-    changed = false;
 
     auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_GAME_WEATHER);
 
@@ -55,7 +52,7 @@ void WeatherMgr::update()
 void WeatherMgr::setCurrent(int weather)
 {
     player->weather.currentWeather = weather;
-    changed = true;
+    setChanged();
 }
 
 int WeatherMgr::getCurrent() const
@@ -66,7 +63,7 @@ int WeatherMgr::getCurrent() const
 void WeatherMgr::setNext(int weather)
 {
     player->weather.nextWeather = weather;
-    changed = true;
+    setChanged();
 }
 
 int WeatherMgr::getNext() const
@@ -77,7 +74,7 @@ int WeatherMgr::getNext() const
 void WeatherMgr::setTransition(float time)
 {
     player->weather.transitionFactor = time;
-    changed = true;
+    setChanged();
 }
 
 float WeatherMgr::getTransition() const
@@ -88,7 +85,7 @@ float WeatherMgr::getTransition() const
 void WeatherMgr::setUpdate(float time)
 {
     player->weather.updateTime = time;
-    changed = true;
+    setChanged();
 }
 
 float WeatherMgr::getUpdate() const
@@ -104,8 +101,8 @@ void WeatherMgr::requestWeather()
 
 void WeatherMgr::copy(const WeatherMgr &other)
 {
-    if(other.player == player)
+    if (other.player == player)
         return;
     player->weather = other.player->weather;
-    changed = true;
+    setChanged();
 }

@@ -85,17 +85,12 @@ void Quests::Init(LuaState &lua)
     );
 }
 
-Quests::Quests(Player *player) : player(player), changedKills(false), changedJournal(false)
+Quests::Quests(Player *player) : BaseMgr(player), changedKills(false), changedJournal(false)
 {
 
 }
 
-Quests::~Quests()
-{
-
-}
-
-void Quests::update()
+void Quests::processUpdate()
 {
     if (changedJournal)
     {
@@ -130,13 +125,14 @@ void Quests::addJournalItem(JournalItem item)
 {
     player->journalChanges.journalItems.push_back(item.item);
     changedJournal = true;
-    
+    setChanged();
 }
 
 void Quests::setJournalItem(unsigned int id, JournalItem item)
 {
     player->journalChanges.journalItems.at(id) = item.item;
     changedJournal = true;
+    setChanged();
 }
 
 JournalItem Quests::getJournalItem(unsigned int id)
@@ -148,6 +144,7 @@ void Quests::addKill(const std::string &refId, int number)
 {
     player->killChanges.kills.push_back({refId, number});
     changedKills = true;
+    setChanged();
 }
 
 std::tuple<std::string, int> Quests::getKill(unsigned int i) const

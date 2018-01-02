@@ -5,11 +5,12 @@
 #pragma once
 
 #include <string>
+#include "BaseMgr.hpp"
 
 class LuaState;
 class Player;
 
-class Dialogue
+class Dialogue final: public BaseMgr
 {
 public:
     static void Init(LuaState &lua);
@@ -24,10 +25,8 @@ public:
     void playSpeech(const std::string &sound);
 
     void reset();
-    void update();
 private:
-    Player *player;
-    bool changed;
+    void processUpdate() final;
 };
 
 

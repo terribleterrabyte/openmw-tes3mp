@@ -21,7 +21,7 @@ void Dialogue::Init(LuaState &lua)
 
 
 
-Dialogue::Dialogue(Player *player) : player(player), changed(false)
+Dialogue::Dialogue(Player *player) : BaseMgr(player)
 {
 
 }
@@ -32,12 +32,8 @@ void Dialogue::reset()
     player->topicChanges.topics.clear();
 }
 
-void Dialogue::update()
+void Dialogue::processUpdate()
 {
-    if (!changed)
-        return;
-    changed = false;
-
     auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_TOPIC);
 
     packet->setPlayer(player);
@@ -46,9 +42,9 @@ void Dialogue::update()
 
 void Dialogue::addTopic(const std::string &topicId)
 {
-    if (!changed)
+    if (!isChanged())
         reset();
-    changed = true;
+    setChanged();
     player->topicChanges.topics.push_back({topicId});
 }
 

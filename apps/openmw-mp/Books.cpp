@@ -20,22 +20,16 @@ void Books::Init(LuaState &lua)
     );
 }
 
-Books::Books(Player *player) : player(player), changed(false)
+Books::Books(Player *player) : BaseMgr(player)
 {
-
-}
-
-Books::~Books()
-{
-
 }
 
 void Books::addBook(const std::string &bookId)
 {
-    if (!changed)
+    if (!isChanged())
         reset();
     player->bookChanges.books.push_back({bookId});
-    changed = true;
+    setChanged();
 }
 
 std::string Books::getBookId(unsigned i) const
@@ -56,12 +50,8 @@ void Books::reset()
     player->bookChanges.books.clear();
 }
 
-void Books::update()
+void Books::processUpdate()
 {
-    if (!changed)
-        return;
-    changed = false;
-
     auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_BOOK);
 
     packet->setPlayer(player);

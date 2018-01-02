@@ -5,6 +5,7 @@
 #include <components/openmw-mp/NetworkMessages.hpp>
 
 #include "Script/LuaState.hpp"
+#include "Player.hpp"
 #include "Networking.hpp"
 
 #include "Cells.hpp"
@@ -45,13 +46,20 @@ std::string Cells::getDescription() const
     return netActor->getNetCreature()->cell.getDescription();
 }
 
+inline void Cells::setChanged()
+{
+    if (!changedCell && netActor->isPlayer())
+        netActor->toPlayer()->addToUpdateQueue();
+    changedCell = true;
+}
+
 void Cells::setDescription(const std::string &cellDescription)
 {
     /*LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Script is moving %s from %s to %s", netActor->getNetCreature()->npc.mName.c_str(),
                        netActor->getNetCreature()->cell.getDescription().c_str(), cellDescription.c_str());*/
 
     netActor->getNetCreature()->cell = Utils::getCellFromDescription(cellDescription);
-    changedCell = true;
+    setChanged();
 }
 
 std::tuple<int, int> Cells::getExterior() const
@@ -70,7 +78,7 @@ void Cells::setExterior(int x, int y)
 
     netActor->getNetCreature()->cell.mData.mX = x;
     netActor->getNetCreature()->cell.mData.mY = y;
-    changedCell = true;
+    setChanged();
 }
 
 bool Cells::isExterior() const

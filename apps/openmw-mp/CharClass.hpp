@@ -6,19 +6,18 @@
 
 #include <string>
 #include <tuple>
+#include "BaseMgr.hpp"
 
 class LuaState;
 class Player;
 
-class CharClass
+class CharClass final: public BaseMgr
 {
 public:
     static void Init(LuaState &lua);
 
 public:
     explicit CharClass(Player *player);
-    ~CharClass();
-    void update();
 
     std::string getDefault() const;
     void setDefault(const std::string &className);
@@ -41,10 +40,9 @@ public:
 
     std::tuple<int, int, int, int, int> getMajorSkills() const;
     void setMajorSkills(int fisrt, int second, int third, int fourth, int fifth);
+
 private:
-    // not controlled pointer
-    Player *player;
-    bool changed;
+    void processUpdate() final;
 };
 
 

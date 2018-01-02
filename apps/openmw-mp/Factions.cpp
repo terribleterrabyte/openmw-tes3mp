@@ -22,7 +22,7 @@ void Factions::Init(LuaState &lua)
     );
 }
 
-Factions::Factions(Player *player): player(player), changed(false)
+Factions::Factions(Player *player): BaseMgr(player)
 {
 
 }
@@ -32,12 +32,8 @@ Factions::~Factions()
 
 }
 
-void Factions::update()
+void Factions::processUpdate()
 {
-    if (!changed)
-        return;
-    changed = false;
-
     auto packet =mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_FACTION);
     packet->setPlayer(player);
     packet->Send(/*toOthers*/ false);
@@ -52,13 +48,13 @@ int Factions::getFactionChangesAction() const
 void Factions::setFactionChangesAction(int action)
 {
     player->factionChanges.action = action;
-    changed = true;
+    setChanged();
 }
 
 void Factions::addFaction(Faction faction)
 {
     player->factionChanges.factions.push_back(faction.faction);
-    changed = true;
+    setChanged();
 }
 
 
@@ -70,13 +66,13 @@ Faction Factions::getFaction(int id) const
 void Factions::setFaction(int id, Faction faction)
 {
     player->factionChanges.factions.at(id) = faction.faction;
-    changed = true;
+    setChanged();
 }
 
 void Factions::clear()
 {
     player->factionChanges.factions.clear();
-    changed = true;
+    setChanged();
 }
 
 size_t Factions::size() const

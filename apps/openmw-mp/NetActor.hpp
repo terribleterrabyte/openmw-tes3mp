@@ -20,6 +20,7 @@ class NetActor
 {
 public:
     NetActor();
+    virtual ~NetActor() = default;
 
     void resetUpdateFlags();
 
@@ -63,13 +64,18 @@ public:
     Cells &getCell();
 
     mwmp::BaseNetCreature *getNetCreature() { return netCreature; }
+
+    bool isPlayer() const { return isActorPlayer; }
+    Player *toPlayer();
 protected:
     bool baseInfoChanged, levelChanged, statsChanged, positionChanged, attributesChanged, skillsChanged;
+
     mwmp::BasePlayer *basePlayer;
     mwmp::BaseNetCreature *netCreature;
 
     Inventory inventory;
     Cells cellAPI;
+    bool isActorPlayer;
 };
 
 

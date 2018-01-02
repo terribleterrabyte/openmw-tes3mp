@@ -5,19 +5,17 @@
 #pragma once
 
 #include "Window.hpp"
+#include "BaseMgr.hpp"
 
 class LuaState;
 class Player;
 
-class GUI
+class GUI final: public BaseMgr
 {
 public:
     static void Init(LuaState &lua);
 public:
     explicit GUI(Player *player);
-    ~GUI();
-
-    void update();
 
     void messageBox(int id, const char *label);
 
@@ -40,8 +38,7 @@ public:
     unsigned int getChanges() const;
 
 private:
-    Player *player;
-    bool changed;
+    void processUpdate() final;
     std::unordered_map<int, std::shared_ptr<Window>> windows;
     int lastWindowId;
 };
@@ -57,8 +54,8 @@ public:
     int getSlot() const;
     void setSlot(unsigned short slot);
 
-    int getType() const;
-    void setType(int slot);
+    mwmp::QuickKey::Type getType() const;
+    void setType(mwmp::QuickKey::Type slot);
 
     std::string getItemId() const;
     void setItemId(const std::string &itemId);
@@ -66,15 +63,12 @@ public:
     mwmp::QuickKey quickKey;
 };
 
-class QuickKeys
+class QuickKeys final: public BaseMgr
 {
 public:
     static void Init(LuaState &lua);
 public:
     explicit QuickKeys(Player *player);
-    ~QuickKeys();
-
-    void update();
 
     void addQuickKey(const QuickKey &quickKey);
     QuickKey getQuickKey(int id) const;
@@ -83,6 +77,5 @@ public:
     void clear();
 
 private:
-    Player *player;
-    bool changed;
+    void processUpdate() final;
 };

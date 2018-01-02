@@ -9,10 +9,11 @@
 #include "Networking.hpp"
 
 #include "NetActor.hpp"
+#include "Player.hpp"
 
 using namespace std;
 
-NetActor::NetActor() : inventory(this), cellAPI(this)
+NetActor::NetActor() : inventory(this), cellAPI(this), isActorPlayer(false)
 {
 
 }
@@ -37,6 +38,9 @@ void NetActor::setPosition(float x, float y, float z)
     netCreature->position.pos[0] = x;
     netCreature->position.pos[1] = y;
     netCreature->position.pos[2] = z;
+
+    if(!positionChanged && isPlayer())
+        toPlayer()->addToUpdateQueue();
     positionChanged = true;
 }
 
@@ -49,6 +53,9 @@ void NetActor::setRotation(float x, float z)
 {
     netCreature->position.rot[0] = x;
     netCreature->position.rot[2] = z;
+
+    if (!positionChanged && isPlayer())
+        toPlayer()->addToUpdateQueue();
     positionChanged = true;
 }
 
@@ -65,6 +72,8 @@ void NetActor::setHealth(float base, float current)
     if (!Utils::vectorContains(&netCreature->statsDynamicIndexChanges, 0))
         netCreature->statsDynamicIndexChanges.push_back(0);
 
+    if (!statsChanged && isPlayer())
+        toPlayer()->addToUpdateQueue();
     statsChanged = true;
 }
 
@@ -81,6 +90,8 @@ void NetActor::setMagicka(float base, float current)
     if (!Utils::vectorContains(&netCreature->statsDynamicIndexChanges, 1))
         netCreature->statsDynamicIndexChanges.push_back(1);
 
+    if (!statsChanged && isPlayer())
+        toPlayer()->addToUpdateQueue();
     statsChanged = true;
 }
 
@@ -97,6 +108,8 @@ void NetActor::setFatigue(float base, float current)
     if (!Utils::vectorContains(&netCreature->statsDynamicIndexChanges, 2))
         netCreature->statsDynamicIndexChanges.push_back(2);
 
+    if (!statsChanged && isPlayer())
+        toPlayer()->addToUpdateQueue();
     statsChanged = true;
 }
 
@@ -108,4 +121,11 @@ Inventory &NetActor::getInventory()
 Cells &NetActor::getCell()
 {
     return cellAPI;
+}
+
+Player *NetActor::toPlayer()
+{
+    if (isPlayer())
+        return dynamic_cast<Player*>(this);
+    return nullptr;
 }

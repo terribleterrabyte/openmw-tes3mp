@@ -6,18 +6,17 @@
 
 #include <components/openmw-mp/Base/BasePlayer.hpp>
 #include <apps/openmw-mp/Script/LuaState.hpp>
+#include "BaseMgr.hpp"
 
 class Player;
 
-class WeatherMgr
+class WeatherMgr final: public BaseMgr
 {
 public:
     static void Init(LuaState &lua);
 public:
     explicit WeatherMgr(Player *player);
     ~WeatherMgr() = default;
-
-    void update();
 
     void setWeather(int weather);
 
@@ -38,8 +37,7 @@ public:
     void copy(const WeatherMgr &other);
 
 private:
-    Player *player;
-    bool changed;
+    void processUpdate() final;
 };
 
 
