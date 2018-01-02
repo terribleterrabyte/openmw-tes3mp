@@ -76,14 +76,13 @@ public:
 
     void update();
 
-    void addQuickKey(QuickKey quickKey);
+    void addQuickKey(const QuickKey &quickKey);
     QuickKey getQuickKey(int id) const;
-    void setQuickKey(int id, QuickKey quickKey);
+    void setQuickKey(int id, const QuickKey &quickKey);
     size_t size() const;
     void clear();
 
 private:
-    mwmp::QuickKey tempQuickKey;
     Player *player;
     bool changed;
 };

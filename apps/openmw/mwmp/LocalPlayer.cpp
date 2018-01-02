@@ -1032,9 +1032,9 @@ void LocalPlayer::setQuickKeys()
 
     for (const auto &quickKey : quickKeyChanges.quickKeys)
     {
-        LOG_APPEND(Log::LOG_INFO, "- slot: %i, type: %i, itemId: %s", quickKey.slot, quickKey.type, quickKey.itemId.c_str());
+        LOG_APPEND(Log::LOG_INFO, "- slot: %i, type: %i, itemId: %s", quickKey.slot, (int)quickKey.type, quickKey.itemId.c_str());
 
-        if (quickKey.type == QuickKey::ITEM || quickKey.type == QuickKey::ITEM_MAGIC)
+        if (quickKey.type == QuickKey::Type::Item || quickKey.type == QuickKey::Type::MagicItem)
         {
             MWWorld::InventoryStore &ptrInventory = ptrPlayer.getClass().getInventoryStore(ptrPlayer);
 
@@ -1043,18 +1043,16 @@ void LocalPlayer::setQuickKeys()
             });
 
             if (it != ptrInventory.end())
-                MWBase::Environment::get().getWindowManager()->setQuickKey(quickKey.slot, quickKey.type, (*it));
+                MWBase::Environment::get().getWindowManager()->setQuickKey(quickKey.slot, (int) quickKey.type, *it);
         }
-        else if (quickKey.type == QuickKey::MAGIC)
+        else if (quickKey.type == QuickKey::Type::Magic)
         {
             MWMechanics::Spells &ptrSpells = ptrPlayer.getClass().getCreatureStats(ptrPlayer).getSpells();
             bool hasSpell = false;
 
-            MWMechanics::Spells::TIterator iter = ptrSpells.begin();
-            for (; iter != ptrSpells.end(); iter++)
+            for (const auto &ptrSpell : ptrSpells)
             {
-                const ESM::Spell *spell = iter->first;
-                if (Misc::StringUtils::ciEqual(spell->mId, quickKey.itemId))
+                if (Misc::StringUtils::ciEqual(ptrSpell.first->mId, quickKey.itemId))
                 {
                     hasSpell = true;
                     break;
@@ -1062,10 +1060,10 @@ void LocalPlayer::setQuickKeys()
             }
 
             if (hasSpell)
-                MWBase::Environment::get().getWindowManager()->setQuickKey(quickKey.slot, quickKey.type, 0, quickKey.itemId);
+                MWBase::Environment::get().getWindowManager()->setQuickKey(quickKey.slot, (int) quickKey.type, 0, quickKey.itemId);
         }
         else
-            MWBase::Environment::get().getWindowManager()->setQuickKey(quickKey.slot, quickKey.type, 0);
+            MWBase::Environment::get().getWindowManager()->setQuickKey(quickKey.slot, (int) quickKey.type, 0);
     }
 
     isReceivingQuickKeys = false;
@@ -1274,17 +1272,17 @@ void LocalPlayer::sendSpellRemoval(const ESM::Spell &spell)
     */
 }
 
-void LocalPlayer::sendQuickKey(unsigned short slot, int type, const std::string& itemId)
+void LocalPlayer::sendQuickKey(int slot, QuickKey::Type type, const std::string& itemId)
 {
     quickKeyChanges.quickKeys.clear();
 
     mwmp::QuickKey quickKey;
-    quickKey.slot = slot;
+    quickKey.slot = static_cast<unsigned short>(slot);
     quickKey.type = type;
     quickKey.itemId = itemId;
 
     LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Sending ID_PLAYER_QUICKKEYS", itemId.c_str());
-    LOG_APPEND(Log::LOG_INFO, "- slot: %i, type: %i, itemId: %s", quickKey.slot, quickKey.type, quickKey.itemId.c_str());
+    LOG_APPEND(Log::LOG_INFO, "- slot: %i, type: %i, itemId: %s", quickKey.slot, (int) quickKey.type, quickKey.itemId.c_str());
 
     quickKeyChanges.quickKeys.push_back(quickKey);
 

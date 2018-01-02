@@ -85,16 +85,16 @@ namespace mwmp
     {
         std::string itemId;
 
-        enum QUICKKEY_TYPE
+        enum class Type : uint8_t
         {   
-            ITEM = 0,
-            MAGIC = 1,
-            ITEM_MAGIC = 2,
-            UNASSIGNED = 3
+            Item = 0,
+            Magic,
+            MagicItem,
+            Unassigned
         };
 
         unsigned short slot;
-        int type;
+        Type type;
     };
 
     struct CellState

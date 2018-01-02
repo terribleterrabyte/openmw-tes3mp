@@ -74,7 +74,7 @@ namespace mwmp
         void sendSpellAddition(const ESM::Spell &spell);
         void sendSpellRemoval(std::string id);
         void sendSpellRemoval(const ESM::Spell &spell);
-        void sendQuickKey(unsigned short slot, int type, const std::string& itemId = "");
+        void sendQuickKey(int slot, QuickKey::Type type, const std::string& itemId = "");
         void sendJournalEntry(const std::string& quest, int index, const MWWorld::Ptr& actor);
         void sendJournalIndex(const std::string& quest, int index);
         void sendFactionRank(const std::string& factionId, int rank);

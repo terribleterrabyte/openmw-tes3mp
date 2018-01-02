@@ -189,7 +189,7 @@ QuickKey QuickKeys::getQuickKey(int id) const
     return QuickKey(player->quickKeyChanges.quickKeys.at(id));
 }
 
-void QuickKeys::setQuickKey(int id, QuickKey quickKey)
+void QuickKeys::setQuickKey(int id, const QuickKey &quickKey)
 {
     player->quickKeyChanges.quickKeys.at(id) = quickKey.quickKey;
     changed = true;
@@ -230,12 +230,12 @@ void QuickKey::setSlot(unsigned short slot)
     quickKey.slot = slot;
 }
 
-int QuickKey::getType() const
+mwmp::QuickKey::Type QuickKey::getType() const
 {
     return quickKey.type;
 }
 
-void QuickKey::setType(int type)
+void QuickKey::setType(mwmp::QuickKey::Type type)
 {
     quickKey.type = type;
 }

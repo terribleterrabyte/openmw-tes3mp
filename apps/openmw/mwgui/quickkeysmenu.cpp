@@ -128,7 +128,7 @@ namespace MWGui
         */
         if (mwmp::Main::get().getLocalPlayer()->hasFinishedCharGen() && !mwmp::Main::get().getLocalPlayer()->isReceivingQuickKeys)
         {
-            mwmp::Main::get().getLocalPlayer()->sendQuickKey(index, Type_Unassigned);
+            mwmp::Main::get().getLocalPlayer()->sendQuickKey(index, mwmp::QuickKey::Type::Unassigned);
         }
         /*
             End of tes3mp addition
@@ -235,7 +235,7 @@ namespace MWGui
             Send a PLAYER_QUICKKEYS packet whenever a key is assigned to an item
         */
         if (!mwmp::Main::get().getLocalPlayer()->isReceivingQuickKeys)
-            mwmp::Main::get().getLocalPlayer()->sendQuickKey(mSelectedIndex, Type_Item, item.getCellRef().getRefId());
+            mwmp::Main::get().getLocalPlayer()->sendQuickKey(mSelectedIndex, mwmp::QuickKey::Type::Item, item.getCellRef().getRefId());
         /*
             End of tes3mp addition
         */
@@ -270,7 +270,7 @@ namespace MWGui
             Send a PLAYER_QUICKKEYS packet whenever a key is assigned to an item's magic
         */
         if (!mwmp::Main::get().getLocalPlayer()->isReceivingQuickKeys)
-            mwmp::Main::get().getLocalPlayer()->sendQuickKey(mSelectedIndex, Type_MagicItem, item.getCellRef().getRefId());
+            mwmp::Main::get().getLocalPlayer()->sendQuickKey(mSelectedIndex, mwmp::QuickKey::Type::MagicItem, item.getCellRef().getRefId());
         /*
             End of tes3mp addition
         */
@@ -315,7 +315,7 @@ namespace MWGui
             Send a PLAYER_QUICKKEYS packet whenever a key is assigned to a spell
         */
         if (!mwmp::Main::get().getLocalPlayer()->isReceivingQuickKeys)
-            mwmp::Main::get().getLocalPlayer()->sendQuickKey(mSelectedIndex, Type_Magic, spellId);
+            mwmp::Main::get().getLocalPlayer()->sendQuickKey(mSelectedIndex, mwmp::QuickKey::Type::Magic, spellId);
         /*
             End of tes3mp addition
         */

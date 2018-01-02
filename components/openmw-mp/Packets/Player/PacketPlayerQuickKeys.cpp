@@ -25,7 +25,7 @@ void PacketPlayerQuickKeys::Packet(RakNet::BitStream *bs, bool send)
         RW(quickKey.type, send);
         RW(quickKey.slot, send);
 
-        if (quickKey.type != QuickKey::UNASSIGNED)
+        if (quickKey.type != QuickKey::Type::Unassigned)
             RW(quickKey.itemId, send);
     }
 }
