@@ -57,6 +57,7 @@ EventController::EventController(LuaState *luaCtrl)
              ADD_CORE_EVENT(ON_PLAYER_FACTION),
              ADD_CORE_EVENT(ON_PLAYER_SHAPESHIFT),
              ADD_CORE_EVENT(ON_PLAYER_SPELLBOOK),
+             ADD_CORE_EVENT(ON_PLAYER_QUICKKEYS),
              ADD_CORE_EVENT(ON_PLAYER_TOPIC),
              ADD_CORE_EVENT(ON_PLAYER_DISPOSITION),
              ADD_CORE_EVENT(ON_PLAYER_BOOK),
