@@ -38,7 +38,7 @@ public:
     static void Init(LuaState &lua);
 public:
     std::shared_ptr<Timer> create(sol::environment env, sol::function callback, long msec, sol::table args);
-    void kill(std::shared_ptr<Timer> timer);
+    void kill(const std::shared_ptr<Timer> &timer);
 
     void terminate();
     void tick();

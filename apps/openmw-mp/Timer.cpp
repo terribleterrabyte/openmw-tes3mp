@@ -50,14 +50,14 @@ Timer::Timer(sol::environment &env, sol::function &callback, long msec, sol::tab
                                                                                          data(std::move(args)),
                                                                                          env(std::move(env))
 {
-    printf("Timer::Timer()\n");
+    LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Timer::Timer()");
     targetMsec = msec;
     end = true;
 }
 
 Timer::~Timer()
 {
-    printf("Timer::~Timer()\n");
+    LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Timer::~Timer()");
 }
 
 void Timer::tick()
@@ -71,7 +71,13 @@ void Timer::tick()
     if (time - startTime >= targetMsec)
     {
         end = true;
-        callback.call(data);
+        if(callback.valid())
+        {
+            LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Timer::tick time expired, callback %p valid", callback.registry_index());
+            callback.call(data);
+        }
+        else
+            LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Timer::tick time expired, callback invalid");
     }
 }
 
@@ -94,12 +100,12 @@ std::shared_ptr<Timer> TimerController::create(sol::environment env, sol::functi
     return timers.back();
 }
 
-void TimerController::kill(std::shared_ptr<Timer> timer)
+void TimerController::kill(const std::shared_ptr<Timer> &timer)
 {
     auto it = find(timers.begin(), timers.end(), timer);
     if (it != timers.end())
     {
-        printf("TimerController::kill\n");
+        LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Timer %p killed\n", timer.get());
         timers.erase(it);
     }
 }
