@@ -17,9 +17,11 @@ Project Status
 
 [Version changelog](https://github.com/TES3MP/openmw-tes3mp/blob/master/tes3mp-changelog.md)
 
-TES3MP is now playable in most respects. Player and NPC movement, animations, combat and spell casting are properly synchronized with small exceptions, as is picking up and dropping items in the world, using doors and levers, and adding and removing items from containers. Journal entries, faction stats and dialogue topics are also synchronized, allowing the majority of quests to work fine.
+As of version 0.6, TES3MP is playable in most respects. Player and NPC movement, animations, combat and spell casting are properly synchronized with small exceptions, as is picking up and dropping items in the world, using doors and levers, and adding and removing items from containers. Journal entries, faction stats and dialogue topics are also synchronized, allowing the majority of quests to work fine.
 
 [Serverside Lua scripts](https://github.com/TES3MP/CoreScripts) are used to save and load the state of most of the aforementioned.
+
+Please note that version 0.7 has involved rewriting a significant portion of our code and is not yet playable. You should use the [latest 0.6 release](https://github.com/TES3MP/openmw-tes3mp/releases/latest) for now.
 
 Contributing
 --------------
