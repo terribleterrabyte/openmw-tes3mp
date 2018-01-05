@@ -239,7 +239,7 @@ void ActorController::sendList(std::shared_ptr<Player> player, std::vector<std::
 {
     actorList.cell = player->cell;
     actorList.guid = player->guid;
-    actorList.action = mwmp::BaseActorList::SET;
+    actorList.action = mwmp::BaseActorList::Action::Set;
 
     for (auto &actor : actors)
     {
@@ -257,7 +257,7 @@ void ActorController::requestList(std::shared_ptr<Player> player, const ESM::Cel
 {
     actorList.cell = player->cell;
     actorList.guid = player->guid;
-    actorList.action = mwmp::BaseActorList::REQUEST;
+    actorList.action = mwmp::BaseActorList::Action::Request;
 
     auto packet = mwmp::Networking::get().getActorPacketController()->GetPacket(ID_ACTOR_LIST);
     packet->setActorList(&actorList);
@@ -270,9 +270,9 @@ std::vector<std::shared_ptr<Actor>> ActorController::getActors(std::shared_ptr<P
 
     std::vector<std::shared_ptr<Actor>> actorList;
 
-    for (auto actor : serverCell->getActorList()->baseActors)
+    for (const auto &actor : serverCell->getActorList()->baseActors)
     {
-        Actor *a = new Actor;
+        auto a = new Actor;
         a->actor = actor;
         actorList.emplace_back(a);
     }

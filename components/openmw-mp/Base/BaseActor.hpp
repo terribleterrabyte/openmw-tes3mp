@@ -46,12 +46,12 @@ namespace mwmp
             cell.blank();
         }
 
-        enum ACTOR_ACTION
+        enum class Action: uint8_t
         {
-            SET = 0,
-            ADD = 1,
-            REMOVE = 2,
-            REQUEST = 3
+            Set = 0,
+            Add,
+            Remsove,
+            Request
         };
 
         RakNet::RakNetGUID guid;
@@ -60,7 +60,7 @@ namespace mwmp
 
         ESM::Cell cell;
 
-        unsigned char action; // 0 - Clear and set in entirety, 1 - Add item, 2 - Remove item, 3 - Request items
+        Action action;
 
         bool isValid;
     };

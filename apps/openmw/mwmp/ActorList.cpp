@@ -172,7 +172,7 @@ void ActorList::sendActorsInCell(MWWorld::CellStore* cellStore)
 {
     reset();
     cell = *cellStore->getCell();
-    action = BaseActorList::SET;
+    action = BaseActorList::Action::Set;
 
     auto createActor = [](const MWWorld::Ptr &ptr){
         BaseActor *actor = new BaseActor;
