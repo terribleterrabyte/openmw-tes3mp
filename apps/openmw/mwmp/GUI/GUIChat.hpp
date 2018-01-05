@@ -47,7 +47,7 @@ namespace mwmp
         void pressedSay(); // switch chat focus (if chat mode != CHAT_DISABLED)
         void setDelay(float delay);
 
-        void Update(float dt);
+        void update(float dt);
 
         void setCaption(const std::string &str);
 
@@ -93,7 +93,7 @@ namespace mwmp
 
         void acceptCommand(MyGUI::EditBox* _sender);
 
-        void SetEditState(bool state);
+        void setEditState(bool state);
 
         int windowState;
         bool editState;

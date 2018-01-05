@@ -14,6 +14,12 @@ void PingHelper::Add(int row, const AddrPair &addrPair)
         pingThread->start();
 }
 
+void PingHelper::Reset()
+{
+    //if (pingThread->isRunning())
+    Stop();
+}
+
 void PingHelper::Stop()
 {
     emit pingUpdater->stop();

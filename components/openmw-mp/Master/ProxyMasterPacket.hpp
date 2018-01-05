@@ -14,9 +14,8 @@ namespace mwmp
     class ProxyMasterPacket : public BasePacket
     {
     private:
-        ProxyMasterPacket(RakNet::RakPeerInterface *peer) : BasePacket(peer)
+        explicit ProxyMasterPacket(RakNet::RakPeerInterface *peer) : BasePacket(peer)
         {
-
         }
 
     public:
@@ -25,8 +24,7 @@ namespace mwmp
         {
             using namespace std;
 
-            int rulesSize = server.rules.size();
-
+            int32_t rulesSize = server.rules.size();
             packet->RW(rulesSize, send);
 
             if (rulesSize > 2000)
@@ -38,7 +36,7 @@ namespace mwmp
 
             while (rulesSize--)
             {
-                ServerRule *rule = 0;
+                ServerRule *rule = nullptr;
                 string key;
                 if (send)
                 {
@@ -66,56 +64,38 @@ namespace mwmp
 
             vector<string>::iterator plIt;
 
-            if (send)
-                plIt = server.players.begin();
-            else
-                server.players.clear();
-
-            int playersCount = server.players.size();
+            int32_t playersCount = server.players.size();
             packet->RW(playersCount, send);
 
             if (playersCount > 2000)
                 playersCount = 0;
 
-            while (playersCount--)
+            if(!send)
             {
-                string player;
-                if (send)
-                    player = *plIt;
-
-                packet->RW(player, send);
-
-                if (!send)
-                    server.players.push_back(player);
-                else
-                    plIt++;
+                server.players.clear();
+                server.players.resize(playersCount);
             }
 
-            int pluginsCount = server.plugins.size();
+            for(auto &&player : server.players)
+                packet->RW(player, send);
+
+
+            int32_t pluginsCount = server.plugins.size();
             packet->RW(pluginsCount, send);
 
             if (pluginsCount > 2000)
                 pluginsCount = 0;
 
-            vector<Plugin>::iterator pluginIt;
-
-            if (send)
-                pluginIt = server.plugins.begin();
-            else
-                server.plugins.clear();
-
-            while (pluginsCount--)
+            if(!send)
             {
-                Plugin plugin;
-                if (send)
-                    plugin = *pluginIt;
+                server.plugins.clear();
+                server.plugins.resize(pluginsCount);
+            }
 
+            for(auto &&plugin : server.plugins)
+            {
                 packet->RW(plugin.name, send);
                 packet->RW(plugin.hash, send);
-                if (!send)
-                    server.plugins.push_back(plugin);
-                else
-                    pluginIt++;
             }
         }
     };

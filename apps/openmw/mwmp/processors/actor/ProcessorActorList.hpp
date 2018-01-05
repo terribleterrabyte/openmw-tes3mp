@@ -23,10 +23,10 @@ namespace mwmp
             if (!ptrCellStore) return;
 
             LOG_MESSAGE_SIMPLE(Log::LOG_VERBOSE, "Received %s about %s", strPacketID.c_str(), actorList.cell.getDescription().c_str());
-            LOG_APPEND(Log::LOG_VERBOSE, "- action: %i", actorList.action);
+            LOG_APPEND(Log::LOG_VERBOSE, "- action: %i", (int) actorList.action);
 
             // If we've received a request for information, comply with it
-            if (actorList.action == mwmp::BaseActorList::REQUEST)
+            if (actorList.action == mwmp::BaseActorList::Action::Request)
             {
                 MechanicsHelper::spawnLeveledCreatures(ptrCellStore);
                 actorList.sendActorsInCell(ptrCellStore);

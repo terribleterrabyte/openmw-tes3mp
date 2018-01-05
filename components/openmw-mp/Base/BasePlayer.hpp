@@ -21,7 +21,7 @@ namespace mwmp
 {
     struct Chat
     {
-        enum class Action : uint8_t {
+        enum class Action: uint8_t {
             print = 0,
             clear,
             addchannel,
@@ -46,7 +46,7 @@ namespace mwmp
     {
         std::string quest;
         int index;
-        enum class Type
+        enum class Type: uint8_t
         {
             Entry = 0,
             Index = 1
@@ -85,7 +85,7 @@ namespace mwmp
     {
         std::string itemId;
 
-        enum class Type : uint8_t
+        enum class Type: uint8_t
         {   
             Item = 0,
             Magic,
