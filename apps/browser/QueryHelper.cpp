@@ -29,6 +29,7 @@ void QueryHelper::refresh()
     if (!queryThread->isRunning())
     {
         _model->removeRows(0, _model->rowCount());
+        PingHelper::Get().Stop();
         queryThread->start();
         emit started();
     }

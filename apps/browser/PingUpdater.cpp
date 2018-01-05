@@ -42,7 +42,7 @@ void PingUpdater::process()
         unsigned ping = PingRakNetServer(server.second.first.toLatin1(), server.second.second);
 
         qDebug() << "Pong from" << server.second.first + "|" + QString::number(server.second.second)
-                 << ":" << ping << "ms";
+                 << ":" << ping << "ms" << "Sizeof servers: " << servers.size();
 
         emit updateModel(server.first, ping);
     }

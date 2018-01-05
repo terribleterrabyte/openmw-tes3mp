@@ -17,6 +17,7 @@ class PingHelper : public QObject
     Q_OBJECT
 public:
 
+    void Reset();
     void Add(int row, const AddrPair &addrPair);
     void Stop();
     void SetModel(QAbstractTableModel *model);
