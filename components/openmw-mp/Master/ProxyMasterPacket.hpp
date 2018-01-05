@@ -14,9 +14,8 @@ namespace mwmp
     class ProxyMasterPacket : public BasePacket
     {
     private:
-        ProxyMasterPacket(RakNet::RakPeerInterface *peer) : BasePacket(peer)
+        explicit ProxyMasterPacket(RakNet::RakPeerInterface *peer) : BasePacket(peer)
         {
-
         }
 
     public:
@@ -25,8 +24,7 @@ namespace mwmp
         {
             using namespace std;
 
-            int rulesSize = server.rules.size();
-
+            int32_t rulesSize = server.rules.size();
             packet->RW(rulesSize, send);
 
             if (rulesSize > 2000)
@@ -38,7 +36,7 @@ namespace mwmp
 
             while (rulesSize--)
             {
-                ServerRule *rule = 0;
+                ServerRule *rule = nullptr;
                 string key;
                 if (send)
                 {
@@ -71,9 +69,8 @@ namespace mwmp
             else
                 server.players.clear();
 
-            int playersCount = server.players.size();
+            int32_t playersCount = server.players.size();
             packet->RW(playersCount, send);
-
             if (playersCount > 2000)
                 playersCount = 0;
 
@@ -91,7 +88,7 @@ namespace mwmp
                     plIt++;
             }
 
-            int pluginsCount = server.plugins.size();
+            int32_t pluginsCount = server.plugins.size();
             packet->RW(pluginsCount, send);
 
             if (pluginsCount > 2000)
