@@ -64,29 +64,21 @@ namespace mwmp
 
             vector<string>::iterator plIt;
 
-            if (send)
-                plIt = server.players.begin();
-            else
-                server.players.clear();
-
             int32_t playersCount = server.players.size();
             packet->RW(playersCount, send);
+
             if (playersCount > 2000)
                 playersCount = 0;
 
-            while (playersCount--)
+            if(!send)
             {
-                string player;
-                if (send)
-                    player = *plIt;
+                server.players.clear();
+                server.players.resize(playersCount);
+            }
 
+            for(auto &&player : server.players)
                 packet->RW(player, send);
 
-                if (!send)
-                    server.players.push_back(player);
-                else
-                    plIt++;
-            }
 
             int32_t pluginsCount = server.plugins.size();
             packet->RW(pluginsCount, send);
@@ -94,25 +86,16 @@ namespace mwmp
             if (pluginsCount > 2000)
                 pluginsCount = 0;
 
-            vector<Plugin>::iterator pluginIt;
-
-            if (send)
-                pluginIt = server.plugins.begin();
-            else
-                server.plugins.clear();
-
-            while (pluginsCount--)
+            if(!send)
             {
-                Plugin plugin;
-                if (send)
-                    plugin = *pluginIt;
+                server.plugins.clear();
+                server.plugins.resize(pluginsCount);
+            }
 
+            for(auto &&plugin : server.plugins)
+            {
                 packet->RW(plugin.name, send);
                 packet->RW(plugin.hash, send);
-                if (!send)
-                    server.plugins.push_back(plugin);
-                else
-                    pluginIt++;
             }
         }
     };
