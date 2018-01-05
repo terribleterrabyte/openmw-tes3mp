@@ -8,6 +8,7 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include <utility>
 
 #define BPP_INIT(packet_id) packetID = packet_id; strPacketID = #packet_id; className = typeid(this).name(); avoidReading = false;
 
@@ -38,7 +39,7 @@ public:
                 throw std::logic_error("processor " + p.second->strPacketID + " already registered. Check " +
                                        processor->className + " and " + p.second->className);
         }
-        processors.insert(typename processors_t::value_type(processor->GetPacketID(), std::move(processor)));
+        processors.emplace(processor->GetPacketID(), std::unique_ptr<Proccessor>(processor));
     }
 protected:
     unsigned char packetID;
