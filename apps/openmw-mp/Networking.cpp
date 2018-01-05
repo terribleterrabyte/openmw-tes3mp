@@ -34,6 +34,7 @@ using namespace std;
 Networking *Networking::sThis = nullptr;
 
 static int currentMpNum = 0;
+static bool pluginEnforcementState = true;
 
 Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
 {
@@ -226,14 +227,16 @@ bool Networking::update(RakNet::Packet *packet)
             packetPreInit.SetSendStream(&bs);
 
             // If the loop above was broken, then the client's plugins do not match the server's
-            if (plugin != plugins.end())
+            if (pluginEnforcementState && plugin != plugins.end())
             {
+                LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "%s was not allowed to connect due to incompatible plugins", packet->systemAddress.ToString());
                 packetPreInit.setChecksums(&samples);
                 packetPreInit.Send(packet->systemAddress);
                 peer->CloseConnection(packet->systemAddress, true);
             }
             else
             {
+                LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "%s was allowed to connect", packet->systemAddress.ToString());
                 PacketPreInit::PluginContainer tmp;
                 packetPreInit.setChecksums(&tmp);
                 packetPreInit.Send(packet->systemAddress);
@@ -371,11 +374,20 @@ int Networking::incrementMpNum()
     return currentMpNum;
 }
 
+bool Networking::getPluginEnforcementState()
+{
+    return pluginEnforcementState;
+}
+
+void Networking::setPluginEnforcementState(bool state)
+{
+    pluginEnforcementState = state;
+}
+
 Networking &Networking::get()
 {
     return *sThis;
 }
-
 
 Networking *Networking::getPtr()
 {

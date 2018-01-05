@@ -170,6 +170,14 @@ LuaState::LuaState()
         mwmp::Networking::getPtr()->setCurrentMpNum(num);
     });
 
+    lua->set_function("getPluginEnforcementState", []() {
+        return mwmp::Networking::getPtr()->getPluginEnforcementState();
+    });
+
+    lua->set_function("setPluginEnforcementState", [](bool state) {
+        mwmp::Networking::getPtr()->setPluginEnforcementState(state);
+    });
+
     lua->set_function("getCaseInsensitiveFilename", [](const char *folderPath, const char *filename) {
         if (!boost::filesystem::exists(folderPath)) return "invalid";
 
