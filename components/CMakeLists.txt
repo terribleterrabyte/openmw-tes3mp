@@ -207,7 +207,7 @@ add_component_dir (fallback
 set (ESM_UI ${CMAKE_SOURCE_DIR}/files/ui/contentselector.ui
     )
 
-IF(BUILD_OPENMW OR BUILD_OPENCS)
+IF(BUILD_OPENMW OR BUILD_OPENCS OR BUILD_BROWSER)
 if (USE_QT)
     add_component_qt_dir (contentselector
         model/modelitem model/esmfile
@@ -234,7 +234,7 @@ if (USE_QT)
         QT5_WRAP_CPP(MOC_SRCS ${COMPONENT_MOC_FILES})
     endif()
 endif()
-ENDIF(BUILD_OPENMW OR BUILD_OPENCS)
+ENDIF(BUILD_OPENMW OR BUILD_OPENCS OR BUILD_BROWSER)
 
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     if("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64" AND NOT APPLE)

@@ -140,6 +140,16 @@ endif()
 find_package(RakNet REQUIRED)
 include_directories(${RakNet_INCLUDES})
 
+if (BUILD_OPENMW_MP OR BUILD_MASTER)
+    find_package(LuaJit REQUIRED)
+    find_package(Sol2 REQUIRED)
+    include_directories(${LuaJit_INCLUDE_DIRS} ${Sol2_INCLUDE_DIRS})
+endif()
+if (BUILD_MASTER)
+    find_package(OpenSSL REQUIRED)
+    include_directories(${OpenSSL_INCLUDE_DIRS})
+endif()
+
 # Dependencies
 if (USE_QT)
     message(STATUS "Using Qt${DESIRED_QT_VERSION}")

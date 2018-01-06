@@ -9,7 +9,7 @@
 #include <chrono>
 #include <RakPeerInterface.h>
 #include <components/openmw-mp/Master/MasterData.hpp>
-#include <extern/sol/sol.hpp>
+#include <sol.hpp>
 #include <mutex>
 
 class MasterServer

@@ -16,13 +16,7 @@ endif(ENABLE_BREAKPAD)
 
 
 
-find_package(LuaJit REQUIRED)
-
-set(LuaScript_Headers ${LUA_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/extern/sol/sol.hpp)
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_LUA")
-include_directories(${LUA_INCLUDE_DIR} ${LUAJIT_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/extern/sol)
-
 
 # local files
 set(SERVER
@@ -145,8 +139,7 @@ target_link_libraries(tes3mp-server
     #${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${RakNet_LIBRARY}
     components
-    ${LUA_LIBRARIES}
-    ${LUAJIT_LIBRARY}
+    ${LuaJit_LIBRARIES}
     ${Breakpad_Library}
 )
 
