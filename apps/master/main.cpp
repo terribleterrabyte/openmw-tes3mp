@@ -1,7 +1,7 @@
 #include <iostream>
 #include <Kbhit.h>
 #include <RakSleep.h>
-#include <extern/sol/sol.hpp>
+#include <sol.hpp>
 #include "MasterServer.hpp"
 #include "RestServer.hpp"
 #include "AdminRest.hpp"

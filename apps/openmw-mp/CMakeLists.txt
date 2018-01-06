@@ -16,13 +16,7 @@ endif(ENABLE_BREAKPAD)
 
 
 
-find_package(LuaJit REQUIRED)
-find_package(Sol2 REQUIRED)
-
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_LUA")
-include_directories(${LuaJit_INCLUDE_DIR} ${Sol2_INCLUDE_DIR})
-
 
 # local files
 set(SERVER
