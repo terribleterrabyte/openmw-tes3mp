@@ -24,12 +24,15 @@ public:
 protected:
     Timer(sol::environment &env, sol::function &callback, long msec, sol::table &args);
     void tick();
+    void kill();
+    bool isMarkedToDelete() const { return markedToDelete; }
 private:
     double startTime, targetMsec;
     sol::function callback;
     sol::table data;
     sol::environment env;
     bool end;
+    bool markedToDelete;
 };
 
 class TimerController
@@ -44,5 +47,7 @@ public:
     void tick();
 private:
     std::vector<std::shared_ptr<Timer>> timers;
+    std::vector<std::shared_ptr<Timer>> newTimersQueue;
+    bool haveMarkedToDeletion;
 };
 

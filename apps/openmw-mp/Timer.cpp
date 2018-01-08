@@ -62,7 +62,7 @@ Timer::~Timer()
 
 void Timer::tick()
 {
-    if (end)
+    if (end || markedToDelete)
         return;
 
     const auto duration = chrono::system_clock::now().time_since_epoch();
@@ -81,6 +81,11 @@ void Timer::tick()
     }
 }
 
+void Timer::kill()
+{
+    markedToDelete = true;
+}
+
 void TimerController::Init(LuaState &lua)
 {
     sol::table timerTable = lua.getState()->create_table("TimerCtrl");
@@ -96,22 +101,37 @@ void TimerController::Init(LuaState &lua)
 
 std::shared_ptr<Timer> TimerController::create(sol::environment env, sol::function callback, long msec, sol::table args)
 {
-    timers.emplace_back(new Timer(env, callback, msec, args));
-    return timers.back();
+    newTimersQueue.emplace_back(new Timer(env, callback, msec, args));
+    return newTimersQueue.back();
 }
 
 void TimerController::kill(const std::shared_ptr<Timer> &timer)
 {
-    auto it = find(timers.begin(), timers.end(), timer);
-    if (it != timers.end())
-    {
-        LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Timer %p killed\n", timer.get());
-        timers.erase(it);
-    }
+    LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Timer %p marked for deletion\n", timer.get());
+    timer->kill();
+    haveMarkedToDeletion = true;
 }
 
 void TimerController::tick()
 {
+    if (haveMarkedToDeletion)
+    {
+        size_t deleted = timers.size();
+        haveMarkedToDeletion = false;
+        timers.erase(remove_if(timers.begin(), timers.end(), [](const std::shared_ptr<Timer> &timer) {
+            return timer->isMarkedToDelete();
+        }), timers.end());
+        deleted -= timers.size();
+        LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Deleted %d timers\n", deleted);
+    }
+
+    if(!newTimersQueue.empty())
+    {
+        timers.insert(timers.begin(), make_move_iterator(newTimersQueue.begin()), make_move_iterator(newTimersQueue.end()));
+        LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Created %d timers\n", newTimersQueue.size());
+        newTimersQueue.clear();
+    }
+
     for (auto &timer : timers)
     {
         timer->tick();
