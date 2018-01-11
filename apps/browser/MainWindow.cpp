@@ -122,19 +122,16 @@ void MainWindow::play()
     if (id < 0)
         return;
 
-    ServerInfoDialog infoDialog(this);
+
     ServerModel *sm = ((ServerModel*)proxyModel->sourceModel());
 
     int sourceId = proxyModel->mapToSource(proxyModel->index(id, ServerData::ADDR)).row();
-    infoDialog.Server(sm->myData[sourceId].addr);
-
-    if (!infoDialog.refresh())
-    {
-        queryHelper->refresh();
-        return;
-    }
+    ServerInfoDialog infoDialog(sm->myData[sourceId].addr, this);
 
     if (!infoDialog.exec())
+        return;
+
+    if (!infoDialog.isUpdated())
         return;
 
     QStringList arguments;
