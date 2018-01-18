@@ -147,12 +147,12 @@ void Object::setCharge(int charge)
 
 }
 
-int Object::getEnchantmentCharge() const
+double Object::getEnchantmentCharge() const
 {
     return object.enchantmentCharge;
 }
 
-void Object::setEnchantmentCharge(int enchantmentCharge)
+void Object::setEnchantmentCharge(double enchantmentCharge)
 {
     changedObjectPlace = true;
     object.enchantmentCharge = enchantmentCharge;
@@ -245,13 +245,13 @@ Container::Container()
 
 }
 
-tuple<string, int, int, int> Container::getItem(int i) const
+tuple<string, int, int, double> Container::getItem(int i) const
 {
     auto &item = object.containerItems.at(i);
     return make_tuple(item.refId, item.count, item.charge, item.enchantmentCharge);
 }
 
-void Container::setItem(int i, const string &refId, int count, int charge, int enchantmentCharge)
+void Container::setItem(int i, const string &refId, int count, int charge, double enchantmentCharge)
 {
     auto &item = object.containerItems.at(i);
     item.refId = refId;
@@ -261,7 +261,7 @@ void Container::setItem(int i, const string &refId, int count, int charge, int e
     changed = true;
 }
 
-void Container::addItem(const string &refId, int count, int charge, int enchantmentCharge)
+void Container::addItem(const string &refId, int count, int charge, double enchantmentCharge)
 {
     mwmp::ContainerItem item;
     item.refId = refId;

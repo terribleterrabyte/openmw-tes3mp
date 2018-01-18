@@ -97,7 +97,7 @@ int Inventory::getChangesSize() const
     return netActor->getNetCreature()->inventoryChanges.items.size();
 }
 
-void Inventory::equipItem(unsigned short slot, const std::string& refId, unsigned int count, int charge, int enchantmentCharge)
+void Inventory::equipItem(unsigned short slot, const std::string& refId, unsigned int count, int charge, double enchantmentCharge)
 {
     netActor->getNetCreature()->equipmentItems[slot].refId = refId;
     netActor->getNetCreature()->equipmentItems[slot].count = count;
@@ -119,7 +119,7 @@ void Inventory::unequipItem( unsigned short slot)
 }
 
 
-void Inventory::addItem(const std::string &refId, unsigned int count, int charge, int enchantmentCharge)
+void Inventory::addItem(const std::string &refId, unsigned int count, int charge, double enchantmentCharge)
 {
     if (inventoryChanged == mwmp::InventoryChanges::Type::Remove)
         return;
@@ -165,13 +165,13 @@ bool Inventory::hasItemEquipped(const std::string &refId) const
     return false;
 }
 
-std::tuple<std::string, int, int, int> Inventory::getEquipmentItem(unsigned short slot) const
+std::tuple<std::string, int, int, double> Inventory::getEquipmentItem(unsigned short slot) const
 {
     const auto &item = netActor->getNetCreature()->equipmentItems[slot];
     return make_tuple(item.refId, item.count, item.charge, item.enchantmentCharge);
 }
 
-std::tuple<std::string, int, int, int> Inventory::getInventoryItem(unsigned int slot) const
+std::tuple<std::string, int, int, double> Inventory::getInventoryItem(unsigned int slot) const
 {
     const auto &item = netActor->getNetCreature()->inventoryChanges.items.at(slot);
     return make_tuple(item.refId, item.count, item.charge, item.enchantmentCharge);

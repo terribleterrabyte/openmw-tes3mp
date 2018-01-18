@@ -127,6 +127,7 @@ namespace MWGui
         containerItem.refId =itemPtr.getCellRef().getRefId();
         containerItem.count = itemPtr.getRefData().getCount();
         containerItem.charge = itemPtr.getCellRef().getCharge();
+        containerItem.enchantmentCharge = itemPtr.getCellRef().getEnchantmentCharge();
         containerItem.actionCount = count;
 
         LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Sending ID_CONTAINER about\n- Ptr cellRef: %s, %i\n- cell: %s\n- item: %s, %i",
@@ -176,6 +177,7 @@ namespace MWGui
             containerItem.count = mDragAndDrop->mDraggedCount;
 
             containerItem.charge = itemPtr.getCellRef().getCharge();
+            containerItem.enchantmentCharge = itemPtr.getCellRef().getEnchantmentCharge();
 
             LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Sending ID_CONTAINER about\n- Ptr cellRef: %s, %i\n- cell: %s\n- item: %s, %i",
                                worldObject.refId.c_str(), worldObject.refNumIndex, worldEvent->cell.getDescription().c_str(),

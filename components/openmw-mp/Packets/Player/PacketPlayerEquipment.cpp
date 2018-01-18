@@ -31,5 +31,6 @@ void PacketPlayerEquipment::Packet(RakNet::BitStream *bs, bool send)
         RW(player->equipmentItems[equipmentIndex].refId, send);
         RW(player->equipmentItems[equipmentIndex].count, send);
         RW(player->equipmentItems[equipmentIndex].charge, send);
+        RW(player->equipmentItems[equipmentIndex].enchantmentCharge, send);
     }
 }
