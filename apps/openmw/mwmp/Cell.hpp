@@ -12,8 +12,8 @@ namespace mwmp
     {
     public:
 
-        Cell(MWWorld::CellStore* cellStore);
-        virtual ~Cell();
+        explicit Cell(MWWorld::CellStore* cellStore);
+        ~Cell() = default;
 
         void updateLocal(bool forceUpdate);
         void updateDedicated(float dt);

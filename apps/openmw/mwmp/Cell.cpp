@@ -27,11 +27,6 @@ mwmp::Cell::Cell(MWWorld::CellStore* cellStore)
     updateTimer = 0;
 }
 
-Cell::~Cell()
-{
-
-}
-
 void Cell::updateLocal(bool forceUpdate)
 {
     if (localActors.empty())
