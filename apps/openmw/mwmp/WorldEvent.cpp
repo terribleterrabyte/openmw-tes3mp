@@ -90,7 +90,7 @@ void WorldEvent::editContainers(MWWorld::CellStore* cellStore)
                     if (containerItem.charge > -1)
                         newPtr.getCellRef().setCharge(containerItem.charge);
 
-                    if (containerItem.enchantmentCharge > -1)
+                    if (containerItem.enchantmentCharge > -1.0f)
                         newPtr.getCellRef().setEnchantmentCharge(containerItem.enchantmentCharge);
 
                     containerStore.add(newPtr, containerItem.count, ownerPtr, true);
