@@ -284,7 +284,7 @@ void Cell::readCellChange(ActorList& actorList)
         std::string mapIndex = Main::get().getCellController()->generateMapIndex(baseActor);
 
         // Is a packet mistakenly moving the actor to the cell it's already in? If so, ignore it
-        if (Misc::StringUtils::ciEqual(getDescription(), baseActor.cell.getDescription()))
+        if (Misc::StringUtils::ciEqual(getDescription(), baseActor->cell.getDescription()))
         {
             LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Server says DedicatedActor %s moved to %s, but it was already there",
                 mapIndex.c_str(), getDescription().c_str());
