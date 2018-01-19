@@ -434,12 +434,12 @@ void Cell::uninitializeDedicatedActors()
     dedicatedActors.clear();
 }
 
-LocalActor *Cell::getLocalActor(std::string actorIndex)
+LocalActor *Cell::getLocalActor(const std::string &actorIndex)
 {
     return localActors.at(actorIndex);
 }
 
-DedicatedActor *Cell::getDedicatedActor(std::string actorIndex)
+DedicatedActor *Cell::getDedicatedActor(const std::string &actorIndex)
 {
     return dedicatedActors.at(actorIndex);
 }

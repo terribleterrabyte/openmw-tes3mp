@@ -36,8 +36,8 @@ namespace mwmp
         void uninitializeLocalActors();
         void uninitializeDedicatedActors();
 
-        virtual LocalActor *getLocalActor(std::string actorIndex);
-        virtual DedicatedActor *getDedicatedActor(std::string actorIndex);
+        virtual LocalActor *getLocalActor(const std::string &actorIndex);
+        virtual DedicatedActor *getDedicatedActor(const std::string &actorIndex);
 
         bool hasLocalAuthority();
         void setAuthority(const RakNet::RakNetGUID& guid);
