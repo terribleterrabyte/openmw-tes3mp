@@ -66,8 +66,8 @@ public:
     int getCharge() const;
     void setCharge(int charge);
 
-    double getEnchantmentCharge() const;
-    void setEnchantmentCharge(double enchantmentCharge);
+    float getEnchantmentCharge() const;
+    void setEnchantmentCharge(float enchantmentCharge);
 
     int getGoldValue() const;
     void setGoldValue(int gold);
@@ -99,9 +99,9 @@ public:
     Container();
 
     std::tuple<std::string, int, int, double> getItem(int i) const;
-    void addItem(const std::string &refId, int count, int charge, double enchantmentCharge);
+    void addItem(const std::string &refId, int count, int charge, float enchantmentCharge);
 
-    void setItem(int i, const std::string &refId, int count, int charge, double enchantmentCharge);
+    void setItem(int i, const std::string &refId, int count, int charge, float enchantmentCharge);
     int getActionCount(int i) const;
 
     size_t size() const;

@@ -173,7 +173,7 @@ void WorldEvent::placeObjects(MWWorld::CellStore* cellStore)
             if (worldObject.charge > -1)
                 newPtr.getCellRef().setCharge(worldObject.charge);
 
-            if (worldObject.enchantmentCharge > -1)
+            if (worldObject.enchantmentCharge > -1.0f)
                 newPtr.getCellRef().setEnchantmentCharge(worldObject.enchantmentCharge);
 
             newPtr.getCellRef().setGoldValue(worldObject.goldValue);

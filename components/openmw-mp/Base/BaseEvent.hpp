@@ -29,7 +29,7 @@ namespace mwmp
         unsigned mpNum;
         int count;
         int charge;
-        double enchantmentCharge;
+        float enchantmentCharge;
         int goldValue;
 
         ESM::Position position;
