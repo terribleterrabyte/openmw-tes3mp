@@ -296,6 +296,12 @@ void ObjectController::Init(LuaState &lua)
         return lua.getObjectCtrl().sendContainers(player, objects, Utils::getCellFromDescription(cellDescription));
     });
 
+    objectCtrl.set_function("sendConsoleCommand", [&lua](shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Object>>> objects,
+                                                         const std::string &cellDescription, const std::string &command,
+                                                         bool broadcast) {
+        return lua.getObjectCtrl().sendConsoleCommand(player, objects, Utils::getCellFromDescription(cellDescription),
+                                                      command, broadcast);
+    });
     objectCtrl.set_function("requestContainers", [&lua](shared_ptr<Player> player) {
         lua.getObjectCtrl().requestContainers(player);
     });
