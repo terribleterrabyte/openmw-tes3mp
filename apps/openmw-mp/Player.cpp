@@ -124,6 +124,7 @@ Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedM
     storedData = mwmp::Networking::get().getState().getState()->create_table();
     customData = mwmp::Networking::get().getState().getState()->create_table();
     isActorPlayer = true;
+    inUpdateQueue = false;
 }
 
 Player::~Player()
