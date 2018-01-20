@@ -16,7 +16,7 @@ public:
     static void Init(LuaState &lua);
     bool isEquipmentChanged();
     void resetEquipmentFlag();
-    mwmp::InventoryChanges::Type inventoryChangeType();
+    bool isInventoryChanged();
     void resetInventoryFlag();
 public:
     explicit Inventory(NetActor *netActor);
@@ -49,15 +49,11 @@ public:
      */
     std::tuple<std::string,int, int, double> getEquipmentItem(unsigned short slot) const;
 
-
-private:
-    void InitializeInventoryChanges();
-
 private:
     // not controlled pointer
     NetActor *netActor;
     bool equipmentChanged;
-    mwmp::InventoryChanges::Type inventoryChanged;
+    bool inventoryChanged;
 };
 
 

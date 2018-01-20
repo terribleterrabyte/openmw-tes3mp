@@ -22,15 +22,14 @@ namespace mwmp
 
     struct InventoryChanges
     {
-        std::vector<Item> items;
-        enum class Type: int8_t
+        enum class Action: int8_t
         {
             None = -1,
             Set = 0,
             Add,
             Remove
         };
-        Type action; // 0 - Clear and set in entirety, 1 - Add item, 2 - Remove item
+        std::vector<std::pair<Item, Action>> items;
     };
     
     struct Target

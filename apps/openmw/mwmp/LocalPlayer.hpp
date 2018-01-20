@@ -38,12 +38,12 @@ namespace mwmp
         void updateDeadState(bool forceUpdate = false);
         void updateAnimFlags(bool forceUpdate = false);
 
-        void addItems();
+        void addItem(const Item &item);
         void addSpells();
         void addJournalItems();
         void addTopics();
 
-        void removeItems();
+        void removeItem(const Item &item);
         void removeSpells();
 
         void closeInventoryWindows();

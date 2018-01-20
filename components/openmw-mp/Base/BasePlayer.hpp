@@ -240,7 +240,6 @@ namespace mwmp
 
         BasePlayer(RakNet::RakNetGUID guid) : guid(guid)
         {
-            inventoryChanges.action = InventoryChanges::Type::None;
             spellbookChanges.action = SpellbookChanges::Type::None;
             useCreatureName = false;
             isWerewolf = false;

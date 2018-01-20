@@ -17,8 +17,6 @@ void PacketPlayerInventory::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
 
-    RW(player->inventoryChanges.action, send);
-
     uint32_t count;
 
     if (send)
@@ -34,9 +32,10 @@ void PacketPlayerInventory::Packet(RakNet::BitStream *bs, bool send)
 
     for (auto &&item :  player->inventoryChanges.items)
     {
-        RW(item.refId, send, true);
-        RW(item.count, send);
-        RW(item.charge, send);
-        RW(item.enchantmentCharge, send);
+        RW(item.first.refId, send, true);
+        RW(item.first.count, send);
+        RW(item.first.charge, send);
+        RW(item.first.enchantmentCharge, send);
+        RW(item.second, send, true); // compress byte to bits
     }
 }

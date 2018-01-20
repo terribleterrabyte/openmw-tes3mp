@@ -219,7 +219,7 @@ void Player::update()
         inventory.resetEquipmentFlag();
     }
 
-    if (inventory.inventoryChangeType() != mwmp::InventoryChanges::Type::None)
+    if (inventory.isInventoryChanged())
     {
         auto packet = plPCtrl->GetPacket(ID_PLAYER_INVENTORY);
         packet->setPlayer(this);
