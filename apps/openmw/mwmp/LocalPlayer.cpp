@@ -1083,7 +1083,7 @@ void LocalPlayer::setFactions()
         if (!ptrNpcStats.isInFaction(faction.factionId))
             ptrNpcStats.joinFaction(faction.factionId);
 
-        if (factionChanges.action == mwmp::FactionChanges::Type::Rank)
+        if (faction.isRankChanged())
         {
             // While the faction rank is different in the packet than in the NpcStats,
             // adjust the NpcStats accordingly
@@ -1095,7 +1095,8 @@ void LocalPlayer::setFactions()
                     ptrNpcStats.lowerRank(faction.factionId);
             }
         }
-        else if (factionChanges.action == mwmp::FactionChanges::Type::Expulsion)
+
+        if (faction.isExpulsionChanged())
         {
             // If the expelled state is different in the packet than in the NpcStats,
             // adjust the NpcStats accordingly
@@ -1108,7 +1109,7 @@ void LocalPlayer::setFactions()
             }
         }
 
-        else if (factionChanges.action == mwmp::FactionChanges::Type::Reputation)
+        if (faction.isReputationChanged())
             ptrNpcStats.setFactionReputation(faction.factionId, faction.reputation);
     }
 }
@@ -1326,11 +1327,11 @@ void LocalPlayer::sendJournalIndex(const std::string& quest, int index)
 void LocalPlayer::sendFactionRank(const std::string& factionId, int rank)
 {
     factionChanges.factions.clear();
-    factionChanges.action = FactionChanges::Type::Rank;
 
     mwmp::Faction faction;
     faction.factionId = factionId;
     faction.rank = rank;
+    faction.rankChanged();
 
     factionChanges.factions.push_back(faction);
 
@@ -1341,11 +1342,11 @@ void LocalPlayer::sendFactionRank(const std::string& factionId, int rank)
 void LocalPlayer::sendFactionExpulsionState(const std::string& factionId, bool isExpelled)
 {
     factionChanges.factions.clear();
-    factionChanges.action = FactionChanges::Type::Expulsion;
 
     mwmp::Faction faction;
     faction.factionId = factionId;
     faction.isExpelled = isExpelled;
+    faction.expulsionChanged();
 
     factionChanges.factions.push_back(faction);
 
@@ -1356,11 +1357,11 @@ void LocalPlayer::sendFactionExpulsionState(const std::string& factionId, bool i
 void LocalPlayer::sendFactionReputation(const std::string& factionId, int reputation)
 {
     factionChanges.factions.clear();
-    factionChanges.action = FactionChanges::Type::Reputation;
 
     mwmp::Faction faction;
     faction.factionId = factionId;
     faction.reputation = reputation;
+    faction.reputationChanged();
 
     factionChanges.factions.push_back(faction);
 
