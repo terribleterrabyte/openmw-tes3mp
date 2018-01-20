@@ -455,11 +455,11 @@ void LocalPlayer::updateEquipment(bool forceUpdate)
             item.refId = "";
             item.count = 0;
             item.charge = -1;
-            item.enchantmentCharge = -1;
+            item.enchantmentCharge = -1.0f;
         }
     }
 
-    if (equipmentIndexChanges.size() > 0)
+    if (!equipmentIndexChanges.empty())
     {
         getNetworking()->getPlayerPacket(ID_PLAYER_EQUIPMENT)->setPlayer(this);
         getNetworking()->getPlayerPacket(ID_PLAYER_EQUIPMENT)->Send();

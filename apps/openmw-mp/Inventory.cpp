@@ -97,7 +97,7 @@ int Inventory::getChangesSize() const
     return netActor->getNetCreature()->inventoryChanges.items.size();
 }
 
-void Inventory::equipItem(unsigned short slot, const std::string& refId, unsigned int count, int charge, double enchantmentCharge)
+void Inventory::equipItem(unsigned short slot, const std::string& refId, unsigned int count, int charge, float enchantmentCharge)
 {
     netActor->getNetCreature()->equipmentItems[slot].refId = refId;
     netActor->getNetCreature()->equipmentItems[slot].count = count;
@@ -119,7 +119,7 @@ void Inventory::unequipItem( unsigned short slot)
 }
 
 
-void Inventory::addItem(const std::string &refId, unsigned int count, int charge, double enchantmentCharge)
+void Inventory::addItem(const std::string &refId, unsigned int count, int charge, float enchantmentCharge)
 {
     if (inventoryChanged == mwmp::InventoryChanges::Type::Remove)
         return;

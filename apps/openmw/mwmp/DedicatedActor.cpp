@@ -172,15 +172,18 @@ void DedicatedActor::setEquipment()
 
         const string &packetRefId = equipmentItems[slot].refId;
         int packetCharge = equipmentItems[slot].charge;
-        std::string storeRefId = "";
         bool equal = false;
 
         if (it != invStore.end())
         {
-            storeRefId = it->getCellRef().getRefId();
+            std::string storeRefId = it->getCellRef().getRefId();
+            int count = invStore.count(storeRefId);
 
-            if (!Misc::StringUtils::ciEqual(storeRefId, packetRefId)) // if other item equiped
+            if (!Misc::StringUtils::ciEqual(storeRefId, packetRefId)) // if other item equipped
+            {
                 invStore.unequipSlot(slot, ptr);
+                ptr.getClass().getContainerStore(ptr).remove(storeRefId, count, ptr);
+            }
             else
                 equal = true;
         }
