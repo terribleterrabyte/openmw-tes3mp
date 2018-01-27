@@ -14,7 +14,6 @@ void Factions::Init(LuaState &lua)
 {
     lua.getState()->new_usertype<Factions>("Factions",
                                            "addFaction", &Factions::addFaction,
-                                           "changesAction", sol::property(&Factions::getFactionChangesAction, &Factions::setFactionChangesAction),
                                            "getFaction", &Factions::getFaction,
                                            "setFaction", &Factions::setFaction,
                                            "clear", &Factions::clear,
@@ -40,20 +39,9 @@ void Factions::processUpdate()
     clear();
 }
 
-mwmp::FactionChanges::Type Factions::getFactionChangesAction() const
+void Factions::addFaction(const Faction &faction)
 {
-    return player->factionChanges.action;
-}
-
-void Factions::setFactionChangesAction(mwmp::FactionChanges::Type action)
-{
-    player->factionChanges.action = action;
-    setChanged();
-}
-
-void Factions::addFaction(Faction faction)
-{
-    player->factionChanges.factions.push_back(faction.faction);
+    player->factionChanges.factions.emplace_back(faction.faction);
     setChanged();
 }
 
@@ -63,7 +51,7 @@ Faction Factions::getFaction(int id) const
     return Faction(player->factionChanges.factions.at(id));
 }
 
-void Factions::setFaction(int id, Faction faction)
+void Factions::setFaction(int id, const Faction &faction)
 {
     player->factionChanges.factions.at(id) = faction.faction;
     setChanged();
@@ -112,6 +100,7 @@ int Faction::getFactionRank() const
 
 void Faction::setFactionRank(unsigned int rank)
 {
+    faction.rankChanged();
     faction.rank = rank;
 }
 
@@ -122,6 +111,7 @@ bool Faction::getFactionExpulsionState() const
 
 void Faction::setFactionExpulsionState(bool expulsionState)
 {
+    faction.expulsionChanged();
     faction.isExpelled = expulsionState;
 }
 
@@ -132,5 +122,6 @@ int Faction::getFactionReputation() const
 
 void Faction::setFactionReputation(int reputation)
 {
+    faction.reputationChanged();
     faction.reputation = reputation;
 }

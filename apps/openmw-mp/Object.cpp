@@ -147,12 +147,12 @@ void Object::setCharge(int charge)
 
 }
 
-double Object::getEnchantmentCharge() const
+float Object::getEnchantmentCharge() const
 {
     return object.enchantmentCharge;
 }
 
-void Object::setEnchantmentCharge(double enchantmentCharge)
+void Object::setEnchantmentCharge(float enchantmentCharge)
 {
     changedObjectPlace = true;
     object.enchantmentCharge = enchantmentCharge;
@@ -251,7 +251,7 @@ tuple<string, int, int, double> Container::getItem(int i) const
     return make_tuple(item.refId, item.count, item.charge, item.enchantmentCharge);
 }
 
-void Container::setItem(int i, const string &refId, int count, int charge, double enchantmentCharge)
+void Container::setItem(int i, const string &refId, int count, int charge, float enchantmentCharge)
 {
     auto &item = object.containerItems.at(i);
     item.refId = refId;
@@ -261,7 +261,7 @@ void Container::setItem(int i, const string &refId, int count, int charge, doubl
     changed = true;
 }
 
-void Container::addItem(const string &refId, int count, int charge, double enchantmentCharge)
+void Container::addItem(const string &refId, int count, int charge, float enchantmentCharge)
 {
     mwmp::ContainerItem item;
     item.refId = refId;
@@ -296,6 +296,12 @@ void ObjectController::Init(LuaState &lua)
         return lua.getObjectCtrl().sendContainers(player, objects, Utils::getCellFromDescription(cellDescription));
     });
 
+    objectCtrl.set_function("sendConsoleCommand", [&lua](shared_ptr<Player> player, shared_ptr<vector<shared_ptr<Object>>> objects,
+                                                         const std::string &cellDescription, const std::string &command,
+                                                         bool broadcast) {
+        return lua.getObjectCtrl().sendConsoleCommand(player, objects, Utils::getCellFromDescription(cellDescription),
+                                                      command, broadcast);
+    });
     objectCtrl.set_function("requestContainers", [&lua](shared_ptr<Player> player) {
         lua.getObjectCtrl().requestContainers(player);
     });

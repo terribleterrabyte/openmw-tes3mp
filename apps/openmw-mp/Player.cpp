@@ -124,6 +124,7 @@ Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedM
     storedData = mwmp::Networking::get().getState().getState()->create_table();
     customData = mwmp::Networking::get().getState().getState()->create_table();
     isActorPlayer = true;
+    inUpdateQueue = false;
 }
 
 Player::~Player()
@@ -218,7 +219,7 @@ void Player::update()
         inventory.resetEquipmentFlag();
     }
 
-    if (inventory.inventoryChangeType() != mwmp::InventoryChanges::Type::None)
+    if (inventory.isInventoryChanged())
     {
         auto packet = plPCtrl->GetPacket(ID_PLAYER_INVENTORY);
         packet->setPlayer(this);

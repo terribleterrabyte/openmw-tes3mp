@@ -27,11 +27,6 @@ mwmp::Cell::Cell(MWWorld::CellStore* cellStore)
     updateTimer = 0;
 }
 
-Cell::~Cell()
-{
-
-}
-
 void Cell::updateLocal(bool forceUpdate)
 {
     if (localActors.empty())
@@ -284,7 +279,7 @@ void Cell::readCellChange(ActorList& actorList)
         std::string mapIndex = Main::get().getCellController()->generateMapIndex(baseActor);
 
         // Is a packet mistakenly moving the actor to the cell it's already in? If so, ignore it
-        if (Misc::StringUtils::ciEqual(getDescription(), baseActor.cell.getDescription()))
+        if (Misc::StringUtils::ciEqual(getDescription(), baseActor->cell.getDescription()))
         {
             LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Server says DedicatedActor %s moved to %s, but it was already there",
                 mapIndex.c_str(), getDescription().c_str());
@@ -434,12 +429,12 @@ void Cell::uninitializeDedicatedActors()
     dedicatedActors.clear();
 }
 
-LocalActor *Cell::getLocalActor(std::string actorIndex)
+LocalActor *Cell::getLocalActor(const std::string &actorIndex)
 {
     return localActors.at(actorIndex);
 }
 
-DedicatedActor *Cell::getDedicatedActor(std::string actorIndex)
+DedicatedActor *Cell::getDedicatedActor(const std::string &actorIndex)
 {
     return dedicatedActors.at(actorIndex);
 }

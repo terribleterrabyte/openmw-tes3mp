@@ -59,10 +59,26 @@ namespace mwmp
 
     struct Faction
     {
+        enum ChangesMask
+        {
+            Rank = 1,
+            Expulsion = 2,
+            Reputation = 4
+        };
+
+        inline bool isRankChanged() const { return (changes & ChangesMask::Rank) > 0; }
+        inline bool isExpulsionChanged() const { return (changes & ChangesMask::Expulsion) > 0; }
+        inline bool isReputationChanged() const { return (changes & ChangesMask::Reputation) > 0; }
+        inline void rankChanged() { changes |= ChangesMask::Rank; };
+        inline void expulsionChanged() { changes |= ChangesMask::Expulsion; };
+        inline void reputationChanged() { changes |= ChangesMask::Reputation; };
+
         std::string factionId;
         int rank;
         int reputation;
         bool isExpelled;
+
+        uint8_t changes = 0;
     };
 
     struct Topic
@@ -118,15 +134,6 @@ namespace mwmp
     struct FactionChanges
     {
         std::vector<Faction> factions;
-
-        enum class Type: uint8_t
-        {
-            Rank = 0,
-            Expulsion,
-            Reputation
-        };
-
-        Type action;
     };
 
     struct TopicChanges
@@ -240,7 +247,6 @@ namespace mwmp
 
         BasePlayer(RakNet::RakNetGUID guid) : guid(guid)
         {
-            inventoryChanges.action = InventoryChanges::Type::None;
             spellbookChanges.action = SpellbookChanges::Type::None;
             useCreatureName = false;
             isWerewolf = false;

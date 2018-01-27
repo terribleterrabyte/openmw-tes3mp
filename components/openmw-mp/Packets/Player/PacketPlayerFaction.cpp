@@ -12,9 +12,6 @@ PacketPlayerFaction::PacketPlayerFaction(RakNet::RakPeerInterface *peer) : Playe
 void PacketPlayerFaction::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
-
-    RW(player->factionChanges.action, send);
-
     uint32_t count;
 
     if (send)
@@ -30,15 +27,17 @@ void PacketPlayerFaction::Packet(RakNet::BitStream *bs, bool send)
 
     for (auto &&faction : player->factionChanges.factions)
     {
+        RW(faction.changes, send, true);
+
         RW(faction.factionId, send, true);
 
-        if (player->factionChanges.action == FactionChanges::Type::Rank)
+        if (faction.isRankChanged())
             RW(faction.rank, send);
 
-        if (player->factionChanges.action == FactionChanges::Type::Expulsion)
+        if (faction.isExpulsionChanged())
             RW(faction.isExpelled, send);
 
-        if (player->factionChanges.action == FactionChanges::Type::Reputation)
+        if (faction.isReputationChanged())
             RW(faction.reputation, send);
     }
 }

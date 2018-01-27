@@ -170,11 +170,10 @@ void DedicatedPlayer::setEquipment()
         MWWorld::ContainerStoreIterator it = invStore.getSlot(slot);
 
         const string &dedicItem = equipmentItems[slot].refId;
-        std::string item = "";
         bool equal = false;
         if (it != invStore.end())
         {
-            item = it->getCellRef().getRefId();
+            const std::string &item = it->getCellRef().getRefId();
             if (!Misc::StringUtils::ciEqual(item, dedicItem)) // if other item equiped
             {
                 MWWorld::ContainerStore &store = ptr.getClass().getContainerStore(ptr);

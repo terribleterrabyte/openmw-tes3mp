@@ -33,7 +33,7 @@ void Inventory::Init(LuaState &lua)
     );
 }
 
-Inventory::Inventory(NetActor *actor) : netActor(actor), equipmentChanged(false), inventoryChanged(mwmp::InventoryChanges::Type::None)
+Inventory::Inventory(NetActor *actor) : netActor(actor), equipmentChanged(false), inventoryChanged(false)
 {
     printf("Inventory::Inventory()\n");
 }
@@ -85,19 +85,12 @@ void Inventory::update()
     inventoryChanged = 0;*/
 }
 
-
-void Inventory::InitializeInventoryChanges()
-{
-    netActor->getNetCreature()->inventoryChanges.items.clear();
-    netActor->getNetCreature()->inventoryChanges.action = mwmp::InventoryChanges::Type::Set;
-}
-
 int Inventory::getChangesSize() const
 {
     return netActor->getNetCreature()->inventoryChanges.items.size();
 }
 
-void Inventory::equipItem(unsigned short slot, const std::string& refId, unsigned int count, int charge, double enchantmentCharge)
+void Inventory::equipItem(unsigned short slot, const std::string& refId, unsigned int count, int charge, float enchantmentCharge)
 {
     netActor->getNetCreature()->equipmentItems[slot].refId = refId;
     netActor->getNetCreature()->equipmentItems[slot].count = count;
@@ -119,12 +112,10 @@ void Inventory::unequipItem( unsigned short slot)
 }
 
 
-void Inventory::addItem(const std::string &refId, unsigned int count, int charge, double enchantmentCharge)
+void Inventory::addItem(const std::string &refId, unsigned int count, int charge, float enchantmentCharge)
 {
-    if (inventoryChanged == mwmp::InventoryChanges::Type::Remove)
-        return;
-    if (inventoryChanged == mwmp::InventoryChanges::Type::None)
-        InitializeInventoryChanges();
+    if(!inventoryChanged)
+        resetInventoryFlag();
 
     mwmp::Item item;
     item.refId = refId;
@@ -132,29 +123,24 @@ void Inventory::addItem(const std::string &refId, unsigned int count, int charge
     item.charge = charge;
     item.enchantmentCharge = enchantmentCharge;
 
-    netActor->getNetCreature()->inventoryChanges.items.push_back(item);
-    netActor->getNetCreature()->inventoryChanges.action = mwmp::InventoryChanges::Type::Add;
-    if (inventoryChanged == mwmp::InventoryChanges::Type::None && netActor->isPlayer())
+    netActor->getNetCreature()->inventoryChanges.items.emplace_back(item, mwmp::InventoryChanges::Action::Add);
+    if (netActor->isPlayer())
         netActor->toPlayer()->addToUpdateQueue();
-    inventoryChanged = netActor->getNetCreature()->inventoryChanges.action;
+    inventoryChanged = true;
 }
 
 void Inventory::removeItem(const std::string &refId, unsigned short count)
 {
-    if (inventoryChanged == mwmp::InventoryChanges::Type::Add)
-        return;
-    if (inventoryChanged == mwmp::InventoryChanges::Type::None)
-        InitializeInventoryChanges();
-
+    if(!inventoryChanged)
+        resetInventoryFlag();
     mwmp::Item item;
     item.refId = refId;
     item.count = count;
 
-    netActor->getNetCreature()->inventoryChanges.items.push_back(item);
-    netActor->getNetCreature()->inventoryChanges.action = mwmp::InventoryChanges::Type::Remove;
-    if (inventoryChanged == mwmp::InventoryChanges::Type::None && netActor->isPlayer())
+    netActor->getNetCreature()->inventoryChanges.items.emplace_back(item, mwmp::InventoryChanges::Action::Remove);
+    if (netActor->isPlayer())
         netActor->toPlayer()->addToUpdateQueue();
-    inventoryChanged = netActor->getNetCreature()->inventoryChanges.action;
+    inventoryChanged = true;
 }
 
 bool Inventory::hasItemEquipped(const std::string &refId) const
@@ -173,7 +159,7 @@ std::tuple<std::string, int, int, double> Inventory::getEquipmentItem(unsigned s
 
 std::tuple<std::string, int, int, double> Inventory::getInventoryItem(unsigned int slot) const
 {
-    const auto &item = netActor->getNetCreature()->inventoryChanges.items.at(slot);
+    const auto &item = netActor->getNetCreature()->inventoryChanges.items.at(slot).first;
     return make_tuple(item.refId, item.count, item.charge, item.enchantmentCharge);
 }
 
@@ -189,15 +175,14 @@ bool Inventory::isEquipmentChanged()
     return equipmentChanged;
 }
 
-void Inventory::resetInventoryFlag()
-{
-    inventoryChanged = mwmp::InventoryChanges::Type::None;
-}
-
-mwmp::InventoryChanges::Type Inventory::inventoryChangeType()
+bool Inventory::isInventoryChanged()
 {
     return inventoryChanged;
 }
 
+void Inventory::resetInventoryFlag()
+{
+    inventoryChanged = false;
 
-
+    netActor->getNetCreature()->inventoryChanges.items.clear();
+}

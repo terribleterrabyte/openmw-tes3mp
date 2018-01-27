@@ -29,12 +29,19 @@ namespace mwmp
             {
                 LocalPlayer &localPlayer = static_cast<LocalPlayer&>(*player);
 
-                if (localPlayer.inventoryChanges.action == InventoryChanges::Type::Add)
-                    localPlayer.addItems();
-                else if (localPlayer.inventoryChanges.action == InventoryChanges::Type::Remove)
-                    localPlayer.removeItems();
-                else // InventoryChanges::SET
-                    localPlayer.setInventory();
+                for (const auto &item : localPlayer.inventoryChanges.items)
+                {
+                    if (item.second == InventoryChanges::Action::Add)
+                        localPlayer.addItem(item.first);
+                    else if (item.second == InventoryChanges::Action::Remove)
+                        localPlayer.removeItem(item.first);
+                    else // InventoryChanges::SET
+                    {
+                        // found set flag, clear and reset inventory 
+                        localPlayer.setInventory();
+                        break;
+                    }
+                }
             }
         }
     };

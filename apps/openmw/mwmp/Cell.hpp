@@ -12,8 +12,8 @@ namespace mwmp
     {
     public:
 
-        Cell(MWWorld::CellStore* cellStore);
-        virtual ~Cell();
+        explicit Cell(MWWorld::CellStore* cellStore);
+        ~Cell() = default;
 
         void updateLocal(bool forceUpdate);
         void updateDedicated(float dt);
@@ -36,8 +36,8 @@ namespace mwmp
         void uninitializeLocalActors();
         void uninitializeDedicatedActors();
 
-        virtual LocalActor *getLocalActor(std::string actorIndex);
-        virtual DedicatedActor *getDedicatedActor(std::string actorIndex);
+        LocalActor *getLocalActor(const std::string &actorIndex);
+        DedicatedActor *getDedicatedActor(const std::string &actorIndex);
 
         bool hasLocalAuthority();
         void setAuthority(const RakNet::RakNetGUID& guid);

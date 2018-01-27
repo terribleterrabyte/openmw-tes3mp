@@ -50,7 +50,7 @@ namespace mwmp
         {
             Set = 0,
             Add,
-            Remsove,
+            Remove,
             Request
         };
 

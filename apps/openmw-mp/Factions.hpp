@@ -42,13 +42,9 @@ public:
     explicit Factions(Player *player);
     ~Factions();
 
-
-    mwmp::FactionChanges::Type getFactionChangesAction() const;
-    void setFactionChangesAction(mwmp::FactionChanges::Type action);
-
-    void addFaction(Faction faction);
+    void addFaction(const Faction &faction);
     Faction getFaction(int id) const;
-    void setFaction(int id, Faction faction);
+    void setFaction(int id, const Faction &faction);
     size_t size() const;
     void clear();
 

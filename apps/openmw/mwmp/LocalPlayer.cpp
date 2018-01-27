@@ -457,11 +457,11 @@ void LocalPlayer::updateEquipment(bool forceUpdate)
             item.refId = "";
             item.count = 0;
             item.charge = -1;
-            item.enchantmentCharge = -1;
+            item.enchantmentCharge = -1.0f;
         }
     }
 
-    if (equipmentIndexChanges.size() > 0)
+    if (!equipmentIndexChanges.empty())
     {
         getNetworking()->getPlayerPacket(ID_PLAYER_EQUIPMENT)->setPlayer(this);
         getNetworking()->getPlayerPacket(ID_PLAYER_EQUIPMENT)->Send();
@@ -500,7 +500,7 @@ void LocalPlayer::updateInventory(bool forceUpdate)
                 if (setItem(item, *result))
                     continue;
 
-                if (item == itemOld)
+                if (item == itemOld.first)
                     break;
             }
             if (result == ptrInventory.end())
@@ -520,7 +520,9 @@ void LocalPlayer::updateInventory(bool forceUpdate)
 
             auto items = inventoryChanges.items;
 
-            if (find(items.begin(), items.end(), item) == items.end())
+            if (find_if(items.begin(), items.end(), [&item](const std::pair<Item, InventoryChanges::Action> &a) {
+                return item == a.first;
+            }) == items.end())
             {
                 invChanged = true;
                 break;
@@ -650,27 +652,25 @@ void LocalPlayer::updateAnimFlags(bool forceUpdate)
     }
 }
 
-void LocalPlayer::addItems()
+void LocalPlayer::addItem(const Item &item)
 {
     MWWorld::Ptr ptrPlayer = getPlayerPtr();
     MWWorld::ContainerStore &ptrStore = ptrPlayer.getClass().getContainerStore(ptrPlayer);
 
-    for (const auto &item : inventoryChanges.items)
+    try
     {
-        try
-        {
-            MWWorld::Ptr itemPtr = *ptrStore.add(item.refId, item.count, ptrPlayer);
-            if (item.charge != -1)
-                itemPtr.getCellRef().setCharge(item.charge);
+        MWWorld::Ptr itemPtr = *ptrStore.add(item.refId, item.count, ptrPlayer);
+        if (item.charge != -1)
+            itemPtr.getCellRef().setCharge(item.charge);
 
-            if (item.enchantmentCharge != -1)
-                itemPtr.getCellRef().setEnchantmentCharge(item.enchantmentCharge);
-        }
-        catch (std::exception&)
-        {
-            LOG_APPEND(Log::LOG_INFO, "- Ignored addition of invalid inventory item %s", item.refId.c_str());
-        }
+        if (item.enchantmentCharge != -1.0f)
+            itemPtr.getCellRef().setEnchantmentCharge(item.enchantmentCharge);
     }
+    catch (std::exception&)
+    {
+        LOG_APPEND(Log::LOG_INFO, "- Ignored addition of invalid inventory item %s", item.refId.c_str());
+    }
+
 }
 
 void LocalPlayer::addSpells()
@@ -732,13 +732,12 @@ void LocalPlayer::addTopics()
     }
 }
 
-void LocalPlayer::removeItems()
+void LocalPlayer::removeItem(const Item &item)
 {
     MWWorld::Ptr ptrPlayer = getPlayerPtr();
     MWWorld::ContainerStore &ptrStore = ptrPlayer.getClass().getContainerStore(ptrPlayer);
 
-    for (const auto &item : inventoryChanges.items)
-        ptrStore.remove(item.refId, item.count, ptrPlayer);
+    ptrStore.remove(item.refId, item.count, ptrPlayer);
 }
 
 void LocalPlayer::removeSpells()
@@ -1067,7 +1066,11 @@ void LocalPlayer::setInventory()
     ptrStore.clear();
 
     // Proceed by adding items
-    addItems();
+    for(const auto &item : inventoryChanges.items)
+    {
+        if(item.second == InventoryChanges::Action::Set)
+            addItem(item.first);
+    }
 
     // Don't automatically setEquipment() here, or the player could end
     // up getting a new set of their starting clothes, or other items
@@ -1172,7 +1175,7 @@ void LocalPlayer::setFactions()
         if (!ptrNpcStats.isInFaction(faction.factionId))
             ptrNpcStats.joinFaction(faction.factionId);
 
-        if (factionChanges.action == mwmp::FactionChanges::Type::Rank)
+        if (faction.isRankChanged())
         {
             // While the faction rank is different in the packet than in the NpcStats,
             // adjust the NpcStats accordingly
@@ -1184,7 +1187,8 @@ void LocalPlayer::setFactions()
                     ptrNpcStats.lowerRank(faction.factionId);
             }
         }
-        else if (factionChanges.action == mwmp::FactionChanges::Type::Expulsion)
+
+        if (faction.isExpulsionChanged())
         {
             // If the expelled state is different in the packet than in the NpcStats,
             // adjust the NpcStats accordingly
@@ -1197,7 +1201,7 @@ void LocalPlayer::setFactions()
             }
         }
 
-        else if (factionChanges.action == mwmp::FactionChanges::Type::Reputation)
+        if (faction.isReputationChanged())
             ptrNpcStats.setFactionReputation(faction.factionId, faction.reputation);
     }
 }
@@ -1272,10 +1276,9 @@ void LocalPlayer::sendInventory()
         item.charge = iter.getCellRef().getCharge();
         item.enchantmentCharge = iter.getCellRef().getEnchantmentCharge();
 
-        inventoryChanges.items.push_back(item);
+        inventoryChanges.items.emplace_back(item, InventoryChanges::Action::Set);
     }
 
-    inventoryChanges.action = InventoryChanges::Type::Set;
     getNetworking()->getPlayerPacket(ID_PLAYER_INVENTORY)->setPlayer(this);
     getNetworking()->getPlayerPacket(ID_PLAYER_INVENTORY)->Send();
 }
@@ -1416,11 +1419,11 @@ void LocalPlayer::sendJournalIndex(const std::string& quest, int index)
 void LocalPlayer::sendFactionRank(const std::string& factionId, int rank)
 {
     factionChanges.factions.clear();
-    factionChanges.action = FactionChanges::Type::Rank;
 
     mwmp::Faction faction;
     faction.factionId = factionId;
     faction.rank = rank;
+    faction.rankChanged();
 
     factionChanges.factions.push_back(faction);
 
@@ -1431,11 +1434,11 @@ void LocalPlayer::sendFactionRank(const std::string& factionId, int rank)
 void LocalPlayer::sendFactionExpulsionState(const std::string& factionId, bool isExpelled)
 {
     factionChanges.factions.clear();
-    factionChanges.action = FactionChanges::Type::Expulsion;
 
     mwmp::Faction faction;
     faction.factionId = factionId;
     faction.isExpelled = isExpelled;
+    faction.expulsionChanged();
 
     factionChanges.factions.push_back(faction);
 
@@ -1446,11 +1449,11 @@ void LocalPlayer::sendFactionExpulsionState(const std::string& factionId, bool i
 void LocalPlayer::sendFactionReputation(const std::string& factionId, int reputation)
 {
     factionChanges.factions.clear();
-    factionChanges.action = FactionChanges::Type::Reputation;
 
     mwmp::Faction faction;
     faction.factionId = factionId;
     faction.reputation = reputation;
+    faction.reputationChanged();
 
     factionChanges.factions.push_back(faction);
 

@@ -12,7 +12,6 @@ PacketPlayerPosition::PacketPlayerPosition(RakNet::RakPeerInterface *peer) : Pla
 {
     packetID = ID_PLAYER_POSITION;
     priority = MEDIUM_PRIORITY;
-    //reliability = UNRELIABLE_SEQUENCED;
 }
 
 void PacketPlayerPosition::Packet(RakNet::BitStream *bs, bool send)
@@ -23,6 +22,11 @@ void PacketPlayerPosition::Packet(RakNet::BitStream *bs, bool send)
     unsigned char dir;
     if (send)
     {
+        if((player->movementFlags & /*Flag_ForceJump*/16) != 0)
+            reliability = RELIABLE_ORDERED;
+        else
+            reliability = UNRELIABLE_SEQUENCED;
+
         rot[0] = player->position.rot[0] * 0.1f;
         rot[1] = player->position.rot[2] * 0.1f;
 
