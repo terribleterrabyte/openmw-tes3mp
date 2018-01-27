@@ -60,6 +60,15 @@ void mwmp::GUIController::cleanUp()
     mChat = nullptr;
 }
 
+void mwmp::GUIController::refreshGuiMode(MWGui::GuiMode guiMode)
+{
+    if (MWBase::Environment::get().getWindowManager()->containsMode(guiMode))
+    {
+        MWBase::Environment::get().getWindowManager()->removeGuiMode(guiMode);
+        MWBase::Environment::get().getWindowManager()->pushGuiMode(guiMode);
+    }
+}
+
 void mwmp::GUIController::setupChat(const Settings::Manager &mgr)
 {
     assert(mChat == nullptr);
@@ -120,8 +129,13 @@ void mwmp::GUIController::setChatVisible(bool chatVisible)
 void mwmp::GUIController::showDialogList(const mwmp::BasePlayer::GUIMessageBox &guiMessageBox)
 {
     MWBase::WindowManager *windowManager = MWBase::Environment::get().getWindowManager();
-    windowManager->removeDialog(mListBox);
-    mListBox = nullptr;
+    
+    if (mListBox != NULL)
+    {
+        windowManager->removeDialog(mListBox);
+        windowManager->removeCurrentModal(mListBox);
+        mListBox = NULL;
+    }
 
     std::vector<std::string> list;
 

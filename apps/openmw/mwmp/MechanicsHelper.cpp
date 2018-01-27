@@ -213,3 +213,45 @@ void MechanicsHelper::processAttack(Attack attack, const MWWorld::Ptr& attacker)
         LOG_APPEND(Log::LOG_VERBOSE, " - success: %d", attack.success);
     }
 }
+
+bool MechanicsHelper::doesEffectListContainEffect(const ESM::EffectList& effectList, short effectId, short attributeId, short skillId)
+{
+    for (const auto &effect : effectList.mList)
+    {
+        if (effect.mEffectID == effectId)
+        {
+            if (attributeId == -1 || effect.mAttribute == attributeId)
+            {
+                if (skillId == -1 || effect.mSkill == skillId)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+void MechanicsHelper::unequipItemsByEffect(const MWWorld::Ptr& ptr, short enchantmentType, short effectId, short attributeId, short skillId)
+{
+    MWBase::World *world = MWBase::Environment::get().getWorld();
+    MWWorld::InventoryStore &ptrInventory = ptr.getClass().getInventoryStore(ptr);
+
+    for (int slot = 0; slot < MWWorld::InventoryStore::Slots; slot++)
+    {
+        if (ptrInventory.getSlot(slot) != ptrInventory.end())
+        {
+            MWWorld::ConstContainerStoreIterator itemIterator = ptrInventory.getSlot(slot);
+            std::string enchantmentName = itemIterator->getClass().getEnchantment(*itemIterator);
+
+            if (!enchantmentName.empty())
+            {
+                const ESM::Enchantment* enchantment = world->getStore().get<ESM::Enchantment>().find(enchantmentName);
+
+                if (enchantment->mData.mType == enchantmentType && doesEffectListContainEffect(enchantment->mEffects, effectId, attributeId, skillId))
+                    ptrInventory.unequipSlot(slot, ptr);
+            }
+        }
+    }
+}

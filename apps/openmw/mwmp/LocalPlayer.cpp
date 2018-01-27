@@ -35,6 +35,7 @@
 #include "Main.hpp"
 #include "Networking.hpp"
 #include "CellController.hpp"
+#include "GUIController.hpp"
 #include "MechanicsHelper.hpp"
 
 using namespace mwmp;
@@ -428,6 +429,7 @@ void LocalPlayer::updateEquipment(bool forceUpdate)
     {
         auto &item = equipmentItems[slot];
         MWWorld::ContainerStoreIterator it = invStore.getSlot(slot);
+
         if (it != invStore.end())
         {
             if (!::Misc::StringUtils::ciEqual(it->getCellRef().getRefId(), equipmentItems[slot].refId) || forceUpdate)
@@ -753,6 +755,61 @@ void LocalPlayer::removeSpells()
     }
 }
 
+void LocalPlayer::resurrect()
+{
+    creatureStats.mDead = false;
+
+    MWBase::World *world = MWBase::Environment::get().getWorld();
+    MWWorld::Ptr ptrPlayer = getPlayerPtr();
+
+    switch (player->resurrectType)
+    {
+        case ResurrectType::Regular:
+            break;
+        case ResurrectType::ImperialShrine:
+            world->teleportToClosestMarker(ptrPlayer, "divinemarker");
+            break;
+        case ResurrectType::TribunalTemple:
+            world->teleportToClosestMarker(ptrPlayer, "templemarker");
+            break;
+    }
+
+    ptrPlayer.getClass().getCreatureStats(ptrPlayer).resurrect();
+
+    // The player could have died from a hand-to-hand attack, so reset their fatigue
+    // as well
+    if (creatureStats.mDynamic[2].mMod < 1)
+        creatureStats.mDynamic[2].mMod = 1;
+
+    creatureStats.mDynamic[2].mCurrent = creatureStats.mDynamic[2].mMod;
+    MWMechanics::DynamicStat<float> fatigue;
+    fatigue.readState(creatureStats.mDynamic[2]);
+    ptrPlayer.getClass().getCreatureStats(ptrPlayer).setFatigue(fatigue);
+
+    // If this player had a weapon or spell readied when dying, they will still have it
+    // readied but be unable to use it unless we clear it here
+    ptrPlayer.getClass().getNpcStats(ptrPlayer).setDrawState(MWMechanics::DrawState_Nothing);
+
+    // Record that the player has died since the last attempt was made to arrest them,
+    // used to make guards lenient enough to attempt an arrest again
+    diedSinceArrestAttempt = true;
+
+    LOG_APPEND(Log::LOG_INFO, "- diedSinceArrestAttempt is now true");
+
+    // Ensure we unequip any items with constant effects that can put us into an infinite
+    // death loop
+    MechanicsHelper::unequipItemsByEffect(ptrPlayer, ESM::Enchantment::ConstantEffect, ESM::MagicEffect::DrainHealth);
+    MechanicsHelper::unequipItemsByEffect(ptrPlayer, ESM::Enchantment::ConstantEffect, ESM::MagicEffect::FireDamage);
+    MechanicsHelper::unequipItemsByEffect(ptrPlayer, ESM::Enchantment::ConstantEffect, ESM::MagicEffect::FrostDamage);
+    MechanicsHelper::unequipItemsByEffect(ptrPlayer, ESM::Enchantment::ConstantEffect, ESM::MagicEffect::ShockDamage);
+    MechanicsHelper::unequipItemsByEffect(ptrPlayer, ESM::Enchantment::ConstantEffect, ESM::MagicEffect::SunDamage);
+
+    Main::get().getNetworking()->getPlayerPacket(ID_PLAYER_RESURRECT)->setPlayer(this);
+    Main::get().getNetworking()->getPlayerPacket(ID_PLAYER_RESURRECT)->Send();
+
+    updateStatsDynamic(true);
+}
+
 void LocalPlayer::closeInventoryWindows()
 {
     if (MWBase::Environment::get().getWindowManager()->containsMode(MWGui::GM_Container) ||
@@ -781,47 +838,67 @@ void LocalPlayer::setDynamicStats()
 
 void LocalPlayer::setAttributes()
 {
-    MWBase::World *world = MWBase::Environment::get().getWorld();
-    MWWorld::Ptr ptrPlayer = world->getPlayerPtr();
+    MWWorld::Ptr ptrPlayer = getPlayerPtr();
 
     MWMechanics::CreatureStats *ptrCreatureStats = &ptrPlayer.getClass().getCreatureStats(ptrPlayer);
     MWMechanics::AttributeValue attributeValue;
 
-    for (int i = 0; i < 8; ++i)
+    for (int attributeIndex = 0; attributeIndex < 8; ++attributeIndex)
     {
         // If the server wants to clear our attribute's non-zero modifier, we need to remove
         // the spell effect causing it, to avoid an infinite loop where the effect keeps resetting
         // the modifier
-        if (creatureStats.mAttributes[i].mMod == 0 && ptrCreatureStats->getAttribute(i).getModifier() > 0)
-            ptrCreatureStats->getActiveSpells().purgeEffectByArg(ESM::MagicEffect::FortifyAttribute, i);
+        if (creatureStats.mAttributes[attributeIndex].mMod == 0 && ptrCreatureStats->getAttribute(attributeIndex).getModifier() > 0)
+        {
+            ptrCreatureStats->getActiveSpells().purgeEffectByArg(ESM::MagicEffect::FortifyAttribute, attributeIndex);
+            MWBase::Environment::get().getMechanicsManager()->updateMagicEffects(ptrPlayer);
 
-        attributeValue.readState(creatureStats.mAttributes[i]);
-        ptrCreatureStats->setAttribute(i, attributeValue);
+            // Is the modifier for this attribute still higher than 0? If so, unequip items that
+            // fortify the attribute
+            if (ptrCreatureStats->getAttribute(attributeIndex).getModifier() > 0)
+            {
+                MechanicsHelper::unequipItemsByEffect(ptrPlayer, ESM::Enchantment::ConstantEffect, ESM::MagicEffect::FortifyAttribute, attributeIndex, -1);
+                mwmp::Main::get().getGUIController()->refreshGuiMode(MWGui::GM_Inventory);
+            }
+        }
+
+        attributeValue.readState(creatureStats.mAttributes[attributeIndex]);
+        ptrCreatureStats->setAttribute(attributeIndex, attributeValue);
     }
 }
 
 void LocalPlayer::setSkills()
 {
-    MWBase::World *world = MWBase::Environment::get().getWorld();
-    MWWorld::Ptr ptrPlayer = world->getPlayerPtr();
+    MWWorld::Ptr ptrPlayer = getPlayerPtr();
 
     MWMechanics::NpcStats *ptrNpcStats = &ptrPlayer.getClass().getNpcStats(ptrPlayer);
     MWMechanics::SkillValue skillValue;
 
-    for (int i = 0; i < 27; ++i)
+    for (int skillIndex = 0; skillIndex < 27; ++skillIndex)
     {
         // If the server wants to clear our skill's non-zero modifier, we need to remove
         // the spell effect causing it, to avoid an infinite loop where the effect keeps resetting
         // the modifier
-        if (npcStats.mSkills[i].mMod == 0 && ptrNpcStats->getSkill(i).getModifier() > 0)
-            ptrNpcStats->getActiveSpells().purgeEffectByArg(ESM::MagicEffect::FortifySkill, i);
+        if (npcStats.mSkills[skillIndex].mMod == 0 && ptrNpcStats->getSkill(skillIndex).getModifier() > 0)
+        {
+            ptrNpcStats->getActiveSpells().purgeEffectByArg(ESM::MagicEffect::FortifySkill, skillIndex);
+            MWBase::Environment::get().getMechanicsManager()->updateMagicEffects(ptrPlayer);
 
-        skillValue.readState(npcStats.mSkills[i]);
-        ptrNpcStats->setSkill(i, skillValue);
+            // Is the modifier for this skill still higher than 0? If so, unequip items that
+            // fortify the skill
+            if (ptrNpcStats->getSkill(skillIndex).getModifier() > 0)
+            {
+                MechanicsHelper::unequipItemsByEffect(ptrPlayer, ESM::Enchantment::ConstantEffect, ESM::MagicEffect::FortifySkill, -1, skillIndex);
+                mwmp::Main::get().getGUIController()->refreshGuiMode(MWGui::GM_Inventory);
+            }
+        }
+
+        skillValue.readState(npcStats.mSkills[skillIndex]);
+        ptrNpcStats->setSkill(skillIndex, skillValue);
     }
 
-    for (int i = 0; i < 8; ++i)
-        ptrNpcStats->setSkillIncrease(i, npcStats.mSkillIncrease[i]);
+    for (int attributeIndex = 0; attributeIndex < 8; ++attributeIndex)
+        ptrNpcStats->setSkillIncrease(attributeIndex, npcStats.mSkillIncrease[attributeIndex]);
 
     ptrNpcStats->setLevelProgress(npcStats.mLevelProgress);
 }
@@ -918,6 +995,8 @@ void LocalPlayer::setCell()
 
 void LocalPlayer::setClass()
 {
+    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Received ID_PLAYER_CLASS from server");
+
     if (charClass.mId.empty()) // custom class
     {
         charClass.mData.mIsPlayable = 0x1;
@@ -926,12 +1005,15 @@ void LocalPlayer::setClass()
     }
     else
     {
-        MWBase::Environment::get().getMechanicsManager()->setPlayerClass(charClass.mId);
-
-        const ESM::Class *existingCharClass = MWBase::Environment::get().getWorld()->getStore().get<ESM::Class>().find(charClass.mId);
+        const ESM::Class *existingCharClass = MWBase::Environment::get().getWorld()->getStore().get<ESM::Class>().search(charClass.mId);
 
         if (existingCharClass)
+        {
+            MWBase::Environment::get().getMechanicsManager()->setPlayerClass(charClass.mId);
             MWBase::Environment::get().getWindowManager()->setPlayerClass(charClass);
+        }
+        else
+            LOG_APPEND(Log::LOG_INFO, "- Ignored invalid default class %s", charClass.mId.c_str());
     }
 }
 
@@ -1074,8 +1156,18 @@ void LocalPlayer::setFactions()
     MWWorld::Ptr ptrPlayer = getPlayerPtr();
     MWMechanics::NpcStats &ptrNpcStats = ptrPlayer.getClass().getNpcStats(ptrPlayer);
 
+    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Received ID_PLAYER_FACTION from server\n- action: %i", factionChanges.action);
+
     for (const auto &faction : factionChanges.factions)
     {
+        const ESM::Faction *esmFaction = MWBase::Environment::get().getWorld()->getStore().get<ESM::Faction>().search(faction.factionId);
+
+        if (!esmFaction)
+        {
+            LOG_APPEND(Log::LOG_INFO, "- Ignored invalid faction %s", faction.factionId.c_str());
+            continue;
+        }
+
         // If the player isn't in this faction, make them join it
         if (!ptrNpcStats.isInFaction(faction.factionId))
             ptrNpcStats.joinFaction(faction.factionId);
@@ -1145,18 +1237,18 @@ void LocalPlayer::setShapeshift()
 void LocalPlayer::sendClass()
 {
     MWBase::World *world = MWBase::Environment::get().getWorld();
-    const ESM::NPC *cpl = world->getPlayerPtr().get<ESM::NPC>()->mBase;
-    const ESM::Class *cls = world->getStore().get<ESM::Class>().find(cpl->mClass);
+    const ESM::NPC *npcBase = world->getPlayerPtr().get<ESM::NPC>()->mBase;
+    const ESM::Class *esmClass = world->getStore().get<ESM::Class>().find(npcBase->mClass);
 
-    if (cpl->mClass.find("$dynamic") != string::npos) // custom class
+    if (npcBase->mClass.find("$dynamic") != string::npos) // custom class
     {
         charClass.mId = "";
-        charClass.mName = cls->mName;
-        charClass.mDescription = cls->mDescription;
-        charClass.mData = cls->mData;
+        charClass.mName = esmClass->mName;
+        charClass.mDescription = esmClass->mDescription;
+        charClass.mData = esmClass->mData;
     }
     else
-        charClass.mId = cls->mId;
+        charClass.mId = esmClass->mId;
 
     getNetworking()->getPlayerPacket(ID_PLAYER_CHARCLASS)->setPlayer(this);
     getNetworking()->getPlayerPacket(ID_PLAYER_CHARCLASS)->Send();
