@@ -168,7 +168,7 @@ void DedicatedActor::setEquipment()
 
     for (int slot = 0; slot < MWWorld::InventoryStore::Slots; ++slot)
     {
-        int count = equipedItems[slot].count;
+        int count = equipmentItems[slot].count;
 
         // If we've somehow received a corrupted item with a count lower than 0, ignore it
         if (count < 0) continue;

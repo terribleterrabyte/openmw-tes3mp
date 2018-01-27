@@ -761,7 +761,7 @@ void LocalPlayer::resurrect()
     MWBase::World *world = MWBase::Environment::get().getWorld();
     MWWorld::Ptr ptrPlayer = getPlayerPtr();
 
-    switch (player->resurrectType)
+    switch (resurrectType)
     {
         case ResurrectType::Regular:
             break;
@@ -1159,7 +1159,7 @@ void LocalPlayer::setFactions()
     MWWorld::Ptr ptrPlayer = getPlayerPtr();
     MWMechanics::NpcStats &ptrNpcStats = ptrPlayer.getClass().getNpcStats(ptrPlayer);
 
-    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Received ID_PLAYER_FACTION from server\n- action: %i", factionChanges.action);
+    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Received ID_PLAYER_FACTION from server");
 
     for (const auto &faction : factionChanges.factions)
     {
