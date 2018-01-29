@@ -5,7 +5,7 @@
 
 namespace mwmp
 {
-    class ProcessorPlayerQuickKeys : public PlayerProcessor
+    class ProcessorPlayerQuickKeys final : public PlayerProcessor
     {
     public:
         ProcessorPlayerQuickKeys()
