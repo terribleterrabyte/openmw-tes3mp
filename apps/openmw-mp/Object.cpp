@@ -58,6 +58,7 @@ void Object::setPosition(float x, float y, float z)
     object.position.pos[0] = x;
     object.position.pos[1] = y;
     object.position.pos[2] = z;
+    object.droppedByPlayer = false;
     changedObjectPlace = true;
 }
 
