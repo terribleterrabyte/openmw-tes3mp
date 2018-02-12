@@ -69,6 +69,7 @@ void Player::Init(LuaState &lua)
                                          "resurrect", &Player::resurrect,
                                          "jail", &Player::jail,
                                          "werewolf",  sol::property(&Player::getWerewolfState, &Player::setWerewolfState),
+                                         "scale", sol::property(&Player::getScale, &Player::setScale),
 
                                          "getAttribute", &Player::getAttribute,
                                          "setAttribute", &Player::setAttribute,
@@ -96,6 +97,8 @@ void Player::Init(LuaState &lua)
                                          "setMarkRotation", &Player::setMarkRotation,
                                          "getMarkCell", &Player::getMarkCell,
                                          "setMarkCell", &Player::setMarkCell,
+                                         "getSelectedSpell", &Player::getSelectedSpell,
+                                         "setSelectedSpell", &Player::setSelectedSpell,
 
                                          "getCellState", &Player::getCellState,
                                          "cellStateSize", &Player::cellStateSize,
