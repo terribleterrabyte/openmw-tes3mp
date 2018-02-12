@@ -1,14 +1,14 @@
-#ifndef OPENMW_PROCESSORPLAYERRECORDDYNAMIC_HPP
-#define OPENMW_PROCESSORPLAYERRECORDDYNAMIC_HPP
+#ifndef OPENMW_PROCESSORRECORDDYNAMIC_HPP
+#define OPENMW_PROCESSORRECORDDYNAMIC_HPP
 
 #include "../PlayerProcessor.hpp"
 
 namespace mwmp
 {
-    class ProcessorPlayerRecordDynamic final : public PlayerProcessor
+    class ProcessorRecordDynamic final : public PlayerProcessor
     {
     public:
-        ProcessorPlayerRecordDynamic()
+        ProcessorRecordDynamic()
         {
             BPP_INIT(ID_RECORD_DYNAMIC)
         }
@@ -17,9 +17,9 @@ namespace mwmp
         {
             DEBUG_PRINTF(strPacketID.c_str());
 
-            Script::Call<Script::CallbackIdentity("OnRecordDynamic")>(player.getId());
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_RECORD_DYNAMIC>(player);
         }
     };
 }
 
-#endif //OPENMW_PROCESSORPLAYERRECORDDYNAMIC_HPP
+#endif //OPENMW_PROCESSORRECORDDYNAMIC_HPP

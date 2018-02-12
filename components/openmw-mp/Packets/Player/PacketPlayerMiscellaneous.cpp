@@ -12,5 +12,20 @@ void PacketPlayerMiscellaneous::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
 
-    // Placeholder
+    RW(player->miscellaneousChangeType, send);
+
+    switch (player->miscellaneousChangeType)
+    {
+        case MiscellaneousChangeType::MarkLocation:
+            RW(player->markCell.mData, send, 1);
+            RW(player->markCell.mName, send, 1);
+
+            RW(player->markPosition.pos, send);
+            RW(player->markPosition.rot[0], send);
+            RW(player->markPosition.rot[2], send);
+            break;
+        case MiscellaneousChangeType::SelectedSpell:
+            RW(player->selectedSpellId, send, 1);
+            break;
+    }
 }

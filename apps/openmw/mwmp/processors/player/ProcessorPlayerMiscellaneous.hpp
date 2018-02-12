@@ -23,7 +23,16 @@ namespace mwmp
             if (!isRequest())
             {
                 LocalPlayer &localPlayer = static_cast<LocalPlayer&>(*player);
-                //localPlayer.setMiscellaneous();
+
+                switch (player->miscellaneousChangeType)
+                {
+                    case MiscellaneousChangeType::MarkLocation:
+                        localPlayer.setMarkLocation();
+                        break;
+                    case MiscellaneousChangeType::SelectedSpell:
+                        localPlayer.setSelectedSpell();    
+                        break;
+                }
             }
         }
     };

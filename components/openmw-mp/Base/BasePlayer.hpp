@@ -187,6 +187,12 @@ namespace mwmp
         TribunalTemple
     };
 
+    enum class MiscellaneousChangeType : uint8_t
+    {
+        MarkLocation = 0,
+        SelectedSpell
+    };
+
     class BasePlayer : public mwmp::BaseNetCreature
     {
     public:
@@ -316,6 +322,7 @@ namespace mwmp
         std::string sound;
         Animation animation;
 
+        float scale;
         bool isWerewolf;
         std::string creatureModel;
         bool useCreatureName;
@@ -329,10 +336,15 @@ namespace mwmp
         std::string jailEndText;
 
         ResurrectType resurrectType;
+        MiscellaneousChangeType miscellaneousChangeType;
 
-        bool diedSinceArrestAttempt;
+        ESM::Cell markCell;
+        ESM::Position markPosition;
+        std::string selectedSpellId;
+
         bool isReceivingQuickKeys;
         bool isPlayingAnimation;
+        bool diedSinceArrestAttempt;
     };
 }
 

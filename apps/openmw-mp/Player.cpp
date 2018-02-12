@@ -61,6 +61,7 @@ void Player::Init(LuaState &lua)
                                          "hair", sol::property(&Player::getHair, &Player::setHair),
                                          "birthsign", sol::property(&Player::getBirthsign, &Player::setBirthsign),
                                          "bounty", sol::property(&Player::getBounty, &Player::setBounty),
+                                         "reputation", sol::property(&Player::getReputation, &Player::setReputation),
                                          "levelProgress", sol::property(&Player::getLevelProgress, &Player::setLevelProgress),
                                          "creatureModel", sol::property(&Player::getCreatureModel, &Player::setCreatureModel),
                                          "isCreatureName",  sol::property(&Player::isCreatureName, &Player::creatureName),
@@ -89,10 +90,18 @@ void Player::Init(LuaState &lua)
                                          "getQuickKeys", &Player::getQuickKeys,
                                          "getWeatherMgr", &Player::getWeatherMgr,
 
+                                         "getMarkPosition", &Player::getMarkPosition,
+                                         "setMarkPosition", &Player::setMarkPosition,
+                                         "getMarkRotation", &Player::getMarkRotation,
+                                         "setMarkRotation", &Player::setMarkRotation,
+                                         "getMarkCell", &Player::getMarkCell,
+                                         "setMarkCell", &Player::setMarkCell,
+
                                          "getCellState", &Player::getCellState,
                                          "cellStateSize", &Player::cellStateSize,
                                          "addCellExplored", &Player::addCellExplored,
                                          "setAuthority", &Player::setAuthority,
+
                                          "storedData", &Player::storedData,
                                          "customData", &Player::customData,
                                          "markedForDeletion", sol::property(&Player::isMarkedForDeleteion)
@@ -115,11 +124,15 @@ Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedM
     handshakeCounter = 0;
     loadState = NOTLOADED;
     resetUpdateFlags();
+
     cell.blank();
     npc.blank();
     npcStats.blank();
     creatureStats.blank();
     charClass.blank();
+    scale = 1;
+    isWerewolf = false;
+
     markedForDeletion = false;
     storedData = mwmp::Networking::get().getState().getState()->create_table();
     customData = mwmp::Networking::get().getState().getState()->create_table();
@@ -225,6 +238,24 @@ void Player::update()
         packet->setPlayer(this);
         packet->Send(/*toOthers*/ false);
         inventory.resetInventoryFlag();
+    }
+
+    if (changedMarkLocation)
+    {
+        miscellaneousChangeType = mwmp::MiscellaneousChangeType::MarkLocation;
+        auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_MISCELLANEOUS);
+        packet->setPlayer(this);
+        packet->Send(false);
+        changedMarkLocation = false;
+    }
+
+    if (changedSelectedSpell)
+    {
+        miscellaneousChangeType = mwmp::MiscellaneousChangeType::SelectedSpell;
+        auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_MISCELLANEOUS);
+        packet->setPlayer(this);
+        packet->Send(false);
+        changedSelectedSpell = false;
     }
 
     if (changedMap)
@@ -610,6 +641,22 @@ void Player::setBounty(int bounty)
     packet->Send(true);
 }
 
+int Player::getReputation() const
+{
+    return npcStats.mReputation;
+}
+
+void Player::setReputation(int reputation, bool toOthers)
+{
+    npcStats.mReputation = reputation;
+    auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_REPUTATION);
+    packet->setPlayer(this);
+    packet->Send(false);
+
+    if (toOthers)
+      packet->Send(true);
+}
+
 int Player::getLevelProgress() const
 {
     return npcStats.mLevelProgress;
@@ -804,6 +851,70 @@ void Player::setWerewolfState(bool state)
     packet->setPlayer(this);
     packet->Send(false);
     packet->Send(true);
+}
+
+float Player::getScale() const
+{
+    return scale;
+}
+
+void Player::setScale(float newScale)
+{
+    scale = newScale;
+
+    auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_SHAPESHIFT);
+    packet->setPlayer(this);
+    packet->Send(false);
+    packet->Send(true);
+}
+
+std::tuple<float, float, float> Player::getMarkPosition()
+{
+    return make_tuple(markPosition.pos[0], markPosition.pos[1], markPosition.pos[2]);
+}
+
+void Player::setMarkPosition(float x, float y, float z)
+{
+    markPosition.pos[0] = x;
+    markPosition.pos[1] = y;
+    markPosition.pos[2] = z;
+
+    changedMarkLocation = true;
+}
+
+std::tuple<float, float> Player::getMarkRotation()
+{
+    return make_tuple(markPosition.rot[0], markPosition.rot[2]);
+}
+
+void Player::setMarkRotation(float x, float z)
+{
+    markPosition.rot[0] = x;
+    markPosition.rot[2] = z;
+
+    changedMarkLocation = true;
+}
+
+std::string Player::getMarkCell()
+{
+    return markCell.getDescription();
+}
+
+void Player::setMarkCell(const std::string &cellDescription)
+{
+    markCell = Utils::getCellFromDescription(cellDescription);
+    changedMarkLocation = true;
+}
+
+std::string Player::getSelectedSpell()
+{
+    return selectedSpellId;
+}
+
+void Player::setSelectedSpell(const std::string &newSelectedSpell)
+{
+    selectedSpellId = newSelectedSpell;
+    changedSelectedSpell = true;
 }
 
 size_t Player::cellStateSize() const

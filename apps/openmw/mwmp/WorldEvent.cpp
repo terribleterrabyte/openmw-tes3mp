@@ -166,26 +166,35 @@ void WorldEvent::placeObjects(MWWorld::CellStore* cellStore)
         // Only create this object if it doesn't already exist
         if (!ptrFound)
         {
-            MWWorld::ManualRef ref(world->getStore(), worldObject.refId, 1);
-            MWWorld::Ptr newPtr = ref.getPtr();
+            try
+            {
+                MWWorld::ManualRef ref(world->getStore(), worldObject.refId, 1);
 
-            if (worldObject.count > 1)
-                newPtr.getRefData().setCount(worldObject.count);
+                MWWorld::Ptr newPtr = ref.getPtr();
 
-            if (worldObject.charge > -1)
-                newPtr.getCellRef().setCharge(worldObject.charge);
+                if (worldObject.count > 1)
+                    newPtr.getRefData().setCount(worldObject.count);
 
-            if (worldObject.enchantmentCharge > -1.0f)
-                newPtr.getCellRef().setEnchantmentCharge(worldObject.enchantmentCharge);
+                if (worldObject.charge > -1)
+                    newPtr.getCellRef().setCharge(worldObject.charge);
 
-            newPtr.getCellRef().setGoldValue(worldObject.goldValue);
-            newPtr = world->placeObject(newPtr, cellStore, worldObject.position);
+                if (worldObject.enchantmentCharge > -1.0f)
+                    newPtr.getCellRef().setEnchantmentCharge(worldObject.enchantmentCharge);
 
-            // Because gold automatically gets replaced with a new object, make sure we set the mpNum at the end
-            newPtr.getCellRef().setMpNum(worldObject.mpNum);
+                newPtr.getCellRef().setGoldValue(worldObject.goldValue);
+                newPtr = world->placeObject(newPtr, cellStore, worldObject.position);
 
-            if (guid == Main::get().getLocalPlayer()->guid && worldObject.droppedByPlayer)
-                world->PCDropped(newPtr);
+                // Because gold automatically gets replaced with a new object, make sure we set the mpNum at the end
+                newPtr.getCellRef().setMpNum(worldObject.mpNum);
+
+                if (guid == Main::get().getLocalPlayer()->guid && worldObject.droppedByPlayer)
+                    world->PCDropped(newPtr);
+
+            }
+            catch (std::exception&)
+            {
+                LOG_APPEND(Log::LOG_INFO, "-- Ignored placement of invalid object");
+            }
         }
         else
             LOG_APPEND(Log::LOG_VERBOSE, "-- Object already existed!");
@@ -468,24 +477,20 @@ void WorldEvent::runConsoleCommands(MWWorld::CellStore* cellStore)
 
             if (worldObject.isPlayer)
             {
-                BasePlayer *player = 0;
-                
                 if (worldObject.guid == Main::get().getLocalPlayer()->guid)
                 {
-                    player = Main::get().getLocalPlayer();
-
                     LOG_APPEND(Log::LOG_VERBOSE, "-- running on local player");
-                    windowManager->setConsolePtr(static_cast<LocalPlayer*>(player)->getPlayerPtr());
+                    windowManager->setConsolePtr(Main::get().getLocalPlayer()->getPlayerPtr());
                     windowManager->executeCommandInConsole(consoleCommand);
                 }
                 else
                 {
-                    player = PlayerList::getPlayer(worldObject.guid);
+                    DedicatedPlayer *player = PlayerList::getPlayer(worldObject.guid);
 
                     if (player != 0)
                     {
                         LOG_APPEND(Log::LOG_VERBOSE, "-- running on player %s", player->npc.mName.c_str());
-                        windowManager->setConsolePtr(static_cast<DedicatedPlayer*>(player)->getPtr());
+                        windowManager->setConsolePtr(player->getPtr());
                         windowManager->executeCommandInConsole(consoleCommand);
                     }
                 }
@@ -508,7 +513,7 @@ void WorldEvent::runConsoleCommands(MWWorld::CellStore* cellStore)
         }
 
         windowManager->clearConsolePtr();
-    } 
+    }
 }
 
 void WorldEvent::setLocalShorts(MWWorld::CellStore* cellStore)

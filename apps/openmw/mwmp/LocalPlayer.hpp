@@ -29,6 +29,7 @@ namespace mwmp
         void updateSkills(bool forceUpdate = false);
         void updateLevel(bool forceUpdate = false);
         void updateBounty(bool forceUpdate = false);
+        void updateReputation(bool forceUpdate = false);
         void updatePosition(bool forceUpdate = false);
         void updateCell(bool forceUpdate = false);
         void updateChar();
@@ -55,6 +56,7 @@ namespace mwmp
         void setSkills();
         void setLevel();
         void setBounty();
+        void setReputation();
         void setPosition();
         void setCell();
         void setClass();
@@ -67,16 +69,18 @@ namespace mwmp
         void setBooks();
         void setMapExplored();
         void setShapeshift();
+        void setMarkLocation();
+        void setSelectedSpell();
 
         void sendClass();
         void sendInventory();
         void sendSpellbook();
         void sendCellStates();
         void sendSpellAddition(std::string id);
-        void sendSpellAddition(const ESM::Spell &spell);
+        void sendSpellAddition(const ESM::Spell& spell);
         void sendSpellRemoval(std::string id);
-        void sendSpellRemoval(const ESM::Spell &spell);
-        void sendQuickKey(int slot, QuickKey::Type type, const std::string& itemId = "");
+        void sendSpellRemoval(const ESM::Spell& spell);
+        void sendQuickKey(unsigned short slot, QuickKey::Type type, const std::string& itemId = "");
         void sendJournalEntry(const std::string& quest, int index, const MWWorld::Ptr& actor);
         void sendJournalIndex(const std::string& quest, int index);
         void sendFactionRank(const std::string& factionId, int rank);
@@ -85,7 +89,10 @@ namespace mwmp
         void sendTopic(const std::string& topic);
         void sendKill(const std::string& refId, int number);
         void sendBook(const std::string& bookId);
-        void sendShapeshift(bool isWerewolf);
+        void sendScale(float newScale);
+        void sendWerewolfState(bool isWerewolf);
+        void sendMarkLocation(const ESM::Cell& newMarkCell, const ESM::Position& newMarkPosition);
+        void sendSelectedSpell(const std::string& newSelectedSpellId);
 
         void clearCellStates();
         void clearCurrentContainer();

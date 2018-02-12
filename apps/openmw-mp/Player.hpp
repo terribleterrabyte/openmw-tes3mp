@@ -104,6 +104,9 @@ public:
 
     int getBounty() const;
     void setBounty(int bounty);
+    int getReputation() const;
+    void setReputation(int reputation, bool toOthers);
+
     int getLevel() const;
     void setLevel(int level);
     int getLevelProgress() const;
@@ -142,6 +145,9 @@ public:
     bool getWerewolfState() const;
     void setWerewolfState(bool state);
 
+    float getScale() const;
+    void setScale(float newScale);
+
     std::string getCreatureModel() const;
     void setCreatureModel(const std::string &model);
     void creatureName(bool useName);
@@ -172,6 +178,16 @@ public:
     int getSkillIncrease(unsigned short attributeId) const;
     void setSkillIncrease(unsigned short attributeId, int increase);
 
+    std::tuple<float, float, float> getMarkPosition();
+    void setMarkPosition(float x, float y, float z);
+    std::tuple<float, float> getMarkRotation();
+    void setMarkRotation(float x, float z);
+    std::string getMarkCell();
+    void setMarkCell(const std::string &cellDescription);
+
+    std::string getSelectedSpell();
+    void setSelectedSpell(const std::string &newSelectedSpellId);
+
     CellState getCellState(int i);
     size_t cellStateSize() const;
     void addCellExplored(const std::string &cellDescription);
@@ -197,7 +213,7 @@ private:
     CellController::TContainer cells;
     int handshakeCounter;
     int loadState;
-    bool /*statsChanged, attributesChanged, skillsChanged, baseInfoChanged, positionChanged,*/ changedMap;
+    bool /*statsChanged, attributesChanged, skillsChanged, baseInfoChanged, positionChanged,*/ changedMarkLocation, changedSelectedSpell, changedMap;
     CharClass cClass;
     GameSettings settings;
     Books books;

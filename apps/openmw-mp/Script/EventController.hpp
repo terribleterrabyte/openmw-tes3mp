@@ -46,6 +46,8 @@ namespace CoreEvent
         ON_PLAYER_ENDCHARGEN,
         ON_PLAYER_WEATHER,
 
+        ON_RECORD_DYNAMIC,
+
         ON_CHANNEL_ACTION,
 
         ON_GUI_ACTION,

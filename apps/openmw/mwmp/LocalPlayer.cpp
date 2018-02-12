@@ -19,6 +19,7 @@
 #include "../mwmechanics/aitravel.hpp"
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwmechanics/mechanicsmanagerimp.hpp"
+#include "../mwmechanics/spellcasting.hpp"
 
 #include "../mwscript/scriptmanagerimp.hpp"
 
@@ -65,6 +66,7 @@ LocalPlayer::LocalPlayer()
     jailProgressText = "";
     jailEndText = "";
 
+    scale = 1;
     isWerewolf = false;
 
     diedSinceArrestAttempt = false;
@@ -106,6 +108,7 @@ void LocalPlayer::update()
         updateSkills();
         updateLevel();
         updateBounty();
+        updateReputation();
     }
 }
 
@@ -319,6 +322,19 @@ void LocalPlayer::updateBounty(bool forceUpdate)
         npcStats.mBounty = ptrNpcStats.getBounty();
         getNetworking()->getPlayerPacket(ID_PLAYER_BOUNTY)->setPlayer(this);
         getNetworking()->getPlayerPacket(ID_PLAYER_BOUNTY)->Send();
+    }
+}
+
+void LocalPlayer::updateReputation(bool forceUpdate)
+{
+    MWWorld::Ptr ptrPlayer = getPlayerPtr();
+    const MWMechanics::NpcStats &ptrNpcStats = ptrPlayer.getClass().getNpcStats(ptrPlayer);
+
+    if (ptrNpcStats.getReputation() != npcStats.mReputation || forceUpdate)
+    {
+        npcStats.mReputation = ptrNpcStats.getReputation();
+        getNetworking()->getPlayerPacket(ID_PLAYER_REPUTATION)->setPlayer(this);
+        getNetworking()->getPlayerPacket(ID_PLAYER_REPUTATION)->Send();
     }
 }
 
@@ -920,6 +936,15 @@ void LocalPlayer::setBounty()
     ptrNpcStats->setBounty(npcStats.mBounty);
 }
 
+void LocalPlayer::setReputation()
+{
+    MWBase::World *world = MWBase::Environment::get().getWorld();
+    MWWorld::Ptr ptrPlayer = world->getPlayerPtr();
+
+    MWMechanics::NpcStats *ptrNpcStats = &ptrPlayer.getClass().getNpcStats(ptrPlayer);
+    ptrNpcStats->setReputation(npcStats.mReputation);
+}
+
 void LocalPlayer::setPosition()
 {
     MWBase::World *world = MWBase::Environment::get().getWorld();
@@ -1235,7 +1260,31 @@ void LocalPlayer::setMapExplored()
 void LocalPlayer::setShapeshift()
 {
     MWWorld::Ptr ptrPlayer = getPlayerPtr();
+
+    MWBase::Environment::get().getWorld()->scaleObject(ptrPlayer, scale);
     MWBase::Environment::get().getMechanicsManager()->setWerewolf(ptrPlayer, isWerewolf);
+}
+
+void LocalPlayer::setMarkLocation()
+{
+    MWWorld::CellStore *ptrCellStore = Main::get().getCellController()->getCellStore(markCell);
+
+    if (ptrCellStore)
+        MWBase::Environment::get().getWorld()->getPlayer().markPosition(ptrCellStore, markPosition);
+}
+
+void LocalPlayer::setSelectedSpell()
+{
+    MWWorld::Ptr ptrPlayer = getPlayerPtr();
+
+    MWMechanics::CreatureStats& stats = ptrPlayer.getClass().getCreatureStats(ptrPlayer);
+    MWMechanics::Spells& spells = stats.getSpells();
+
+    if (!spells.hasSpell(selectedSpellId))
+        return;
+ 
+    MWBase::Environment::get().getWindowManager()->setSelectedSpell(selectedSpellId,
+        int(MWMechanics::getSpellSuccessChance(selectedSpellId, ptrPlayer)));
 }
 
 void LocalPlayer::sendClass()
@@ -1367,7 +1416,7 @@ void LocalPlayer::sendSpellRemoval(const ESM::Spell &spell)
     */
 }
 
-void LocalPlayer::sendQuickKey(int slot, QuickKey::Type type, const std::string& itemId)
+void LocalPlayer::sendQuickKey(unsigned short slot, QuickKey::Type type, const std::string& itemId)
 {
     quickKeyChanges.quickKeys.clear();
 
@@ -1512,7 +1561,17 @@ void LocalPlayer::sendBook(const std::string& bookId)
     getNetworking()->getPlayerPacket(ID_PLAYER_BOOK)->Send();
 }
 
-void LocalPlayer::sendShapeshift(bool werewolfState)
+void LocalPlayer::sendScale(float newScale)
+{
+    scale = newScale;
+
+    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Sending ID_PLAYER_SHAPESHIFT with scale of %f", scale);
+
+    getNetworking()->getPlayerPacket(ID_PLAYER_SHAPESHIFT)->setPlayer(this);
+    getNetworking()->getPlayerPacket(ID_PLAYER_SHAPESHIFT)->Send();
+}
+
+void LocalPlayer::sendWerewolfState(bool werewolfState)
 {
     isWerewolf = werewolfState;
 
@@ -1520,6 +1579,25 @@ void LocalPlayer::sendShapeshift(bool werewolfState)
 
     getNetworking()->getPlayerPacket(ID_PLAYER_SHAPESHIFT)->setPlayer(this);
     getNetworking()->getPlayerPacket(ID_PLAYER_SHAPESHIFT)->Send();
+}
+
+void LocalPlayer::sendMarkLocation(const ESM::Cell& newMarkCell, const ESM::Position& newMarkPosition)
+{
+    miscellaneousChangeType = mwmp::MiscellaneousChangeType::MarkLocation;
+    markCell = newMarkCell;
+    markPosition = newMarkPosition;
+
+    getNetworking()->getPlayerPacket(ID_PLAYER_MISCELLANEOUS)->setPlayer(this);
+    getNetworking()->getPlayerPacket(ID_PLAYER_MISCELLANEOUS)->Send();
+}
+
+void LocalPlayer::sendSelectedSpell(const std::string& newSelectedSpellId)
+{
+    miscellaneousChangeType = mwmp::MiscellaneousChangeType::SelectedSpell;
+    selectedSpellId = newSelectedSpellId;
+
+    getNetworking()->getPlayerPacket(ID_PLAYER_MISCELLANEOUS)->setPlayer(this);
+    getNetworking()->getPlayerPacket(ID_PLAYER_MISCELLANEOUS)->Send();
 }
 
 void LocalPlayer::clearCellStates()
