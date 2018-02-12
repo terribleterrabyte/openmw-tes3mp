@@ -205,7 +205,7 @@ public:
 
     void setAuthority();
 
-    bool isMarkedForDeleteion() const;
+    bool isMarkedForDeletion() const;
 
     void addToUpdateQueue();
 

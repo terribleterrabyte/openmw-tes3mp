@@ -107,7 +107,7 @@ void Player::Init(LuaState &lua)
 
                                          "storedData", &Player::storedData,
                                          "customData", &Player::customData,
-                                         "markedForDeletion", sol::property(&Player::isMarkedForDeleteion)
+                                         "markedForDeletion", sol::property(&Player::isMarkedForDeletion)
     );
 
     lua.getState()->new_enum("ChannelAction",
@@ -957,7 +957,7 @@ void Player::setAuthority()
     }
 }
 
-bool Player::isMarkedForDeleteion() const
+bool Player::isMarkedForDeletion() const
 {
     return markedForDeletion;
 }
