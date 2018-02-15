@@ -87,8 +87,9 @@ void Players::deletePlayerByPID(int pid)
     if (it != ls.end())
     {
         (*it)->markedForDeletion = true;
+        size_t useCount = it->use_count();
         ls.erase(it);
-        LOG_APPEND(Log::LOG_TRACE, "- references: %d", it->use_count());
+        LOG_APPEND(Log::LOG_TRACE, "- references: %d", useCount - 1);
     }
 }
 
