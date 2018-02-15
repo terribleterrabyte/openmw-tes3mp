@@ -47,7 +47,7 @@ public:
     static Store::const_iterator end();
     static size_t size();
 
-    static void for_each(std::function<void(std::shared_ptr<Player>)> func);
+    static void for_each(std::function<void(Player *)> func);
 
     static void processUpdated();
 private:

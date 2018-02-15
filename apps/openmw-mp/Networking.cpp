@@ -121,7 +121,7 @@ void Networking::processPlayerPacket(RakNet::Packet *packet)
         player->setLoadState(Player::LOADED);
         player->joinChannel(0, "Default");
 
-        bool result = luaState.getEventCtrl().Call<CoreEvent::ON_PLAYER_CONNECT, bool>(player);
+        bool result = luaState.getEventCtrl().Call<CoreEvent::ON_PLAYER_CONNECT, bool>(player.get());
 
         if (!result)
         {
@@ -297,13 +297,13 @@ void Networking::newPlayer(RakNet::RakNetGUID guid)
         // If we are iterating over a player who has inputted their name, proceed
         else if (pl->getLoadState() == Player::POSTLOADED)
         {
-            playerPacketController->GetPacket(ID_PLAYER_BASEINFO)->setPlayer(pl.get());
-            playerPacketController->GetPacket(ID_PLAYER_STATS_DYNAMIC)->setPlayer(pl.get());
-            playerPacketController->GetPacket(ID_PLAYER_ATTRIBUTE)->setPlayer(pl.get());
-            playerPacketController->GetPacket(ID_PLAYER_SKILL)->setPlayer(pl.get());
-            playerPacketController->GetPacket(ID_PLAYER_POSITION)->setPlayer(pl.get());
-            playerPacketController->GetPacket(ID_PLAYER_CELL_CHANGE)->setPlayer(pl.get());
-            playerPacketController->GetPacket(ID_PLAYER_EQUIPMENT)->setPlayer(pl.get());
+            playerPacketController->GetPacket(ID_PLAYER_BASEINFO)->setPlayer(pl);
+            playerPacketController->GetPacket(ID_PLAYER_STATS_DYNAMIC)->setPlayer(pl);
+            playerPacketController->GetPacket(ID_PLAYER_ATTRIBUTE)->setPlayer(pl);
+            playerPacketController->GetPacket(ID_PLAYER_SKILL)->setPlayer(pl);
+            playerPacketController->GetPacket(ID_PLAYER_POSITION)->setPlayer(pl);
+            playerPacketController->GetPacket(ID_PLAYER_CELL_CHANGE)->setPlayer(pl);
+            playerPacketController->GetPacket(ID_PLAYER_EQUIPMENT)->setPlayer(pl);
 
             playerPacketController->GetPacket(ID_PLAYER_BASEINFO)->Send(guid);
             playerPacketController->GetPacket(ID_PLAYER_STATS_DYNAMIC)->Send(guid);
@@ -325,7 +325,7 @@ void Networking::disconnectPlayer(RakNet::RakNetGUID guid)
     if (player == nullptr)
         return;
 
-    luaState.getEventCtrl().Call<CoreEvent::ON_PLAYER_DISCONNECT>(player);
+    luaState.getEventCtrl().Call<CoreEvent::ON_PLAYER_DISCONNECT>(player.get());
 
     playerPacketController->GetPacket(ID_USER_DISCONNECTED)->setPlayer(player.get());
     playerPacketController->GetPacket(ID_USER_DISCONNECTED)->Send(true);

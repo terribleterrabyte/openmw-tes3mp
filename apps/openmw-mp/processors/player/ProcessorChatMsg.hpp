@@ -30,7 +30,7 @@ namespace mwmp
                     player->message(player->chat.channel, "#FF0000Command not found.\n"); // inform player that command not found
                     break;
                 case CommandController::ExecResult::NOT_CMD: // cmd length < 2 or message is not cmd
-                    lua.getEventCtrl().Call<CoreEvent::ON_PLAYER_SENDMESSAGE>(player, player->chat.message, player->chat.channel);
+                    lua.getEventCtrl().Call<CoreEvent::ON_PLAYER_SENDMESSAGE>(player.get(), player->chat.message, player->chat.channel);
                     break;
                 case CommandController::ExecResult::SUCCESS: // returned true from function
                     break;

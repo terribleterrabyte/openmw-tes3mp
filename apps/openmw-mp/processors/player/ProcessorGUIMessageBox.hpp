@@ -21,7 +21,7 @@ namespace mwmp
         {
             DEBUG_PRINTF(strPacketID.c_str());
 
-            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_GUI_ACTION>(player, player->guiMessageBox.id,
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_GUI_ACTION>(player.get(), player->guiMessageBox.id,
                                                                                        player->guiMessageBox.data);
         }
     };

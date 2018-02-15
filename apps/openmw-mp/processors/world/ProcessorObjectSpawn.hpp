@@ -29,7 +29,7 @@ namespace mwmp
             auto objCtrl = Networking::get().getState().getObjectCtrl();
             auto objects = objCtrl.copyObjects(event);
 
-            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_OBJECT_SCALE>(player, objects);
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_OBJECT_SCALE>(player.get(), objects);
 
             objCtrl.sendObjects(player, objects, event.cell);
         }

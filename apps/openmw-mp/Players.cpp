@@ -13,8 +13,8 @@ std::queue<Player*> Players::updateQueue;
 void Players::Init(LuaState &lua)
 {
     sol::table playersTable = lua.getState()->create_named_table("Players");
-    playersTable.set_function("getByPID", &Players::getPlayerByPID);
-    playersTable.set_function("getByGUID", &Players::getPlayerByGUID);
+    playersTable.set_function("getByPID", [](int pid) { return Players::getPlayerByPID(pid).get(); });
+    playersTable.set_function("getByGUID", [](RakNet::RakNetGUID guid) { return Players::getPlayerByGUID(guid).get(); });
     playersTable.set_function("for_each", [](sol::function func)
     {
         for (shared_ptr<Player> player : store)
@@ -103,15 +103,17 @@ void Players::deletePlayerByGUID(RakNet::RakNetGUID guid)
     if (it != ls.end())
     {
         (*it)->markedForDeletion = true;
+        mwmp::Networking::get().getState().getState()->collect_garbage();
+        size_t useCount = it->use_count();
         ls.erase(it);
-        LOG_APPEND(Log::LOG_TRACE, "- references: %d", it->use_count());
+        LOG_APPEND(Log::LOG_TRACE, "- references: %d", useCount - 1);
     }
 }
 
-void Players::for_each(std::function<void (std::shared_ptr<Player>)> func)
+void Players::for_each(std::function<void (Player *)> func)
 {
     for (auto &player : store)
-        func(player);
+        func(player.get());
 }
 
 Players::Store::const_iterator Players::begin()

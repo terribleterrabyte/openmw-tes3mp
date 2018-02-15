@@ -26,7 +26,7 @@ namespace mwmp
 
             packet.Send(true);
 
-            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_DEATH>(player, player->deathReason);
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_DEATH>(player.get(), player->deathReason);
         }
     };
 }

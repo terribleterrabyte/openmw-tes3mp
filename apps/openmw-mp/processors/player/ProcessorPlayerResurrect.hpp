@@ -25,7 +25,7 @@ namespace mwmp
 
             packet.Send(true);
 
-            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_RESURRECT>(player);
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_RESURRECT>(player.get());
         }
     };
 }

@@ -71,7 +71,7 @@ namespace mwmp
                 packet.setPlayer(player.get());
                 packet.Send(true); //send to other clients
 
-                Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_CELLCHANGE>(player);
+                Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_CELLCHANGE>(player.get());
 
                 LOG_APPEND(Log::LOG_INFO, "- Finished processing ID_PLAYER_CELL_CHANGE");
             }

@@ -22,7 +22,7 @@ namespace mwmp
             DEBUG_PRINTF(strPacketID.c_str());
 
             if (player->charGenState.currentStage == player->charGenState.endStage)
-                Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_ENDCHARGEN>(player);
+                Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_ENDCHARGEN>(player.get());
         }
     };
 }

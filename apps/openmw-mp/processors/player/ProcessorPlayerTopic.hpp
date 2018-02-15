@@ -18,7 +18,7 @@ namespace mwmp
             DEBUG_PRINTF(strPacketID.c_str());
 
             //Todo: Script::Call<Script::CallbackIdentity("OnPlayerTopic")>(player.getId());
-            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_TOPIC>(player);
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_TOPIC>(player.get());
         }
     };
 }

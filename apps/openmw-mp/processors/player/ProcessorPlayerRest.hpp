@@ -17,7 +17,7 @@ namespace mwmp
         {
             DEBUG_PRINTF(strPacketID.c_str());
 
-            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_REST>(player);
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_REST>(player.get());
         }
     };
 }

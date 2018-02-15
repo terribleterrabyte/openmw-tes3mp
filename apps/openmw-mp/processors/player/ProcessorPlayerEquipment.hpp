@@ -23,7 +23,7 @@ namespace mwmp
 
             player->sendToLoaded(packet);
 
-            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_EQUIPMENT>(player);
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_EQUIPMENT>(player.get());
         }
     };
 }

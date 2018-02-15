@@ -21,7 +21,7 @@ namespace mwmp
         {
             DEBUG_PRINTF(strPacketID.c_str());
 
-            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_INVENTORY>(player);
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_INVENTORY>(player.get());
         }
     };
 }

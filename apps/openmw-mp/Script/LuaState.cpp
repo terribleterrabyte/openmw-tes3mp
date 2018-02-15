@@ -255,12 +255,12 @@ LuaState::LuaState()
 
     lua->set_function("setHour", [](double hour) {
         auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_GAME_TIME);
-        Players::for_each([&hour, &packet](std::shared_ptr<Player> player){
+        Players::for_each([&hour, &packet](Player *player){
             player->hour = hour;
             player->month = -1;
             player->day = -1;
 
-            packet->setPlayer(player.get());
+            packet->setPlayer(player);
             packet->Send(false);
         });
     });
@@ -268,24 +268,24 @@ LuaState::LuaState()
     lua->set_function("setMonth", [](int month) {
 
         auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_GAME_TIME);
-        Players::for_each([&month, &packet](std::shared_ptr<Player> player){
+        Players::for_each([&month, &packet](Player *player){
             player->hour = -1;
             player->month = month;
             player->day = -1;
 
-            packet->setPlayer(player.get());
+            packet->setPlayer(player);
             packet->Send(false);
         });
     });
 
     lua->set_function("setDay", [](int day) {
         auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_GAME_TIME);
-        Players::for_each([&day, &packet](std::shared_ptr<Player> player){
+        Players::for_each([&day, &packet](Player *player){
             player->hour = -1;
             player->month = -1;
             player->day = day;
 
-            packet->setPlayer(player.get());
+            packet->setPlayer(player);
             packet->Send(false);
         });
     });

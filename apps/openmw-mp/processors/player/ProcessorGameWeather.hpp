@@ -17,7 +17,7 @@ namespace mwmp
         {
             DEBUG_PRINTF(strPacketID);
 
-            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_WEATHER>(player);
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_WEATHER>(player.get());
         }
     };
 }

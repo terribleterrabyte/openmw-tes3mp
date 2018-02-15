@@ -26,7 +26,7 @@ namespace mwmp
                 actors.emplace_back(actor);
             }
 
-            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_ACTOR_LIST>(player, actors);
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_ACTOR_LIST>(player.get(), actors);
 
             Networking::get().getState().getActorCtrl().sendActors(player, actors, actorList.cell, true);
         }

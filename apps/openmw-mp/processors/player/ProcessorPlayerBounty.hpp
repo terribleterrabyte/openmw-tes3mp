@@ -15,7 +15,7 @@ namespace mwmp
 
         void Do(PlayerPacket &packet, const std::shared_ptr<Player> &player) override
         {
-            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_BOUNTY>(player);
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_BOUNTY>(player.get());
         }
     };
 }

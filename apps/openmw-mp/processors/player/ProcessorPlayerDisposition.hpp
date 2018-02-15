@@ -19,7 +19,7 @@ namespace mwmp
 
             packet.Send(true);
 
-            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_DISPOSITION>(player);
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_DISPOSITION>(player.get());
         }
     };
 }
