@@ -3,6 +3,7 @@
 //
 
 #include "Players.hpp"
+#include "Networking.hpp"
 
 using namespace std;
 
@@ -87,6 +88,7 @@ void Players::deletePlayerByPID(int pid)
     if (it != ls.end())
     {
         (*it)->markedForDeletion = true;
+        mwmp::Networking::get().getState().getState()->collect_garbage();
         size_t useCount = it->use_count();
         ls.erase(it);
         LOG_APPEND(Log::LOG_TRACE, "- references: %d", useCount - 1);
