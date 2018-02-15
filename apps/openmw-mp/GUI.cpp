@@ -56,13 +56,15 @@ int GUI::generateGuiId()
 
 void GUI::messageBox(sol::function fn, const char *label, sol::this_environment te)
 {
-    if(!fn.valid())
-        return;
+    if(fn.valid())
+    {
+        int id = generateGuiId();
+        callbacks[id] = std::make_shared<sol::function>(fn);
+        player->guiMessageBox.id = id;
+    }
+    else
+        player->guiMessageBox.id = -1;
 
-    int id = generateGuiId();
-    callbacks[id] = std::make_shared<sol::function>(fn);
-
-    player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
     player->guiMessageBox.type = Player::GUIMessageBox::Type::MessageBox;
 
@@ -71,13 +73,15 @@ void GUI::messageBox(sol::function fn, const char *label, sol::this_environment 
 
 void GUI::customMessageBox(sol::function fn, const char *label, const char *buttons, sol::this_environment te)
 {
-    if(!fn.valid())
-        return;
+    if(fn.valid())
+    {
+        int id = generateGuiId();
+        callbacks[id] = std::make_shared<sol::function>(fn);
+        player->guiMessageBox.id = id;
+    }
+    else
+        player->guiMessageBox.id = -1;
 
-    int id = generateGuiId();
-    callbacks[id] = std::make_shared<sol::function>(fn);
-
-    player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
     player->guiMessageBox.buttons = buttons;
     player->guiMessageBox.type = Player::GUIMessageBox::Type::CustomMessageBox;
@@ -87,13 +91,15 @@ void GUI::customMessageBox(sol::function fn, const char *label, const char *butt
 
 void GUI::inputDialog(sol::function fn, const char *label, sol::this_environment te)
 {
-    if(!fn.valid())
-        return;
+    if(fn.valid())
+    {
+        int id = generateGuiId();
+        callbacks[id] = std::make_shared<sol::function>(fn);
+        player->guiMessageBox.id = id;
+    }
+    else
+        player->guiMessageBox.id = -1;
 
-    int id = generateGuiId();
-    callbacks[id] = std::make_shared<sol::function>(fn);
-
-    player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
     player->guiMessageBox.type = Player::GUIMessageBox::Type::InputDialog;
 
@@ -102,13 +108,15 @@ void GUI::inputDialog(sol::function fn, const char *label, sol::this_environment
 
 void GUI::passwordDialog(sol::function fn, const char *label, const char *note, sol::this_environment te)
 {
-    if(!fn.valid())
-        return;
+    if(fn.valid())
+    {
+        int id = generateGuiId();
+        callbacks[id] = std::make_shared<sol::function>(fn);
+        player->guiMessageBox.id = id;
+    }
+    else
+        player->guiMessageBox.id = -1;
 
-    int id = generateGuiId();
-    callbacks[id] = std::make_shared<sol::function>(fn);
-
-    player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
     player->guiMessageBox.note = note;
     player->guiMessageBox.type = Player::GUIMessageBox::Type::PasswordDialog;
@@ -118,13 +126,15 @@ void GUI::passwordDialog(sol::function fn, const char *label, const char *note, 
 
 void GUI::listBox(sol::function fn, const char *label, const char *items, sol::this_environment te)
 {
-    if(!fn.valid())
-        return;
+    if(fn.valid())
+    {
+        int id = generateGuiId();
+        callbacks[id] = std::make_shared<sol::function>(fn);
+        player->guiMessageBox.id = id;
+    }
+    else
+        player->guiMessageBox.id = -1;
 
-    int id = generateGuiId();
-    callbacks[id] = std::make_shared<sol::function>(fn);
-
-    player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
     player->guiMessageBox.data = items;
     player->guiMessageBox.type = Player::GUIMessageBox::Type::ListBox;
@@ -134,6 +144,9 @@ void GUI::listBox(sol::function fn, const char *label, const char *items, sol::t
 
 void GUI::onGUIAction()
 {
+    if(player->guiMessageBox.id == -1)
+        return;
+
     auto it = callbacks.find(player->guiMessageBox.id);
     if (it != callbacks.end() && it->second != nullptr)
     {
