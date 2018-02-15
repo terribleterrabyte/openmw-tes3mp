@@ -53,6 +53,7 @@ Timer::Timer(sol::environment &env, sol::function &callback, long msec, sol::tab
     LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Timer::Timer()");
     targetMsec = msec;
     end = true;
+    markedToDelete = false;
 }
 
 Timer::~Timer()
