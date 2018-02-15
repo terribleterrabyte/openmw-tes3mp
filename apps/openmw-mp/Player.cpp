@@ -91,12 +91,9 @@ void Player::Init(LuaState &lua)
                                          "getQuickKeys", &Player::getQuickKeys,
                                          "getWeatherMgr", &Player::getWeatherMgr,
 
-                                         "getMarkPosition", &Player::getMarkPosition,
-                                         "setMarkPosition", &Player::setMarkPosition,
-                                         "getMarkRotation", &Player::getMarkRotation,
-                                         "setMarkRotation", &Player::setMarkRotation,
-                                         "getMarkCell", &Player::getMarkCell,
-                                         "setMarkCell", &Player::setMarkCell,
+                                         "getMark", &Player::getMark,
+                                         "setMark", &Player::setMark,
+
                                          "getSelectedSpell", &Player::getSelectedSpell,
                                          "setSelectedSpell", &Player::setSelectedSpell,
 
@@ -871,42 +868,23 @@ void Player::setScale(float newScale)
     packet->Send(true);
 }
 
-std::tuple<float, float, float> Player::getMarkPosition()
-{
-    return make_tuple(markPosition.pos[0], markPosition.pos[1], markPosition.pos[2]);
-}
-
-void Player::setMarkPosition(float x, float y, float z)
+void Player::setMark(float x, float y, float z, float xRot, float zRot, const std::string &cellDescription)
 {
     markPosition.pos[0] = x;
     markPosition.pos[1] = y;
     markPosition.pos[2] = z;
 
-    changedMarkLocation = true;
-}
-
-std::tuple<float, float> Player::getMarkRotation()
-{
-    return make_tuple(markPosition.rot[0], markPosition.rot[2]);
-}
-
-void Player::setMarkRotation(float x, float z)
-{
-    markPosition.rot[0] = x;
-    markPosition.rot[2] = z;
-
-    changedMarkLocation = true;
-}
-
-std::string Player::getMarkCell()
-{
-    return markCell.getDescription();
-}
-
-void Player::setMarkCell(const std::string &cellDescription)
-{
+    markPosition.rot[0] = xRot;
+    markPosition.rot[2] = zRot;
     markCell = Utils::getCellFromDescription(cellDescription);
+
     changedMarkLocation = true;
+}
+
+std::tuple<float, float, float, float, float, std::string> Player::getMark()
+{
+    return make_tuple(markPosition.pos[0], markPosition.pos[1], markPosition.pos[2],
+                      markPosition.rot[0], markPosition.rot[2], markCell.getDescription());
 }
 
 std::string Player::getSelectedSpell()

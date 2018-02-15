@@ -178,12 +178,8 @@ public:
     int getSkillIncrease(unsigned short attributeId) const;
     void setSkillIncrease(unsigned short attributeId, int increase);
 
-    std::tuple<float, float, float> getMarkPosition();
-    void setMarkPosition(float x, float y, float z);
-    std::tuple<float, float> getMarkRotation();
-    void setMarkRotation(float x, float z);
-    std::string getMarkCell();
-    void setMarkCell(const std::string &cellDescription);
+    void setMark(float x, float y, float z, float xRot, float zRot, const std::string &cellDescription);
+    std::tuple<float, float, float, float, float, std::string> getMark();
 
     std::string getSelectedSpell();
     void setSelectedSpell(const std::string &newSelectedSpellId);
