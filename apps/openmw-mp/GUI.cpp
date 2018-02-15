@@ -35,8 +35,33 @@ void GUI::processUpdate()
     packet->Send(false);
 }
 
-void GUI::messageBox(int id, const char *label)
+int GUI::generateGuiId()
 {
+    int id = 0;
+
+    for (const auto &item: callbacks)
+    {
+        if (item.second == nullptr)
+        {
+            id = item.first;
+            break;
+        }
+    }
+
+    if (id == 0)
+        id = lastGuiId++;
+
+    return id;
+}
+
+void GUI::messageBox(sol::function fn, const char *label, sol::this_environment te)
+{
+    if(!fn.valid())
+        return;
+
+    int id = generateGuiId();
+    callbacks[id] = std::make_shared<sol::function>(fn);
+
     player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
     player->guiMessageBox.type = Player::GUIMessageBox::Type::MessageBox;
@@ -44,8 +69,14 @@ void GUI::messageBox(int id, const char *label)
     setChanged();
 }
 
-void GUI::customMessageBox(int id, const char *label, const char *buttons)
+void GUI::customMessageBox(sol::function fn, const char *label, const char *buttons, sol::this_environment te)
 {
+    if(!fn.valid())
+        return;
+
+    int id = generateGuiId();
+    callbacks[id] = std::make_shared<sol::function>(fn);
+
     player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
     player->guiMessageBox.buttons = buttons;
@@ -54,8 +85,14 @@ void GUI::customMessageBox(int id, const char *label, const char *buttons)
     setChanged();
 }
 
-void GUI::inputDialog(int id, const char *label)
+void GUI::inputDialog(sol::function fn, const char *label, sol::this_environment te)
 {
+    if(!fn.valid())
+        return;
+
+    int id = generateGuiId();
+    callbacks[id] = std::make_shared<sol::function>(fn);
+
     player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
     player->guiMessageBox.type = Player::GUIMessageBox::Type::InputDialog;
@@ -63,8 +100,14 @@ void GUI::inputDialog(int id, const char *label)
     setChanged();
 }
 
-void GUI::passwordDialog(int id, const char *label, const char *note)
+void GUI::passwordDialog(sol::function fn, const char *label, const char *note, sol::this_environment te)
 {
+    if(!fn.valid())
+        return;
+
+    int id = generateGuiId();
+    callbacks[id] = std::make_shared<sol::function>(fn);
+
     player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
     player->guiMessageBox.note = note;
@@ -73,14 +116,30 @@ void GUI::passwordDialog(int id, const char *label, const char *note)
     setChanged();
 }
 
-void GUI::listBox(int id, const char *label, const char *items)
+void GUI::listBox(sol::function fn, const char *label, const char *items, sol::this_environment te)
 {
+    if(!fn.valid())
+        return;
+
+    int id = generateGuiId();
+    callbacks[id] = std::make_shared<sol::function>(fn);
+
     player->guiMessageBox.id = id;
     player->guiMessageBox.label = label;
     player->guiMessageBox.data = items;
     player->guiMessageBox.type = Player::GUIMessageBox::Type::ListBox;
 
     setChanged();
+}
+
+void GUI::onGUIAction()
+{
+    auto it = callbacks.find(player->guiMessageBox.id);
+    if (it != callbacks.end() && it->second != nullptr)
+    {
+        it->second->call(player, player->guiMessageBox.data);
+        it->second = nullptr;
+    }
 }
 
 void GUI::setMapVisibility(unsigned short targetPID, unsigned short affectedPID, unsigned short state)

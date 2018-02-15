@@ -17,13 +17,15 @@ public:
 public:
     explicit GUI(Player *player);
 
-    void messageBox(int id, const char *label);
+    void messageBox(sol::function fn, const char *label, sol::this_environment te);
 
-    void customMessageBox(int id, const char *label, const char *buttons);
-    void inputDialog(int id, const char *label);
-    void passwordDialog(int id, const char *label, const char *note);
+    void customMessageBox(sol::function fn, const char *label, const char *buttons, sol::this_environment te);
+    void inputDialog(sol::function fn, const char *label, sol::this_environment te);
+    void passwordDialog(sol::function fn, const char *label, const char *note, sol::this_environment te);
 
-    void listBox(int id, const char *label, const char *items);
+    void listBox(sol::function fn, const char *label, const char *items, sol::this_environment te);
+
+    void onGUIAction();
 
     //state 0 - disallow, 1 - allow
     void setMapVisibility(unsigned short targetPID, unsigned short affectedPID, unsigned short state);
@@ -38,9 +40,12 @@ public:
     unsigned int getChanges() const;
 
 private:
+    int generateGuiId();
     void processUpdate() final;
     std::unordered_map<int, std::shared_ptr<Window>> windows;
+    std::unordered_map<int, std::shared_ptr<sol::function>> callbacks;
     int lastWindowId;
+    int lastGuiId; // for message boxes
 };
 
 class QuickKey
