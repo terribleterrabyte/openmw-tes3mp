@@ -41,9 +41,9 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
     sThis = this;
     this->peer = peer;
 
-    playerPacketController = new PlayerPacketController(peer);
-    actorPacketController = new ActorPacketController(peer);
-    worldPacketController = new WorldPacketController(peer);
+    playerPacketController = make_unique<PlayerPacketController>(peer);
+    actorPacketController = make_unique<ActorPacketController>(peer);
+    worldPacketController =  make_unique<WorldPacketController>(peer);
 
     // Set send stream
     playerPacketController->SetStream(nullptr, &bsOut);
@@ -62,10 +62,6 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
 Networking::~Networking()
 {
     luaState.getEventCtrl().Call<CoreEvent::ON_EXIT>(false);
-    
-    delete playerPacketController;
-    delete actorPacketController;
-    delete worldPacketController;
 }
 
 void Networking::setServerPassword(std::string passw) noexcept
@@ -334,17 +330,17 @@ void Networking::disconnectPlayer(RakNet::RakNetGUID guid)
 
 PlayerPacketController *Networking::getPlayerPacketController() const
 {
-    return playerPacketController;
+    return playerPacketController.get();
 }
 
 ActorPacketController *Networking::getActorPacketController() const
 {
-    return actorPacketController;
+    return actorPacketController.get();
 }
 
 WorldPacketController *Networking::getWorldPacketController() const
 {
-    return worldPacketController;
+    return worldPacketController.get();
 }
 
 BaseActorList *Networking::getLastActorList()
@@ -525,12 +521,12 @@ int Networking::getAvgPing(RakNet::AddressOrGUID addr) const
 
 MasterClient *Networking::getMasterClient()
 {
-    return mclient;
+    return mclient.get();
 }
 
 void Networking::InitQuery(const std::string &queryAddr, unsigned short queryPort)
 {
-    mclient = new MasterClient(peer, queryAddr, queryPort);
+    mclient = make_unique<MasterClient>(peer, queryAddr, queryPort);
 }
 
 void Networking::postInit()

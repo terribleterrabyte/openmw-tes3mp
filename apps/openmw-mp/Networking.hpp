@@ -87,14 +87,14 @@ namespace  mwmp
 
         RakNet::RakPeerInterface *peer;
         RakNet::BitStream bsOut;
-        MasterClient *mclient;
+        std::unique_ptr<MasterClient> mclient;
 
         BaseActorList baseActorList;
         BaseEvent baseEvent;
 
-        PlayerPacketController *playerPacketController;
-        ActorPacketController *actorPacketController;
-        WorldPacketController *worldPacketController;
+        std::unique_ptr<PlayerPacketController> playerPacketController;
+        std::unique_ptr<ActorPacketController> actorPacketController;
+        std::unique_ptr<WorldPacketController> worldPacketController;
 
         bool running;
         int exitCode;
