@@ -1,6 +1,3 @@
-
-set (CMAKE_CXX_STANDARD 14)
-
 set(BROWSER_UI
         ${CMAKE_SOURCE_DIR}/files/tes3mp/ui/Main.ui
         ${CMAKE_SOURCE_DIR}/files/tes3mp/ui/ServerInfo.ui
@@ -74,6 +71,8 @@ add_executable(tes3mp-browser
         ${MOC_SRCS}
         ${UI_HDRS}
         )
+
+set_property(TARGET tes3mp-browser PROPERTY CXX_STANDARD 14)
 
 if (WIN32)
     INSTALL(TARGETS tes3mp-browser RUNTIME DESTINATION ".")

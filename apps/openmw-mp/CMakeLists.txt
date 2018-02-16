@@ -133,8 +133,9 @@ target_compile_definitions(tes3mp-server PRIVATE $<$<CONFIG:Debug>:SOL_SAFE_FUNC
 target_compile_definitions(tes3mp-server PRIVATE $<$<CONFIG:Debug>:SOL_SAFE_USERTYPE> $<$<CONFIG:RelWithDebInfo>:SOL_SAFE_USERTYPE>)
 target_compile_definitions(tes3mp-server PRIVATE $<$<CONFIG:Debug>:SERVER_DEBUG> $<$<CONFIG:RelWithDebInfo>:SERVER_DEBUG>)
 
+set_property(TARGET tes3mp-server PROPERTY CXX_STANDARD 14)
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(tes3mp-server PRIVATE -std=gnu++14 -Wno-ignored-qualifiers -ftemplate-depth=2048)
+    target_compile_options(tes3mp-server PRIVATE -Wno-ignored-qualifiers -ftemplate-depth=2048)
 endif()
 
 target_link_libraries(tes3mp-server

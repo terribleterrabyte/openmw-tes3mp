@@ -1,14 +1,13 @@
 project(masterserver)
 
-#set(CMAKE_CXX_STANDARD 14)
-add_definitions(-std=gnu++14)
-
 include_directories("./")
 
 set(SOURCE_FILES main.cpp MasterServer.cpp MasterServer.hpp RestServer.cpp RestServer.hpp  AdminRest.cpp)
 
 add_executable(masterserver ${SOURCE_FILES})
 target_link_libraries(masterserver ${RakNet_LIBRARY} ${LuaJit_LIBRARIES} ${OPENSSL_LIBRARIES} components)
+
+set_property(TARGET masterserver PROPERTY CXX_STANDARD 14)
 
 option(BUILD_MASTER_TEST "build master server test program" OFF)
 
