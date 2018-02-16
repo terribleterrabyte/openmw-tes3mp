@@ -214,7 +214,7 @@ namespace mwmp
                 ListBox
             };
 
-            int id;
+            uint64_t id;
             Type type;
 
             std::string label;
