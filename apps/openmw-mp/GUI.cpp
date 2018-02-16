@@ -114,9 +114,11 @@ void GUI::onGUIAction()
     auto mbox = std::move(guiQueue.front().first);
     auto callback = std::move(guiQueue.front().second);
     guiQueue.pop();
-    if(!guiQueue.empty())
+
+    if (!guiQueue.empty())
         setChanged();
-    if(player->guiMessageBox.id != mbox.id)
+
+    if (player->guiMessageBox.id != mbox.id)
     {
         LOG_MESSAGE_SIMPLE(Log::LOG_ERROR, "Wrong MessageBox id from %s(%d).", player->npc.mName, player->getId());
         return;
