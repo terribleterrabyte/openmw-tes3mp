@@ -30,129 +30,100 @@ GUI::GUI(Player *player): BaseMgr(player)
 
 void GUI::processUpdate()
 {
+    player->guiMessageBox = guiQueue.front().first;
     auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_GUI_MESSAGEBOX);
     packet->setPlayer(player);
     packet->Send(false);
 }
 
-int GUI::generateGuiId()
+uint64_t GUI::generateGuiId()
 {
-    int id = 0;
-
-    for (const auto &item: callbacks)
-    {
-        if (item.second == nullptr)
-        {
-            id = item.first;
-            break;
-        }
-    }
-
-    if (id == 0)
-        id = lastGuiId++;
-
-    return id;
+    return RakNet::RakPeerInterface::Get64BitUniqueRandomNumber();
 }
 
 void GUI::messageBox(sol::function fn, const char *label, sol::this_environment te)
 {
-    if(fn.valid())
-    {
-        int id = generateGuiId();
-        callbacks[id] = std::make_shared<sol::function>(fn);
-        player->guiMessageBox.id = id;
-    }
-    else
-        player->guiMessageBox.id = -1;
+    mwmp::BasePlayer::GUIMessageBox mbox;
 
-    player->guiMessageBox.label = label;
-    player->guiMessageBox.type = Player::GUIMessageBox::Type::MessageBox;
+    mbox.id = generateGuiId();
+    mbox.label = label;
+    mbox.type = Player::GUIMessageBox::Type::MessageBox;
+
+    guiQueue.emplace(std::move(mbox), std::move(fn));
 
     setChanged();
 }
 
 void GUI::customMessageBox(sol::function fn, const char *label, const char *buttons, sol::this_environment te)
 {
-    if(fn.valid())
-    {
-        int id = generateGuiId();
-        callbacks[id] = std::make_shared<sol::function>(fn);
-        player->guiMessageBox.id = id;
-    }
-    else
-        player->guiMessageBox.id = -1;
+    mwmp::BasePlayer::GUIMessageBox mbox;
+    mbox.id = generateGuiId();
+    mbox.label = label;
+    mbox.buttons = buttons;
+    mbox.type = Player::GUIMessageBox::Type::CustomMessageBox;
 
-    player->guiMessageBox.label = label;
-    player->guiMessageBox.buttons = buttons;
-    player->guiMessageBox.type = Player::GUIMessageBox::Type::CustomMessageBox;
+    guiQueue.emplace(std::move(mbox), std::move(fn));
 
     setChanged();
 }
 
 void GUI::inputDialog(sol::function fn, const char *label, sol::this_environment te)
 {
-    if(fn.valid())
-    {
-        int id = generateGuiId();
-        callbacks[id] = std::make_shared<sol::function>(fn);
-        player->guiMessageBox.id = id;
-    }
-    else
-        player->guiMessageBox.id = -1;
+    mwmp::BasePlayer::GUIMessageBox mbox;
 
-    player->guiMessageBox.label = label;
-    player->guiMessageBox.type = Player::GUIMessageBox::Type::InputDialog;
+    mbox.id = generateGuiId();
+    mbox.label = label;
+    mbox.type = Player::GUIMessageBox::Type::InputDialog;
+
+    guiQueue.emplace(std::move(mbox), std::move(fn));
 
     setChanged();
 }
 
 void GUI::passwordDialog(sol::function fn, const char *label, const char *note, sol::this_environment te)
 {
-    if(fn.valid())
-    {
-        int id = generateGuiId();
-        callbacks[id] = std::make_shared<sol::function>(fn);
-        player->guiMessageBox.id = id;
-    }
-    else
-        player->guiMessageBox.id = -1;
+    mwmp::BasePlayer::GUIMessageBox mbox;
 
-    player->guiMessageBox.label = label;
-    player->guiMessageBox.note = note;
-    player->guiMessageBox.type = Player::GUIMessageBox::Type::PasswordDialog;
+    mbox.id = generateGuiId();
+    mbox.label = label;
+    mbox.note = note;
+    mbox.type = Player::GUIMessageBox::Type::PasswordDialog;
+
+    guiQueue.emplace(std::move(mbox), std::move(fn));
 
     setChanged();
 }
 
 void GUI::listBox(sol::function fn, const char *label, const char *items, sol::this_environment te)
 {
-    if(fn.valid())
-    {
-        int id = generateGuiId();
-        callbacks[id] = std::make_shared<sol::function>(fn);
-        player->guiMessageBox.id = id;
-    }
-    else
-        player->guiMessageBox.id = -1;
+    mwmp::BasePlayer::GUIMessageBox mbox;
 
-    player->guiMessageBox.label = label;
-    player->guiMessageBox.data = items;
-    player->guiMessageBox.type = Player::GUIMessageBox::Type::ListBox;
+    mbox.id = generateGuiId();
+
+    mbox.label = label;
+    mbox.data = items;
+    mbox.type = Player::GUIMessageBox::Type::ListBox;
+
+    guiQueue.emplace(std::move(mbox), std::move(fn));
 
     setChanged();
 }
 
 void GUI::onGUIAction()
 {
-    if(player->guiMessageBox.id == -1)
-        return;
-
-    auto it = callbacks.find(player->guiMessageBox.id);
-    if (it != callbacks.end() && it->second != nullptr)
+    auto mbox = std::move(guiQueue.front().first);
+    auto callback = std::move(guiQueue.front().second);
+    guiQueue.pop();
+    if(!guiQueue.empty())
+        setChanged();
+    if(player->guiMessageBox.id != mbox.id)
     {
-        it->second->call(player, player->guiMessageBox.data);
-        it->second = nullptr;
+        LOG_MESSAGE_SIMPLE(Log::LOG_ERROR, "Wrong MessageBox id from %s(%d).", player->npc.mName, player->getId());
+        return;
     }
+
+    if (callback.valid())
+        callback.call(player, player->guiMessageBox.data);
 }
 
 void GUI::setMapVisibility(unsigned short targetPID, unsigned short affectedPID, unsigned short state)

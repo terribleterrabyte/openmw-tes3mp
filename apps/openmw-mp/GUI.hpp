@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <queue>
 #include "Window.hpp"
 #include "BaseMgr.hpp"
 
@@ -40,12 +41,11 @@ public:
     unsigned int getChanges() const;
 
 private:
-    int generateGuiId();
+    uint64_t generateGuiId();
     void processUpdate() final;
     std::unordered_map<int, std::shared_ptr<Window>> windows;
-    std::unordered_map<int, std::shared_ptr<sol::function>> callbacks;
+    std::queue<std::pair<mwmp::BasePlayer::GUIMessageBox, sol::function>> guiQueue;
     int lastWindowId;
-    int lastGuiId; // for message boxes
 };
 
 class QuickKey
