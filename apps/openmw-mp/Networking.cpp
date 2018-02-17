@@ -117,9 +117,9 @@ void Networking::processPlayerPacket(RakNet::Packet *packet)
         player->setLoadState(Player::LOADED);
         player->joinChannel(0, "Default");
 
-        bool result = luaState.getEventCtrl().Call<CoreEvent::ON_PLAYER_CONNECT, bool>(player.get());
+        luaState.getEventCtrl().Call<CoreEvent::ON_PLAYER_CONNECT>(player.get());
 
-        if (!result)
+        if (peer->GetConnectionState(player->guid) != RakNet::ConnectionState::IS_CONNECTED)
         {
             LOG_MESSAGE(Log::LOG_TRACE, "Player \"%s\" Disconnected by ON_PLAYER_CONNECT event", player->getName().c_str());
             playerPacketController->GetPacket(ID_USER_DISCONNECTED)->setPlayer(player.get());
