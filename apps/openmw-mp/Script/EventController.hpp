@@ -50,7 +50,6 @@ namespace CoreEvent
 
         ON_CHANNEL_ACTION,
 
-        ON_GUI_ACTION,
         ON_MP_REFNUM,
 
         ON_ACTOR_EQUIPMENT,

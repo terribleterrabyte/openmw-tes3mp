@@ -71,7 +71,6 @@ EventController::EventController(LuaState *luaCtrl)
              ADD_CORE_EVENT(ON_PLAYER_WEATHER),
              ADD_CORE_EVENT(ON_RECORD_DYNAMIC),
              ADD_CORE_EVENT(ON_CHANNEL_ACTION),
-             ADD_CORE_EVENT(ON_GUI_ACTION),
              ADD_CORE_EVENT(ON_REQUEST_PLUGIN_LIST),
              ADD_CORE_EVENT(ON_MP_REFNUM),
              ADD_CORE_EVENT(ON_ACTOR_EQUIPMENT),
