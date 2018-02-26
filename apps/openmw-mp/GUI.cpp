@@ -6,6 +6,7 @@
 #include "GUI.hpp"
 #include "Player.hpp"
 #include "Networking.hpp"
+#include <RakPeerInterface.h>
 
 void GUI::Init(LuaState &lua)
 {
