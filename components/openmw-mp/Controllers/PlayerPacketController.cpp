@@ -49,15 +49,6 @@
 
 #include "PlayerPacketController.hpp"
 
-template <typename T>
-inline void AddPacket(mwmp::PlayerPacketController::packets_t *packets, RakNet::RakPeerInterface *peer)
-{
-    T *packet = new T(peer);
-    typedef mwmp::PlayerPacketController::packets_t::value_type value_t;
-    unsigned char packetId = packet->GetPacketID();
-    packets->insert(value_t(packetId, value_t::second_type(std::move(packet))));
-}
-
 mwmp::PlayerPacketController::PlayerPacketController(RakNet::RakPeerInterface *peer)
 {
     AddPacket<PacketDisconnect>(&packets, peer);
@@ -109,26 +100,4 @@ mwmp::PlayerPacketController::PlayerPacketController(RakNet::RakPeerInterface *p
     AddPacket<PacketPlayerSpellbook>(&packets, peer);
     AddPacket<PacketPlayerStatsDynamic>(&packets, peer);
     AddPacket<PacketPlayerTopic>(&packets, peer);
-}
-
-
-mwmp::PlayerPacket *mwmp::PlayerPacketController::GetPacket(RakNet::MessageID id)
-{
-    return packets[(RakNet::MessageID)id].get();
-}
-
-void mwmp::PlayerPacketController::SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream)
-{
-    for (const auto &packet : packets)
-        packet.second->SetStreams(inStream, outStream);
-}
-
-bool mwmp::PlayerPacketController::ContainsPacket(RakNet::MessageID id)
-{
-    for (const auto &packet : packets)
-    {
-        if (packet.first == id)
-            return true;
-    }
-    return false;
 }

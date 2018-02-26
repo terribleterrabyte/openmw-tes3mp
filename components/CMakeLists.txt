@@ -162,7 +162,7 @@ add_component_dir (openmw-mp/Base
         )
 
 add_component_dir (openmw-mp/Controllers
-        PlayerPacketController ActorPacketController WorldPacketController
+        PlayerPacketController ActorPacketController WorldPacketController PacketController
         )
 
 add_component_dir(openmw-mp/Master

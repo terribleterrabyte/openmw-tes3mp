@@ -28,15 +28,6 @@
 
 #include "WorldPacketController.hpp"
 
-template <typename T>
-inline void AddPacket(mwmp::WorldPacketController::packets_t *packets, RakNet::RakPeerInterface *peer)
-{
-    T *packet = new T(peer);
-    typedef mwmp::WorldPacketController::packets_t::value_type value_t;
-    unsigned char packetId = packet->GetPacketID();
-    packets->insert(value_t(packetId, value_t::second_type(std::move(packet))));
-}
-
 mwmp::WorldPacketController::WorldPacketController(RakNet::RakPeerInterface *peer)
 {
     AddPacket<PacketObjectAnimPlay>(&packets, peer);
@@ -66,26 +57,4 @@ mwmp::WorldPacketController::WorldPacketController(RakNet::RakPeerInterface *pee
     AddPacket<PacketScriptMemberFloat>(&packets, peer);
     AddPacket<PacketScriptGlobalShort>(&packets, peer);
     AddPacket<PacketScriptGlobalFloat>(&packets, peer);
-}
-
-
-mwmp::WorldPacket *mwmp::WorldPacketController::GetPacket(RakNet::MessageID id)
-{
-    return packets[(RakNet::MessageID)id].get();
-}
-
-void mwmp::WorldPacketController::SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream)
-{
-    for (const auto &packet : packets)
-        packet.second->SetStreams(inStream, outStream);
-}
-
-bool mwmp::WorldPacketController::ContainsPacket(RakNet::MessageID id)
-{
-    for (const auto &packet : packets)
-    {
-        if (packet.first == id)
-            return true;
-    }
-    return false;
 }

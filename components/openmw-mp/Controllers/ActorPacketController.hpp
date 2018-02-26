@@ -2,25 +2,15 @@
 #define OPENMW_ACTORPACKETCONTROLLER_HPP
 
 
-#include <RakPeerInterface.h>
 #include "../Packets/Actor/ActorPacket.hpp"
-#include <unordered_map>
-#include <memory>
+#include "BasePacketController.hpp"
 
 namespace mwmp
 {
-    class ActorPacketController
+    class ActorPacketController: public BasePacketController<ActorPacket>
     {
     public:
         ActorPacketController(RakNet::RakPeerInterface *peer);
-        ActorPacket *GetPacket(RakNet::MessageID id);
-        void SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream);
-
-        bool ContainsPacket(RakNet::MessageID id);
-
-        typedef std::unordered_map<RakNet::MessageID, std::unique_ptr<ActorPacket> > packets_t;
-    private:
-        packets_t packets;
     };
 }
 

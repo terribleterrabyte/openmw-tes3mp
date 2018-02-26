@@ -2,25 +2,15 @@
 #define OPENMW_WORLDPACKETCONTROLLER_HPP
 
 
-#include <RakPeerInterface.h>
 #include "../Packets/World/WorldPacket.hpp"
-#include <unordered_map>
-#include <memory>
+#include "BasePacketController.hpp"
 
 namespace mwmp
 {
-    class WorldPacketController
+    class WorldPacketController: public BasePacketController<WorldPacket>
     {
     public:
         WorldPacketController(RakNet::RakPeerInterface *peer);
-        WorldPacket *GetPacket(RakNet::MessageID id);
-        void SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream);
-
-        bool ContainsPacket(RakNet::MessageID id);
-
-        typedef std::unordered_map<RakNet::MessageID, std::unique_ptr<WorldPacket> > packets_t;
-    private:
-        packets_t packets;
     };
 }
 
