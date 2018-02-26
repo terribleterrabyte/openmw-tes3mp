@@ -251,25 +251,23 @@ bool Networking::update(RakNet::Packet *packet)
     {
         playerPacketController->SetStream(&bsIn, nullptr);
         processPlayerPacket(packet);
-        return true;
     }
-
-    if (actorPacketController->ContainsPacket(packet->data[0]))
+    else if (actorPacketController->ContainsPacket(packet->data[0]))
     {
         actorPacketController->SetStream(&bsIn, nullptr);
         processActorPacket(packet);
-        return true;
     }
-
-    if (worldPacketController->ContainsPacket(packet->data[0]))
+    else if (worldPacketController->ContainsPacket(packet->data[0]))
     {
         worldPacketController->SetStream(&bsIn, nullptr);
         processWorldPacket(packet);
-        return true;
     }
-
-    LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled RakNet packet with identifier %i has arrived", (int) packet->data[0]);
-    return false;
+    else
+    {
+        LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled RakNet packet with identifier %i has arrived", (int) packet->data[0]);
+        return false;
+    }
+    return true;
 }
 
 void Networking::newPlayer(RakNet::RakNetGUID guid)
@@ -425,11 +423,42 @@ void Networking::stopServer(int code)
     exitCode = code;
 }
 
+using hrclock = chrono::high_resolution_clock;
+
+template<typename _Rep, typename _Period>
+hrclock::time_point limitTPS(const chrono::duration<_Rep, _Period> &limit)
+{
+
+    static hrclock::time_point now = hrclock::now();
+    static auto last = now;
+    now = hrclock::now();
+    hrclock::duration delta = now - last;
+    auto tmp = last;
+    last = now;
+    if (delta < limit)
+        this_thread::sleep_for(limit - delta);
+    return tmp;
+}
+
 int Networking::mainLoop()
 {
     RakNet::Packet *packet;
 
     auto &timerCtrl = luaState.getTimerCtrl();
+
+    auto OneSecTimer = []() {
+        static hrclock::time_point time;
+        time = hrclock::now();
+
+        static auto last2 = time;
+        hrclock::duration delta = time - last2;
+        if (delta >= 1s)
+        {
+            last2 = time;
+            return true;
+        }
+        return false;
+    };
 
     while (running)
     {
@@ -483,6 +512,13 @@ int Networking::mainLoop()
         timerCtrl.tick();
         if (updated)
             Players::processUpdated();
+
+        const int limit = 60;
+
+        auto t = limitTPS(1.0s / limit); // 60 ticks per 1 second
+
+        if (OneSecTimer())
+            printf("TPS %.1Lf / %d \n", 1.0s / (hrclock::now() - t), limit);
     }
 
     timerCtrl.terminate();
