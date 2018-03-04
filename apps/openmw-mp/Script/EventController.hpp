@@ -79,19 +79,51 @@ namespace CoreEvent
 class CallbackCollection // todo: add sort by dependencies
 {
 public:
-    typedef std::vector<std::pair<sol::environment, sol::function>> Container;
+    struct CBType
+    {
+        sol::environment env;
+        sol::function fn;
+        bool needsOldState;
+        CBType(sol::environment _env, sol::function _fn, bool _needsOldState): env(_env), fn(_fn), needsOldState(_needsOldState) {}
+    };
+
+    typedef std::vector<CBType> Container;
     typedef Container::iterator Iterator;
     typedef Container::const_iterator CIterator;
 
     template<typename> struct type_tag {};
 
-    void push(sol::environment &env, sol::function &func) { functions.emplace_back(env, func); }
+    void push(sol::environment &env, sol::function &func, bool needsOldState) { functions.emplace_back(env, func, needsOldState); }
     CIterator begin() const { return functions.begin(); }
     CIterator end() const { return functions.end(); }
 
     void stop() {_stop = true;}
     bool isStoped() const {return _stop;}
     CIterator stopedAt() const { return lastCalled; }
+
+    template<typename... Args, typename OldData>
+    void callWOld(const OldData &oldData, Args&&... args)
+    {
+        lastCalled = functions.end();
+        _stop = false;
+        for (CIterator iter = functions.begin(); iter != functions.end(); ++iter)
+        {
+            if (!_stop)
+            {
+                if (!iter->needsOldState)
+                {
+                    iter->fn.call(std::forward<Args>(args)...);
+                    continue;
+                }
+                iter->fn.call(std::forward<Args>(args)..., oldData);
+            }
+            else
+            {
+                lastCalled = iter;
+                break;
+            }
+        }
+    }
 
     template<typename... Args>
     void call(type_tag<void>, Args&&... args)
@@ -101,14 +133,13 @@ public:
         for (CIterator iter = functions.begin(); iter != functions.end(); ++iter)
         {
             if (!_stop)
-                iter->second.call(std::forward<Args>(args)...);
+                iter->fn.call(std::forward<Args>(args)...);
             else
             {
                 lastCalled = iter;
                 break;
             }
         }
-
     }
 
     template<typename R, typename... Args>
@@ -121,7 +152,7 @@ public:
         for (CIterator iter = functions.begin(); iter != functions.end(); ++iter)
         {
             if (!_stop)
-                ret = iter->second.call(std::forward<Args>(args)...);
+                ret = iter->fn.call(std::forward<Args>(args)...);
             else
             {
                 lastCalled = iter;
@@ -145,16 +176,25 @@ public:
     explicit EventController(LuaState *luaCtrl);
     typedef std::unordered_map<int, CallbackCollection> Container;
 
-    void registerEvent(int event, sol::environment &env, sol::function& func);
+    void registerEvent(int event, sol::environment &env, sol::function& func, bool needsOldState);
     CallbackCollection& GetEvents(Event event);
     Event createEvent();
     void raiseEvent(Event id, sol::table data, const std::string &moduleName = "");
     void stop(int event);
 
-    template<Event event, typename R = void, typename... Args>
+    template<Event event, bool canProvideOldState = false, typename R = void, typename... Args>
     R Call(Args&&... args)
     {
-        return events.at(event).call(CallbackCollection::type_tag<R>{}, std::forward<Args>(args)...);
+        if(canProvideOldState)
+            events.at(event).callWOld(std::forward<Args>(args)...);
+        else
+            return events.at(event).call(CallbackCollection::type_tag<R>{}, std::forward<Args>(args)...);
+    }
+
+    template<Event event, bool canProvideOldState = false, typename R = void>
+    R Call()
+    {
+        return events.at(event).call(CallbackCollection::type_tag<R>{});
     }
 private:
     Container events;

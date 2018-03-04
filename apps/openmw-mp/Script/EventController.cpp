@@ -13,7 +13,7 @@ void EventController::Init(LuaState &lua)
 
     eventsTable["register"] = [&lua](int event, sol::function func, sol::this_environment te) {
         sol::environment& env = te;
-        lua.getEventCtrl().registerEvent(event, env, func);
+        lua.getEventCtrl().registerEvent(event, env, func, false);
     };
     eventsTable["stop"] = [&lua](int event) {
         lua.getEventCtrl().stop(event);
@@ -112,11 +112,11 @@ EventController::EventController(LuaState *luaCtrl)
     }
 }
 
-void EventController::registerEvent(int event, sol::environment &env, sol::function& func)
+void EventController::registerEvent(int event, sol::environment &env, sol::function& func, bool needsOldState)
 {
     auto iter = events.find(event);
     if (iter != events.end())
-        iter->second.push(env, func);
+        iter->second.push(env, func, needsOldState);
 }
 
 void EventController::stop(int event)
@@ -146,12 +146,12 @@ void EventController::raiseEvent(Event id, sol::table data, const string &module
         if (!moduleName.empty())
         {
             auto f = std::find_if(iter->second.begin(), iter->second.end(), [&moduleName](const auto &item){
-                return item.first["ModuleName"]["name"] == moduleName;
+                return item.env["ModuleName"]["name"] == moduleName;
             });
             if (f != iter->second.end())
-                f->second.call(data); // call only specified mod
+                f->fn.call(data); // call only specified mod
         }
-        iter->second.call(CallbackCollection::type_tag<void>(), data); // call all registered events with this id
+        iter->second.call(CallbackCollection::type_tag<void>(), false, data); // call all registered events with this id
     }
     else
         cerr << "Event with id: " << id << " is not registered" << endl;

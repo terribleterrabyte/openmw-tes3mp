@@ -400,13 +400,13 @@ PacketPreInit::PluginContainer Networking::getPluginListSample()
     while (true)
     {
         unsigned field = 0;
-        auto name = luaState.getEventCtrl().Call<CoreEvent::ON_REQUEST_PLUGIN_LIST, string>(id, field++);
+        auto name = luaState.getEventCtrl().Call<CoreEvent::ON_REQUEST_PLUGIN_LIST, false, string>(id, field++);
         if (name.empty())
             break;
         PacketPreInit::HashList hashList;
         while (true)
         {
-            auto hash = luaState.getEventCtrl().Call<CoreEvent::ON_REQUEST_PLUGIN_LIST, string>(id, field++);
+            auto hash = luaState.getEventCtrl().Call<CoreEvent::ON_REQUEST_PLUGIN_LIST, false, string>(id, field++);
             if (hash.empty())
                 break;
             hashList.push_back((unsigned)stoul(hash));
