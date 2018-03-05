@@ -18,6 +18,7 @@ namespace mwmp
     {
     public:
 
+        virtual void PreReading(PlayerPacket &packet, const std::shared_ptr<Player> &player){};
         virtual void Do(PlayerPacket &packet, const std::shared_ptr<Player> &player) = 0;
 
         static bool Process(RakNet::Packet &packet) noexcept;

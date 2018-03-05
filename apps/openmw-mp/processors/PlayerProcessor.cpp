@@ -20,10 +20,15 @@ bool PlayerProcessor::Process(RakNet::Packet &packet) noexcept
             PlayerPacket *myPacket = Networking::get().getPlayerPacketController()->GetPacket(packet.data[0]);
             myPacket->setPlayer(player.get());
 
-            LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Processing %s from %s", processor.second->strPacketID.c_str(), player->npc.mName.c_str());
+
+            LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Processing %s from %s", processor.second->strPacketID.c_str(),
+                               player->npc.mName.c_str());
 
             if (!processor.second->avoidReading)
+            {
+                processor.second->PreReading(*myPacket, player);
                 myPacket->Read();
+            }
 
             processor.second->Do(*myPacket, player);
             return true;
