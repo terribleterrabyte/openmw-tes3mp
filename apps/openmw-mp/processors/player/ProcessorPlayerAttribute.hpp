@@ -24,7 +24,7 @@ namespace mwmp
                                                                              "damage", &OldAState::mDamage);
         }
 
-        void PreReading(PlayerPacket &packet, const std::shared_ptr<Player> &player)
+        void PreReading(PlayerPacket &packet, const std::shared_ptr<Player> &player) override
         {
             if (!player->creatureStats.mDead)
                 std::copy(std::begin(player->creatureStats.mAttributes),
