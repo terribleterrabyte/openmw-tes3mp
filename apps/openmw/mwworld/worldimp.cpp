@@ -330,7 +330,6 @@ namespace MWWorld
         mWorldScene->clear();
 
         mStore.clearDynamic();
-        mStore.setUp();
 
         if (mPlayer)
         {
@@ -1520,6 +1519,19 @@ namespace MWWorld
     void World::setInertialForce(const Ptr& ptr, const osg::Vec3f &force)
     {
         mPhysics->getActor(ptr)->setInertialForce(force);
+    }
+    /*
+        End of tes3mp addition
+    */
+
+    /*
+        Start of tes3mp addition
+
+        Make it possible to set the physics framerate from elsewhere
+    */
+    void World::setPhysicsFramerate(float physFramerate)
+    {
+        mPhysics->setPhysicsFramerate(physFramerate);
     }
     /*
         End of tes3mp addition

@@ -14,6 +14,7 @@ void GameSettings::Init(LuaState &lua)
 {
     lua.getState()->new_usertype<GameSettings>("Settings",
                                            "setDifficulty", &GameSettings::setDifficulty,
+                                           "setPhysicsFramerate", &GameSettings::setPhysicsFramerate,
                                            "setConsoleAllowed", &GameSettings::setConsoleAllowed,
                                            "setBedRestAllowed", &GameSettings::setBedRestAllowed,
                                            "setWildernessRestAllowed", &GameSettings::setWildernessRestAllowed,
@@ -35,6 +36,12 @@ void GameSettings::setConsoleAllowed(bool state)
 void GameSettings::setDifficulty(int difficulty)
 {
     player->difficulty = difficulty;
+    setChanged();
+}
+
+void GameSettings::setPhysicsFramerate(double physicsFramerate)
+{
+    player->physicsFramerate = physicsFramerate;
     setChanged();
 }
 

@@ -22,6 +22,8 @@ public:
 
     void setDifficulty(int difficulty);
 
+    void setPhysicsFramerate(double physicsFramerate);
+
     void setBedRestAllowed(bool state);
 
     void setWildernessRestAllowed(bool state);

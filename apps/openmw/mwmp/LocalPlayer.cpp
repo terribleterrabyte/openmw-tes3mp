@@ -49,6 +49,7 @@ LocalPlayer::LocalPlayer()
     charGenState.isFinished = false;
 
     difficulty = 0;
+    physicsFramerate = 60.0;
     consoleAllowed = false;
     bedRestAllowed = true;
     wildernessRestAllowed = true;
@@ -69,9 +70,9 @@ LocalPlayer::LocalPlayer()
     scale = 1;
     isWerewolf = false;
 
-    diedSinceArrestAttempt = false;
     isReceivingQuickKeys = false;
     isPlayingAnimation = false;
+    diedSinceArrestAttempt = false;
 }
 
 LocalPlayer::~LocalPlayer()
@@ -808,8 +809,10 @@ void LocalPlayer::resurrect()
     // Record that the player has died since the last attempt was made to arrest them,
     // used to make guards lenient enough to attempt an arrest again
     diedSinceArrestAttempt = true;
-
     LOG_APPEND(Log::LOG_INFO, "- diedSinceArrestAttempt is now true");
+
+    // Record that we are no longer a known werewolf, to avoid being attacked infinitely
+    MWBase::Environment::get().getWorld()->setGlobalInt("pcknownwerewolf", 0);
 
     // Ensure we unequip any items with constant effects that can put us into an infinite
     // death loop

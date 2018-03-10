@@ -592,7 +592,7 @@ namespace MWWorld
         const ESM::Cell *ptr = search(id);
         if (ptr == 0) {
             std::ostringstream msg;
-            msg << "Interior cell '" << id << "' not found";
+            msg << "Cell '" << id << "' not found";
             throw std::runtime_error(msg.str());
         }
         return ptr;
@@ -607,6 +607,11 @@ namespace MWWorld
         }
         return ptr;
     }
+    void Store<ESM::Cell>::clearDynamic()
+    {
+        setUp();
+    }
+
     void Store<ESM::Cell>::setUp()
     {
         typedef DynamicExt::iterator ExtIterator;

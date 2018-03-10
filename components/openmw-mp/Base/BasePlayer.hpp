@@ -303,6 +303,7 @@ namespace mwmp
         } weather;
 
         int difficulty;
+        float physicsFramerate;
         bool consoleAllowed;
         bool bedRestAllowed;
         bool wildernessRestAllowed;
