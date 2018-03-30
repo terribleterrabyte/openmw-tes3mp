@@ -30,8 +30,10 @@ namespace mwmp
                 if (serverCell != nullptr)
                     serverCell->sendToLoaded(&packet, &event);
             }
-            else
-                packet.Send(true);
+
+            // Otherwise, don't have any hardcoded sync and expect Lua scripts to forward
+            // container packets to ensure their integrity based on what exists in the
+            // server data
 
             auto objCtrl = Networking::get().getState().getObjectCtrl();
             auto containers = objCtrl.copyContainers(event);

@@ -205,16 +205,8 @@ void LocalActor::updateEquipment(bool forceUpdate)
 
                 item.refId = cellRef.getRefId();
                 item.charge = cellRef.getCharge();
-                if (slot == MWWorld::InventoryStore::Slot_CarriedRight)
-                {
-                    MWMechanics::WeaponType weaptype;
-                    auto &_class = ptr.getClass();
-                    MWMechanics::getActiveWeapon(_class.getCreatureStats(ptr), _class.getInventoryStore(ptr), &weaptype);
-                    if (weaptype != MWMechanics::WeapType_Thrown)
-                        item.count = 1;
-                }
-                else
-                    item.count = invStore.count(cellRef.getRefId());
+                item.enchantmentCharge = it->getCellRef().getEnchantmentCharge();
+                item.count = it->getRefData().getCount();
             }
         }
         else if (!item.refId.empty())
@@ -222,7 +214,8 @@ void LocalActor::updateEquipment(bool forceUpdate)
             equipmentChanged = true;
             item.refId = "";
             item.count = 0;
-            item.charge = 0;
+            item.charge = -1;
+            item.enchantmentCharge = -1;
         }
     }
 

@@ -72,6 +72,11 @@ public:
         return instance;
     }
 
+    static int GetLevel()
+    {
+        return Log::Get().logLevel;
+    }
+
     void SetLevel(int level)
     {
         logLevel = level;

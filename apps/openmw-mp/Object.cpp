@@ -228,6 +228,7 @@ void Object::setMasterState(bool state)
 }
 
 
+// TODO: Make this actually reflect the capabilities offered by containers in 0.6.3
 void Container::Init(LuaState &lua)
 {
     lua.getState()->new_usertype<Container>("Container",

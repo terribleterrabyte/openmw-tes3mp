@@ -85,6 +85,14 @@ namespace mwmp
             Request
         };
 
+        enum class ContainerSubAction : uint8_t
+        {
+            None = 0,
+            Drag,
+            Drop,
+            TakeAll
+        };
+
         RakNet::RakNetGUID guid;
         
         std::vector<WorldObject> worldObjects;
@@ -93,6 +101,7 @@ namespace mwmp
         std::string consoleCommand;
 
         Action action;
+        ContainerSubAction containerSubAction;
 
         bool isValid;
     };

@@ -17,12 +17,12 @@ namespace mwmp
         {
             BaseObjectProcessor::Do(packet, event);
 
-            LOG_APPEND(Log::LOG_VERBOSE, "- action: %i", (int)event.action);
+            LOG_APPEND(Log::LOG_VERBOSE, "- action: %i, containerSubAction: %i", (int) event.action, (int) event.containerSubAction);
 
             // If we've received a request for information, comply with it
             if (event.action == mwmp::BaseEvent::Action::Request)
-                event.sendContainers(ptrCellStore);
-                // Otherwise, edit containers based on the information received
+                event.sendCellContainers(ptrCellStore);
+            // Otherwise, edit containers based on the information received
             else
                 event.editContainers(ptrCellStore);
         }

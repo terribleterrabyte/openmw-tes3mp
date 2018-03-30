@@ -218,7 +218,6 @@ void mwmp::GUIController::showCustomWindow(const mwmp::BasePlayer::GUIWindow &gu
 void mwmp::GUIController::onInputBoxDone(MWGui::WindowBase *parWindow)
 {
     //MWBase::WindowManager *windowManager = MWBase::Environment::get().getWindowManager();
-    LOG_MESSAGE_SIMPLE(Log::LOG_VERBOSE, "GUIController::onInputBoxDone: %s.",mInputBox->getTextInput().c_str());
 
     Main::get().getLocalPlayer()->guiMessageBox.data = mInputBox->getTextInput();
     Main::get().getNetworking()->getPlayerPacket(ID_GUI_MESSAGEBOX)->setPlayer(Main::get().getLocalPlayer());

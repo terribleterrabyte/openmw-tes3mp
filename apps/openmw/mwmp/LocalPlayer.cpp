@@ -49,6 +49,7 @@ LocalPlayer::LocalPlayer()
     charGenState.isFinished = false;
 
     difficulty = 0;
+    enforcedLogLevel = -1;
     physicsFramerate = 60.0;
     consoleAllowed = false;
     bedRestAllowed = true;
@@ -455,17 +456,7 @@ void LocalPlayer::updateEquipment(bool forceUpdate)
                 item.refId = it->getCellRef().getRefId();
                 item.charge = it->getCellRef().getCharge();
                 item.enchantmentCharge = it->getCellRef().getEnchantmentCharge();
-
-                if (slot == MWWorld::InventoryStore::Slot_CarriedRight)
-                {
-                    MWMechanics::WeaponType weaptype;
-                    MWMechanics::getActiveWeapon(ptrPlayer.getClass().getCreatureStats(ptrPlayer),
-                                                 ptrPlayer.getClass().getInventoryStore(ptrPlayer), &weaptype);
-                    if (weaptype != MWMechanics::WeapType_Thrown)
-                        item.count = 1;
-                }
-                else
-                    item.count = invStore.count(it->getCellRef().getRefId());
+                item.count = it->getRefData().getCount();
             }
         }
         else if (!item.refId.empty())
@@ -688,6 +679,7 @@ void LocalPlayer::addItem(const Item &item)
         LOG_APPEND(Log::LOG_INFO, "- Ignored addition of invalid inventory item %s", item.refId.c_str());
     }
 
+    MWBase::Environment::get().getWindowManager()->getInventoryWindow()->updateItemView();
 }
 
 void LocalPlayer::addSpells()
@@ -1080,6 +1072,8 @@ void LocalPlayer::setEquipment()
         else
             ptrInventory.unequipSlot(slot, ptrPlayer);
     }
+
+    MWBase::Environment::get().getWindowManager()->getInventoryWindow()->updatePlayer();
 }
 
 void LocalPlayer::setInventory()

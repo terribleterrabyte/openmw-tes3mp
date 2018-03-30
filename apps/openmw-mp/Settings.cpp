@@ -14,6 +14,7 @@ void GameSettings::Init(LuaState &lua)
 {
     lua.getState()->new_usertype<GameSettings>("Settings",
                                            "setDifficulty", &GameSettings::setDifficulty,
+                                           "setEnforcedLogLevel", &GameSettings::setEnforcedLogLevel,
                                            "setPhysicsFramerate", &GameSettings::setPhysicsFramerate,
                                            "setConsoleAllowed", &GameSettings::setConsoleAllowed,
                                            "setBedRestAllowed", &GameSettings::setBedRestAllowed,
@@ -36,6 +37,12 @@ void GameSettings::setConsoleAllowed(bool state)
 void GameSettings::setDifficulty(int difficulty)
 {
     player->difficulty = difficulty;
+    setChanged();
+}
+
+void GameSettings::setEnforcedLogLevel(int logLevel)
+{
+    player->enforcedLogLevel = logLevel;
     setChanged();
 }
 

@@ -303,6 +303,7 @@ namespace mwmp
         } weather;
 
         int difficulty;
+        int enforcedLogLevel;
         float physicsFramerate;
         bool consoleAllowed;
         bool bedRestAllowed;

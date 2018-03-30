@@ -184,6 +184,17 @@ namespace MWGui
     virtual MWGui::ConfirmationDialog* getConfirmationDialog();
     virtual MWGui::TradeWindow* getTradeWindow();
 
+    /*
+        Start of tes3mp addition
+
+        Make it possible to get the ContainerWindow from elsewhere
+        in the code
+    */
+    virtual MWGui::ContainerWindow* getContainerWindow();
+    /*
+        End of tes3mp addition
+    */
+
     /// Make the player use an item, while updating GUI state accordingly
     virtual void useItem(const MWWorld::Ptr& item);
 
@@ -440,7 +451,7 @@ namespace MWGui
     /// Cycle to next or previous weapon
     virtual void cycleWeapon(bool next);
 
-    virtual void playSound(const std::string& soundId, float volume = 1.f, float pitch = 1.f);
+    virtual void playSound(const std::string& soundId, bool preventOverlapping = false, float volume = 1.f, float pitch = 1.f);
 
     // In WindowManager for now since there isn't a VFS singleton
     virtual std::string correctIconPath(const std::string& path);
@@ -509,6 +520,17 @@ namespace MWGui
     ScreenFader* mScreenFader;
     DebugWindow* mDebugWindow;
     JailScreen* mJailScreen;
+
+    /*
+        Start of tes3mp addition
+
+        Keep a pointer to the container window because of its usefulness
+        in multiplayer for container sync
+    */
+    ContainerWindow* mContainerWindow;
+    /*
+        End of tes3mp addition
+    */
 
     std::vector<WindowBase*> mWindows;
 

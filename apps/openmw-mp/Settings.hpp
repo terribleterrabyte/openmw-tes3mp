@@ -22,6 +22,8 @@ public:
 
     void setDifficulty(int difficulty);
 
+    void setEnforcedLogLevel(int logLevel);
+
     void setPhysicsFramerate(double physicsFramerate);
 
     void setBedRestAllowed(bool state);
