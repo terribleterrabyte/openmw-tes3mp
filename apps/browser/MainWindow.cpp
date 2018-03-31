@@ -13,6 +13,8 @@
 #include <QJsonArray>
 #include <QFile>
 #include <QJsonDocument>
+#include <apps/browser/netutils/Utils.hpp>
+#include <QtWidgets/QFileDialog>
 
 
 using namespace Process;
@@ -30,9 +32,6 @@ MainWindow::MainWindow(QWidget *parent)
     proxyModel->setSourceModel(browser);
     tblServerBrowser->setModel(proxyModel);
     tblFavorites->setModel(proxyModel);
-
-    // Remove Favorites tab while it remains broken
-    tabWidget->removeTab(1);
 
     tblServerBrowser->hideColumn(ServerData::ADDR);
     tblFavorites->hideColumn(ServerData::ADDR);
@@ -57,12 +56,20 @@ MainWindow::MainWindow(QWidget *parent)
     connect(cBBoxWOPass, SIGNAL(toggled(bool)), this, SLOT(noPasswordSwitch(bool)));
     connect(comboLatency, SIGNAL(currentIndexChanged(int)), this, SLOT(maxLatencyChanged(int)));
     connect(leGamemode, SIGNAL(textChanged(const QString &)), this, SLOT(gamemodeChanged(const QString &)));
+    connect(pbModulePath, &QPushButton::clicked, [this](bool) {
+        QString str = QFileDialog::getExistingDirectory(this, tr("Module path"),
+                                                        leModulePath->text(), QFileDialog::ShowDirsOnly);
+        if(!str.isEmpty())
+            leModulePath->setText(str);
+    });
     loadFavorites();
     queryHelper->refresh();
+    settingsMgr.loadBrowserSettings(*this);
 }
 
 MainWindow::~MainWindow()
 {
+    settingsMgr.saveBrowserSettings(*this);
     delete mGameInvoker;
 }
 
@@ -71,6 +78,9 @@ void MainWindow::addServerAndUpdate(const QString &addr)
     favorites->insertRow(0);
     QModelIndex mi = favorites->index(0, ServerData::ADDR);
     favorites->setData(mi, addr, Qt::EditRole);
+    /*auto address = addr.split(":");
+    auto data = getExtendedData(address[0].toLatin1(), address[1].toUShort());*/
+
     //NetController::get()->updateInfo(favorites, mi);
     //QueryClient::Update(RakNet::SystemAddress())
     /*auto data = QueryClient::Get().Query();

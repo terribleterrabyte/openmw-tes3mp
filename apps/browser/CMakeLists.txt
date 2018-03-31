@@ -14,6 +14,7 @@ set(BROWSER
         PingUpdater.cpp
         PingHelper.cpp
         QueryHelper.cpp
+        Settings.cpp
         ${CMAKE_SOURCE_DIR}/files/tes3mp/browser.rc
         )
 
@@ -33,6 +34,7 @@ set(BROWSER_HEADER
         netutils/Utils.hpp
         netutils/QueryClient.hpp
         Types.hpp
+        Settings.hpp
         )
 
 source_group(browser FILES ${BROWSER} ${BROWSER_HEADER})

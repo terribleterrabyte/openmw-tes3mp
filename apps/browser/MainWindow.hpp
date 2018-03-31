@@ -9,6 +9,7 @@
 #include "ui_Main.h"
 #include "ServerModel.hpp"
 #include "MySortFilterProxyModel.hpp"
+#include "Settings.hpp"
 #include <components/process/processinvoker.hpp>
 
 class QueryHelper;
@@ -39,6 +40,7 @@ private:
     Process::ProcessInvoker *mGameInvoker;
     ServerModel *browser, *favorites;
     MySortFilterProxyModel *proxyModel;
+    SettingsMgr settingsMgr;
     void loadFavorites();
 };
 
