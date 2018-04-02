@@ -65,6 +65,17 @@ MainWindow::MainWindow(QWidget *parent)
     loadFavorites();
     queryHelper->refresh();
     settingsMgr.loadBrowserSettings(*this);
+
+#ifdef TES3MP_PRE07
+    gbModules->setTitle(tr("Plugins Path"));
+    chbAutosort->setVisible(false);
+    listModules->setVisible(false);
+    leAddModule->setVisible(false);
+    pbAddModule->setVisible(false);
+    pbUpModule->setVisible(false);
+    pbDownModule->setVisible(false);
+    pbRemModule->setVisible(false);
+#endif
 }
 
 MainWindow::~MainWindow()

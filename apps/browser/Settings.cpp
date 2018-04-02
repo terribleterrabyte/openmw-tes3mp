@@ -138,8 +138,12 @@ void SettingsMgr::loadServerSettings(Ui::MainWindow &mw)
     mw.leServerMPort->setText(QString::fromStdString(serverMgr.getString("port", "MasterServer")));
     mw.sbRate->setValue(serverMgr.getInt("rate", "MasterServer"));
 
+#ifndef TES3MP_PRE07
     mw.leModulePath->setText(QString::fromStdString(serverMgr.getString("home", "Modules")));
     mw.chbAutosort->setCheckState(serverMgr.getBool("autoSort", "Modules") ? Qt::Checked : Qt::Unchecked);
+#else
+    mw.leModulePath->setText(QString::fromStdString(serverMgr.getString("home", "Plugins")));
+#endif
 
 }
 
@@ -157,8 +161,13 @@ void SettingsMgr::saveServerSettings(Ui::MainWindow &mw)
     serverMgr.setString("port", "MasterServer", mw.leServerMPort->text().toStdString());
     serverMgr.setInt("rate", "MasterServer", mw.sbRate->value());
 
+#ifndef TES3MP_PRE07
     serverMgr.setString("home", "Modules", mw.leModulePath->text().toStdString());
     serverMgr.setBool("autoSort", "Modules", mw.chbAutosort->checkState() == Qt::Checked);
+#else
+    serverMgr.setString("home", "Plugins", mw.leModulePath->text().toStdString());
+#endif
+
     serverMgr.saveUser(serverCfg);
 }
 

@@ -1,3 +1,5 @@
+option(OPTION_TES3MP_PRE07 "Temporary. Pre 0.7.0 compatible mode." OFF)
+
 set(BROWSER_UI
         ${CMAKE_SOURCE_DIR}/files/tes3mp/ui/Main.ui
         ${CMAKE_SOURCE_DIR}/files/tes3mp/ui/ServerInfo.ui
@@ -75,6 +77,11 @@ add_executable(tes3mp-browser
         )
 
 set_property(TARGET tes3mp-browser PROPERTY CXX_STANDARD 14)
+
+if (OPTION_TES3MP_PRE07)
+    target_compile_definitions(tes3mp-browser PRIVATE TES3MP_PRE07)
+endif (OPTION_TES3MP_PRE07)
+
 
 if (WIN32)
     INSTALL(TARGETS tes3mp-browser RUNTIME DESTINATION ".")

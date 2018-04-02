@@ -564,7 +564,7 @@
          </widget>
         </item>
         <item row="0" column="1" rowspan="2">
-         <widget class="QGroupBox" name="groupBox_2">
+         <widget class="QGroupBox" name="gbModules">
           <property name="enabled">
            <bool>true</bool>
           </property>
@@ -589,7 +589,7 @@
              </property>
              <layout class="QVBoxLayout" name="vertLayoutModulesList">
               <item>
-               <widget class="QListWidget" name="listWidget"/>
+               <widget class="QListWidget" name="listModules"/>
               </item>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_55">
@@ -608,14 +608,14 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_56">
                 <item>
-                 <widget class="QPushButton" name="pushButton">
+                 <widget class="QPushButton" name="pbUpModule">
                   <property name="text">
                    <string>Up</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton_2">
+                 <widget class="QPushButton" name="pbDownModule">
                   <property name="text">
                    <string>Down</string>
                   </property>
