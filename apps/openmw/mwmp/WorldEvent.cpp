@@ -75,7 +75,7 @@ void WorldEvent::addContainerItem(mwmp::WorldObject& worldObject, const MWWorld:
     containerItem.enchantmentCharge = itemPtr.getCellRef().getEnchantmentCharge();
     containerItem.actionCount = actionCount;
 
-    LOG_APPEND(Log::LOG_INFO, "- Adding container item %s", containerItem.refId.c_str());
+    LOG_APPEND(Log::LOG_INFO, "-- Adding container item %s", containerItem.refId.c_str());
 
     worldObject.containerItems.push_back(containerItem);
 }
@@ -223,7 +223,12 @@ void WorldEvent::editContainers(MWWorld::CellStore* cellStore)
                 mwmp::Main::get().getCellController()->isLocalActor(ptrFound))
             {
                 MWWorld::InventoryStore& invStore = ptrFound.getClass().getInventoryStore(ptrFound);
-                invStore.autoEquip(ptrFound);
+
+                if (ptrFound.getTypeName() == typeid(ESM::NPC).name())
+                    invStore.autoEquip(ptrFound);
+                // autoEquip only works on NPCs, so use the closest alternative for creatures
+                else
+                    invStore.autoEquipShield(ptrFound);
             }
 
             // If this container was open for us, update its view
@@ -324,7 +329,7 @@ void WorldEvent::spawnObjects(MWWorld::CellStore* cellStore)
             {
                 MWWorld::Ptr masterPtr;
 
-                if (worldObject.master.refId.empty())
+                if (worldObject.master.isPlayer)
                     masterPtr = MechanicsHelper::getPlayerPtr(worldObject.master);
                 else
                     masterPtr = cellStore->searchExact(worldObject.master.refNumIndex, worldObject.master.mpNum);
@@ -814,18 +819,19 @@ void WorldEvent::addObjectSpawn(const MWWorld::Ptr& ptr, const MWWorld::Ptr& mas
 
     if (master == MWBase::Environment::get().getWorld()->getPlayerPtr())
     {
+        worldObject.master.isPlayer = true;
         worldObject.master.guid = mwmp::Main::get().getLocalPlayer()->guid;
-        worldObject.master.refId.clear();
     }
     else if (mwmp::PlayerList::isDedicatedPlayer(master))
     {
+        worldObject.master.isPlayer = true;
         worldObject.master.guid = mwmp::PlayerList::getPlayer(master)->guid;
-        worldObject.master.refId.clear();
     }
     else
     {
         MWWorld::CellRef *masterRef = &master.getCellRef();
 
+        worldObject.master.isPlayer = false;
         worldObject.master.refId = masterRef->getRefId();
         worldObject.master.refNumIndex = masterRef->getRefNum().mIndex;
         worldObject.master.mpNum = masterRef->getMpNum();

@@ -34,6 +34,8 @@ namespace mwmp
     
     struct Target
     {
+        bool isPlayer;
+
         std::string refId;
         int refNumIndex;
         int mpNum;
@@ -66,6 +68,8 @@ namespace mwmp
         bool pressed;
         bool instant;
         bool knockdown;
+        bool applyWeaponEnchantment;
+        bool applyProjectileEnchantment;
 
         bool shouldSend;
     };

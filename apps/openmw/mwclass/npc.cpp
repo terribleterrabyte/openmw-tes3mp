@@ -706,7 +706,20 @@ namespace MWClass
             damage *= store.find("fCombatKODamageMult")->getFloat();
 
         // Apply "On hit" enchanted weapons
-        MWMechanics::applyOnStrikeEnchantment(ptr, victim, weapon, hitPosition);
+
+        /*
+            Start of tes3mp change (minor)
+
+            Track whether the strike enchantment is successful for attacks by the
+            LocalPlayer or LocalActors
+        */
+        bool appliedEnchantment = MWMechanics::applyOnStrikeEnchantment(ptr, victim, weapon, hitPosition);
+
+        if (localAttack)
+            localAttack->applyWeaponEnchantment = appliedEnchantment;
+        /*
+            End of tes3mp change (minor)
+        */
 
         MWMechanics::applyElementalShields(ptr, victim);
 

@@ -86,13 +86,10 @@ Attack *MechanicsHelper::getDedicatedAttack(const MWWorld::Ptr& ptr)
 
 MWWorld::Ptr MechanicsHelper::getPlayerPtr(const Target& target)
 {
-    if (target.refId.empty())
-    {
-        if (target.guid == mwmp::Main::get().getLocalPlayer()->guid)
-            return MWBase::Environment::get().getWorld()->getPlayerPtr();
-        else if (PlayerList::getPlayer(target.guid) != nullptr)
-            return PlayerList::getPlayer(target.guid)->getPtr();
-    }
+    if (target.guid == mwmp::Main::get().getLocalPlayer()->guid)
+        return MWBase::Environment::get().getWorld()->getPlayerPtr();
+    else if (PlayerList::getPlayer(target.guid) != nullptr)
+        return PlayerList::getPlayer(target.guid)->getPtr();
 
     return nullptr;
 }
@@ -101,18 +98,19 @@ void MechanicsHelper::assignAttackTarget(Attack* attack, const MWWorld::Ptr& tar
 {
     if (target == MWBase::Environment::get().getWorld()->getPlayerPtr())
     {
+        attack->target.isPlayer = true;
         attack->target.guid = mwmp::Main::get().getLocalPlayer()->guid;
-        attack->target.refId.clear();
     }
     else if (mwmp::PlayerList::isDedicatedPlayer(target))
     {
+        attack->target.isPlayer = true;
         attack->target.guid = mwmp::PlayerList::getPlayer(target)->guid;
-        attack->target.refId.clear();
     }
     else
     {
         MWWorld::CellRef *targetRef = &target.getCellRef();
 
+        attack->target.isPlayer = false;
         attack->target.refId = targetRef->getRefId();
         attack->target.refNumIndex = targetRef->getRefNum().mIndex;
         attack->target.mpNum = targetRef->getMpNum();
@@ -124,8 +122,12 @@ void MechanicsHelper::resetAttack(Attack* attack)
     attack->success = false;
     attack->knockdown = false;
     attack->block = false;
+    attack->applyWeaponEnchantment = false;
+    attack->applyProjectileEnchantment = false;
     attack->target.guid = RakNet::RakNetGUID();
     attack->target.refId.clear();
+    attack->target.refNumIndex = 0;
+    attack->target.mpNum = 0;
 }
 
 bool MechanicsHelper::getSpellSuccess(std::string spellId, const MWWorld::Ptr& caster)
@@ -150,7 +152,7 @@ void MechanicsHelper::processAttack(Attack attack, const MWWorld::Ptr& attacker)
 
     MWWorld::Ptr victim;
 
-    if (attack.target.refId.empty())
+    if (attack.target.isPlayer)
     {
         if (attack.target.guid == mwmp::Main::get().getLocalPlayer()->guid)
             victim = MWBase::Environment::get().getWorld()->getPlayerPtr();
@@ -170,14 +172,20 @@ void MechanicsHelper::processAttack(Attack attack, const MWWorld::Ptr& attacker)
     if (attack.type == Attack::Type::Melee)
     {
         MWWorld::Ptr weapon;
+        MWWorld::Ptr projectile;
 
         if (attacker.getClass().hasInventoryStore(attacker))
         {
-            MWWorld::InventoryStore &inv = attacker.getClass().getInventoryStore(attacker);
-            MWWorld::ContainerStoreIterator weaponslot = inv.getSlot(
+            MWWorld::InventoryStore &inventoryStore = attacker.getClass().getInventoryStore(attacker);
+            MWWorld::ContainerStoreIterator weaponSlot = inventoryStore.getSlot(
                 MWWorld::InventoryStore::Slot_CarriedRight);
+            MWWorld::ContainerStoreIterator projectileSlot = inventoryStore.getSlot(
+                MWWorld::InventoryStore::Slot_Ammunition);
 
-            weapon = ((weaponslot != inv.end()) ? *weaponslot : MWWorld::Ptr());
+            // TODO: Fix for when arrows, bolts and throwing weapons have just run out
+            weapon = weaponSlot != inventoryStore.end() ? *weaponSlot : MWWorld::Ptr();
+            projectile = projectileSlot != inventoryStore.end() ? *projectileSlot : MWWorld::Ptr();
+
             if (!weapon.isEmpty() && weapon.getTypeName() != typeid(ESM::Weapon).name())
                 weapon = MWWorld::Ptr();
         }
@@ -195,7 +203,25 @@ void MechanicsHelper::processAttack(Attack attack, const MWWorld::Ptr& attacker)
                 }
             }
             else
+            {
+                LOG_APPEND(Log::LOG_VERBOSE, "- weapon: %s", weapon.getCellRef().getRefId().c_str());
+
                 MWMechanics::blockMeleeAttack(attacker, victim, weapon, attack.damage, 1);
+
+                if (attack.applyWeaponEnchantment)
+                {
+                    MWMechanics::CastSpell cast(attacker, victim, false);
+                    cast.mHitPosition = osg::Vec3f();
+                    cast.cast(weapon, false);
+                }
+
+                if (attack.applyProjectileEnchantment)
+                {
+                    MWMechanics::CastSpell cast(attacker, victim, false);
+                    cast.mHitPosition = osg::Vec3f();
+                    cast.cast(projectile, false);
+                }
+            }
 
             victim.getClass().onHit(victim, attack.damage, healthdmg, weapon, attacker, osg::Vec3f(),
                 attack.success);

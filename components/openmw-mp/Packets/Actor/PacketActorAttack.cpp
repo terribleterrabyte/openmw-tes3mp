@@ -11,9 +11,18 @@ PacketActorAttack::PacketActorAttack(RakNet::RakPeerInterface *peer) : ActorPack
 
 void PacketActorAttack::Actor(BaseActor &actor, bool send)
 {
-    RW(actor.attack.target.refNumIndex, send);
-    RW(actor.attack.target.mpNum, send);
-    RW(actor.attack.target.guid, send);
+    RW(actor.attack.target.isPlayer, send);
+
+    if (actor.attack.target.isPlayer)
+    {
+        RW(actor.attack.target.guid, send);
+    }
+    else
+    {
+        RW(actor.attack.target.refId, send, 1);
+        RW(actor.attack.target.refNumIndex, send);
+        RW(actor.attack.target.mpNum, send);
+    }
 
     RW(actor.attack.spellId, send);
     RW(actor.attack.type, send);
@@ -25,4 +34,6 @@ void PacketActorAttack::Actor(BaseActor &actor, bool send)
     RW(actor.attack.block, send);
 
     RW(actor.attack.instant, send);
+    RW(actor.attack.applyWeaponEnchantment, send);
+    RW(actor.attack.applyProjectileEnchantment, send);
 }
