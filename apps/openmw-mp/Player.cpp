@@ -60,11 +60,13 @@ void Player::Init(LuaState &lua)
                                          "head", sol::property(&Player::getHead, &Player::setHead),
                                          "hair", sol::property(&Player::getHair, &Player::setHair),
                                          "birthsign", sol::property(&Player::getBirthsign, &Player::setBirthsign),
+                                         "setResetStats", &Player::setResetStats,
+
                                          "bounty", sol::property(&Player::getBounty, &Player::setBounty),
                                          "reputation", sol::property(&Player::getReputation, &Player::setReputation),
                                          "levelProgress", sol::property(&Player::getLevelProgress, &Player::setLevelProgress),
-                                         "creatureModel", sol::property(&Player::getCreatureModel, &Player::setCreatureModel),
-                                         "isCreatureName",  sol::property(&Player::isCreatureName, &Player::creatureName),
+                                         "creatureRefId", sol::property(&Player::getCreatureRefId, &Player::setCreatureRefId),
+                                         "displayCreatureName",  sol::property(&Player::getCreatureNameDisplayState, &Player::setCreatureNameDisplayState),
 
                                          "resurrect", &Player::resurrect,
                                          "jail", &Player::jail,
@@ -180,6 +182,14 @@ void Player::update()
         auto packet = plPCtrl->GetPacket(ID_PLAYER_POSITION);
         packet->setPlayer(basePlayer);
         packet->Send(false);
+    }
+
+    if (shapeshiftChanged)
+    {
+        auto packet = plPCtrl->GetPacket(ID_PLAYER_SHAPESHIFT);
+        packet->setPlayer(basePlayer);
+        packet->Send(false);
+        packet->Send(true);
     }
 
     // The character class can override values from below on the client, so send it first
@@ -300,9 +310,14 @@ void Player::setHandshake()
     handshakeCounter = numeric_limits<int>::max();
 }
 
-int Player::handshakeAttempts()
+void Player::incrementHandshakeAttempts()
 {
-    return handshakeCounter++;
+    handshakeCounter++;
+}
+
+int Player::getHandshakeAttempts()
+{
+    return handshakeCounter;
 }
 
 int Player::getLoadState()
@@ -627,6 +642,12 @@ void Player::setBirthsign(const std::string &sign)
     baseInfoChanged = true;
 }
 
+void Player::setResetStats(bool state)
+{
+    resetStats = state;
+    baseInfoChanged = true;
+}
+
 int Player::getBounty() const
 {
     return npcStats.mBounty;
@@ -668,26 +689,26 @@ void Player::setLevelProgress(int progress)
     levelChanged = true;
 }
 
-std::string Player::getCreatureModel() const
+std::string Player::getCreatureRefId() const
 {
-    return creatureModel;
+    return creatureRefId;
 }
 
-void Player::setCreatureModel(const std::string &model)
+void Player::setCreatureRefId(const std::string &refId)
 {
-    creatureModel = model;
-    baseInfoChanged = true;
+    creatureRefId = refId;
+    shapeshiftChanged = true;
 }
 
-void Player::creatureName(bool useName)
+bool Player::getCreatureNameDisplayState() const
 {
-    useCreatureName = useName;
-    baseInfoChanged = true;
+    return displayCreatureName;
 }
 
-bool Player::isCreatureName() const
+void Player::setCreatureNameDisplayState(bool useName)
 {
-    return useCreatureName;
+    displayCreatureName = useName;
+    shapeshiftChanged = true;
 }
 
 std::tuple<int, int> Player::getAttribute(unsigned short attributeId) const
@@ -846,11 +867,7 @@ bool Player::getWerewolfState() const
 void Player::setWerewolfState(bool state)
 {
     isWerewolf = state;
-
-    auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_SHAPESHIFT);
-    packet->setPlayer(this);
-    packet->Send(false);
-    packet->Send(true);
+    shapeshiftChanged = true;
 }
 
 float Player::getScale() const
@@ -861,11 +878,7 @@ float Player::getScale() const
 void Player::setScale(float newScale)
 {
     scale = newScale;
-
-    auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_SHAPESHIFT);
-    packet->setPlayer(this);
-    packet->Send(false);
-    packet->Send(true);
+    shapeshiftChanged = true;
 }
 
 void Player::setMark(float x, float y, float z, float xRot, float zRot, const std::string &cellDescription)

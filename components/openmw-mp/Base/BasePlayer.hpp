@@ -254,8 +254,9 @@ namespace mwmp
         BasePlayer(RakNet::RakNetGUID guid) : guid(guid)
         {
             spellbookChanges.action = SpellbookChanges::Type::None;
-            useCreatureName = false;
             isWerewolf = false;
+            displayCreatureName = false;
+            resetStats = false;
         }
 
         BasePlayer()
@@ -324,10 +325,12 @@ namespace mwmp
         std::string sound;
         Animation animation;
 
+        bool resetStats;
         float scale;
         bool isWerewolf;
-        std::string creatureModel;
-        bool useCreatureName;
+
+        bool displayCreatureName;
+        std::string creatureRefId;
 
         std::string deathReason;
 

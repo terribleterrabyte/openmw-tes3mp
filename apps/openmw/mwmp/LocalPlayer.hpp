@@ -32,7 +32,6 @@ namespace mwmp
         void updateReputation(bool forceUpdate = false);
         void updatePosition(bool forceUpdate = false);
         void updateCell(bool forceUpdate = false);
-        void updateChar();
         void updateEquipment(bool forceUpdate = false);
         void updateInventory(bool forceUpdate = false);
         void updateAttack();
@@ -51,6 +50,7 @@ namespace mwmp
 
         void closeInventoryWindows();
 
+        void setCharacter();
         void setDynamicStats();
         void setAttributes();
         void setSkills();

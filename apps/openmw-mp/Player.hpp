@@ -58,7 +58,8 @@ public:
     void setId(unsigned short id);
 
     bool isHandshaked();
-    int handshakeAttempts();
+    int getHandshakeAttempts();
+    void incrementHandshakeAttempts();
     void setHandshake();
 
     void setLoadState(int state);
@@ -101,6 +102,7 @@ public:
     void setHair(const std::string &hair);
     std::string getBirthsign() const;
     void setBirthsign(const std::string &sign);
+    void setResetStats(bool state);
 
     int getBounty() const;
     void setBounty(int bounty);
@@ -148,10 +150,10 @@ public:
     float getScale() const;
     void setScale(float newScale);
 
-    std::string getCreatureModel() const;
-    void setCreatureModel(const std::string &model);
-    void creatureName(bool useName);
-    bool isCreatureName() const;
+    std::string getCreatureRefId() const;
+    void setCreatureRefId(const std::string &model);
+    bool getCreatureNameDisplayState() const;
+    void setCreatureNameDisplayState(bool useName);
 
     std::string getIP() const;
 
@@ -207,8 +209,8 @@ public:
 
 private:
     CellController::TContainer cells;
-    int handshakeCounter;
     int loadState;
+    int handshakeCounter;
     bool /*statsChanged, attributesChanged, skillsChanged, baseInfoChanged, positionChanged,*/ changedMarkLocation, changedSelectedSpell, changedMap;
     CharClass cClass;
     GameSettings settings;

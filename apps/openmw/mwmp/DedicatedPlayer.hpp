@@ -6,8 +6,11 @@
 #define OPENMW_DEDICATEDPLAYER_HPP
 
 #include <components/esm/custommarkerstate.hpp>
+#include <components/esm/loadcrea.hpp>
 #include <components/esm/loadnpc.hpp>
 #include <components/openmw-mp/Base/BasePlayer.hpp>
+
+#include "../mwclass/npc.hpp"
 
 #include "../mwmechanics/aisequence.hpp"
 
@@ -32,10 +35,11 @@ namespace mwmp
         void update(float dt);
 
         void move(float dt);
+        void setBaseInfo();
+        void setShapeshift();
         void setAnimFlags();
         void setEquipment();
         void setCell();
-        void setShapeshift();
 
         void updateMarker();
         void removeMarker();
@@ -44,8 +48,13 @@ namespace mwmp
         void playAnimation();
         void playSpeech();
 
+        std::string getNpcRecordId();
+        std::string getCreatureRecordId();
+
+        void createReference(const std::string& recId);
+        void deleteReference();
+
         MWWorld::Ptr getPtr();
-        MWWorld::Ptr getLiveCellPtr();
         MWWorld::ManualRef* getRef();
 
         void setPtr(const MWWorld::Ptr& newPtr);
@@ -55,7 +64,6 @@ namespace mwmp
         DedicatedPlayer(RakNet::RakNetGUID guid);
         virtual ~DedicatedPlayer();
 
-        int state;
         MWWorld::ManualRef* reference;
 
         MWWorld::Ptr ptr;

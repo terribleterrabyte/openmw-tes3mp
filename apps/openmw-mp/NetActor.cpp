@@ -21,6 +21,7 @@ NetActor::NetActor() : inventory(this), cellAPI(this), isActorPlayer(false)
 void NetActor::resetUpdateFlags()
 {
     baseInfoChanged = false;
+    shapeshiftChanged = false;
     levelChanged = false;
     statsChanged = false;
     positionChanged = false;
