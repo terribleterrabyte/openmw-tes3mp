@@ -6,6 +6,7 @@
 #define OPENMW_BASEPLAYER_HPP
 
 #include <components/esm/loadcell.hpp>
+#include <components/esm/loadcrea.hpp>
 #include <components/esm/loadnpc.hpp>
 #include <components/esm/npcstats.hpp>
 #include <components/esm/loadclas.hpp>
@@ -316,6 +317,7 @@ namespace mwmp
         ESM::Position previousCellPosition;
         ESM::NPC npc;
         ESM::NpcStats npcStats;
+        ESM::Creature creature;
         ESM::Class charClass;
         std::string birthsign;
         Chat chat;
