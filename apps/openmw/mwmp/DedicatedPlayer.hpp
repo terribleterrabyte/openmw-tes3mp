@@ -73,6 +73,7 @@ namespace mwmp
 
         std::string previousRace;
         std::string previousCreatureRefId;
+        bool previousDisplayCreatureName;
 
         std::string creatureRecordId;
     };
