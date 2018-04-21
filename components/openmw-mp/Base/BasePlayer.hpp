@@ -258,6 +258,7 @@ namespace mwmp
             isWerewolf = false;
             displayCreatureName = false;
             resetStats = false;
+            enforcedLogLevel = -1;
         }
 
         BasePlayer()

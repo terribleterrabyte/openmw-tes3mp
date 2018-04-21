@@ -212,6 +212,7 @@ void Main::frame(float dt)
 
 void Main::updateWorld(float dt) const
 {
+
     if (!mLocalPlayer->processCharGen())
         return;
 

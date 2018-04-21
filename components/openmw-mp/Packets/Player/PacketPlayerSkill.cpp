@@ -1,7 +1,3 @@
-//
-// Created by koncord on 17.03.16.
-//
-
 #include "PacketPlayerSkill.hpp"
 
 #include <components/openmw-mp/NetworkMessages.hpp>
@@ -31,7 +27,7 @@ void PacketPlayerSkill::Packet(RakNet::BitStream *bs, bool send)
         player->skillIndexChanges.resize(count);
     }
 
-    for (auto && skillId : player->skillIndexChanges)
+    for (auto &&skillId : player->skillIndexChanges)
     {
         RW(skillId, send);
         RW(player->npcStats.mSkills[skillId], send);

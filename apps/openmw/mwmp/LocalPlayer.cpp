@@ -49,7 +49,6 @@ LocalPlayer::LocalPlayer()
     charGenState.isFinished = false;
 
     difficulty = 0;
-    enforcedLogLevel = -1;
     physicsFramerate = 60.0;
     consoleAllowed = false;
     bedRestAllowed = true;
@@ -215,7 +214,7 @@ void LocalPlayer::updateStatsDynamic(bool forceUpdate)
 
     if (needUpdate(oldHealth, health, 2))
         statsDynamicIndexChanges.push_back(0);
-    
+
     if (needUpdate(oldMagicka, magicka, 4))
         statsDynamicIndexChanges.push_back(1);
     
