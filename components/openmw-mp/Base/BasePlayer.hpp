@@ -256,6 +256,7 @@ namespace mwmp
         {
             spellbookChanges.action = SpellbookChanges::Type::None;
             isWerewolf = false;
+            exchangeFullInfo = false;
             displayCreatureName = false;
             resetStats = false;
             enforcedLogLevel = -1;
@@ -285,6 +286,8 @@ namespace mwmp
         // Track only the indexes of the skills that have been changed,
         // with the skill values themselves being stored in npcStats.mSkills
         std::vector<int> skillIndexChanges;
+
+        bool exchangeFullInfo;
 
         SpellbookChanges spellbookChanges;
         QuickKeyChanges quickKeyChanges;
