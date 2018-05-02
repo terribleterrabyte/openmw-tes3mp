@@ -84,10 +84,13 @@ public:
     int getLockLevel() const;
     void setLockLevel(int locklevel);
 
+    void setTeleportState(bool state);
+    void setDoorDestination(const std::string &cellDescription, float posX, float posY, float posZ, float rotX, float rotY, float rotZ);
+
     void setDisarmState(bool state);
     void setMasterState(bool state);
 
-    bool changedDoorState, changedObjectState, changedObjectScale, changedObjectTrap, changedObjectLock,
+    bool changedDoorState, changedDoorDestination, changedObjectState, changedObjectScale, changedObjectTrap, changedObjectLock,
             changedObjectDelete, changedObjectSpawn, changedObjectPlace;
 };
 

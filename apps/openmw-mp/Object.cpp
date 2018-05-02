@@ -26,8 +26,10 @@ void Object::Init(LuaState &lua)
                                          "goldValue", sol::property(&Object::getGoldValue, &Object::setGoldValue),
                                          "scale", sol::property(&Object::getScale, &Object::setScale),
                                          "state", sol::property(&Object::getState, &Object::setState),
-                                         "doorState", sol::property(&Object::getDoorState, &Object::setDoorState),
                                          "lockLevel", sol::property(&Object::getLockLevel, &Object::setLockLevel),
+                                         "doorState", sol::property(&Object::getDoorState, &Object::setDoorState),
+                                         "setTeleportState", &Object::setTeleportState,
+                                         "setDoorDestination", &Object::setDoorDestination,
                                          "setDisarmState", &Object::setDisarmState,
                                          "setMasterState", &Object::setMasterState
     );
@@ -215,6 +217,24 @@ void Object::setLockLevel(int locklevel)
     object.lockLevel = locklevel;
 }
 
+void Object::setTeleportState(bool state)
+{
+    changedDoorDestination = true;
+    object.teleportState = state;
+}
+
+void Object::setDoorDestination(const std::string &cellDescription, float posX, float posY, float posZ, float rotX, float rotY, float rotZ)
+{
+    changedDoorDestination = true;
+    object.destinationCell = Utils::getCellFromDescription(cellDescription);
+    object.destinationPosition.pos[0] = posX;
+    object.destinationPosition.pos[1] = posY;
+    object.destinationPosition.pos[2] = posZ;
+    object.destinationPosition.rot[0] = rotX;
+    object.destinationPosition.rot[1] = rotY;
+    object.destinationPosition.rot[2] = rotZ;
+}
+
 void Object::setDisarmState(bool state)
 {
     changedObjectTrap = true;
@@ -344,6 +364,7 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     enum Type
     {
         DOOR_STATE = 0,
+        DOOR_DESTINATION,
         OBJECT_STATE,
         OBJECT_SCALE,
         OBJECT_TRAP,
@@ -374,6 +395,11 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
         {
             changed[Type::DOOR_STATE] = true;
             events[Type::DOOR_STATE].worldObjects.push_back(object->object);
+        }
+        if (object->changedDoorDestination && validNewObjOrCopy)
+        {
+            changed[Type::DOOR_DESTINATION] = true;
+            events[Type::DOOR_DESTINATION].worldObjects.push_back(object->object);
         }
         if (object->changedObjectState && validNewObjOrCopy)
         {
@@ -418,6 +444,16 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     {
         auto packet = worldCtrl->GetPacket(ID_DOOR_STATE);
         auto &event = events[Type::DOOR_STATE];
+        packet->setEvent(&event);
+        packet->Send(false);
+
+        if (broadcast)
+            packet->Send(true);
+    }
+    if (changed[Type::DOOR_DESTINATION])
+    {
+        auto packet = worldCtrl->GetPacket(ID_DOOR_DESTINATION);
+        auto &event = events[Type::DOOR_DESTINATION];
         packet->setEvent(&event);
         packet->Send(false);
 

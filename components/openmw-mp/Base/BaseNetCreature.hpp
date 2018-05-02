@@ -20,6 +20,7 @@ namespace mwmp
     public:
         ESM::Position position;
         ESM::Position direction;
+        ESM::Position momentum;
 
         ESM::CreatureStats creatureStats;
         ESM::Cell cell;

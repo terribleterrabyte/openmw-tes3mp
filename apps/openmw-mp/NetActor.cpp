@@ -60,6 +60,17 @@ void NetActor::setRotation(float x, float z)
     positionChanged = true;
 }
 
+void NetActor::setMomentum(float x, float y, float z)
+{
+    netCreature->momentum.pos[0] = x;
+    netCreature->momentum.pos[1] = y;
+    netCreature->momentum.pos[2] = z;
+
+    if (!momentumChanged && isPlayer())
+        toPlayer()->addToUpdateQueue();
+    momentumChanged = true;
+}
+
 std::tuple<float, float> NetActor::getHealth() const
 {
     return make_tuple(netCreature->creatureStats.mDynamic[0].mBase, netCreature->creatureStats.mDynamic[0].mCurrent);

@@ -39,6 +39,8 @@ public:
     std::tuple<float, float> getRotation() const;
     void setRotation(float x, float z);
 
+    void setMomentum(float x, float y, float z);
+
     /**
      *
      * @return base, current
@@ -68,7 +70,7 @@ public:
     bool isPlayer() const { return isActorPlayer; }
     Player *toPlayer();
 protected:
-    bool baseInfoChanged, shapeshiftChanged, levelChanged, statsChanged, positionChanged, attributesChanged, skillsChanged;
+    bool baseInfoChanged, shapeshiftChanged, levelChanged, statsChanged, positionChanged, momentumChanged, attributesChanged, skillsChanged;
 
     mwmp::BasePlayer *basePlayer;
     mwmp::BaseNetCreature *netCreature;

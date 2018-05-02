@@ -21,6 +21,7 @@ void Player::Init(LuaState &lua)
                                          "setPosition", &NetActor::setPosition,
                                          "getRotation", &NetActor::getRotation,
                                          "setRotation", &NetActor::setRotation,
+                                         "setMomentum", &NetActor::setMomentum,
 
                                          "getHealth", &NetActor::getHealth,
                                          "setHealth", &NetActor::setHealth,
@@ -180,6 +181,13 @@ void Player::update()
     if (positionChanged)
     {
         auto packet = plPCtrl->GetPacket(ID_PLAYER_POSITION);
+        packet->setPlayer(basePlayer);
+        packet->Send(false);
+    }
+
+    if (momentumChanged)
+    {
+        auto packet = plPCtrl->GetPacket(ID_PLAYER_MOMENTUM);
         packet->setPlayer(basePlayer);
         packet->Send(false);
     }

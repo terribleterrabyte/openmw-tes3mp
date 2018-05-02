@@ -319,6 +319,7 @@ namespace mwmp
         bool ignorePosPacket;
 
         ESM::Position previousCellPosition;
+
         ESM::NPC npc;
         ESM::NpcStats npcStats;
         ESM::Creature creature;
