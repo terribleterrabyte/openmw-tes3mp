@@ -1119,7 +1119,7 @@ void LocalPlayer::setEquipment()
             else
             {
                 // Don't try to equip an item that is already equipped
-                if (!ptrInventory.getSlot(slot).isEqual(it))
+                if (ptrInventory.getSlot(slot) != it)
                     ptrInventory.equip(slot, it, ptrPlayer);
             }
         }
@@ -1299,12 +1299,17 @@ void LocalPlayer::setBooks()
 
 void LocalPlayer::setMapExplored()
 {
-    for (const auto &cellExplored : mapChanges.cellsExplored)
-    {
-        MWWorld::CellStore *ptrCellStore = Main::get().getCellController()->getCellStore(cellExplored);
+    MWWorld::Ptr ptrPlayer = getPlayerPtr();
+    MWMechanics::NpcStats &ptrNpcStats = ptrPlayer.getClass().getNpcStats(ptrPlayer);
 
-        if (ptrCellStore)
-            MWBase::Environment::get().getWindowManager()->setCellExplored(ptrCellStore);
+    for (const auto &mapTile : mapChanges.mapTiles)
+    {
+        const MWWorld::CellStore *cellStore = MWBase::Environment::get().getWorld()->getExterior(mapTile.x, mapTile.y);
+
+        if (!cellStore->getCell()->mName.empty())
+            MWBase::Environment::get().getWindowManager()->addVisitedLocation(cellStore->getCell()->mName, mapTile.x, mapTile.y);
+
+        MWBase::Environment::get().getWindowManager()->setGlobalMapImage(mapTile.x, mapTile.y, mapTile.imageData);
     }
 }
 
@@ -1649,6 +1654,23 @@ void LocalPlayer::sendSelectedSpell(const std::string& newSelectedSpellId)
 
     getNetworking()->getPlayerPacket(ID_PLAYER_MISCELLANEOUS)->setPlayer(this);
     getNetworking()->getPlayerPacket(ID_PLAYER_MISCELLANEOUS)->Send();
+}
+
+void LocalPlayer::sendMapExplored(int x, int y, const std::vector<char>& imageData)
+{
+    mapChanges.mapTiles.clear();
+
+    mwmp::MapTile mapTile;
+    mapTile.x = x;
+    mapTile.y = y;
+    mapTile.imageData = imageData;
+
+    LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Sending ID_PLAYER_MAP with x: %i, y: %i", x, y);
+
+    mapChanges.mapTiles.push_back(mapTile);
+
+    getNetworking()->getPlayerPacket(ID_PLAYER_MAP)->setPlayer(this);
+    getNetworking()->getPlayerPacket(ID_PLAYER_MAP)->Send();
 }
 
 void LocalPlayer::clearCellStates()

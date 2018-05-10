@@ -127,6 +127,13 @@ namespace mwmp
         Type type;
     };
 
+    struct MapTile
+    {
+        int x;
+        int y;
+        std::vector<char> imageData;
+    };
+
     struct JournalChanges
     {
         std::vector<JournalItem> journalItems;
@@ -154,7 +161,7 @@ namespace mwmp
 
     struct MapChanges
     {
-        std::vector<ESM::Cell> cellsExplored;
+        std::vector<MapTile> mapTiles;
     };
 
     struct SpellbookChanges

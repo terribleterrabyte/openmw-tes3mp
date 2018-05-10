@@ -13,22 +13,40 @@ void PacketPlayerMap::Packet(RakNet::BitStream *bs, bool send)
 {
     PlayerPacket::Packet(bs, send);
     
-    uint32_t count;
+    uint32_t changesCount;
 
     if (send)
-        count = static_cast<uint32_t>(player->mapChanges.cellsExplored.size());
+        changesCount = static_cast<uint32_t>(player->mapChanges.mapTiles.size());
 
-    RW(count, send);
+    RW(changesCount, send);
 
     if (!send)
     {
-        player->mapChanges.cellsExplored.clear();
-        player->mapChanges.cellsExplored.resize(count);
+        player->mapChanges.mapTiles.clear();
+        player->mapChanges.mapTiles.resize(changesCount);
     }
 
-    for (auto &&cellExplored : player->mapChanges.cellsExplored)
+    for (auto &&mapTile : player->mapChanges.mapTiles)
     {
-        RW(cellExplored.mData, send, true);
-        RW(cellExplored.mName, send, true);
+        RW(mapTile.x, send);
+        RW(mapTile.y, send);
+
+        uint32_t imageDataCount;
+
+        if (send)
+            imageDataCount = static_cast<uint32_t>(mapTile.imageData.size());
+
+        RW(imageDataCount, send);
+
+        if (!send)
+        {
+            mapTile.imageData.clear();
+            mapTile.imageData.resize(imageDataCount);
+        }
+
+        for (auto &&imageChar : mapTile.imageData)
+        {
+            RW(imageChar, send);
+        }
     }
 }

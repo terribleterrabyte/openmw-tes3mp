@@ -186,9 +186,8 @@ public:
     std::string getSelectedSpell();
     void setSelectedSpell(const std::string &newSelectedSpellId);
 
-    CellState getCellState(int i);
     size_t cellStateSize() const;
-    void addCellExplored(const std::string &cellDescription);
+    CellState getCellState(int i);
 
     CharClass &getCharClass(sol::this_state thisState);
     GameSettings &getSettings();
@@ -199,6 +198,7 @@ public:
     Quests &getQuests();
     Spells &getSpells();
     QuickKeys &getQuickKeys();
+    MapTiles &getMapTiles();
     WeatherMgr &getWeatherMgr();
 
     void setAuthority();
@@ -221,6 +221,7 @@ private:
     Quests quests;
     Spells spells;
     QuickKeys quickKeys;
+    MapTiles mapTiles;
     WeatherMgr weatherMgr;
     sol::table storedData;
     sol::table customData;

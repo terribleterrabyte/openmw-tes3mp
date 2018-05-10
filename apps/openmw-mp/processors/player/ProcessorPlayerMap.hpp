@@ -17,9 +17,7 @@ namespace mwmp
         {
             DEBUG_PRINTF(strPacketID.c_str());
 
-            // Not currently implemented
-            //
-            // To be dealt with later to save explored areas on local maps
+            Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_PLAYER_MAP>(player.get());
         }
     };
 }

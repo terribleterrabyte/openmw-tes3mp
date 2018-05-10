@@ -211,7 +211,6 @@ void QuickKeys::addQuickKey(const QuickKey &quickKey)
     setChanged();
 }
 
-
 QuickKey QuickKeys::getQuickKey(int id) const
 {
     return QuickKey(player->quickKeyChanges.quickKeys.at(id));
@@ -276,4 +275,104 @@ std::string QuickKey::getItemId() const
 void QuickKey::setItemId(const std::string &itemId)
 {
     quickKey.itemId = itemId;
+}
+
+void MapTiles::Init(LuaState &lua)
+{
+    lua.getState()->new_usertype<MapTiles>("MapTiles",
+        "addMapTile", &MapTiles::addMapTile,
+        "getMapTile", &MapTiles::getMapTile,
+        "setMapTile", &MapTiles::setMapTile,
+        "clear", &MapTiles::clear,
+        "size", &MapTiles::size
+        );
+}
+
+MapTiles::MapTiles(Player *player) : BaseMgr(player)
+{
+
+}
+
+void MapTiles::processUpdate()
+{
+    auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_MAP);
+    packet->setPlayer(player);
+    packet->Send(false);
+    clear();
+}
+
+void MapTiles::addMapTile(const MapTile &mapTile)
+{
+    player->mapChanges.mapTiles.push_back(mapTile.mapTile);
+    setChanged();
+}
+
+MapTile MapTiles::getMapTile(int id) const
+{
+    return MapTile(player->mapChanges.mapTiles.at(id));
+}
+
+void MapTiles::setMapTile(int id, const MapTile &mapTile)
+{
+    player->mapChanges.mapTiles.at(id) = mapTile.mapTile;
+    setChanged();
+}
+
+void MapTiles::clear()
+{
+    player->mapChanges.mapTiles.clear();
+    setChanged();
+}
+
+size_t MapTiles::size() const
+{
+    return player->mapChanges.mapTiles.size();
+}
+
+void MapTile::Init(LuaState &lua)
+{
+    lua.getState()->new_usertype<MapTile>("MapTile",
+        "cellX", sol::property(&MapTile::getCellX, &MapTile::setCellX),
+        "cellY", sol::property(&MapTile::getCellY, &MapTile::setCellY),
+        "loadImageFile", &MapTile::loadImageFile,
+        "saveImageFile", &MapTile::saveImageFile
+        );
+}
+
+MapTile::MapTile(mwmp::MapTile &mapTile) : mapTile(mapTile)
+{
+
+}
+
+int MapTile::getCellX() const
+{
+    return mapTile.x;
+}
+
+void MapTile::setCellX(int cellX)
+{
+    mapTile.x = cellX;
+}
+
+int MapTile::getCellY() const
+{
+    return mapTile.y;
+}
+
+void MapTile::setCellY(int cellY)
+{
+    mapTile.y = cellY;
+}
+
+void MapTile::loadImageFile(const char* filePath)
+{
+    std::ifstream inputFile(filePath, std::ios::binary);
+    mapTile.imageData = std::vector<char>(std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>());
+}
+
+void MapTile::saveImageFile(const char* filePath)
+{
+    std::ofstream outputFile(filePath, std::ios::binary);
+    std::ostream_iterator<char> outputIterator(outputFile);
+    std::copy(mapTile.imageData.begin(), mapTile.imageData.end(), outputIterator);
 }

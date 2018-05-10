@@ -92,6 +92,7 @@ void Player::Init(LuaState &lua)
                                          "getQuests", &Player::getQuests,
                                          "getSpells", &Player::getSpells,
                                          "getQuickKeys", &Player::getQuickKeys,
+                                         "getMapTiles", &Player::getMapTiles,
                                          "getWeatherMgr", &Player::getWeatherMgr,
 
                                          "getMark", &Player::getMark,
@@ -100,9 +101,9 @@ void Player::Init(LuaState &lua)
                                          "getSelectedSpell", &Player::getSelectedSpell,
                                          "setSelectedSpell", &Player::setSelectedSpell,
 
-                                         "getCellState", &Player::getCellState,
                                          "cellStateSize", &Player::cellStateSize,
-                                         "addCellExplored", &Player::addCellExplored,
+                                         "getCellState", &Player::getCellState,
+
                                          "setAuthority", &Player::setAuthority,
 
                                          "storedData", &Player::storedData,
@@ -119,7 +120,7 @@ void Player::Init(LuaState &lua)
 
 Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedMap(false), cClass(this),
                                           settings(this), books(this), gui(this), dialogue(this), factions(this),
-                                          quests(this), spells(this), quickKeys(this), weatherMgr(this)
+                                          quests(this), spells(this), quickKeys(this), mapTiles(this), weatherMgr(this)
 {
     basePlayer = this;
     netCreature = this;
@@ -292,6 +293,7 @@ void Player::update()
     quests.update();
     spells.update();
     quickKeys.update();
+    mapTiles.update();
     weatherMgr.update();
 
     resetUpdateFlags();
@@ -833,6 +835,11 @@ QuickKeys &Player::getQuickKeys()
     return quickKeys;
 }
 
+MapTiles &Player::getMapTiles()
+{
+    return mapTiles;
+}
+
 WeatherMgr &Player::getWeatherMgr()
 {
     return weatherMgr;
@@ -922,13 +929,6 @@ void Player::setSelectedSpell(const std::string &newSelectedSpell)
 size_t Player::cellStateSize() const
 {
     return cellStateChanges.cellStates.size();
-}
-
-void Player::addCellExplored(const std::string &cellDescription)
-{
-    auto cellExplored = Utils::getCellFromDescription(cellDescription);
-    mapChanges.cellsExplored.push_back(cellExplored);
-    changedMap = true;
 }
 
 CellState Player::getCellState(int i)
