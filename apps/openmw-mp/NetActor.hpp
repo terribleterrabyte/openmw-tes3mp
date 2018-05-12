@@ -70,7 +70,7 @@ public:
     bool isPlayer() const { return isActorPlayer; }
     Player *toPlayer();
 protected:
-    bool baseInfoChanged, shapeshiftChanged, levelChanged, statsChanged, positionChanged, momentumChanged, attributesChanged, skillsChanged;
+    bool baseInfoChanged, shapeshiftChanged, levelChanged, statsChanged, positionChanged, momentumChanged, attributesChanged, skillsChanged, aiChanged;
 
     mwmp::BasePlayer *basePlayer;
     mwmp::BaseNetCreature *netCreature;

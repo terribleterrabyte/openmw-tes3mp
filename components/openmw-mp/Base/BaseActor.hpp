@@ -25,6 +25,11 @@ namespace mwmp
             isFlying = false;
         }
 
+        enum class AIAction : uint8_t
+        {
+            Follow = 0
+        };
+
         std::string refId;
         unsigned refNumIndex;
         unsigned mpNum;
@@ -32,6 +37,10 @@ namespace mwmp
         std::string sound;
 
         Animation animation;
+
+        bool hasAiTarget;
+        Target aiTarget;
+        AIAction aiAction;
 
         bool hasPositionData;
         bool hasStatsDynamicData;

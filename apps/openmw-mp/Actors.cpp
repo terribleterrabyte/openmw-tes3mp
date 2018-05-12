@@ -11,6 +11,7 @@
 #include "Cell.hpp"
 #include "CellController.hpp"
 #include "Player.hpp"
+#include "Players.hpp"
 
 using namespace std;
 
@@ -32,6 +33,9 @@ void Actor::Init(LuaState &lua)
                                         "getCell", &NetActor::getCell,
                                         "getInventory", &NetActor::getInventory,
 
+                                        "followPlayer", &Actor::followPlayer,
+                                        "followActor", &Actor::followActor,
+
                                         "refId", sol::property(&Actor::getRefId, &Actor::setRefId),
                                         "refNumIndex", sol::property(&Actor::getRefNumIndex, &Actor::setRefNumIndex),
                                         "mpNum", sol::property(&Actor::getMpNum, &Actor::setMpNum)
@@ -42,6 +46,32 @@ void Actor::Init(LuaState &lua)
 Actor::Actor() : NetActor()
 {
 
+}
+
+void Actor::followPlayer(int pid)
+{
+    actor->aiAction = mwmp::BaseActor::AIAction::Follow;
+
+    actor->hasAiTarget = true;
+    actor->aiTarget.isPlayer = true;
+
+    auto player = Players::getPlayerByPID(pid).get();
+    actor->aiTarget.guid = player->guid;
+
+    aiChanged = true;
+}
+
+void Actor::followActor(unsigned int refNumIndex, unsigned int mpNum)
+{
+    actor->aiAction = mwmp::BaseActor::AIAction::Follow;
+
+    actor->hasAiTarget = true;
+    actor->aiTarget.isPlayer = false;
+
+    actor->aiTarget.refNumIndex = refNumIndex;
+    actor->aiTarget.mpNum = mpNum;
+
+    aiChanged = true;
 }
 
 std::string Actor::getRefId() const
@@ -141,6 +171,7 @@ void ActorController::sendActors(std::shared_ptr<Player> player, std::vector<std
     bool skillsChanged = false;
     bool baseInfoChanged = false;*/
     bool equipmentChanged = false;
+    bool aiChanged = false;
     bool changedCell = false;
 
     actorList.baseActors.clear();
@@ -152,6 +183,8 @@ void ActorController::sendActors(std::shared_ptr<Player> player, std::vector<std
             positionChanged = true;
         if (actor->statsChanged)
             statsChanged = true;
+        if (actor->aiChanged)
+            aiChanged = true;
         /*if (actor->attributesChanged)
             attributesChanged = true;
         if (actor->skillsChanged)
@@ -217,6 +250,15 @@ void ActorController::sendActors(std::shared_ptr<Player> player, std::vector<std
     if (equipmentChanged)
     {
         auto packet = actorCtrl->GetPacket(ID_ACTOR_EQUIPMENT);
+        packet->setActorList(&actorList);
+        packet->Send(actorList.guid);
+
+        if (sendToAll)
+            serverCell->sendToLoaded(packet, &actorList);
+    }
+    if (aiChanged)
+    {
+        auto packet = actorCtrl->GetPacket(ID_ACTOR_AI);
         packet->setActorList(&actorList);
         packet->Send(actorList.guid);
 

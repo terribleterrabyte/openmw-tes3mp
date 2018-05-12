@@ -25,6 +25,10 @@ public:
     void setRefNumIndex(unsigned refNumIndex);
     unsigned getMpNum() const;
     void setMpNum(unsigned mpNum);
+
+    void followPlayer(int pid);
+    void followActor(unsigned int refNumIndex, unsigned int mpNum);
+
     bool doesHavePosition() const; // ????
     bool doesHaveStatsDynamic() const; // ????
     
