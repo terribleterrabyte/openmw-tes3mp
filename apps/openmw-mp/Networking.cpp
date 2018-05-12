@@ -43,12 +43,12 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
 
     playerPacketController = make_unique<PlayerPacketController>(peer);
     actorPacketController = make_unique<ActorPacketController>(peer);
-    worldPacketController =  make_unique<WorldPacketController>(peer);
+    objectPacketController =  make_unique<ObjectPacketController>(peer);
 
     // Set send stream
     playerPacketController->SetStream(nullptr, &bsOut);
     actorPacketController->SetStream(nullptr, &bsOut);
-    worldPacketController->SetStream(nullptr, &bsOut);
+    objectPacketController->SetStream(nullptr, &bsOut);
 
     running = true;
     exitCode = 0;
@@ -171,7 +171,7 @@ void Networking::processActorPacket(RakNet::Packet *packet)
 
 }
 
-void Networking::processWorldPacket(RakNet::Packet *packet)
+void Networking::processObjectPacket(RakNet::Packet *packet)
 {
     auto player = Players::getPlayerByGUID(packet->guid);
 
@@ -179,7 +179,7 @@ void Networking::processWorldPacket(RakNet::Packet *packet)
         return;
 
     if (!WorldProcessor::Process(*packet, baseEvent))
-        LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled WorldPacket with identifier %i has arrived", (int) packet->data[0]);
+        LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled ObjectPacket with identifier %i has arrived", (int) packet->data[0]);
 
 }
 
@@ -264,10 +264,10 @@ bool Networking::update(RakNet::Packet *packet)
         actorPacketController->SetStream(&bsIn, nullptr);
         processActorPacket(packet);
     }
-    else if (worldPacketController->ContainsPacket(packet->data[0]))
+    else if (objectPacketController->ContainsPacket(packet->data[0]))
     {
-        worldPacketController->SetStream(&bsIn, nullptr);
-        processWorldPacket(packet);
+        objectPacketController->SetStream(&bsIn, nullptr);
+        processObjectPacket(packet);
     }
     else
     {
@@ -343,9 +343,9 @@ ActorPacketController *Networking::getActorPacketController() const
     return actorPacketController.get();
 }
 
-WorldPacketController *Networking::getWorldPacketController() const
+ObjectPacketController *Networking::getObjectPacketController() const
 {
-    return worldPacketController.get();
+    return objectPacketController.get();
 }
 
 BaseActorList *Networking::getLastActorList()

@@ -7,7 +7,7 @@
 
 #include <components/openmw-mp/Controllers/PlayerPacketController.hpp>
 #include <components/openmw-mp/Controllers/ActorPacketController.hpp>
-#include <components/openmw-mp/Controllers/WorldPacketController.hpp>
+#include <components/openmw-mp/Controllers/ObjectPacketController.hpp>
 #include <components/openmw-mp/Packets/PacketPreInit.hpp>
 #include <apps/openmw-mp/Script/LuaState.hpp>
 
@@ -38,7 +38,7 @@ namespace  mwmp
 
         void processPlayerPacket(RakNet::Packet *packet);
         void processActorPacket(RakNet::Packet *packet);
-        void processWorldPacket(RakNet::Packet *packet);
+        void processObjectPacket(RakNet::Packet *packet);
         bool update(RakNet::Packet *packet);
 
         unsigned short numberOfConnections() const;
@@ -51,7 +51,7 @@ namespace  mwmp
 
         PlayerPacketController *getPlayerPacketController() const;
         ActorPacketController *getActorPacketController() const;
-        WorldPacketController *getWorldPacketController() const;
+        ObjectPacketController *getObjectPacketController() const;
 
         LuaState &getState() {return luaState;}
 
@@ -94,7 +94,7 @@ namespace  mwmp
 
         std::unique_ptr<PlayerPacketController> playerPacketController;
         std::unique_ptr<ActorPacketController> actorPacketController;
-        std::unique_ptr<WorldPacketController> worldPacketController;
+        std::unique_ptr<ObjectPacketController> objectPacketController;
 
         bool running;
         int exitCode;

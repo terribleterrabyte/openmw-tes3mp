@@ -14,7 +14,7 @@ namespace mwmp
             BPP_INIT(ID_OBJECT_SPAWN)
         }
 
-        void Do(WorldPacket &packet, const std::shared_ptr<Player> &player, BaseEvent &event) override
+        void Do(ObjectPacket &packet, const std::shared_ptr<Player> &player, BaseEvent &event) override
         {
             LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Received %s from %s", strPacketID.c_str(), player->npc.mName.c_str());
 

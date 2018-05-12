@@ -8,7 +8,7 @@
 
 #include <components/openmw-mp/Base/BasePacketProcessor.hpp>
 #include <components/openmw-mp/Packets/BasePacket.hpp>
-#include <components/openmw-mp/Packets/World/WorldPacket.hpp>
+#include <components/openmw-mp/Packets/Object/ObjectPacket.hpp>
 #include <components/openmw-mp/NetworkMessages.hpp>
 #include "Players.hpp"
 
@@ -18,7 +18,7 @@ namespace mwmp
     {
     public:
 
-        virtual void Do(WorldPacket &packet, const std::shared_ptr<Player> &player, BaseEvent &event);
+        virtual void Do(ObjectPacket &packet, const std::shared_ptr<Player> &player, BaseEvent &event);
 
         static bool Process(RakNet::Packet &packet, BaseEvent &event) noexcept;
     };

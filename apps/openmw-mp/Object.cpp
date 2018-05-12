@@ -438,7 +438,7 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
         }
     }
 
-    auto worldCtrl = mwmp::Networking::get().getWorldPacketController();
+    auto worldCtrl = mwmp::Networking::get().getObjectPacketController();
 
     if (changed[Type::DOOR_STATE])
     {
@@ -544,7 +544,7 @@ void ObjectController::sendConsoleCommand(shared_ptr<Player> player, shared_ptr<
     for (auto &object : *objects)
         event.worldObjects.push_back(object->object);
 
-    auto packet = mwmp::Networking::get().getWorldPacketController()->GetPacket(ID_CONSOLE_COMMAND);
+    auto packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_CONSOLE_COMMAND);
     packet->setEvent(&event);
     packet->Send(false);
 
@@ -568,7 +568,7 @@ void ObjectController::sendContainers(shared_ptr<Player> player, shared_ptr<vect
             event.worldObjects.push_back(object->object);
     }
 
-    auto packet = mwmp::Networking::get().getWorldPacketController()->GetPacket(ID_CONTAINER);
+    auto packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_CONTAINER);
     packet->setEvent(&event);
     packet->Send(false);
 
@@ -583,7 +583,7 @@ void ObjectController::requestContainers(shared_ptr<Player> player)
     event.guid = player->guid;
     event.cell = player->cell;
 
-    auto packet = mwmp::Networking::get().getWorldPacketController()->GetPacket(ID_CONTAINER);
+    auto packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_CONTAINER);
     packet->setEvent(&event);
     packet->Send(event.guid);
 }
