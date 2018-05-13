@@ -15,10 +15,10 @@ ObjectPacket::ObjectPacket(RakNet::RakPeerInterface *peer) : BasePacket(peer)
     this->peer = peer;
 }
 
-void ObjectPacket::setEvent(BaseEvent *event)
+void ObjectPacket::setObjectList(BaseObjectList *objectList)
 {
-    this->event = event;
-    guid = event->guid;
+    this->objectList = objectList;
+    guid = objectList->guid;
 }
 
 void ObjectPacket::Packet(RakNet::BitStream *bs, bool send)
@@ -26,9 +26,9 @@ void ObjectPacket::Packet(RakNet::BitStream *bs, bool send)
     if (!PacketHeader(bs, send))
         return;
 
-    for (auto &&worldObject : event->worldObjects)
+    for (auto &&baseObject : objectList->baseObjects)
     {
-        Object(worldObject, send);
+        Object(baseObject, send);
     }
 }
 
@@ -36,37 +36,37 @@ bool ObjectPacket::PacketHeader(RakNet::BitStream *bs, bool send)
 {
     BasePacket::Packet(bs, send);
 
-    uint32_t worldObjectCount;
+    uint32_t baseObjectCount;
 
     if (send)
-        worldObjectCount = (uint32_t) (event->worldObjects.size());
+        baseObjectCount = (uint32_t) (objectList->baseObjects.size());
 
-    RW(worldObjectCount, send);
+    RW(baseObjectCount, send);
 
-    if (worldObjectCount > maxObjects)
+    if (baseObjectCount > maxObjects)
     {
-        event->isValid = false;
+        objectList->isValid = false;
         return false;
     }
 
     if (!send)
     {
-        event->worldObjects.clear();
-        event->worldObjects.resize(worldObjectCount);
+        objectList->baseObjects.clear();
+        objectList->baseObjects.resize(baseObjectCount);
     }
 
     if (hasCellData)
     {
-        RW(event->cell.mData, send, true);
-        RW(event->cell.mName, send, true);
+        RW(objectList->cell.mData, send, true);
+        RW(objectList->cell.mName, send, true);
     }
 
     return true;
 }
 
-void ObjectPacket::Object(WorldObject &worldObject, bool send)
+void ObjectPacket::Object(BaseObject &baseObject, bool send)
 {
-    RW(worldObject.refId, send);
-    RW(worldObject.refNumIndex, send);
-    RW(worldObject.mpNum, send);
+    RW(baseObject.refId, send);
+    RW(baseObject.refNumIndex, send);
+    RW(baseObject.mpNum, send);
 }

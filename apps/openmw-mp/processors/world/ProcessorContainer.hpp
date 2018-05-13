@@ -15,17 +15,17 @@ namespace mwmp
             BPP_INIT(ID_CONTAINER)
         }
 
-        void Do(ObjectPacket &packet, const std::shared_ptr<Player> &player, BaseEvent &event) override
+        void Do(ObjectPacket &packet, const std::shared_ptr<Player> &player, BaseObjectList &objectList) override
         {
             LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Received %s from %s", strPacketID.c_str(), player->npc.mName.c_str());
-            LOG_APPEND(Log::LOG_INFO, "- action: %i", (int) event.action);
+            LOG_APPEND(Log::LOG_INFO, "- action: %i", (int) objectList.action);
 
             // Don't have any hardcoded sync, and instead expect Lua scripts to forward
             // container packets to ensure their integrity based on what exists in the
             // server data
 
             auto objCtrl = Networking::get().getState().getObjectCtrl();
-            auto containers = objCtrl.copyContainers(event);
+            auto containers = objCtrl.copyContainers(objectList);
 
             Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_CONTAINER>(player, containers);
 

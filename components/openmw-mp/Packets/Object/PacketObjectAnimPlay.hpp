@@ -10,7 +10,7 @@ namespace mwmp
     public:
         explicit PacketObjectAnimPlay(RakNet::RakPeerInterface *peer);
 
-        void Object(WorldObject &worldObject, bool send) override;
+        void Object(BaseObject &baseObject, bool send) override;
     };
 }
 

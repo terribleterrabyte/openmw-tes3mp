@@ -10,7 +10,7 @@ namespace mwmp
     public:
         explicit PacketScriptMemberShort(RakNet::RakPeerInterface *peer);
 
-        void Object(WorldObject &obj, bool send) override;
+        void Object(BaseObject &obj, bool send) override;
     };
 }
 

@@ -331,11 +331,11 @@ void ObjectController::Init(LuaState &lua)
 
 }
 
-shared_ptr<vector<shared_ptr<Object>>> ObjectController::copyObjects(mwmp::BaseEvent &event)
+shared_ptr<vector<shared_ptr<Object>>> ObjectController::copyObjects(mwmp::BaseObjectList &objectList)
 {
     auto objects = make_shared<vector<shared_ptr<Object>>>();
 
-    for (auto &obj : event.worldObjects)
+    for (auto &obj : objectList.baseObjects)
     {
         auto object = new Object;
         object->copied = true;
@@ -345,11 +345,11 @@ shared_ptr<vector<shared_ptr<Object>>> ObjectController::copyObjects(mwmp::BaseE
     return objects;
 }
 
-shared_ptr<vector<shared_ptr<Container>>> ObjectController::copyContainers(mwmp::BaseEvent &event)
+shared_ptr<vector<shared_ptr<Container>>> ObjectController::copyContainers(mwmp::BaseObjectList &objectList)
 {
     auto containers = make_shared<vector<shared_ptr<Container>>>();
 
-    for (auto &obj : event.worldObjects)
+    for (auto &obj : objectList.baseObjects)
     {
         auto container = new Container;
         container->copied = true;
@@ -374,14 +374,14 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
         OBJECT_PLACE,
         LAST
     };
-    mwmp::BaseEvent events[Type::LAST];
+    mwmp::BaseObjectList objectLists[Type::LAST];
     bool changed[Type::LAST];
 
-    for (auto &e : events)
+    for (auto &objectList : objectLists)
     {
-        e.action = mwmp::BaseEvent::Action::Set;
-        e.guid = player->guid;
-        e.cell = cell;
+        objectList.action = mwmp::BaseObjectList::Action::Set;
+        objectList.guid = player->guid;
+        objectList.cell = cell;
     }
 
 
@@ -394,47 +394,47 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
         if (object->changedDoorState && validNewObjOrCopy)
         {
             changed[Type::DOOR_STATE] = true;
-            events[Type::DOOR_STATE].worldObjects.push_back(object->object);
+            objectLists[Type::DOOR_STATE].baseObjects.push_back(object->object);
         }
         if (object->changedDoorDestination && validNewObjOrCopy)
         {
             changed[Type::DOOR_DESTINATION] = true;
-            events[Type::DOOR_DESTINATION].worldObjects.push_back(object->object);
+            objectLists[Type::DOOR_DESTINATION].baseObjects.push_back(object->object);
         }
         if (object->changedObjectState && validNewObjOrCopy)
         {
             changed[Type::OBJECT_STATE] = true;
-            events[Type::OBJECT_STATE].worldObjects.push_back(object->object);
+            objectLists[Type::OBJECT_STATE].baseObjects.push_back(object->object);
         }
         if (object->changedObjectScale && validNewObjOrCopy)
         {
             changed[Type::OBJECT_SCALE] = true;
-            events[Type::OBJECT_SCALE].worldObjects.push_back(object->object);
+            objectLists[Type::OBJECT_SCALE].baseObjects.push_back(object->object);
         }
         if (object->changedObjectTrap && validNewObjOrCopy)
         {
             changed[Type::OBJECT_TRAP] = true;
-            events[Type::OBJECT_TRAP].worldObjects.push_back(object->object);
+            objectLists[Type::OBJECT_TRAP].baseObjects.push_back(object->object);
         }
         if (object->changedObjectLock && validNewObjOrCopy)
         {
             changed[Type::OBJECT_LOCK] = true;
-            events[Type::OBJECT_LOCK].worldObjects.push_back(object->object);
+            objectLists[Type::OBJECT_LOCK].baseObjects.push_back(object->object);
         }
         if (object->changedObjectDelete && validNewObjOrCopy)
         {
             changed[Type::OBJECT_DELETE] = true;
-            events[Type::OBJECT_DELETE].worldObjects.push_back(object->object);
+            objectLists[Type::OBJECT_DELETE].baseObjects.push_back(object->object);
         }
         if (object->changedObjectSpawn && validNewObjOrCopy)
         {
             changed[Type::OBJECT_SPAWN] = true;
-            events[Type::OBJECT_SPAWN].worldObjects.push_back(object->object);
+            objectLists[Type::OBJECT_SPAWN].baseObjects.push_back(object->object);
         }
         if (object->changedObjectPlace && validNewObjOrCopy)
         {
             changed[Type::OBJECT_PLACE] = true;
-            events[Type::OBJECT_PLACE].worldObjects.push_back(object->object);
+            objectLists[Type::OBJECT_PLACE].baseObjects.push_back(object->object);
         }
     }
 
@@ -443,8 +443,8 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     if (changed[Type::DOOR_STATE])
     {
         auto packet = worldCtrl->GetPacket(ID_DOOR_STATE);
-        auto &event = events[Type::DOOR_STATE];
-        packet->setEvent(&event);
+        auto &objectList = objectLists[Type::DOOR_STATE];
+        packet->setObjectList(&objectList);
         packet->Send(false);
 
         if (broadcast)
@@ -453,8 +453,8 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     if (changed[Type::DOOR_DESTINATION])
     {
         auto packet = worldCtrl->GetPacket(ID_DOOR_DESTINATION);
-        auto &event = events[Type::DOOR_DESTINATION];
-        packet->setEvent(&event);
+        auto &objectList = objectLists[Type::DOOR_DESTINATION];
+        packet->setObjectList(&objectList);
         packet->Send(false);
 
         if (broadcast)
@@ -463,8 +463,8 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     if (changed[Type::OBJECT_STATE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_STATE);
-        auto &event = events[Type::OBJECT_STATE];
-        packet->setEvent(&event);
+        auto &objectList = objectLists[Type::OBJECT_STATE];
+        packet->setObjectList(&objectList);
         packet->Send(false);
 
         if (broadcast)
@@ -473,8 +473,8 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     if (changed[Type::OBJECT_SCALE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_SCALE);
-        auto &event = events[Type::OBJECT_SCALE];
-        packet->setEvent(&event);
+        auto &objectList = objectLists[Type::OBJECT_SCALE];
+        packet->setObjectList(&objectList);
         packet->Send(false);
 
         if (broadcast)
@@ -483,8 +483,8 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     if (changed[Type::OBJECT_TRAP])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_TRAP);
-        auto &event = events[Type::OBJECT_TRAP];
-        packet->setEvent(&event);
+        auto &objectList = objectLists[Type::OBJECT_TRAP];
+        packet->setObjectList(&objectList);
         packet->Send(false);
 
         if (broadcast)
@@ -493,8 +493,8 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     if (changed[Type::OBJECT_LOCK])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_LOCK);
-        auto &event = events[Type::OBJECT_LOCK];
-        packet->setEvent(&event);
+        auto &objectList = objectLists[Type::OBJECT_LOCK];
+        packet->setObjectList(&objectList);
         packet->Send(false);
 
         if (broadcast)
@@ -503,8 +503,8 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     if (changed[Type::OBJECT_DELETE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_DELETE);
-        auto &event = events[Type::OBJECT_DELETE];
-        packet->setEvent(&event);
+        auto &objectList = objectLists[Type::OBJECT_DELETE];
+        packet->setObjectList(&objectList);
         packet->Send(false);
 
         if (broadcast)
@@ -513,8 +513,8 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     if (changed[Type::OBJECT_SCALE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_SPAWN);
-        auto &event = events[Type::OBJECT_SCALE];
-        packet->setEvent(&event);
+        auto &objectList = objectLists[Type::OBJECT_SCALE];
+        packet->setObjectList(&objectList);
         packet->Send(false);
 
         if (broadcast)
@@ -523,8 +523,8 @@ void ObjectController::sendObjects(shared_ptr<Player> player, shared_ptr<vector<
     if (changed[Type::OBJECT_PLACE])
     {
         auto packet = worldCtrl->GetPacket(ID_OBJECT_PLACE);
-        auto &event = events[Type::OBJECT_PLACE];
-        packet->setEvent(&event);
+        auto &objectList = objectLists[Type::OBJECT_PLACE];
+        packet->setObjectList(&objectList);
         packet->Send(false);
 
         if (broadcast)
@@ -536,16 +536,16 @@ void ObjectController::sendConsoleCommand(shared_ptr<Player> player, shared_ptr<
     const ESM::Cell &cell, const std::string &consoleCommand, bool broadcast)
 {
 
-    mwmp::BaseEvent event;
-    event.cell = cell;
-    event.consoleCommand = consoleCommand;
-    event.guid = player->guid;
+    mwmp::BaseObjectList objectList;
+    objectList.cell = cell;
+    objectList.consoleCommand = consoleCommand;
+    objectList.guid = player->guid;
 
     for (auto &object : *objects)
-        event.worldObjects.push_back(object->object);
+        objectList.baseObjects.push_back(object->object);
 
     auto packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_CONSOLE_COMMAND);
-    packet->setEvent(&event);
+    packet->setObjectList(&objectList);
     packet->Send(false);
 
     if (broadcast)
@@ -556,20 +556,20 @@ void ObjectController::sendContainers(shared_ptr<Player> player, shared_ptr<vect
     const ESM::Cell &cell, bool broadcast)
 {
 
-    mwmp::BaseEvent event;
-    event.cell = cell;
-    event.action = mwmp::BaseEvent::Action::Set;
-    event.guid = player->guid;
+    mwmp::BaseObjectList objectList;
+    objectList.cell = cell;
+    objectList.action = mwmp::BaseObjectList::Action::Set;
+    objectList.guid = player->guid;
 
     for (auto &object : *objects)
     {
         bool validNewObjOrCopy = (!object->copied && object->changedBase) || object->copied;
         if (object->changed && validNewObjOrCopy)
-            event.worldObjects.push_back(object->object);
+            objectList.baseObjects.push_back(object->object);
     }
 
     auto packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_CONTAINER);
-    packet->setEvent(&event);
+    packet->setObjectList(&objectList);
     packet->Send(false);
 
     if (broadcast)
@@ -578,12 +578,12 @@ void ObjectController::sendContainers(shared_ptr<Player> player, shared_ptr<vect
 
 void ObjectController::requestContainers(shared_ptr<Player> player)
 {
-    mwmp::BaseEvent event;
-    event.action = mwmp::BaseEvent::Action::Request;
-    event.guid = player->guid;
-    event.cell = player->cell;
+    mwmp::BaseObjectList objectList;
+    objectList.action = mwmp::BaseObjectList::Action::Request;
+    objectList.guid = player->guid;
+    objectList.cell = player->cell;
 
     auto packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_CONTAINER);
-    packet->setEvent(&event);
-    packet->Send(event.guid);
+    packet->setObjectList(&objectList);
+    packet->Send(objectList.guid);
 }

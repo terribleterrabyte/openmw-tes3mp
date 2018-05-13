@@ -15,34 +15,34 @@ void PacketContainer::Packet(RakNet::BitStream *bs, bool send)
     if (!PacketHeader(bs, send))
         return;
 
-    RW(event->action, send);
-    RW(event->containerSubAction, send);
+    RW(objectList->action, send);
+    RW(objectList->containerSubAction, send);
 
-    for (auto &&worldObject : event->worldObjects)
+    for (auto &&baseObject : objectList->baseObjects)
     {
-        Object(worldObject, send);
+        Object(baseObject, send);
 
         if (send)
         {
-            worldObject.containerItemCount = (unsigned int) (worldObject.containerItems.size());
+            baseObject.containerItemCount = (unsigned int) (baseObject.containerItems.size());
         }
 
-        RW(worldObject.containerItemCount, send);
+        RW(baseObject.containerItemCount, send);
 
         if (!send)
         {
-            worldObject.containerItems.clear();
-            worldObject.containerItems.resize(worldObject.containerItemCount);
+            baseObject.containerItems.clear();
+            baseObject.containerItems.resize(baseObject.containerItemCount);
         }
 
-        if (worldObject.containerItemCount > maxObjects || worldObject.refId.empty()
-            || (worldObject.refNumIndex != 0 && worldObject.mpNum != 0))
+        if (baseObject.containerItemCount > maxObjects || baseObject.refId.empty()
+            || (baseObject.refNumIndex != 0 && baseObject.mpNum != 0))
         {
-            event->isValid = false;
+            objectList->isValid = false;
             return;
         }
 
-        for (auto &&containerItem: worldObject.containerItems)
+        for (auto &&containerItem: baseObject.containerItems)
         {
             RW(containerItem.refId, send);
             RW(containerItem.count, send);

@@ -1,11 +1,7 @@
-//
-// Created by koncord on 26.08.17.
-//
-
 #pragma once
 
 #include <tuple>
-#include <components/openmw-mp/Base/BaseEvent.hpp>
+#include <components/openmw-mp/Base/BaseObject.hpp>
 #include <memory>
 
 class LuaState;
@@ -30,7 +26,7 @@ public:
     //void setEventCell(const std::string &cellDescription);
 
 
-    mwmp::WorldObject object;
+    mwmp::BaseObject object;
     bool changedBase;
     bool copied;
 };
@@ -118,8 +114,8 @@ public:
     static void Init(LuaState &lua);
 public:
 
-    std::shared_ptr<std::vector<std::shared_ptr<Object>>> copyObjects(mwmp::BaseEvent &event);
-    std::shared_ptr<std::vector<std::shared_ptr<Container>>> copyContainers(mwmp::BaseEvent &event);
+    std::shared_ptr<std::vector<std::shared_ptr<Object>>> copyObjects(mwmp::BaseObjectList &objectList);
+    std::shared_ptr<std::vector<std::shared_ptr<Container>>> copyContainers(mwmp::BaseObjectList &objectList);
 
     void sendObjects(std::shared_ptr<Player> player, std::shared_ptr<std::vector<std::shared_ptr<Object>>> objects,
         const ESM::Cell &cell, bool broadcast = false);

@@ -432,7 +432,7 @@ void Networking::receiveMessage(RakNet::Packet *packet)
     }
     else if (objectPacketController.ContainsPacket(packet->data[0]))
     {
-        if (!WorldProcessor::Process(*packet, worldEvent))
+        if (!WorldProcessor::Process(*packet, objectList))
             LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled ObjectPacket with identifier %i has arrived", (int) packet->data[0]);
     }
 }
@@ -462,9 +462,9 @@ ActorList *Networking::getActorList()
     return &actorList;
 }
 
-WorldEvent *Networking::getWorldEvent()
+ObjectList *Networking::getObjectList()
 {
-    return &worldEvent;
+    return &objectList;
 }
 
 bool Networking::isConnected()

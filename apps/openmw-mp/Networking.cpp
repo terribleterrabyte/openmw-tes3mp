@@ -178,7 +178,7 @@ void Networking::processObjectPacket(RakNet::Packet *packet)
     if (!player->isHandshaked() || player->getLoadState() != Player::POSTLOADED)
         return;
 
-    if (!WorldProcessor::Process(*packet, baseEvent))
+    if (!WorldProcessor::Process(*packet, baseObjectList))
         LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled ObjectPacket with identifier %i has arrived", (int) packet->data[0]);
 
 }
@@ -353,9 +353,9 @@ BaseActorList *Networking::getLastActorList()
     return &baseActorList;
 }
 
-BaseEvent *Networking::getLastEvent()
+BaseObjectList *Networking::getLastObjectList()
 {
-    return &baseEvent;
+    return &baseObjectList;
 }
 
 int Networking::getCurrentMpNum()

@@ -1,24 +1,24 @@
 #ifndef OPENMW_WORLDEVENT_HPP
 #define OPENMW_WORLDEVENT_HPP
 
-#include <components/openmw-mp/Base/BaseEvent.hpp>
+#include <components/openmw-mp/Base/BaseObject.hpp>
 #include "../mwworld/cellstore.hpp"
 #include <RakNetTypes.h>
 
 namespace mwmp
 {
     class Networking;
-    class WorldEvent : public BaseEvent
+    class ObjectList : public BaseObjectList
     {
     public:
 
-        WorldEvent();
-        virtual ~WorldEvent();
+        ObjectList();
+        virtual ~ObjectList();
 
         void reset();
 
-        WorldObject getWorldObject(const MWWorld::Ptr& ptr);
-        void addContainerItem(mwmp::WorldObject& worldObject, const MWWorld::Ptr& itemPtr, int actionCount);
+        BaseObject getBaseObject(const MWWorld::Ptr& ptr);
+        void addContainerItem(mwmp::BaseObject& baseObject, const MWWorld::Ptr& itemPtr, int actionCount);
         void addEntireContainer(const MWWorld::Ptr& ptr);
 
         void editContainers(MWWorld::CellStore* cellStore);
@@ -46,7 +46,7 @@ namespace mwmp
         void playVideo();
 
         void addAllContainers(MWWorld::CellStore* cellStore);
-        void addRequestedContainers(MWWorld::CellStore* cellStore, const std::vector<WorldObject>& requestObjects);
+        void addRequestedContainers(MWWorld::CellStore* cellStore, const std::vector<BaseObject>& requestObjects);
 
         void addObjectPlace(const MWWorld::Ptr& ptr, bool droppedByPlayer = false);
         void addObjectSpawn(const MWWorld::Ptr& ptr);

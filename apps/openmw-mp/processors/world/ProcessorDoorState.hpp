@@ -13,16 +13,16 @@ namespace mwmp
             BPP_INIT(ID_DOOR_STATE)
         }
 
-        void Do(ObjectPacket &packet, const std::shared_ptr<Player> &player, BaseEvent &event) override
+        void Do(ObjectPacket &packet, const std::shared_ptr<Player> &player, BaseObjectList &objectList) override
         {
             packet.Send(true);
 
             auto objCtrl = Networking::get().getState().getObjectCtrl();
-            auto objects = objCtrl.copyObjects(event);
+            auto objects = objCtrl.copyObjects(objectList);
 
             Networking::get().getState().getEventCtrl().Call<CoreEvent::ON_DOOR_STATE>(player, objects);
 
-            objCtrl.sendObjects(player, objects, event.cell);
+            objCtrl.sendObjects(player, objects, objectList.cell);
         }
     };
 }

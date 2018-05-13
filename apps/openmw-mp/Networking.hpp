@@ -56,7 +56,7 @@ namespace  mwmp
         LuaState &getState() {return luaState;}
 
         BaseActorList *getLastActorList();
-        BaseEvent *getLastEvent();
+        BaseObjectList *getLastObjectList();
 
         int getCurrentMpNum();
         void setCurrentMpNum(int value);
@@ -90,7 +90,7 @@ namespace  mwmp
         std::unique_ptr<MasterClient> mclient;
 
         BaseActorList baseActorList;
-        BaseEvent baseEvent;
+        BaseObjectList baseObjectList;
 
         std::unique_ptr<PlayerPacketController> playerPacketController;
         std::unique_ptr<ActorPacketController> actorPacketController;
