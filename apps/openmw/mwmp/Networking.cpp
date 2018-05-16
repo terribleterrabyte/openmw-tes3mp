@@ -38,7 +38,7 @@
 #include "Main.hpp"
 #include "processors/ProcessorInitializer.hpp"
 #include "processors/PlayerProcessor.hpp"
-#include "processors/WorldProcessor.hpp"
+#include "processors/ObjectProcessor.hpp"
 #include "processors/ActorProcessor.hpp"
 #include "GUIController.hpp"
 #include "CellController.hpp"
@@ -432,7 +432,7 @@ void Networking::receiveMessage(RakNet::Packet *packet)
     }
     else if (objectPacketController.ContainsPacket(packet->data[0]))
     {
-        if (!WorldProcessor::Process(*packet, objectList))
+        if (!ObjectProcessor::Process(*packet, objectList))
             LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled ObjectPacket with identifier %i has arrived", (int) packet->data[0]);
     }
 }
