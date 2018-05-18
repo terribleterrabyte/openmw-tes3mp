@@ -94,7 +94,7 @@ set(PROCESSORS_PLAYER
 
 source_group(tes3mp-server\\processors\\player FILES ${PROCESSORS_PLAYER})
 
-set(PROCESSORS_WORLD
+set(PROCESSORS_OBJECT
         processors/object/ProcessorContainer.hpp processors/object/ProcessorDoorState.hpp
         processors/object/ProcessorMusicPlay.hpp processors/object/ProcessorObjectAnimPlay.hpp
         processors/object/ProcessorObjectDelete.hpp processors/object/ProcessorObjectLock.hpp
@@ -107,13 +107,14 @@ set(PROCESSORS_WORLD
         processors/object/ProcessorScriptGlobalFloat.hpp processors/object/ProcessorVideoPlay.hpp
         )
 
-source_group(tes3mp-server\\processors\\world FILES ${PROCESSORS_WORLD})
+source_group(tes3mp-server\\processors\\object FILES ${PROCESSORS_OBJECT})
 
 set(PROCESSORS
         processors/ProcessorInitializer.cpp
         processors/PlayerProcessor.cpp
         processors/ActorProcessor.cpp
         processors/ObjectProcessor.cpp
+        processors/WorldstateProcessor.cpp
         )
 
 source_group(tes3mp-server\\processors FILES ${PROCESSORS})
@@ -124,7 +125,7 @@ include_directories("./")
 
 add_executable(tes3mp-server
         ${SERVER} ${SERVER_HEADER}
-        ${PROCESSORS_ACTOR} ${PROCESSORS_PLAYER} ${PROCESSORS_WORLD} ${PROCESSORS}
+        ${PROCESSORS_ACTOR} ${PROCESSORS_PLAYER} ${PROCESSORS_OBJECT} ${PROCESSORS}
         ${APPLE_BUNDLE_RESOURCES}
         )
 

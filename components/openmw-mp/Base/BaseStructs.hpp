@@ -2,6 +2,7 @@
 #define OPENMW_BASESTRUCTS_HPP
 
 #include <components/esm/statstate.hpp>
+#include <vector>
 
 #include <RakNetTypes.h>
 

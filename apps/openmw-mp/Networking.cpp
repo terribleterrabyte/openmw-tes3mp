@@ -20,6 +20,7 @@
 #include "processors/PlayerProcessor.hpp"
 #include "processors/ActorProcessor.hpp"
 #include "processors/ObjectProcessor.hpp"
+#include "processors/WorldstateProcessor.hpp"
 
 #include "Networking.hpp"
 #include "MasterClient.hpp"
@@ -44,6 +45,7 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
     playerPacketController = make_unique<PlayerPacketController>(peer);
     actorPacketController = make_unique<ActorPacketController>(peer);
     objectPacketController =  make_unique<ObjectPacketController>(peer);
+    worldstatePacketController = make_unique<WorldstatePacketController>(peer);
 
     // Set send stream
     playerPacketController->SetStream(nullptr, &bsOut);
@@ -183,6 +185,18 @@ void Networking::processObjectPacket(RakNet::Packet *packet)
 
 }
 
+void Networking::processWorldstatePacket(RakNet::Packet *packet)
+{
+    auto player = Players::getPlayerByGUID(packet->guid);
+
+    if (!player->isHandshaked() || player->getLoadState() != Player::POSTLOADED)
+        return;
+
+    if (!WorldstateProcessor::Process(*packet, baseWorldstate))
+        LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled WorldstatePacket with identifier %i has arrived", packet->data[0]);
+
+}
+
 bool Networking::update(RakNet::Packet *packet)
 {
     auto player = Players::getPlayerByGUID(packet->guid);
@@ -269,6 +283,11 @@ bool Networking::update(RakNet::Packet *packet)
         objectPacketController->SetStream(&bsIn, nullptr);
         processObjectPacket(packet);
     }
+    else if (worldstatePacketController->ContainsPacket(packet->data[0]))
+    {
+        worldstatePacketController->SetStream(&bsIn, nullptr);
+        processWorldstatePacket(packet);
+    }
     else
     {
         LOG_MESSAGE_SIMPLE(Log::LOG_WARN, "Unhandled RakNet packet with identifier %i has arrived", (int) packet->data[0]);
@@ -348,6 +367,11 @@ ObjectPacketController *Networking::getObjectPacketController() const
     return objectPacketController.get();
 }
 
+WorldstatePacketController *Networking::getWorldstatePacketController() const
+{
+    return worldstatePacketController.get();
+}
+
 BaseActorList *Networking::getLastActorList()
 {
     return &baseActorList;
@@ -356,6 +380,11 @@ BaseActorList *Networking::getLastActorList()
 BaseObjectList *Networking::getLastObjectList()
 {
     return &baseObjectList;
+}
+
+BaseWorldstate *Networking::getLastWorldstate()
+{
+    return &baseWorldstate;
 }
 
 int Networking::getCurrentMpNum()
