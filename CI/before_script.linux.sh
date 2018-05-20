@@ -10,7 +10,6 @@ if [ ! -z "${MATRIX_CC}" ]; then
 fi
 
 export RAKNET_ROOT=~/RakNet
-export Terra_ROOT=~/terra-Linux-x86_64-332a506
 
 export CODE_COVERAGE=0
 if [ ! -z "${ANALYZE}" ]; then
@@ -38,5 +37,3 @@ ${ANALYZE}cmake .. \
     -DUSE_SYSTEM_TINYXML=TRUE \
     -DRakNet_LIBRARY_RELEASE=~/RakNet/lib/libRakNetLibStatic.a \
     -DRakNet_LIBRARY_DEBUG=~/RakNet/lib/libRakNetLibStatic.a \
-    -DCallFF_INCLUDES=~/CallFF/include \
-    -DCallFF_LIBRARY=~/CallFF/build/src/libcallff.a
