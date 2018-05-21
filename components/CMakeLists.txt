@@ -174,8 +174,7 @@ add_component_dir (openmw-mp/Packets/Actor
 
 add_component_dir (openmw-mp/Packets/Player
         PlayerPacket
-        PacketHandshake PacketChatMessage PacketGUIBoxes PacketGUIWindow PacketGameSettings PacketGameTime
-        PacketGameWeather
+        PacketHandshake PacketChatMessage PacketGUIBoxes PacketGUIWindow PacketGameSettings PacketGameWeather
 
         PacketCellCreate PacketRecordDynamic
 
@@ -199,6 +198,7 @@ add_component_dir (openmw-mp/Packets/Object
 
 add_component_dir (openmw-mp/Packets/Worldstate
         WorldstatePacket
+        PacketGameTime
         )
 
 add_component_dir (fallback

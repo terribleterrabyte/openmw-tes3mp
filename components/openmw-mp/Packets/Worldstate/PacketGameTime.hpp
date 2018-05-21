@@ -1,15 +1,11 @@
-//
-// Created by koncord on 30.08.16.
-//
-
 #ifndef OPENMW_PACKETGAMETIME_HPP
 #define OPENMW_PACKETGAMETIME_HPP
 
-#include <components/openmw-mp/Packets/Player/PlayerPacket.hpp>
+#include <components/openmw-mp/Packets/Worldstate/WorldstatePacket.hpp>
 
 namespace mwmp
 {
-    class PacketGameTime final: public PlayerPacket
+    class PacketGameTime final : public WorldstatePacket
     {
     public:
         PacketGameTime(RakNet::RakPeerInterface *peer);

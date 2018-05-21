@@ -51,6 +51,7 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
     playerPacketController->SetStream(nullptr, &bsOut);
     actorPacketController->SetStream(nullptr, &bsOut);
     objectPacketController->SetStream(nullptr, &bsOut);
+    worldstatePacketController->SetStream(nullptr, &bsOut);
 
     running = true;
     exitCode = 0;

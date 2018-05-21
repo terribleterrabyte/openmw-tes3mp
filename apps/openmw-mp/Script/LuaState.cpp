@@ -12,8 +12,10 @@
 #include <boost/tokenizer.hpp>
 
 #include <components/misc/stringops.hpp>
+
 #include <components/openmw-mp/NetworkMessages.hpp>
 #include <components/openmw-mp/Version.hpp>
+#include <components/openmw-mp/Base/BaseWorldstate.hpp>
 
 #include <apps/openmw/mwworld/inventorystore.hpp>
 
@@ -37,6 +39,7 @@
 
 using namespace std;
 
+mwmp::BaseWorldstate tempWorldstate;
 
 #if defined(SOL_SAFE_FUNCTIONS)
 inline int errHandler(lua_State *L)
@@ -258,38 +261,47 @@ LuaState::LuaState()
     });
 
     lua->set_function("setHour", [](double hour) {
-        auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_GAME_TIME);
-        Players::for_each([&hour, &packet](Player *player){
-            player->hour = hour;
-            player->month = -1;
-            player->day = -1;
+        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_GAME_TIME);
 
-            packet->setPlayer(player);
+        tempWorldstate.hour = hour;
+        tempWorldstate.month = -1;
+        tempWorldstate.day = -1;
+
+        Players::for_each([&hour, &packet](Player *player){
+
+            tempWorldstate.guid = player->guid;
+            packet->setWorldstate(&tempWorldstate);
             packet->Send(false);
         });
     });
 
     lua->set_function("setMonth", [](int month) {
 
-        auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_GAME_TIME);
-        Players::for_each([&month, &packet](Player *player){
-            player->hour = -1;
-            player->month = month;
-            player->day = -1;
+        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_GAME_TIME);
 
-            packet->setPlayer(player);
+        tempWorldstate.hour = -1;
+        tempWorldstate.month = month;
+        tempWorldstate.day = -1;
+
+        Players::for_each([&month, &packet](Player *player){
+
+            tempWorldstate.guid = player->guid;
+            packet->setWorldstate(&tempWorldstate);
             packet->Send(false);
         });
     });
 
     lua->set_function("setDay", [](int day) {
-        auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_GAME_TIME);
-        Players::for_each([&day, &packet](Player *player){
-            player->hour = -1;
-            player->month = -1;
-            player->day = day;
+        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_GAME_TIME);
 
-            packet->setPlayer(player);
+        tempWorldstate.hour = -1;
+        tempWorldstate.month = -1;
+        tempWorldstate.day = day;
+
+        Players::for_each([&day, &packet](Player *player){
+
+            tempWorldstate.guid = player->guid;
+            packet->setWorldstate(&tempWorldstate);
             packet->Send(false);
         });
     });

@@ -281,10 +281,7 @@ namespace mwmp
 
         RakNet::RakNetGUID guid;
         GUIMessageBox guiMessageBox;
-        int month;
-        int day;
         GUIWindow guiWindow;
-        double hour;
 
         // Track only the indexes of the attributes that have been changed,
         // with the attribute values themselves being stored in creatureStats.mAttributes
