@@ -19,7 +19,7 @@ enum GameMessages
     ID_GUI_MESSAGEBOX,
     ID_GUI_WINDOW,
 
-    ID_GAME_TIME,
+    ID_WORLD_TIME,
     ID_GAME_WEATHER,
     
     ID_PLAYER_BASEINFO,

@@ -261,7 +261,7 @@ LuaState::LuaState()
     });
 
     lua->set_function("setHour", [](double hour) {
-        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_GAME_TIME);
+        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_TIME);
 
         tempWorldstate.hour = hour;
         tempWorldstate.month = -1;
@@ -277,7 +277,7 @@ LuaState::LuaState()
 
     lua->set_function("setMonth", [](int month) {
 
-        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_GAME_TIME);
+        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_TIME);
 
         tempWorldstate.hour = -1;
         tempWorldstate.month = month;
@@ -292,7 +292,7 @@ LuaState::LuaState()
     });
 
     lua->set_function("setDay", [](int day) {
-        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_GAME_TIME);
+        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_TIME);
 
         tempWorldstate.hour = -1;
         tempWorldstate.month = -1;

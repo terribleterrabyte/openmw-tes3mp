@@ -92,7 +92,7 @@
 #include "actor/ProcessorActorTest.hpp"
 
 #include "WorldstateProcessor.hpp"
-#include "worldstate/ProcessorGameTime.hpp"
+#include "worldstate/ProcessorWorldTime.hpp"
 
 using namespace mwmp;
 
@@ -186,5 +186,5 @@ void ProcessorInitializer()
     ActorProcessor::AddProcessor(new ProcessorActorStatsDynamic());
     ActorProcessor::AddProcessor(new ProcessorActorTest());
 
-    WorldstateProcessor::AddProcessor(new ProcessorGameTime());
+    WorldstateProcessor::AddProcessor(new ProcessorWorldTime());
 }
