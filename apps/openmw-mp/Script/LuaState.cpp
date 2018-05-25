@@ -1,7 +1,3 @@
-//
-// Created by koncord on 01.08.17.
-//
-
 #include <iostream>
 #include <cstdlib>
 
@@ -264,8 +260,6 @@ LuaState::LuaState()
         auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_TIME);
 
         tempWorldstate.hour = hour;
-        tempWorldstate.month = -1;
-        tempWorldstate.day = -1;
 
         Players::for_each([&hour, &packet](Player *player){
 
@@ -279,9 +273,7 @@ LuaState::LuaState()
 
         auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_TIME);
 
-        tempWorldstate.hour = -1;
         tempWorldstate.month = month;
-        tempWorldstate.day = -1;
 
         Players::for_each([&month, &packet](Player *player){
 
@@ -294,11 +286,51 @@ LuaState::LuaState()
     lua->set_function("setDay", [](int day) {
         auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_TIME);
 
-        tempWorldstate.hour = -1;
-        tempWorldstate.month = -1;
         tempWorldstate.day = day;
 
         Players::for_each([&day, &packet](Player *player){
+
+            tempWorldstate.guid = player->guid;
+            packet->setWorldstate(&tempWorldstate);
+            packet->Send(false);
+        });
+    });
+
+    lua->set_function("setYear", [](int year) {
+
+        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_TIME);
+
+        tempWorldstate.year = year;
+
+        Players::for_each([&year, &packet](Player *player) {
+
+            tempWorldstate.guid = player->guid;
+            packet->setWorldstate(&tempWorldstate);
+            packet->Send(false);
+        });
+    });
+
+    lua->set_function("setDaysPassed", [](int daysPassed) {
+
+        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_TIME);
+
+        tempWorldstate.daysPassed = daysPassed;
+
+        Players::for_each([&daysPassed, &packet](Player *player) {
+
+            tempWorldstate.guid = player->guid;
+            packet->setWorldstate(&tempWorldstate);
+            packet->Send(false);
+        });
+    });
+
+    lua->set_function("setDaysPassed", [](float timeScale) {
+
+        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_TIME);
+
+        tempWorldstate.timeScale = timeScale;
+
+        Players::for_each([&timeScale, &packet](Player *player) {
 
             tempWorldstate.guid = player->guid;
             packet->setWorldstate(&tempWorldstate);

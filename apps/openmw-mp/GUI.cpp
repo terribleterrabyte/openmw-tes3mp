@@ -68,12 +68,13 @@ void GUI::customMessageBox(sol::function fn, const char *label, const char *butt
     setChanged();
 }
 
-void GUI::inputDialog(sol::function fn, const char *label, sol::this_environment te)
+void GUI::inputDialog(sol::function fn, const char *label, const char *note, sol::this_environment te)
 {
     mwmp::BasePlayer::GUIMessageBox mbox;
 
     mbox.id = generateGuiId();
     mbox.label = label;
+    mbox.note = note;
     mbox.type = Player::GUIMessageBox::Type::InputDialog;
 
     guiQueue.emplace(std::move(mbox), std::move(fn));

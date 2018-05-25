@@ -1,7 +1,3 @@
-//
-// Created by koncord on 23.07.16.
-//
-
 #include "PacketGUIBoxes.hpp"
 #include <components/openmw-mp/NetworkMessages.hpp>
 
@@ -25,7 +21,8 @@ void PacketGUIBoxes::Packet(RakNet::BitStream *bs, bool send)
 
     if (player->guiMessageBox.type == BasePlayer::GUIMessageBox::Type::CustomMessageBox)
         RW(player->guiMessageBox.buttons, send);
-    else if (player->guiMessageBox.type == BasePlayer::GUIMessageBox::Type::PasswordDialog)
+    else if (player->guiMessageBox.type == BasePlayer::GUIMessageBox::Type::InputDialog ||
+        player->guiMessageBox.type == BasePlayer::GUIMessageBox::Type::PasswordDialog)
         RW(player->guiMessageBox.note, send);
 }
 

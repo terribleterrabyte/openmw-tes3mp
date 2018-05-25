@@ -1,7 +1,3 @@
-//
-// Created by koncord on 15.08.17.
-//
-
 #pragma once
 
 #include <queue>
@@ -21,7 +17,7 @@ public:
     void messageBox(sol::function fn, const char *label, sol::this_environment te);
 
     void customMessageBox(sol::function fn, const char *label, const char *buttons, sol::this_environment te);
-    void inputDialog(sol::function fn, const char *label, sol::this_environment te);
+    void inputDialog(sol::function fn, const char *label, const char *note, sol::this_environment te);
     void passwordDialog(sol::function fn, const char *label, const char *note, sol::this_environment te);
 
     void listBox(sol::function fn, const char *label, const char *items, sol::this_environment te);

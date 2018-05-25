@@ -6,7 +6,7 @@ using namespace mwmp;
 template<class T>
 typename BasePacketProcessor<T>::processors_t BasePacketProcessor<T>::processors;
 
-void WorldstateProcessor::Do(WorldstatePacket &packet, Player &player, BaseWorldstate &worldstate)
+void WorldstateProcessor::Do(WorldstatePacket &packet, const std::shared_ptr<Player> &player, BaseWorldstate &worldstate)
 {
     packet.Send(true);
 }
@@ -29,7 +29,7 @@ bool WorldstateProcessor::Process(RakNet::Packet &packet, BaseWorldstate &worlds
                 myPacket->Read();
 
             if (worldstate.isValid)
-                processor.second->Do(*myPacket, *player, worldstate);
+                processor.second->Do(*myPacket, player, worldstate);
             else
                 LOG_MESSAGE_SIMPLE(Log::LOG_ERROR, "Received %s that failed integrity check and was ignored!", processor.second->strPacketID.c_str());
             

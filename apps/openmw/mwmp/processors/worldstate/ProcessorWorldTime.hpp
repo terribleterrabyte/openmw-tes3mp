@@ -21,12 +21,24 @@ namespace mwmp
             if (isLocal())
             {
                 MWBase::World *world = MWBase::Environment::get().getWorld();
+
                 if (worldstate.hour != -1)
                     world->setHour(worldstate.hour);
-                else if (worldstate.day != -1)
+                
+                if (worldstate.day != -1)
                     world->setDay(worldstate.day);
-                else if (worldstate.month != -1)
+                
+                if (worldstate.month != -1)
                     world->setMonth(worldstate.month);
+
+                if (worldstate.year != -1)
+                    world->setYear(worldstate.year);
+
+                if (worldstate.daysPassed != -1)
+                    world->setDaysPassed(worldstate.daysPassed);
+
+                if (worldstate.timeScale != -1)
+                    world->setTimeScale(worldstate.timeScale);
             }
         }
     };

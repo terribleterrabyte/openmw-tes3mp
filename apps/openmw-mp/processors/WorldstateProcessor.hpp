@@ -13,7 +13,7 @@ namespace mwmp
     {
     public:
 
-        virtual void Do(WorldstatePacket &packet, Player &player, BaseWorldstate &worldstate);
+        virtual void Do(WorldstatePacket &packet, const std::shared_ptr<Player> &player, BaseWorldstate &worldstate);
 
         static bool Process(RakNet::Packet &packet, BaseWorldstate &worldstate) noexcept;
     };

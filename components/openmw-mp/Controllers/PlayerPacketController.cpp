@@ -6,7 +6,6 @@
 #include "../Packets/Player/PacketGUIWindow.hpp"
 #include "../Packets/Player/PacketLoaded.hpp"
 #include "../Packets/Player/PacketCellCreate.hpp"
-#include "../Packets/Player/PacketRecordDynamic.hpp"
 #include "../Packets/Player/PacketGameSettings.hpp"
 #include "../Packets/Player/PacketGameWeather.hpp"
 #include "../Packets/Player/PacketPlayerActiveSkills.hpp"
@@ -57,7 +56,6 @@ mwmp::PlayerPacketController::PlayerPacketController(RakNet::RakPeerInterface *p
     AddPacket<PacketGUIWindow>(&packets, peer);
     AddPacket<PacketLoaded>(&packets, peer);
     AddPacket<PacketCellCreate>(&packets, peer);
-    AddPacket<PacketRecordDynamic>(&packets, peer);
     AddPacket<PacketGameSettings>(&packets, peer);
     AddPacket<PacketGameWeather>(&packets, peer);
     AddPacket<PacketPlayerActiveSkills>(&packets, peer);

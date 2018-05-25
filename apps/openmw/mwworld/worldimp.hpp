@@ -129,7 +129,7 @@ namespace MWWorld
             Ptr copyObjectToCell(const ConstPtr &ptr, CellStore* cell, ESM::Position pos, int count, bool adjustPos);
 
             void updateSoundListener();
-            void updatePlayer(bool paused);
+            void updatePlayer();
 
             void preloadSpells();
 
@@ -314,6 +314,36 @@ namespace MWWorld
 
             void setDay (int day) override;
             ///< Set in-game time day.
+
+            /*
+                Start of tes3mp addition
+
+                Make it possible to set the year from elsewhere
+            */
+            void setYear(int year) override;
+            /*
+                End of tes3mp addition
+            */
+
+            /*
+                Start of tes3mp addition
+
+                Make it possible to set the number of days passed from elsewhere
+            */
+            void setDaysPassed(int daysPassed) override;
+            /*
+                End of tes3mp addition
+            */
+
+            /*
+                Start of tes3mp addition
+
+                Make it possible to set a custom timeScale from elsewhere
+            */
+            void setTimeScale(float timeScale) override;
+            /*
+                End of tes3mp addition
+            */
 
             int getDay() const override;
             int getMonth() const override;
@@ -523,6 +553,7 @@ namespace MWWorld
             bool isWading(const MWWorld::ConstPtr &object) const override;
             bool isWaterWalkingCastableOnTarget(const MWWorld::ConstPtr &target) const override;
             bool isOnGround(const MWWorld::Ptr &ptr) const override;
+            bool isIdle(const MWWorld::Ptr &ptr) const override;
 
             osg::Matrixf getActorHeadTransform(const MWWorld::ConstPtr& actor) const override;
 
@@ -694,7 +725,7 @@ namespace MWWorld
             /// Spawn a blood effect for \a ptr at \a worldPosition
             void spawnBloodEffect (const MWWorld::Ptr& ptr, const osg::Vec3f& worldPosition) override;
 
-            void spawnEffect (const std::string& model, const std::string& textureOverride, const osg::Vec3f& worldPos) override;
+            void spawnEffect (const std::string& model, const std::string& textureOverride, const osg::Vec3f& worldPos, float scale = 1.f, bool isMagicVFX = true) override;
 
             void explodeSpell(const osg::Vec3f& origin, const ESM::EffectList& effects, const MWWorld::Ptr& caster, const MWWorld::Ptr& ignore,
                                       ESM::RangeType rangeType, const std::string& id, const std::string& sourceName,
@@ -734,6 +765,8 @@ namespace MWWorld
 
             /// Preload VFX associated with this effect list
             void preloadEffects(const ESM::EffectList* effectList) override;
+
+            osg::ref_ptr<osg::Node> getInstance (const std::string& modelName);
     };
 }
 
