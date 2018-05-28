@@ -324,7 +324,7 @@ LuaState::LuaState()
         });
     });
 
-    lua->set_function("setDaysPassed", [](float timeScale) {
+    lua->set_function("setTimeScale", [](float timeScale) {
 
         auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_TIME);
 
