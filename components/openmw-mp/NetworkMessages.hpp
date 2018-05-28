@@ -19,7 +19,6 @@ enum GameMessages
     ID_GUI_MESSAGEBOX,
     ID_GUI_WINDOW,
 
-    ID_WORLD_TIME,
     ID_GAME_WEATHER,
     
     ID_PLAYER_BASEINFO,
@@ -91,7 +90,6 @@ enum GameMessages
     ID_OBJECT_TRAP,
 
     ID_CELL_CREATE,
-    ID_RECORD_DYNAMIC,
     
     ID_CONSOLE_COMMAND,
     ID_CONTAINER,
@@ -108,7 +106,11 @@ enum GameMessages
     ID_SCRIPT_GLOBAL_FLOAT,
 
     ID_GAME_SETTINGS,
-    ID_GAME_PREINIT
+    ID_GAME_PREINIT,
+
+    ID_RECORD_DYNAMIC,
+    ID_WORLD_COLLISION_OVERRIDE,
+    ID_WORLD_TIME,
 };
 
 enum OrderingChannel

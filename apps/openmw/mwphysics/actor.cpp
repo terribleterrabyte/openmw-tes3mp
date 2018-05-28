@@ -1,5 +1,18 @@
 #include "actor.hpp"
 
+/*
+    Start of tes3mp addition
+
+    Include additional headers for multiplayer purposes
+*/
+#include <components/openmw-mp/Log.hpp>
+#include "../mwmp/Main.hpp"
+#include "../mwmp/Networking.hpp"
+#include "../mwmp/PlayerList.hpp"
+/*
+    End of tes3mp addition
+*/
+
 #include <BulletCollision/CollisionShapes/btCapsuleShape.h>
 #include <BulletCollision/CollisionShapes/btBoxShape.h>
 #include <BulletCollision/CollisionDispatch/btCollisionWorld.h>
@@ -18,7 +31,7 @@ namespace MWPhysics
 
 Actor::Actor(const MWWorld::Ptr& ptr, osg::ref_ptr<const Resource::BulletShape> shape, btCollisionWorld* world)
   : mCanWaterWalk(false), mWalkingOnWater(false)
-  , mCollisionObject(nullptr), mForce(0.f, 0.f, 0.f), mOnGround(true), mOnSlope(false), mIdle(true)
+  , mCollisionObject(nullptr), mForce(0.f, 0.f, 0.f), mOnGround(true), mOnSlope(false)
   , mInternalCollisionMode(true)
   , mExternalCollisionMode(true)
   , mCollisionWorld(world)
@@ -53,6 +66,27 @@ Actor::Actor(const MWWorld::Ptr& ptr, osg::ref_ptr<const Resource::BulletShape> 
     updatePosition();
 
     addCollisionMask(getCollisionMask());
+
+    /*
+        Start of tes3mp addition
+
+        Make it possible to disable collision for players or regular actors from a packet
+    */
+    mwmp::BaseWorldstate *worldstate = mwmp::Main::get().getNetworking()->getWorldstate();
+
+    if (mwmp::PlayerList::isDedicatedPlayer(ptr))
+    {
+        if (!worldstate->hasPlayerCollision)
+            enableCollisionBody(false);
+    }
+    else
+    {
+        if (!worldstate->hasActorCollision)
+            enableCollisionBody(false);
+    }
+    /*
+        End of tes3mp addition
+    */
 }
 
 Actor::~Actor()
@@ -193,11 +227,6 @@ void Actor::setOnGround(bool grounded)
 void Actor::setOnSlope(bool slope)
 {
     mOnSlope = slope;
-}
-
-void Actor::setIdle(bool idle)
-{
-    mIdle = idle;
 }
 
 bool Actor::isWalkingOnWater() const

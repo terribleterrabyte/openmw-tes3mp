@@ -338,6 +338,62 @@ LuaState::LuaState()
         });
     });
 
+    lua->set_function("setPlayerCollisionState", [](bool state) {
+
+        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_COLLISION_OVERRIDE);
+
+        tempWorldstate.hasPlayerCollision = state;
+
+        Players::for_each([&state, &packet](Player *player) {
+
+            tempWorldstate.guid = player->guid;
+            packet->setWorldstate(&tempWorldstate);
+            packet->Send(false);
+        });
+    });
+
+    lua->set_function("setActorCollisionState", [](bool state) {
+
+        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_COLLISION_OVERRIDE);
+
+        tempWorldstate.hasActorCollision = state;
+
+        Players::for_each([&state, &packet](Player *player) {
+
+            tempWorldstate.guid = player->guid;
+            packet->setWorldstate(&tempWorldstate);
+            packet->Send(false);
+        });
+    });
+
+    lua->set_function("setPlacedObjectCollisionState", [](bool state) {
+
+        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_COLLISION_OVERRIDE);
+
+        tempWorldstate.hasPlacedObjectCollision = state;
+
+        Players::for_each([&state, &packet](Player *player) {
+
+            tempWorldstate.guid = player->guid;
+            packet->setWorldstate(&tempWorldstate);
+            packet->Send(false);
+        });
+    });
+
+    lua->set_function("useActorCollisionForPlacedObjects", [](bool state) {
+
+        auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_COLLISION_OVERRIDE);
+
+        tempWorldstate.useActorCollisionForPlacedObjects = state;
+
+        Players::for_each([&state, &packet](Player *player) {
+
+            tempWorldstate.guid = player->guid;
+            packet->setWorldstate(&tempWorldstate);
+            packet->Send(false);
+        });
+    });
+
     lua->set_function("createChannel", [](){
         return mwmp::Networking::get().createChannel();
     });

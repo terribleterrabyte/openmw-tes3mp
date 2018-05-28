@@ -280,10 +280,11 @@ namespace MWWorld
             {
                 ESM::Position pos;
 
-                // Major change made by tes3mp
-                //
-                // If Pelagiad exists, spawn there; otherwise, spawn at 0,0
+                /*
+                    Start of tes3mp change (major)
 
+                    If Pelagiad exists, spawn there; otherwise, spawn at 0 ,0
+                */
                 if (findExteriorPosition("Pelagiad", pos))
                 {
                     changeToExteriorCell(pos, true);
@@ -300,6 +301,9 @@ namespace MWWorld
                     pos.rot[2] = 0;
                     mWorldScene->changeToExteriorCell(pos, true);
                 }
+                /*
+                    End of tes3mp change (major)
+                */
             }
         }
 
@@ -1437,6 +1441,8 @@ namespace MWWorld
         if (pos.z() < terrainHeight)
             pos.z() = terrainHeight;
 
+        pos.z() += 20; // place slightly above. will snap down to ground with code below
+
         if (force || !isFlying(ptr))
         {
             osg::Vec3f traced = mPhysics->traceDown(ptr, pos, 500);
@@ -1680,11 +1686,6 @@ namespace MWWorld
             default:
                 return mRendering->toggleRenderMode(mode);
         }
-    }
-
-    osg::ref_ptr<osg::Node> World::getInstance (const std::string& modelName)
-    {
-        return mRendering->getInstance(modelName);
     }
 
     const ESM::Potion *World::createRecord (const ESM::Potion& record)
@@ -2314,11 +2315,6 @@ namespace MWWorld
         return mPhysics->isOnGround(ptr);
     }
 
-    bool World::isIdle(const MWWorld::Ptr &ptr) const
-    {
-        return mPhysics->isIdle(ptr);
-    }
-
     void World::togglePOV()
     {
         mRendering->togglePOV();
@@ -2559,10 +2555,16 @@ namespace MWWorld
 
     void World::hurtStandingActors(const ConstPtr &object, float healthPerSecond)
     {
-        /* Disabled by tes3mp, because being in a menu should not pause the game in it
+        /*
+            Start of tes3mp change (major)
 
-        if (MWBase::Environment::get().getWindowManager()->isGuiMode())
-            return;
+            Being in a menu should not prevent actors from being hurt in multiplayer,
+            so that check has been commented out
+        */
+        //if (MWBase::Environment::get().getWindowManager()->isGuiMode())
+        //    return;
+        /*
+            End of tes3mp change (major)
         */
 
         std::vector<MWWorld::Ptr> actors;
@@ -2596,10 +2598,16 @@ namespace MWWorld
 
     void World::hurtCollidingActors(const ConstPtr &object, float healthPerSecond)
     {
-        /* Disabled by tes3mp, because being in a menu should not pause the game in it
+        /*
+            Start of tes3mp change (major)
 
-        if (MWBase::Environment::get().getWindowManager()->isGuiMode())
-            return;
+            Being in a menu should not prevent actors from being hurt in multiplayer,
+            so that check has been commented out
+        */
+        //if (MWBase::Environment::get().getWindowManager()->isGuiMode())
+        //    return;
+        /*
+            End of tes3mp change (major)
         */
 
         std::vector<MWWorld::Ptr> actors;
@@ -3575,9 +3583,9 @@ namespace MWWorld
         mRendering->spawnEffect(model, texture, worldPosition, 1.0f, false);
     }
 
-    void World::spawnEffect(const std::string &model, const std::string &textureOverride, const osg::Vec3f &worldPos, float scale, bool isMagicVFX)
+    void World::spawnEffect(const std::string &model, const std::string &textureOverride, const osg::Vec3f &worldPos)
     {
-        mRendering->spawnEffect(model, textureOverride, worldPos, scale, isMagicVFX);
+        mRendering->spawnEffect(model, textureOverride, worldPos);
     }
 
     void World::explodeSpell(const osg::Vec3f& origin, const ESM::EffectList& effects, const Ptr& caster, const Ptr& ignore, ESM::RangeType rangeType,

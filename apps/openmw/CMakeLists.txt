@@ -98,7 +98,7 @@ add_openmw_dir (mwbase
     )
 
 add_openmw_dir (mwmp Main Networking LocalPlayer DedicatedPlayer PlayerList LocalActor DedicatedActor ActorList ObjectList
-    Cell CellController MechanicsHelper RecordHelper GUIController
+    Worldstate Cell CellController MechanicsHelper RecordHelper GUIController
     )
 
 add_openmw_dir (mwmp/GUI GUIChat GUILogin PlayerMarkerCollection GUIDialogList TextInputDialog GUICustomWindow
@@ -124,15 +124,15 @@ add_openmw_dir (mwmp/processors/player ProcessorChatMessage ProcessorGUIMessageB
     ProcessorPlayerSkill ProcessorPlayerSpeech ProcessorPlayerSpellbook ProcessorPlayerStatsDynamic ProcessorPlayerTopic
     )
 
-add_openmw_dir (mwmp/processors/object BaseObjectProcessor ProcessorConsoleCommand ProcessorContainer ProcessorDoorDestination
-    ProcessorDoorState ProcessorMusicPlay ProcessorVideoPlay ProcessorObjectAnimPlay ProcessorObjectAttach 
-    ProcessorObjectCollision ProcessorObjectDelete ProcessorObjectLock ProcessorObjectMove ProcessorObjectPlace 
-    ProcessorObjectReset ProcessorObjectRotate ProcessorObjectScale ProcessorObjectSpawn ProcessorObjectState 
-    ProcessorObjectTrap ProcessorScriptLocalShort ProcessorScriptLocalFloat ProcessorScriptMemberShort 
-    ProcessorScriptMemberFloat ProcessorScriptGlobalShort ProcessorScriptGlobalFloat
+add_openmw_dir (mwmp/processors/object BaseObjectProcessor ProcessorConsoleCommand ProcessorContainer
+    ProcessorDoorDestination ProcessorDoorState ProcessorMusicPlay ProcessorVideoPlay ProcessorObjectAnimPlay
+    ProcessorObjectAttach  ProcessorObjectCollision ProcessorObjectDelete ProcessorObjectLock ProcessorObjectMove
+    ProcessorObjectPlace ProcessorObjectReset ProcessorObjectRotate ProcessorObjectScale ProcessorObjectSpawn
+    ProcessorObjectState ProcessorObjectTrap ProcessorScriptLocalShort ProcessorScriptLocalFloat
+    ProcessorScriptMemberShort ProcessorScriptMemberFloat ProcessorScriptGlobalShort ProcessorScriptGlobalFloat
     )
 
-add_openmw_dir (mwmp/processors/worldstate ProcessorRecordDynamic ProcessorWorldTime
+add_openmw_dir (mwmp/processors/worldstate ProcessorRecordDynamic ProcessorWorldCollisionOverride ProcessorWorldTime
     )
 
 # Main executable
