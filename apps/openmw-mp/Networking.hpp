@@ -7,6 +7,7 @@
 #include <components/openmw-mp/Controllers/WorldstatePacketController.hpp>
 #include <components/openmw-mp/Packets/PacketPreInit.hpp>
 #include <apps/openmw-mp/Script/LuaState.hpp>
+#include <apps/openmw-mp/Worldstate.hpp>
 
 class MasterClient;
 namespace  mwmp
@@ -57,6 +58,7 @@ namespace  mwmp
         BaseActorList *getLastActorList();
         BaseObjectList *getLastObjectList();
         BaseWorldstate *getLastWorldstate();
+        Worldstate *getServerWorldstate();
 
         int getCurrentMpNum();
         void setCurrentMpNum(int value);
@@ -92,6 +94,8 @@ namespace  mwmp
         BaseActorList baseActorList;
         BaseObjectList baseObjectList;
         BaseWorldstate baseWorldstate;
+
+        Worldstate serverWorldstate;
 
         std::unique_ptr<PlayerPacketController> playerPacketController;
         std::unique_ptr<ActorPacketController> actorPacketController;

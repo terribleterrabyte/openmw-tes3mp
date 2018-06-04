@@ -388,6 +388,11 @@ BaseWorldstate *Networking::getLastWorldstate()
     return &baseWorldstate;
 }
 
+Worldstate *Networking::getServerWorldstate()
+{
+    return &serverWorldstate;
+}
+
 int Networking::getCurrentMpNum()
 {
     return currentMpNum;
@@ -547,8 +552,12 @@ int Networking::mainLoop()
             }
         }
         timerCtrl.tick();
+
         if (updated)
+        {
             Players::processUpdated();
+            serverWorldstate.update();
+        }
 
         const int limit = 60;
 
