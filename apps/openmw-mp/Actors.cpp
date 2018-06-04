@@ -116,27 +116,27 @@ bool Actor::doesHaveStatsDynamic() const
 
 void ActorController::Init(LuaState &lua)
 {
-    sol::table playersTable = lua.getState()->create_named_table("Actors");
+    sol::table actorsTable = lua.getState()->create_named_table("Actors");
 
-    playersTable.set_function("createActor", [&lua](){
+    actorsTable.set_function("createActor", [&lua](){
         return lua.getActorCtrl().createActor();
     });
 
-    playersTable.set_function("sendActors", [&lua](shared_ptr<Player> player, vector<shared_ptr<Actor>> actors,
+    actorsTable.set_function("sendActors", [&lua](shared_ptr<Player> player, vector<shared_ptr<Actor>> actors,
                                                    const std::string &cellDescription, bool sendToAll) {
         lua.getActorCtrl().sendActors(player, actors, Utils::getCellFromDescription(cellDescription), sendToAll);
     });
 
-    playersTable.set_function("sendList", [&lua](shared_ptr<Player> player, vector<shared_ptr<Actor>> actors,
+    actorsTable.set_function("sendList", [&lua](shared_ptr<Player> player, vector<shared_ptr<Actor>> actors,
                                                  const std::string &cellDescription, bool sendToAll) {
         lua.getActorCtrl().sendList(player, actors, Utils::getCellFromDescription(cellDescription), sendToAll);
     });
 
-    playersTable.set_function("requestList", [&lua](shared_ptr<Player> player, const std::string &cellDescription){
+    actorsTable.set_function("requestList", [&lua](shared_ptr<Player> player, const std::string &cellDescription){
         lua.getActorCtrl().requestList(player, Utils::getCellFromDescription(cellDescription));
     });
 
-    playersTable.set_function("getActors", [&lua](shared_ptr<Player> player, const std::string &cellDescription){
+    actorsTable.set_function("getActors", [&lua](shared_ptr<Player> player, const std::string &cellDescription){
         lua.getActorCtrl().getActors(player, Utils::getCellFromDescription(cellDescription));
     });
 }
