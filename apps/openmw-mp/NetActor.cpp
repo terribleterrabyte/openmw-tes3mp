@@ -40,7 +40,7 @@ void NetActor::setPosition(float x, float y, float z)
     netCreature->position.pos[1] = y;
     netCreature->position.pos[2] = z;
 
-    if(!positionChanged && isPlayer())
+    if (!positionChanged && isPlayer())
         toPlayer()->addToUpdateQueue();
     positionChanged = true;
 }

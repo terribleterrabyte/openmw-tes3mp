@@ -185,7 +185,7 @@ public:
     template<Event event, bool canProvideOldState = false, typename R = void, typename... Args>
     R Call(Args&&... args)
     {
-        if(canProvideOldState)
+        if (canProvideOldState)
             events.at(event).callWOld(std::forward<Args>(args)...);
         else
             return events.at(event).call(CallbackCollection::type_tag<R>{}, std::forward<Args>(args)...);

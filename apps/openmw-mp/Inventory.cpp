@@ -46,7 +46,7 @@ Inventory::~Inventory()
 void Inventory::update()
 {
     printf("Inventory::update()");
-    /*if(isEquipmentChanged())
+    /*if (isEquipmentChanged())
     {
         if (netActor->isPlayer())
         {
@@ -100,7 +100,7 @@ void Inventory::equipItem(unsigned short slot, const std::string& refId, unsigne
     if (!Utils::vectorContains(&netActor->getNetCreature()->equipmentIndexChanges, slot))
         netActor->getNetCreature()->equipmentIndexChanges.push_back(slot);
 
-    if(!equipmentChanged && netActor->isPlayer())
+    if (!equipmentChanged && netActor->isPlayer())
         netActor->toPlayer()->addToUpdateQueue();
 
     equipmentChanged = true;
@@ -114,7 +114,7 @@ void Inventory::unequipItem( unsigned short slot)
 
 void Inventory::addItem(const std::string &refId, unsigned int count, int charge, float enchantmentCharge)
 {
-    if(!inventoryChanged)
+    if (!inventoryChanged)
         resetInventoryFlag();
 
     mwmp::Item item;
@@ -131,7 +131,7 @@ void Inventory::addItem(const std::string &refId, unsigned int count, int charge
 
 void Inventory::removeItem(const std::string &refId, unsigned short count)
 {
-    if(!inventoryChanged)
+    if (!inventoryChanged)
         resetInventoryFlag();
     mwmp::Item item;
     item.refId = refId;

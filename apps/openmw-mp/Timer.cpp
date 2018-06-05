@@ -72,7 +72,7 @@ void Timer::tick()
     if (time - startTime >= targetMsec)
     {
         end = true;
-        if(callback.valid())
+        if (callback.valid())
         {
             LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Timer::tick time expired, callback %p valid", callback.registry_index());
             callback.call(data);
@@ -126,7 +126,7 @@ void TimerController::tick()
         LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Deleted %d timers\n", deleted);
     }
 
-    if(!newTimersQueue.empty())
+    if (!newTimersQueue.empty())
     {
         timers.insert(timers.begin(), make_move_iterator(newTimersQueue.begin()), make_move_iterator(newTimersQueue.end()));
         LOG_MESSAGE_SIMPLE(Log::LOG_TRACE, "Created %d timers\n", newTimersQueue.size());
