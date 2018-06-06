@@ -94,7 +94,8 @@ namespace mwmp
             None = 0,
             Drag,
             Drop,
-            TakeAll
+            TakeAll,
+            ReplyToRequest
         };
 
         RakNet::RakNetGUID guid;
