@@ -31,7 +31,6 @@
 #include "player/ProcessorPlayerJournal.hpp"
 #include "player/ProcessorPlayerKillCount.hpp"
 #include "player/ProcessorPlayerLevel.hpp"
-#include "player/ProcessorPlayerMap.hpp"
 #include "player/ProcessorPlayerMiscellaneous.hpp"
 #include "player/ProcessorPlayerMomentum.hpp"
 #include "player/ProcessorPlayerPosition.hpp"
@@ -93,6 +92,7 @@
 #include "WorldstateProcessor.hpp"
 #include "worldstate/ProcessorRecordDynamic.hpp"
 #include "worldstate/ProcessorWorldCollisionOverride.hpp"
+#include "worldstate/ProcessorWorldMap.hpp"
 #include "worldstate/ProcessorWorldTime.hpp"
 
 using namespace mwmp;
@@ -129,7 +129,6 @@ void ProcessorInitializer()
     PlayerProcessor::AddProcessor(new ProcessorPlayerJournal());
     PlayerProcessor::AddProcessor(new ProcessorPlayerKillCount());
     PlayerProcessor::AddProcessor(new ProcessorPlayerLevel());
-    PlayerProcessor::AddProcessor(new ProcessorPlayerMap());
     PlayerProcessor::AddProcessor(new ProcessorPlayerMiscellaneous());
     PlayerProcessor::AddProcessor(new ProcessorPlayerMomentum());
     PlayerProcessor::AddProcessor(new ProcessorPlayerPosition());
@@ -188,5 +187,6 @@ void ProcessorInitializer()
 
     WorldstateProcessor::AddProcessor(new ProcessorRecordDynamic());
     WorldstateProcessor::AddProcessor(new ProcessorWorldCollisionOverride());
+    WorldstateProcessor::AddProcessor(new ProcessorWorldMap());
     WorldstateProcessor::AddProcessor(new ProcessorWorldTime());
 }

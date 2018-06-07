@@ -198,7 +198,6 @@ public:
     Quests &getQuests();
     Spells &getSpells();
     QuickKeys &getQuickKeys();
-    MapTiles &getMapTiles();
     WeatherMgr &getWeatherMgr();
 
     void setAuthority();
@@ -211,7 +210,7 @@ private:
     CellController::TContainer cells;
     int loadState;
     int handshakeCounter;
-    bool /*statsChanged, attributesChanged, skillsChanged, baseInfoChanged, positionChanged,*/ changedMarkLocation, changedSelectedSpell, changedMap;
+    bool /*statsChanged, attributesChanged, skillsChanged, baseInfoChanged, positionChanged,*/ changedMarkLocation, changedSelectedSpell;
     CharClass cClass;
     GameSettings settings;
     Books books;
@@ -221,7 +220,6 @@ private:
     Quests quests;
     Spells spells;
     QuickKeys quickKeys;
-    MapTiles mapTiles;
     WeatherMgr weatherMgr;
     sol::table storedData;
     sol::table customData;

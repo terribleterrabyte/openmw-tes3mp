@@ -63,7 +63,6 @@ EventController::EventController(LuaState *luaCtrl)
              ADD_CORE_EVENT(ON_PLAYER_DISPOSITION),
              ADD_CORE_EVENT(ON_PLAYER_BOOK),
              ADD_CORE_EVENT(ON_PLAYER_MISCELLANEOUS),
-             ADD_CORE_EVENT(ON_PLAYER_MAP),
              ADD_CORE_EVENT(ON_PLAYER_INTERACTION),
              ADD_CORE_EVENT(ON_PLAYER_REST),
              ADD_CORE_EVENT(ON_PLAYER_SENDMESSAGE),
@@ -88,7 +87,8 @@ EventController::EventController(LuaState *luaCtrl)
              ADD_CORE_EVENT(ON_OBJECT_DELETE),
              ADD_CORE_EVENT(ON_OBJECT_LOCK),
              ADD_CORE_EVENT(ON_OBJECT_SCALE),
-             ADD_CORE_EVENT(ON_OBJECT_TRAP)
+             ADD_CORE_EVENT(ON_OBJECT_TRAP),
+             ADD_CORE_EVENT(ON_WORLD_MAP)
             );
 
     sol::state &state = *luaCtrl->getState();

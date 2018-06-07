@@ -123,13 +123,6 @@ namespace mwmp
         Type type;
     };
 
-    struct MapTile
-    {
-        int x;
-        int y;
-        std::vector<char> imageData;
-    };
-
     struct JournalChanges
     {
         std::vector<JournalItem> journalItems;
@@ -153,11 +146,6 @@ namespace mwmp
     struct BookChanges
     {
         std::vector<Book> books;
-    };
-
-    struct MapChanges
-    {
-        std::vector<MapTile> mapTiles;
     };
 
     struct SpellbookChanges
@@ -296,7 +284,6 @@ namespace mwmp
         TopicChanges topicChanges;
         KillChanges killChanges;
         BookChanges bookChanges;
-        MapChanges mapChanges;
         CellStateChanges cellStateChanges;
 
         ESM::ActiveSpells activeSpells;

@@ -39,7 +39,6 @@ namespace CoreEvent
         ON_PLAYER_DISPOSITION,
         ON_PLAYER_BOOK,
         ON_PLAYER_MISCELLANEOUS,
-        ON_PLAYER_MAP,
         ON_PLAYER_INTERACTION,
         ON_PLAYER_REST,
         ON_PLAYER_SENDMESSAGE,
@@ -70,6 +69,8 @@ namespace CoreEvent
         ON_OBJECT_LOCK,
         ON_OBJECT_SCALE,
         ON_OBJECT_TRAP,
+
+        ON_WORLD_MAP,
 
         LAST,
     };

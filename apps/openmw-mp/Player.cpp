@@ -92,7 +92,6 @@ void Player::Init(LuaState &lua)
                                          "getQuests", &Player::getQuests,
                                          "getSpells", &Player::getSpells,
                                          "getQuickKeys", &Player::getQuickKeys,
-                                         "getMapTiles", &Player::getMapTiles,
                                          "getWeatherMgr", &Player::getWeatherMgr,
 
                                          "getMark", &Player::getMark,
@@ -118,9 +117,9 @@ void Player::Init(LuaState &lua)
                             "leaveChannel", 3);
 }
 
-Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), changedMap(false), cClass(this),
-                                          settings(this), books(this), gui(this), dialogue(this), factions(this),
-                                          quests(this), spells(this), quickKeys(this), mapTiles(this), weatherMgr(this)
+Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid), NetActor(), cClass(this), settings(this), books(this), gui(this),
+                                          dialogue(this), factions(this), quests(this), spells(this), quickKeys(this),
+                                          weatherMgr(this)
 {
     basePlayer = this;
     netCreature = this;
@@ -277,14 +276,6 @@ void Player::update()
         changedSelectedSpell = false;
     }
 
-    if (changedMap)
-    {
-        auto packet = mwmp::Networking::get().getPlayerPacketController()->GetPacket(ID_PLAYER_MAP);
-        packet->setPlayer(this);
-        packet->Send(/*toOthers*/ false);
-        changedMap = false;
-    }
-
     settings.update();
     books.update();
     gui.update();
@@ -293,7 +284,6 @@ void Player::update()
     quests.update();
     spells.update();
     quickKeys.update();
-    mapTiles.update();
     weatherMgr.update();
 
     resetUpdateFlags();
@@ -833,11 +823,6 @@ Spells &Player::getSpells()
 QuickKeys &Player::getQuickKeys()
 {
     return quickKeys;
-}
-
-MapTiles &Player::getMapTiles()
-{
-    return mapTiles;
 }
 
 WeatherMgr &Player::getWeatherMgr()

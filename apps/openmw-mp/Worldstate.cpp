@@ -5,9 +5,18 @@
 
 using namespace std;
 
+Worldstate::Worldstate() : mapTiles(this)
+{
+
+}
+
 void Worldstate::Init(LuaState &lua)
 {
     sol::table worldstateTable = lua.getState()->create_named_table("Worldstate");
+
+    //worldstateTable.set_function("getMapTiles", []() {
+    //    mwmp::Networking::get().get().getServerWorldstate()->getMapTiles();
+    //});
 
     worldstateTable.set_function("setHour", [](double hour) {
         mwmp::Networking::get().get().getServerWorldstate()->setHour(hour);
@@ -71,6 +80,13 @@ void Worldstate::update()
 
         shouldUpdateCollisionOverrides = false;
     }
+
+    //mapTiles.update();
+}
+
+MapTiles &Worldstate::getMapTiles()
+{
+    return mapTiles;
 }
 
 void Worldstate::setHour(double inputHour)
@@ -131,3 +147,103 @@ void Worldstate::setActorCollisionForPlacedObjects(bool state)
     useActorCollisionForPlacedObjects = state;
     shouldUpdateCollisionOverrides = true;
 }
+
+void MapTiles::Init(LuaState &lua)
+{
+    lua.getState()->new_usertype<MapTiles>("MapTiles",
+        "addMapTile", &MapTiles::addMapTile,
+        "getMapTile", &MapTiles::getMapTile,
+        "setMapTile", &MapTiles::setMapTile,
+        "clear", &MapTiles::clear,
+        "size", &MapTiles::size
+        );
+}
+
+MapTiles::MapTiles(Worldstate *worldstate) : BaseMgr(worldstate)
+{
+
+}
+
+void MapTiles::processUpdate()
+{
+    auto packet = mwmp::Networking::get().getWorldstatePacketController()->GetPacket(ID_WORLD_MAP);
+    packet->Send(false);
+    clear();
+}
+
+void MapTiles::addMapTile(const MapTile &mapTile)
+{
+    mwmp::Networking::get().get().getServerWorldstate()->mapChanges.mapTiles.push_back(mapTile.mapTile);
+    setChanged();
+}
+
+MapTile MapTiles::getMapTile(int id) const
+{
+    return MapTile(mwmp::Networking::get().get().getServerWorldstate()->mapChanges.mapTiles.at(id));
+}
+
+void MapTiles::setMapTile(int id, const MapTile &mapTile)
+{
+    mwmp::Networking::get().get().getServerWorldstate()->mapChanges.mapTiles.at(id) = mapTile.mapTile;
+    setChanged();
+}
+
+void MapTiles::clear()
+{
+    mwmp::Networking::get().get().getServerWorldstate()->mapChanges.mapTiles.clear();
+    setChanged();
+}
+
+size_t MapTiles::size() const
+{
+    return mwmp::Networking::get().get().getServerWorldstate()->mapChanges.mapTiles.size();
+}
+
+void MapTile::Init(LuaState &lua)
+{
+    lua.getState()->new_usertype<MapTile>("MapTile",
+        "cellX", sol::property(&MapTile::getCellX, &MapTile::setCellX),
+        "cellY", sol::property(&MapTile::getCellY, &MapTile::setCellY),
+        "loadImageFile", &MapTile::loadImageFile,
+        "saveImageFile", &MapTile::saveImageFile
+        );
+}
+
+MapTile::MapTile(mwmp::BaseMapTile &mapTile) : mapTile(mapTile)
+{
+
+}
+
+int MapTile::getCellX() const
+{
+    return mapTile.x;
+}
+
+void MapTile::setCellX(int cellX)
+{
+    mapTile.x = cellX;
+}
+
+int MapTile::getCellY() const
+{
+    return mapTile.y;
+}
+
+void MapTile::setCellY(int cellY)
+{
+    mapTile.y = cellY;
+}
+
+void MapTile::loadImageFile(const char* filePath)
+{
+    std::ifstream inputFile(filePath, std::ios::binary);
+    mapTile.imageData = std::vector<char>(std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>());
+}
+
+void MapTile::saveImageFile(const char* filePath)
+{
+    std::ofstream outputFile(filePath, std::ios::binary);
+    std::ostream_iterator<char> outputIterator(outputFile);
+    std::copy(mapTile.imageData.begin(), mapTile.imageData.end(), outputIterator);
+}
+

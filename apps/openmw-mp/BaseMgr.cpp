@@ -4,8 +4,14 @@
 
 #include "BaseMgr.hpp"
 #include "Player.hpp"
+#include "Worldstate.hpp"
 
 BaseMgr::BaseMgr(Player *player) : player(player), changed(false)
+{
+
+}
+
+BaseMgr::BaseMgr(Worldstate *worldstate) : worldstate(worldstate), changed(false)
 {
 
 }
@@ -22,5 +28,7 @@ void BaseMgr::update()
 void BaseMgr::setChanged()
 {
     changed = true;
-    player->addToUpdateQueue();
+
+    if (player != nullptr)
+        player->addToUpdateQueue();
 }
