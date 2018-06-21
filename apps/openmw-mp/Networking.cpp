@@ -313,7 +313,7 @@ void Networking::newPlayer(RakNet::RakNetGUID guid)
         if (pl->guid == guid) return;
 
         // If an invalid key makes it into the Players map, ignore it
-        else if (pl->guid == RakNet::UNASSIGNED_RAKNET_GUID) return;
+        else if (pl->guid == RakNet::UNASSIGNED_CRABNET_GUID) return;
 
         // If we are iterating over a player who has inputted their name, proceed
         else if (pl->getLoadState() == Player::POSTLOADED)

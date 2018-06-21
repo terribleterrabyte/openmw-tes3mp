@@ -235,9 +235,9 @@ int main(int argc, char *argv[])
 
     switch (peer->Startup((unsigned) players, &sd, 1))
     {
-        case RakNet::RAKNET_STARTED:
+        case RakNet::CRABNET_STARTED:
             break;
-        case RakNet::RAKNET_ALREADY_STARTED:
+        case RakNet::CRABNET_ALREADY_STARTED:
             Utils::throwError("Already started");
             break;
         case RakNet::INVALID_SOCKET_DESCRIPTORS:
