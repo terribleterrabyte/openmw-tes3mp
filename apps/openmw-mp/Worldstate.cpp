@@ -173,8 +173,17 @@ void MapTiles::processUpdate()
 
 void MapTiles::addMapTile(const MapTile &mapTile)
 {
-    mwmp::Networking::get().get().getServerWorldstate()->mapChanges.mapTiles.push_back(mapTile.mapTile);
-    setChanged();
+    if (mapTile.mapTile.imageData.size() > mwmp::maxImageDataSize)
+    {
+        LOG_MESSAGE_SIMPLE(Log::LOG_ERROR, "Error loading image file for map tile: "
+            "%i, %i has a size of %i, which is over the maximum allowed of %i!",
+            mapTile.mapTile.x, mapTile.mapTile.y, mapTile.mapTile.imageData.size(), mwmp::maxImageDataSize);
+    }
+    else
+    {
+        mwmp::Networking::get().get().getServerWorldstate()->mapChanges.mapTiles.push_back(mapTile.mapTile);
+        setChanged();
+    }
 }
 
 MapTile MapTiles::getMapTile(int id) const
