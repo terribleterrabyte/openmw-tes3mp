@@ -28,6 +28,7 @@ void Object::Init(LuaState &lua)
                                          "state", sol::property(&Object::getState, &Object::setState),
                                          "lockLevel", sol::property(&Object::getLockLevel, &Object::setLockLevel),
                                          "doorState", sol::property(&Object::getDoorState, &Object::setDoorState),
+                                         "hasContainer", &Object::hasContainer,
                                          "setTeleportState", &Object::setTeleportState,
                                          "setDoorDestination", &Object::setDoorDestination,
                                          "setDisarmState", &Object::setDisarmState,
@@ -215,6 +216,11 @@ void Object::setLockLevel(int locklevel)
 {
     changedObjectLock = true;
     object.lockLevel = locklevel;
+}
+
+bool Object::hasContainer() const
+{
+    return object.hasContainer;
 }
 
 void Object::setTeleportState(bool state)

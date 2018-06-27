@@ -80,6 +80,8 @@ public:
     int getLockLevel() const;
     void setLockLevel(int locklevel);
 
+    bool hasContainer() const;
+
     void setTeleportState(bool state);
     void setDoorDestination(const std::string &cellDescription, float posX, float posY, float posZ, float rotX, float rotY, float rotZ);
 

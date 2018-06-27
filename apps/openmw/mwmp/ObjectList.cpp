@@ -75,14 +75,14 @@ void ObjectList::addContainerItem(mwmp::BaseObject& baseObject, const MWWorld::P
     containerItem.enchantmentCharge = itemPtr.getCellRef().getEnchantmentCharge();
     containerItem.actionCount = actionCount;
 
-    LOG_APPEND(Log::LOG_INFO, "--- Adding container item %s", containerItem.refId.c_str());
+    LOG_APPEND(Log::LOG_VERBOSE, "--- Adding container item %s", containerItem.refId.c_str());
 
     baseObject.containerItems.push_back(containerItem);
 }
 
 void ObjectList::addEntireContainer(const MWWorld::Ptr& ptr)
 {
-    LOG_APPEND(Log::LOG_INFO, "-- Adding entire container %s %i-%i", ptr.getCellRef().getRefId().c_str(),
+    LOG_APPEND(Log::LOG_VERBOSE, "-- Adding entire container %s %i-%i", ptr.getCellRef().getRefId().c_str(),
         ptr.getCellRef().getRefNum().mIndex, ptr.getCellRef().getMpNum());
 
     MWWorld::ContainerStore& containerStore = ptr.getClass().getContainerStore(ptr);
@@ -800,6 +800,7 @@ void ObjectList::addObjectPlace(const MWWorld::Ptr& ptr, bool droppedByPlayer)
     baseObject.charge = ptr.getCellRef().getCharge();
     baseObject.enchantmentCharge = ptr.getCellRef().getEnchantmentCharge();
     baseObject.droppedByPlayer = droppedByPlayer;
+    baseObject.hasContainer = ptr.getClass().hasContainerStore(ptr);
 
     // Make sure we send the RefData position instead of the CellRef one, because that's what
     // we actually see on this client
