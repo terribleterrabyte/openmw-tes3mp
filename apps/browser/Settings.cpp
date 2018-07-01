@@ -86,7 +86,7 @@ void SettingsMgr::loadClientSettings(Ui::MainWindow &mw)
     mw.leClientAddress->setText(QString::fromStdString(clientMgr.getString("destinationAddress", "General")));
     mw.leClientPort->setText(QString::fromStdString(clientMgr.getString("port", "General")));
     mw.leClientPassword->setText(QString::fromStdString(clientMgr.getString("password", "General")));
-    mw.combLoglevel->setCurrentIndex(clientMgr.getInt("loglevel", "General"));
+    mw.combLoglevel->setCurrentIndex(clientMgr.getInt("logLevel", "General"));
 
     mw.leClientMAddress->setText(QString::fromStdString(clientMgr.getString("address", "Master")));
     mw.leClientMPort->setText(QString::fromStdString(clientMgr.getString("port", "Master")));
@@ -107,7 +107,7 @@ void SettingsMgr::saveClientSettings(Ui::MainWindow &mw)
     clientMgr.setString("destinationAddress", "General", mw.leClientAddress->text().toStdString());
     clientMgr.setString("port", "General", mw.leClientPort->text().toStdString());
     clientMgr.setString("password", "General", mw.leClientPassword->text().toStdString());
-    clientMgr.setInt("loglevel", "General", mw.combLoglevel->currentIndex());
+    clientMgr.setInt("logLevel", "General", mw.combLoglevel->currentIndex());
 
     clientMgr.setString("address", "Master", mw.leClientMAddress->text().toStdString());
     clientMgr.setString("port", "Master", mw.leClientMPort->text().toStdString());
