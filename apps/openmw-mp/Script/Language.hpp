@@ -13,7 +13,7 @@
 class Language
 {
 public:
-    virtual ~Language(){}
+    virtual ~Language() = default;
     virtual void LoadProgram(const char* filename) = 0;
     virtual int FreeProgram() = 0;
     virtual bool IsCallbackPresent(const char* name) = 0;

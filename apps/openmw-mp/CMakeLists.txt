@@ -32,6 +32,20 @@ if(BUILD_WITH_LUA)
     include_directories(${LuaJit_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/extern/LuaBridge)
 endif(BUILD_WITH_LUA)
 
+option(BUILD_WITH_MONO "Enable Mono languages" ON)
+if(BUILD_WITH_MONO)
+    message(STATUS "Mono enabled")
+    find_package(Mono REQUIRED)
+    include_directories(${MONO_INCLUDE_DIR})
+
+    set(MonoScript_Sources
+            Script/LangMono/LangMono.cpp
+            )
+    set(MonoScript_Headers
+            Script/LangMono/LangMono.hpp
+            )
+endif(BUILD_WITH_MONO)
+
 set(NativeScript_Sources
         Script/LangNative/LangNative.cpp
         )
@@ -64,7 +78,7 @@ set(SERVER
     Script/API/TimerAPI.cpp Script/API/PublicFnAPI.cpp
         ${LuaScript_Sources}
         ${NativeScript_Sources}
-
+        ${MonoScript_Sources}
 )
 
 set(SERVER_HEADER
@@ -73,6 +87,7 @@ set(SERVER_HEADER
         Script/ScriptFunctions.hpp Script/API/TimerAPI.hpp Script/API/PublicFnAPI.hpp
         ${LuaScript_Headers}
         ${NativeScript_Headers}
+        ${MonoScript_Headers}
 )
 source_group(tes3mp-server FILES ${SERVER} ${SERVER_HEADER})
 
@@ -162,6 +177,7 @@ target_link_libraries(tes3mp-server
     ${RakNet_LIBRARY}
     components
     ${LuaJit_LIBRARIES}
+    ${MONO_LIBRARY}
     ${Breakpad_Library}
 )
 

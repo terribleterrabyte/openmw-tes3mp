@@ -27,7 +27,8 @@ private:
     enum
     {
         SCRIPT_CPP,
-        SCRIPT_LUA
+        SCRIPT_LUA,
+        SCRIPT_MONO
     };
 
     template<typename R>
@@ -91,8 +92,7 @@ public:
 
             if (script->script_type == SCRIPT_CPP)
                 (callback)(std::forward<Args>(args)...);
-#if defined (ENABLE_LUA)
-            else if (script->script_type == SCRIPT_LUA)
+            else
             {
                 try
                 {
@@ -106,7 +106,6 @@ public:
                         throw;
                 }
             }
-#endif
             ++count;
         }
 
