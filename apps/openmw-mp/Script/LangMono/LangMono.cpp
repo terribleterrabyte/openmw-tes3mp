@@ -71,7 +71,12 @@ std::vector<MonoClass *> getInstanceClassList(MonoImage *image, const std::strin
 
 void LangMono::LoadProgram(const char *filename)
 {
-    instance->assembly = mono_domain_assembly_open(domain, filename);
+    MonoAssembly *assembly = mono_domain_assembly_open(domain, filename);
+
+    if(!assembly)
+        throw std::runtime_error("Cannot load: " + std::string(filename));
+
+    instance->assembly = assembly;
     instance->image = mono_assembly_get_image(instance->assembly);
 
     std::vector<MonoClass *> list = getInstanceClassList(instance->image, "Instance");

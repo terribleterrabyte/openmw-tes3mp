@@ -2,7 +2,6 @@
 // Created by koncord on 19.03.16.
 //
 
-#include <apps/openmw-mp/Script/LangMono/LangMono.hpp>
 #include "Script.hpp"
 #include "LangNative/LangNative.hpp"
 
@@ -10,9 +9,26 @@
 #include "LangLua/LangLua.hpp"
 #endif
 
+#ifdef ENABLE_MONO
+#include "LangMono/LangMono.hpp"
+#endif
+
 using namespace std;
 
 Script::ScriptList Script::scripts;
+
+inline bool Load(Language *lang, const std::string &path)
+{
+    try
+    {
+        lang->LoadProgram(path.c_str());
+    }
+    catch (...)
+    {
+        lang->FreeProgram();
+        throw std::runtime_error("Failed to load: " + path);
+    }
+}
 
 Script::Script(const char *path)
 {
@@ -25,39 +41,43 @@ Script::Script(const char *path)
 
     if (strstr(path, ".dll"))
     {
+#ifdef ENABLE_MONO
         script_type = SCRIPT_MONO;
-        lang = new LangMono();
-    }
-    /*else
-#ifdef _WIN32
-    if (strstr(path, ".dll"))
-#else
-    if (strstr(path, ".so"))
+        try
+        {
+            lang = new LangMono();
+            Load(lang, path);
+        }
+        catch(...)
+        {
 #endif
+#ifdef _WIN32
+        script_type = SCRIPT_CPP;
+        lang = new LangNative();
+        Load(lang, path);
+#endif
+#ifdef ENABLE_MONO
+        }
+#endif
+    }
+#ifndef _WIN32
+    else if (strstr(path, ".so"))
     {
         script_type = SCRIPT_CPP;
         lang = new LangNative();
-    }*/
+        Load(lang, path);
+    }
+#endif
 #if defined (ENABLE_LUA)
     else if (strstr(path, ".lua") || strstr(path, ".t"))
     {
-        lang = new LangLua();
         script_type = SCRIPT_LUA;
+        lang = new LangLua();
+        Load(lang, path);
     }
 #endif
     else
         throw runtime_error("Script type not recognized: " + string(path));
-
-    try
-    {
-        lang->LoadProgram(path);
-    }
-    catch (...)
-    {
-        lang->FreeProgram();
-        throw;
-    }
-
 }
 
 

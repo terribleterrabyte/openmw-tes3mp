@@ -44,6 +44,7 @@ if(BUILD_WITH_MONO)
     set(MonoScript_Headers
             Script/LangMono/LangMono.hpp
             )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_MONO")
 endif(BUILD_WITH_MONO)
 
 set(NativeScript_Sources

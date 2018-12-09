@@ -26,7 +26,10 @@
 #include "Utils.hpp"
 
 #include <apps/openmw-mp/Script/Script.hpp>
+
+#ifdef ENABLE_MONO
 #include <mono/metadata/assembly.h>
+#endif
 
 #ifdef ENABLE_BREAKPAD
 #include <handler/exception_handler.h>
@@ -234,7 +237,10 @@ int main(int argc, char *argv[])
 #else
     setenv("LUA_CPATH", Utils::convertPath(plugin_home + "/lib/?.so").c_str(), 1);
 #endif
+
+#ifdef ENABLE_MONO
     mono_set_dirs(Utils::convertPath(plugin_home + "/mono").c_str(), Utils::convertPath(plugin_home + "/mono/etc").c_str());
+#endif
 
     int code;
 
