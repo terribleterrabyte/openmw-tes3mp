@@ -23,17 +23,15 @@
     {"SendCell",                CellFunctions::SendCell}
 
 
-class CellFunctions
+namespace CellFunctions
 {
-public:
-
     /**
     * \brief Get the number of indexes in a player's latest cell state changes.
     *
     * \param pid The player ID whose cell state changes should be used.
     * \return The number of indexes.
     */
-    static unsigned int GetCellStateChangesSize(unsigned short pid) noexcept;
+    extern "C" unsigned int GetCellStateChangesSize(unsigned short pid) noexcept;
 
     /**
     * \brief Get the cell state type at a certain index in a player's latest cell state changes.
@@ -42,7 +40,7 @@ public:
     * \param index The index of the cell state.
     * \return The cell state type (0 for LOAD, 1 for UNLOAD).
     */
-    static unsigned int GetCellStateType(unsigned short pid, unsigned int index) noexcept;
+    extern "C" unsigned int GetCellStateType(unsigned short pid, unsigned int index) noexcept;
 
     /**
     * \brief Get the cell description at a certain index in a player's latest cell state changes.
@@ -51,7 +49,7 @@ public:
     * \param index The index of the cell state.
     * \return The cell description.
     */
-    static const char *GetCellStateDescription(unsigned short pid, unsigned int index) noexcept;
+    extern "C" const char *GetCellStateDescription(unsigned short pid, unsigned int index) noexcept;
 
     /**
     * \brief Get the cell description of a player's cell.
@@ -59,7 +57,7 @@ public:
     * \param pid The player ID.
     * \return The cell description.
     */
-    static const char *GetCell(unsigned short pid) noexcept;
+    extern "C" const char *GetCell(unsigned short pid) noexcept;
 
     /**
     * \brief Get the X coordinate of the player's exterior cell.
@@ -67,7 +65,7 @@ public:
     * \param pid The player ID.
     * \return The X coordinate of the cell.
     */
-    static int GetExteriorX(unsigned short pid) noexcept;
+    extern "C" int GetExteriorX(unsigned short pid) noexcept;
 
     /**
     * \brief Get the Y coordinate of the player's exterior cell.
@@ -75,7 +73,7 @@ public:
     * \param pid The player ID.
     * \return The Y coordinate of the cell.
     */
-    static int GetExteriorY(unsigned short pid) noexcept;
+    extern "C" int GetExteriorY(unsigned short pid) noexcept;
 
     /**
     * \brief Check whether the player is in an exterior cell or not.
@@ -83,7 +81,7 @@ public:
     * \param pid The player ID.
     * \return Whether the player is in an exterior cell.
     */
-    static bool IsInExterior(unsigned short pid) noexcept;
+    extern "C" bool IsInExterior(unsigned short pid) noexcept;
 
     /**
     * \brief Get the region of the player's exterior cell.
@@ -93,7 +91,7 @@ public:
     * \param pid The player ID.
     * \return The region.
     */
-    static const char *GetRegion(unsigned short pid) noexcept;
+    extern "C" const char *GetRegion(unsigned short pid) noexcept;
 
     /**
     * \brief Check whether the player's last cell change has involved a region change.
@@ -101,7 +99,7 @@ public:
     * \param pid The player ID.
     * \return Whether the player has changed their region.
     */
-    static bool IsChangingRegion(unsigned short pid) noexcept;
+    extern "C" bool IsChangingRegion(unsigned short pid) noexcept;
 
     /**
     * \brief Set the cell of a player.
@@ -116,7 +114,7 @@ public:
     * \param cellDescription The cell description.
     * \return void
     */
-    static void SetCell(unsigned short pid, const char *cellDescription) noexcept;
+    extern "C" void SetCell(unsigned short pid, const char *cellDescription) noexcept;
 
     /**
     * \brief Set the cell of a player to an exterior cell.
@@ -129,7 +127,7 @@ public:
     * \param y The Y coordinate of the cell.
     * \return void
     */
-    static void SetExteriorCell(unsigned short pid, int x, int y) noexcept;
+    extern "C" void SetExteriorCell(unsigned short pid, int x, int y) noexcept;
 
     /**
     * \brief Send a PlayerCellChange packet about a player.
@@ -139,8 +137,7 @@ public:
     * \param pid The player ID.
     * \return void
     */
-    static void SendCell(unsigned short pid) noexcept;
-
-};
+    extern "C" void SendCell(unsigned short pid) noexcept;
+}
 
 #endif //OPENMW_CELLAPI_HPP

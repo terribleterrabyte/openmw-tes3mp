@@ -6,7 +6,7 @@
 #include <apps/openmw-mp/Script/ScriptFunctions.hpp>
 #include <apps/openmw-mp/Networking.hpp>
 
-void ChatFunctions::SendMessage(unsigned short pid, const char *message, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ChatFunctions::SendMessage(unsigned short pid, const char *message, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player,);
@@ -24,7 +24,7 @@ void ChatFunctions::SendMessage(unsigned short pid, const char *message, bool se
         packet->Send(true);
 }
 
-void ChatFunctions::CleanChatForPid(unsigned short pid)
+extern "C" void ChatFunctions::CleanChatForPid(unsigned short pid)
 {
     Player *player;
     GET_PLAYER(pid, player,);
@@ -37,7 +37,7 @@ void ChatFunctions::CleanChatForPid(unsigned short pid)
     packet->Send(false);
 }
 
-void ChatFunctions::CleanChat()
+extern "C" void ChatFunctions::CleanChat()
 {
     for (auto player : *Players::getPlayers())
     {

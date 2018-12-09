@@ -16,10 +16,8 @@
     \
     {"InitializeSpellbookChanges", SpellFunctions::InitializeSpellbookChanges}
 
-class SpellFunctions
+namespace SpellFunctions
 {
-public:
-
     /**
     * \brief Clear the last recorded spellbook changes for a player.
     *
@@ -28,7 +26,7 @@ public:
     * \param pid The player ID whose spellbook changes should be used.
     * \return void
     */
-    static void ClearSpellbookChanges(unsigned short pid) noexcept;
+    extern "C" void ClearSpellbookChanges(unsigned short pid) noexcept;
 
     /**
     * \brief Get the number of indexes in a player's latest spellbook changes.
@@ -36,7 +34,7 @@ public:
     * \param pid The player ID whose spellbook changes should be used.
     * \return The number of indexes.
     */
-    static unsigned int GetSpellbookChangesSize(unsigned short pid) noexcept;
+    extern "C" unsigned int GetSpellbookChangesSize(unsigned short pid) noexcept;
 
     /**
     * \brief Get the action type used in a player's latest spellbook changes.
@@ -44,7 +42,7 @@ public:
     * \param pid The player ID whose spellbook changes should be used.
     * \return The action type (0 for SET, 1 for ADD, 2 for REMOVE).
     */
-    static unsigned int GetSpellbookChangesAction(unsigned short pid) noexcept;
+    extern "C" unsigned int GetSpellbookChangesAction(unsigned short pid) noexcept;
 
     /**
     * \brief Set the action type in a player's spellbook changes.
@@ -53,7 +51,7 @@ public:
     * \param action The action (0 for SET, 1 for ADD, 2 for REMOVE).
     * \return void
     */
-    static void SetSpellbookChangesAction(unsigned short pid, unsigned char action) noexcept;
+    extern "C" void SetSpellbookChangesAction(unsigned short pid, unsigned char action) noexcept;
 
     /**
     * \brief Add a new spell to the spellbook changes for a player.
@@ -62,7 +60,7 @@ public:
     * \param spellId The spellId of the spell.
     * \return void
     */
-    static void AddSpell(unsigned short pid, const char* spellId) noexcept;
+    extern "C" void AddSpell(unsigned short pid, const char* spellId) noexcept;
 
     /**
     * \brief Get the spellId at a certain index in a player's latest spellbook changes.
@@ -71,7 +69,7 @@ public:
     * \param index The index of the spell.
     * \return The spellId.
     */
-    static const char *GetSpellId(unsigned short pid, unsigned int index) noexcept;
+    extern "C" const char *GetSpellId(unsigned short pid, unsigned int index) noexcept;
 
     /**
     * \brief Send a PlayerSpellbook packet with a player's recorded spellbook changes.
@@ -83,14 +81,11 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendSpellbookChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendSpellbookChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     // All methods below are deprecated versions of methods from above
 
-    static void InitializeSpellbookChanges(unsigned short pid) noexcept;
-
-private:
-
-};
+    extern "C" void InitializeSpellbookChanges(unsigned short pid) noexcept;
+}
 
 #endif //OPENMW_SPELLAPI_HPP

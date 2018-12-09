@@ -8,7 +8,7 @@
 
 using namespace mwmp;
 
-void QuestFunctions::ClearJournalChanges(unsigned short pid) noexcept
+extern "C" void QuestFunctions::ClearJournalChanges(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -16,7 +16,7 @@ void QuestFunctions::ClearJournalChanges(unsigned short pid) noexcept
     player->journalChanges.journalItems.clear();
 }
 
-void QuestFunctions::ClearKillChanges(unsigned short pid) noexcept
+extern "C" void QuestFunctions::ClearKillChanges(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -24,7 +24,7 @@ void QuestFunctions::ClearKillChanges(unsigned short pid) noexcept
     player->killChanges.kills.clear();
 }
 
-unsigned int QuestFunctions::GetJournalChangesSize(unsigned short pid) noexcept
+extern "C" unsigned int QuestFunctions::GetJournalChangesSize(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -32,7 +32,7 @@ unsigned int QuestFunctions::GetJournalChangesSize(unsigned short pid) noexcept
     return player->journalChanges.count;
 }
 
-unsigned int QuestFunctions::GetKillChangesSize(unsigned short pid) noexcept
+extern "C" unsigned int QuestFunctions::GetKillChangesSize(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -40,7 +40,7 @@ unsigned int QuestFunctions::GetKillChangesSize(unsigned short pid) noexcept
     return player->killChanges.count;
 }
 
-void QuestFunctions::AddJournalEntry(unsigned short pid, const char* quest, unsigned int index, const char* actorRefId) noexcept
+extern "C" void QuestFunctions::AddJournalEntry(unsigned short pid, const char* quest, unsigned int index, const char* actorRefId) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -55,7 +55,7 @@ void QuestFunctions::AddJournalEntry(unsigned short pid, const char* quest, unsi
     player->journalChanges.journalItems.push_back(journalItem);
 }
 
-void QuestFunctions::AddJournalEntryWithTimestamp(unsigned short pid, const char* quest, unsigned int index, const char* actorRefId,
+extern "C" void QuestFunctions::AddJournalEntryWithTimestamp(unsigned short pid, const char* quest, unsigned int index, const char* actorRefId,
     unsigned int daysPassed, unsigned int month, unsigned int day) noexcept
 {
     Player *player;
@@ -75,7 +75,7 @@ void QuestFunctions::AddJournalEntryWithTimestamp(unsigned short pid, const char
     player->journalChanges.journalItems.push_back(journalItem);
 }
 
-void QuestFunctions::AddJournalIndex(unsigned short pid, const char* quest, unsigned int index) noexcept
+extern "C" void QuestFunctions::AddJournalIndex(unsigned short pid, const char* quest, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -88,7 +88,7 @@ void QuestFunctions::AddJournalIndex(unsigned short pid, const char* quest, unsi
     player->journalChanges.journalItems.push_back(journalItem);
 }
 
-void QuestFunctions::AddKill(unsigned short pid, const char* refId, int number) noexcept
+extern "C" void QuestFunctions::AddKill(unsigned short pid, const char* refId, int number) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -100,7 +100,7 @@ void QuestFunctions::AddKill(unsigned short pid, const char* refId, int number) 
     player->killChanges.kills.push_back(kill);
 }
 
-void QuestFunctions::SetReputation(unsigned short pid, int value) noexcept
+extern "C" void QuestFunctions::SetReputation(unsigned short pid, int value) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -108,7 +108,7 @@ void QuestFunctions::SetReputation(unsigned short pid, int value) noexcept
     player->npcStats.mReputation = value;
 }
 
-const char *QuestFunctions::GetJournalItemQuest(unsigned short pid, unsigned int index) noexcept
+extern "C" const char *QuestFunctions::GetJournalItemQuest(unsigned short pid, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, "");
@@ -119,7 +119,7 @@ const char *QuestFunctions::GetJournalItemQuest(unsigned short pid, unsigned int
     return player->journalChanges.journalItems.at(index).quest.c_str();
 }
 
-int QuestFunctions::GetJournalItemIndex(unsigned short pid, unsigned int index) noexcept
+extern "C" int QuestFunctions::GetJournalItemIndex(unsigned short pid, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -127,7 +127,7 @@ int QuestFunctions::GetJournalItemIndex(unsigned short pid, unsigned int index) 
     return player->journalChanges.journalItems.at(index).index;
 }
 
-int QuestFunctions::GetJournalItemType(unsigned short pid, unsigned int index) noexcept
+extern "C" int QuestFunctions::GetJournalItemType(unsigned short pid, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -135,7 +135,7 @@ int QuestFunctions::GetJournalItemType(unsigned short pid, unsigned int index) n
     return player->journalChanges.journalItems.at(index).type;
 }
 
-const char *QuestFunctions::GetJournalItemActorRefId(unsigned short pid, unsigned int index) noexcept
+extern "C" const char *QuestFunctions::GetJournalItemActorRefId(unsigned short pid, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -143,7 +143,7 @@ const char *QuestFunctions::GetJournalItemActorRefId(unsigned short pid, unsigne
     return player->journalChanges.journalItems.at(index).actorRefId.c_str();
 }
 
-const char *QuestFunctions::GetKillRefId(unsigned short pid, unsigned int index) noexcept
+extern "C" const char *QuestFunctions::GetKillRefId(unsigned short pid, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, "");
@@ -154,7 +154,7 @@ const char *QuestFunctions::GetKillRefId(unsigned short pid, unsigned int index)
     return player->killChanges.kills.at(index).refId.c_str();
 }
 
-int QuestFunctions::GetKillNumber(unsigned short pid, unsigned int index) noexcept
+extern "C" int QuestFunctions::GetKillNumber(unsigned short pid, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -162,7 +162,7 @@ int QuestFunctions::GetKillNumber(unsigned short pid, unsigned int index) noexce
     return player->killChanges.kills.at(index).number;
 }
 
-int QuestFunctions::GetReputation(unsigned short pid) noexcept
+extern "C" int QuestFunctions::GetReputation(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -170,7 +170,7 @@ int QuestFunctions::GetReputation(unsigned short pid) noexcept
     return player->npcStats.mReputation;
 }
 
-void QuestFunctions::SendJournalChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void QuestFunctions::SendJournalChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -184,7 +184,7 @@ void QuestFunctions::SendJournalChanges(unsigned short pid, bool sendToOtherPlay
         packet->Send(true);
 }
 
-void QuestFunctions::SendKillChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void QuestFunctions::SendKillChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -198,7 +198,7 @@ void QuestFunctions::SendKillChanges(unsigned short pid, bool sendToOtherPlayers
         packet->Send(true);
 }
 
-void QuestFunctions::SendReputation(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void QuestFunctions::SendReputation(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -212,14 +212,14 @@ void QuestFunctions::SendReputation(unsigned short pid, bool sendToOtherPlayers,
         packet->Send(true);
 }
 
-// All methods below are deprecated versions of methods from above
+extern "C" // All methods below are deprecated versions of methods from above
 
 void QuestFunctions::InitializeJournalChanges(unsigned short pid) noexcept
 {
     ClearJournalChanges(pid);
 }
 
-void QuestFunctions::InitializeKillChanges(unsigned short pid) noexcept
+extern "C" void QuestFunctions::InitializeKillChanges(unsigned short pid) noexcept
 {
     ClearKillChanges(pid);
 }

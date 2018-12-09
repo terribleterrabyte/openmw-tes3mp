@@ -74,6 +74,7 @@ set(SERVER
     Script/Functions/Positions.cpp Script/Functions/Quests.cpp Script/Functions/RecordsDynamic.cpp
     Script/Functions/Server.cpp Script/Functions/Settings.cpp Script/Functions/Shapeshift.cpp
     Script/Functions/Spells.cpp Script/Functions/Stats.cpp Script/Functions/Timer.cpp
+    Script/Functions/Public.cpp
 
     Script/API/TimerAPI.cpp Script/API/PublicFnAPI.cpp
         ${LuaScript_Sources}
@@ -185,6 +186,7 @@ if (UNIX)
     target_link_libraries(tes3mp-server dl)
     # Fix for not visible pthreads functions for linker with glibc 2.15
     if(NOT APPLE)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -rdynamic") # TODO: use -Wl,--dynamic-list=list.txt instead
         target_link_libraries(tes3mp-server ${CMAKE_THREAD_LIBS_INIT})
     endif(NOT APPLE)
 endif(UNIX)

@@ -11,12 +11,12 @@ using namespace std;
 
 static std::string tempFilename;
 
-bool MiscellaneousFunctions::DoesFileExist(const char *filePath) noexcept
+extern "C" bool MiscellaneousFunctions::DoesFileExist(const char *filePath) noexcept
 {
     return boost::filesystem::exists(filePath);
 }
 
-const char *MiscellaneousFunctions::GetCaseInsensitiveFilename(const char *folderPath, const char *filename) noexcept
+extern "C" const char *MiscellaneousFunctions::GetCaseInsensitiveFilename(const char *folderPath, const char *filename) noexcept
 {
     if (!boost::filesystem::exists(folderPath)) return "invalid";
 
@@ -33,27 +33,27 @@ const char *MiscellaneousFunctions::GetCaseInsensitiveFilename(const char *folde
     return "invalid";
 }
 
-unsigned int MiscellaneousFunctions::GetLastPlayerId() noexcept
+extern "C" unsigned int MiscellaneousFunctions::GetLastPlayerId() noexcept
 {
     return Players::getLastPlayerId();
 }
 
-int MiscellaneousFunctions::GetCurrentMpNum() noexcept
+extern "C" int MiscellaneousFunctions::GetCurrentMpNum() noexcept
 {
     return mwmp::Networking::getPtr()->getCurrentMpNum();
 }
 
-void MiscellaneousFunctions::SetCurrentMpNum(int mpNum) noexcept
+extern "C" void MiscellaneousFunctions::SetCurrentMpNum(int mpNum) noexcept
 {
     mwmp::Networking::getPtr()->setCurrentMpNum(mpNum);
 }
 
-void MiscellaneousFunctions::LogMessage(unsigned short level, const char *message) noexcept
+extern "C" void MiscellaneousFunctions::LogMessage(unsigned short level, const char *message) noexcept
 {
     LOG_MESSAGE_SIMPLE(level, "[Script]: %s", message);
 }
 
-void MiscellaneousFunctions::LogAppend(unsigned short level, const char *message) noexcept
+extern "C" void MiscellaneousFunctions::LogAppend(unsigned short level, const char *message) noexcept
 {
     LOG_APPEND(level, "[Script]: %s", message);
 }

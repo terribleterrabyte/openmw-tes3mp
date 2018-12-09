@@ -41,10 +41,8 @@
     {"InitializeInventoryChanges",            ItemFunctions::InitializeInventoryChanges},\
     {"AddItem",                               ItemFunctions::AddItem}
 
-class ItemFunctions
+namespace ItemFunctions
 {
-public:
-
     /**
     * \brief Clear the last recorded inventory changes for a player.
     *
@@ -53,7 +51,7 @@ public:
     * \param pid The player ID whose inventory changes should be used.
     * \return void
     */
-    static void ClearInventoryChanges(unsigned short pid) noexcept;
+    extern "C" void ClearInventoryChanges(unsigned short pid) noexcept;
 
     /**
     * \brief Get the number of slots used for equipment.
@@ -62,7 +60,7 @@ public:
     *
     * \return The number of slots.
     */
-    static int GetEquipmentSize() noexcept;
+    extern "C" int GetEquipmentSize() noexcept;
 
     /**
     * \brief Get the number of indexes in a player's latest inventory changes.
@@ -70,7 +68,7 @@ public:
     * \param pid The player ID whose inventory changes should be used.
     * \return The number of indexes.
     */
-    static unsigned int GetInventoryChangesSize(unsigned short pid) noexcept;
+    extern "C" unsigned int GetInventoryChangesSize(unsigned short pid) noexcept;
 
     /**
     * \brief Get the action type used in a player's latest inventory changes.
@@ -78,7 +76,7 @@ public:
     * \param pid The player ID whose inventory changes should be used.
     * \return The action type (0 for SET, 1 for ADD, 2 for REMOVE).
     */
-    static unsigned int GetInventoryChangesAction(unsigned short pid) noexcept;
+    extern "C" unsigned int GetInventoryChangesAction(unsigned short pid) noexcept;
 
     /**
     * \brief Set the action type in a player's inventory changes.
@@ -87,7 +85,7 @@ public:
     * \param action The action (0 for SET, 1 for ADD, 2 for REMOVE).
     * \return void
     */
-    static void SetInventoryChangesAction(unsigned short pid, unsigned char action) noexcept;
+    extern "C" void SetInventoryChangesAction(unsigned short pid, unsigned char action) noexcept;
 
     /**
     * \brief Equip an item in a certain slot of the equipment of a player.
@@ -100,7 +98,7 @@ public:
     * \param enchantmentCharge The enchantment charge of the item.
     * \return void
     */
-    static void EquipItem(unsigned short pid, unsigned short slot, const char* refId, unsigned int count, int charge,
+    extern "C" void EquipItem(unsigned short pid, unsigned short slot, const char* refId, unsigned int count, int charge,
         double enchantmentCharge = -1) noexcept;
     
     /**
@@ -110,7 +108,7 @@ public:
     * \param slot The equipment slot.
     * \return void
     */
-    static void UnequipItem(unsigned short pid, unsigned short slot) noexcept;
+    extern "C" void UnequipItem(unsigned short pid, unsigned short slot) noexcept;
 
     /**
     * \brief Add an item change to a player's inventory changes.
@@ -123,7 +121,7 @@ public:
     * \param soul The soul of the item.
     * \return void
     */
-    static void AddItemChange(unsigned short pid, const char* refId, unsigned int count, int charge,
+    extern "C" void AddItemChange(unsigned short pid, const char* refId, unsigned int count, int charge,
         double enchantmentCharge, const char* soul) noexcept;
 
     /**
@@ -133,7 +131,7 @@ public:
     * \param refId The refId of the item.
     * \return Whether the player has the item equipped.
     */
-    static bool HasItemEquipped(unsigned short pid, const char* refId);
+    extern "C" bool HasItemEquipped(unsigned short pid, const char* refId);
 
     /**
     * \brief Get the refId of the item in a certain slot of the equipment of a player.
@@ -142,7 +140,7 @@ public:
     * \param slot The slot of the equipment item.
     * \return The refId.
     */
-    static const char *GetEquipmentItemRefId(unsigned short pid, unsigned short slot) noexcept;
+    extern "C" const char *GetEquipmentItemRefId(unsigned short pid, unsigned short slot) noexcept;
 
     /**
     * \brief Get the count of the item in a certain slot of the equipment of a player.
@@ -151,7 +149,7 @@ public:
     * \param slot The slot of the equipment item.
     * \return The item count.
     */
-    static int GetEquipmentItemCount(unsigned short pid, unsigned short slot) noexcept;
+    extern "C" int GetEquipmentItemCount(unsigned short pid, unsigned short slot) noexcept;
 
     /**
     * \brief Get the charge of the item in a certain slot of the equipment of a player.
@@ -160,7 +158,7 @@ public:
     * \param slot The slot of the equipment item.
     * \return The charge.
     */
-    static int GetEquipmentItemCharge(unsigned short pid, unsigned short slot) noexcept;
+    extern "C" int GetEquipmentItemCharge(unsigned short pid, unsigned short slot) noexcept;
 
     /**
     * \brief Get the enchantment charge of the item in a certain slot of the equipment of
@@ -170,7 +168,7 @@ public:
     * \param slot The slot of the equipment item.
     * \return The enchantment charge.
     */
-    static double GetEquipmentItemEnchantmentCharge(unsigned short pid, unsigned short slot) noexcept;
+    extern "C" double GetEquipmentItemEnchantmentCharge(unsigned short pid, unsigned short slot) noexcept;
 
     /**
     * \brief Get the refId of the item at a certain index in a player's latest inventory
@@ -180,7 +178,7 @@ public:
     * \param index The index of the inventory item.
     * \return The refId.
     */
-    static const char *GetInventoryItemRefId(unsigned short pid, unsigned int index) noexcept;
+    extern "C" const char *GetInventoryItemRefId(unsigned short pid, unsigned int index) noexcept;
 
     /**
     * \brief Get the count of the item at a certain index in a player's latest inventory
@@ -190,7 +188,7 @@ public:
     * \param index The index of the inventory item.
     * \return The item count.
     */
-    static int GetInventoryItemCount(unsigned short pid, unsigned int index) noexcept;
+    extern "C" int GetInventoryItemCount(unsigned short pid, unsigned int index) noexcept;
 
     /**
     * \brief Get the charge of the item at a certain index in a player's latest inventory
@@ -200,7 +198,7 @@ public:
     * \param index The index of the inventory item.
     * \return The charge.
     */
-    static int GetInventoryItemCharge(unsigned short pid, unsigned int index) noexcept;
+    extern "C" int GetInventoryItemCharge(unsigned short pid, unsigned int index) noexcept;
 
     /**
     * \brief Get the enchantment charge of the item at a certain index in a player's
@@ -210,7 +208,7 @@ public:
     * \param index The index of the inventory item.
     * \return The enchantment charge.
     */
-    static double GetInventoryItemEnchantmentCharge(unsigned short pid, unsigned int index) noexcept;
+    extern "C" double GetInventoryItemEnchantmentCharge(unsigned short pid, unsigned int index) noexcept;
 
     /**
     * \brief Get the soul of the item at a certain index in a player's latest inventory
@@ -220,7 +218,7 @@ public:
     * \param index The index of the inventory item.
     * \return The soul.
     */
-    static const char *GetInventoryItemSoul(unsigned short pid, unsigned int index) noexcept;
+    extern "C" const char *GetInventoryItemSoul(unsigned short pid, unsigned int index) noexcept;
 
     /**
     * \brief Get the refId of the item last used by a player.
@@ -228,7 +226,7 @@ public:
     * \param pid The player ID.
     * \return The refId.
     */
-    static const char *GetUsedItemRefId(unsigned short pid) noexcept;
+    extern "C" const char *GetUsedItemRefId(unsigned short pid) noexcept;
 
     /**
     * \brief Get the count of the item last used by a player.
@@ -236,7 +234,7 @@ public:
     * \param pid The player ID.
     * \return The item count.
     */
-    static int GetUsedItemCount(unsigned short pid) noexcept;
+    extern "C" int GetUsedItemCount(unsigned short pid) noexcept;
 
     /**
     * \brief Get the charge of the item last used by a player.
@@ -244,7 +242,7 @@ public:
     * \param pid The player ID.
     * \return The charge.
     */
-    static int GetUsedItemCharge(unsigned short pid) noexcept;
+    extern "C" int GetUsedItemCharge(unsigned short pid) noexcept;
 
     /**
     * \brief Get the enchantment charge of the item last used by a player.
@@ -252,7 +250,7 @@ public:
     * \param pid The player ID.
     * \return The enchantment charge.
     */
-    static double GetUsedItemEnchantmentCharge(unsigned short pid) noexcept;
+    extern "C" double GetUsedItemEnchantmentCharge(unsigned short pid) noexcept;
 
     /**
     * \brief Get the soul of the item last used by a player.
@@ -260,7 +258,7 @@ public:
     * \param pid The player ID.
     * \return The soul.
     */
-    static const char *GetUsedItemSoul(unsigned short pid) noexcept;
+    extern "C" const char *GetUsedItemSoul(unsigned short pid) noexcept;
 
     /**
     * \brief Send a PlayerEquipment packet with a player's equipment.
@@ -270,7 +268,7 @@ public:
     * \param pid The player ID whose equipment should be sent.
     * \return void
     */
-    static void SendEquipment(unsigned short pid) noexcept;
+    extern "C" void SendEquipment(unsigned short pid) noexcept;
 
     /**
     * \brief Send a PlayerInventory packet with a player's recorded inventory changes.
@@ -282,7 +280,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendInventoryChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendInventoryChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send a PlayerItemUse causing a player to use their recorded usedItem.
@@ -290,17 +288,14 @@ public:
     * \param pid The player ID affected.
     * \return void
     */
-    static void SendItemUse(unsigned short pid) noexcept;
+    extern "C" void SendItemUse(unsigned short pid) noexcept;
 
     // All methods below are deprecated versions of methods from above
 
-    static void InitializeInventoryChanges(unsigned short pid) noexcept;
+    extern "C" void InitializeInventoryChanges(unsigned short pid) noexcept;
 
-    static void AddItem(unsigned short pid, const char* refId, unsigned int count, int charge,
+    extern "C" void AddItem(unsigned short pid, const char* refId, unsigned int count, int charge,
         double enchantmentCharge, const char* soul) noexcept;
-
-private:
-
-};
+}
 
 #endif //OPENMW_ITEMAPI_HPP

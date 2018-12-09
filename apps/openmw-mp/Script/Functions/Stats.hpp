@@ -75,10 +75,8 @@
     {"SendLevel",               StatsFunctions::SendLevel},\
     {"SendBounty",              StatsFunctions::SendBounty}
 
-class StatsFunctions
+namespace StatsFunctions
 {
-public:
-
     /**
     * \brief Get the number of attributes.
     *
@@ -86,7 +84,7 @@ public:
     *
     * \return The number of attributes.
     */
-    static int GetAttributeCount() noexcept;
+    extern "C" int GetAttributeCount() noexcept;
 
     /**
     * \brief Get the number of skills.
@@ -95,7 +93,7 @@ public:
     *
     * \return The number of skills.
     */
-    static int GetSkillCount() noexcept;
+    extern "C" int GetSkillCount() noexcept;
 
     /**
     * \brief Get the numerical ID of an attribute with a certain name.
@@ -105,7 +103,7 @@ public:
     * \param name The name of the attribute.
     * \return The ID of the attribute.
     */
-    static int GetAttributeId(const char *name) noexcept;
+    extern "C" int GetAttributeId(const char *name) noexcept;
 
     /**
     * \brief Get the numerical ID of a skill with a certain name.
@@ -115,7 +113,7 @@ public:
     * \param name The name of the skill.
     * \return The ID of the skill.
     */
-    static int GetSkillId(const char *name) noexcept;
+    extern "C" int GetSkillId(const char *name) noexcept;
 
     /**
     * \brief Get the name of the attribute with a certain numerical ID.
@@ -125,7 +123,7 @@ public:
     * \param attributeId The ID of the attribute.
     * \return The name of the attribute.
     */
-    static const char *GetAttributeName(unsigned short attributeId) noexcept;
+    extern "C" const char *GetAttributeName(unsigned short attributeId) noexcept;
 
     /**
     * \brief Get the name of the skill with a certain numerical ID.
@@ -135,7 +133,7 @@ public:
     * \param skillId The ID of the skill.
     * \return The name of the skill.
     */
-    static const char *GetSkillName(unsigned short skillId) noexcept;
+    extern "C" const char *GetSkillName(unsigned short skillId) noexcept;
 
     /**
     * \brief Get the name of a player.
@@ -143,7 +141,7 @@ public:
     * \param pid The player ID.
     * \return The name of the player.
     */
-    static const char *GetName(unsigned short pid) noexcept;
+    extern "C" const char *GetName(unsigned short pid) noexcept;
 
     /**
     * \brief Get the race of a player.
@@ -151,7 +149,7 @@ public:
     * \param pid The player ID.
     * \return The race of the player.
     */
-    static const char *GetRace(unsigned short pid) noexcept;
+    extern "C" const char *GetRace(unsigned short pid) noexcept;
 
     /**
     * \brief Get the head mesh used by a player.
@@ -159,7 +157,7 @@ public:
     * \param pid The player ID.
     * \return The head mesh of the player.
     */
-    static const char *GetHead(unsigned short pid) noexcept;
+    extern "C" const char *GetHead(unsigned short pid) noexcept;
 
     /**
     * \brief Get the hairstyle mesh used by a player.
@@ -167,7 +165,7 @@ public:
     * \param pid The player ID.
     * \return The hairstyle mesh of the player.
     */
-    static const char *GetHairstyle(unsigned short pid) noexcept;
+    extern "C" const char *GetHairstyle(unsigned short pid) noexcept;
 
     /**
     * \brief Check whether a player is male or not.
@@ -175,7 +173,7 @@ public:
     * \param pid The player ID.
     * \return Whether the player is male.
     */
-    static int GetIsMale(unsigned short pid) noexcept;
+    extern "C" int GetIsMale(unsigned short pid) noexcept;
 
     /**
     * \brief Get the birthsign of a player.
@@ -183,7 +181,7 @@ public:
     * \param pid The player ID.
     * \return The birthsign of the player.
     */
-    static const char *GetBirthsign(unsigned short pid) noexcept;
+    extern "C" const char *GetBirthsign(unsigned short pid) noexcept;
 
     /**
     * \brief Get the character level of a player.
@@ -191,7 +189,7 @@ public:
     * \param pid The player ID.
     * \return The level of the player.
     */
-    static int GetLevel(unsigned short pid) noexcept;
+    extern "C" int GetLevel(unsigned short pid) noexcept;
 
     /**
     * \brief Get the player's progress to their next character level.
@@ -199,7 +197,7 @@ public:
     * \param pid The player ID.
     * \return The level progress.
     */
-    static int GetLevelProgress(unsigned short pid) noexcept;
+    extern "C" int GetLevelProgress(unsigned short pid) noexcept;
 
     /**
     * \brief Get the base health of the player.
@@ -207,7 +205,7 @@ public:
     * \param pid The player ID.
     * \return The base health.
     */
-    static double GetHealthBase(unsigned short pid) noexcept;
+    extern "C" double GetHealthBase(unsigned short pid) noexcept;
 
     /**
     * \brief Get the current health of the player.
@@ -215,7 +213,7 @@ public:
     * \param pid The player ID.
     * \return The current health.
     */
-    static double GetHealthCurrent(unsigned short pid) noexcept;
+    extern "C" double GetHealthCurrent(unsigned short pid) noexcept;
 
     /**
     * \brief Get the base magicka of the player.
@@ -223,7 +221,7 @@ public:
     * \param pid The player ID.
     * \return The base magicka.
     */
-    static double GetMagickaBase(unsigned short pid) noexcept;
+    extern "C" double GetMagickaBase(unsigned short pid) noexcept;
 
     /**
     * \brief Get the current magicka of the player.
@@ -231,7 +229,7 @@ public:
     * \param pid The player ID.
     * \return The current magicka.
     */
-    static double GetMagickaCurrent(unsigned short pid) noexcept;
+    extern "C" double GetMagickaCurrent(unsigned short pid) noexcept;
 
     /**
     * \brief Get the base fatigue of the player.
@@ -239,7 +237,7 @@ public:
     * \param pid The player ID.
     * \return The base fatigue.
     */
-    static double GetFatigueBase(unsigned short pid) noexcept;
+    extern "C" double GetFatigueBase(unsigned short pid) noexcept;
 
     /**
     * \brief Get the current fatigue of the player.
@@ -247,7 +245,7 @@ public:
     * \param pid The player ID.
     * \return The current fatigue.
     */
-    static double GetFatigueCurrent(unsigned short pid) noexcept;
+    extern "C" double GetFatigueCurrent(unsigned short pid) noexcept;
 
     /**
     * \brief Get the base value of a player's attribute.
@@ -256,7 +254,7 @@ public:
     * \param attributeId The attribute ID.
     * \return The base value of the attribute.
     */
-    static int GetAttributeBase(unsigned short pid, unsigned short attributeId) noexcept;
+    extern "C" int GetAttributeBase(unsigned short pid, unsigned short attributeId) noexcept;
 
     /**
     * \brief Get the modifier value of a player's attribute.
@@ -265,7 +263,7 @@ public:
     * \param attributeId The attribute ID.
     * \return The modifier value of the attribute.
     */
-    static int GetAttributeModifier(unsigned short pid, unsigned short attributeId) noexcept;
+    extern "C" int GetAttributeModifier(unsigned short pid, unsigned short attributeId) noexcept;
 
     /**
     * \brief Get the base value of a player's skill.
@@ -274,7 +272,7 @@ public:
     * \param skillId The skill ID.
     * \return The base value of the skill.
     */
-    static int GetSkillBase(unsigned short pid, unsigned short skillId) noexcept;
+    extern "C" int GetSkillBase(unsigned short pid, unsigned short skillId) noexcept;
 
     /**
     * \brief Get the modifier value of a player's skill.
@@ -283,7 +281,7 @@ public:
     * \param skillId The skill ID.
     * \return The modifier value of the skill.
     */
-    static int GetSkillModifier(unsigned short pid, unsigned short skillId) noexcept;
+    extern "C" int GetSkillModifier(unsigned short pid, unsigned short skillId) noexcept;
 
     /**
     * \brief Get the progress the player has made towards increasing a certain skill by 1.
@@ -292,7 +290,7 @@ public:
     * \param skillId The skill ID.
     * \return The skill progress.
     */
-    static double GetSkillProgress(unsigned short pid, unsigned short skillId) noexcept;
+    extern "C" double GetSkillProgress(unsigned short pid, unsigned short skillId) noexcept;
 
     /**
     * \brief Get the bonus applied to a certain attribute at the next level up as a result
@@ -304,7 +302,7 @@ public:
     * \param skillId The attribute ID.
     * \return The increase in the attribute caused by skills.
     */
-    static int GetSkillIncrease(unsigned short pid, unsigned int attributeId) noexcept;
+    extern "C" int GetSkillIncrease(unsigned short pid, unsigned int attributeId) noexcept;
 
     /**
     * \brief Get the bounty of the player.
@@ -312,7 +310,7 @@ public:
     * \param pid The player ID.
     * \return The bounty.
     */
-    static int GetBounty(unsigned short pid) noexcept;
+    extern "C" int GetBounty(unsigned short pid) noexcept;
 
     /**
     * \brief Set the name of a player.
@@ -321,7 +319,7 @@ public:
     * \param name The new name of the player.
     * \return void
     */
-    static void SetName(unsigned short pid, const char *name) noexcept;
+    extern "C" void SetName(unsigned short pid, const char *name) noexcept;
 
     /**
     * \brief Set the race of a player.
@@ -330,7 +328,7 @@ public:
     * \param race The new race of the player.
     * \return void
     */
-    static void SetRace(unsigned short pid, const char *race) noexcept;
+    extern "C" void SetRace(unsigned short pid, const char *race) noexcept;
 
     /**
     * \brief Set the head mesh used by a player.
@@ -339,7 +337,7 @@ public:
     * \param head The new head mesh of the player.
     * \return void
     */
-    static void SetHead(unsigned short pid, const char *head) noexcept;
+    extern "C" void SetHead(unsigned short pid, const char *head) noexcept;
 
     /**
     * \brief Set the hairstyle mesh used by a player.
@@ -348,7 +346,7 @@ public:
     * \param hairstyle The new hairstyle mesh of the player.
     * \return void
     */
-    static void SetHairstyle(unsigned short pid, const char *hairstyle) noexcept;
+    extern "C" void SetHairstyle(unsigned short pid, const char *hairstyle) noexcept;
 
     /**
     * \brief Set whether a player is male or not.
@@ -357,7 +355,7 @@ public:
     * \param state Whether the player is male.
     * \return void
     */
-    static void SetIsMale(unsigned short pid, int state) noexcept;
+    extern "C" void SetIsMale(unsigned short pid, int state) noexcept;
 
     /**
     * \brief Set the birthsign of a player.
@@ -366,7 +364,7 @@ public:
     * \param name The new birthsign of the player.
     * \return void
     */
-    static void SetBirthsign(unsigned short pid, const char *name) noexcept;
+    extern "C" void SetBirthsign(unsigned short pid, const char *name) noexcept;
 
     /**
     * \brief Set whether the player's stats should be reset based on their
@@ -379,7 +377,7 @@ public:
     * \param resetStats The stat reset state.
     * \return void
     */
-    static void SetResetStats(unsigned short pid, bool resetStats) noexcept;
+    extern "C" void SetResetStats(unsigned short pid, bool resetStats) noexcept;
     
     /**
     * \brief Set the character level of a player.
@@ -388,7 +386,7 @@ public:
     * \param value The new level of the player.
     * \return void
     */
-    static void SetLevel(unsigned short pid, int value) noexcept;
+    extern "C" void SetLevel(unsigned short pid, int value) noexcept;
 
     /**
     * \brief Set the player's progress to their next character level.
@@ -397,7 +395,7 @@ public:
     * \param value The new level progress of the player.
     * \return void
     */
-    static void SetLevelProgress(unsigned short pid, int value) noexcept;
+    extern "C" void SetLevelProgress(unsigned short pid, int value) noexcept;
 
     /**
     * \brief Set the base health of a player.
@@ -406,7 +404,7 @@ public:
     * \param name The new base health of the player.
     * \return void
     */
-    static void SetHealthBase(unsigned short pid, double value) noexcept;
+    extern "C" void SetHealthBase(unsigned short pid, double value) noexcept;
 
     /**
     * \brief Set the current health of a player.
@@ -415,7 +413,7 @@ public:
     * \param name The new current health of the player.
     * \return void
     */
-    static void SetHealthCurrent(unsigned short pid, double value) noexcept;
+    extern "C" void SetHealthCurrent(unsigned short pid, double value) noexcept;
 
     /**
     * \brief Set the base magicka of a player.
@@ -424,7 +422,7 @@ public:
     * \param name The new base magicka of the player.
     * \return void
     */
-    static void SetMagickaBase(unsigned short pid, double value) noexcept;
+    extern "C" void SetMagickaBase(unsigned short pid, double value) noexcept;
 
     /**
     * \brief Set the current magicka of a player.
@@ -433,7 +431,7 @@ public:
     * \param name The new current magicka of the player.
     * \return void
     */
-    static void SetMagickaCurrent(unsigned short pid, double value) noexcept;
+    extern "C" void SetMagickaCurrent(unsigned short pid, double value) noexcept;
 
     /**
     * \brief Set the base fatigue of a player.
@@ -442,7 +440,7 @@ public:
     * \param name The new base fatigue of the player.
     * \return void
     */
-    static void SetFatigueBase(unsigned short pid, double value) noexcept;
+    extern "C" void SetFatigueBase(unsigned short pid, double value) noexcept;
 
     /**
     * \brief Set the current fatigue of a player.
@@ -451,7 +449,7 @@ public:
     * \param name The new current fatigue of the player.
     * \return void
     */
-    static void SetFatigueCurrent(unsigned short pid, double value) noexcept;
+    extern "C" void SetFatigueCurrent(unsigned short pid, double value) noexcept;
 
     /**
     * \brief Set the base value of a player's attribute.
@@ -461,7 +459,7 @@ public:
     * \param value The new base value of the player's attribute.
     * \return void
     */
-    static void SetAttributeBase(unsigned short pid, unsigned short attributeId, int value) noexcept;
+    extern "C" void SetAttributeBase(unsigned short pid, unsigned short attributeId, int value) noexcept;
 
     /**
     * \brief Clear the modifier value of a player's attribute.
@@ -475,7 +473,7 @@ public:
     * \param attributeId The attribute ID.
     * \return void
     */
-    static void ClearAttributeModifier(unsigned short pid, unsigned short attributeId) noexcept;
+    extern "C" void ClearAttributeModifier(unsigned short pid, unsigned short attributeId) noexcept;
 
     /**
     * \brief Set the base value of a player's skill.
@@ -485,7 +483,7 @@ public:
     * \param value The new base value of the player's skill.
     * \return void
     */
-    static void SetSkillBase(unsigned short pid, unsigned short skillId, int value) noexcept;    
+    extern "C" void SetSkillBase(unsigned short pid, unsigned short skillId, int value) noexcept;    
 
     /**
     * \brief Clear the modifier value of a player's skill.
@@ -499,7 +497,7 @@ public:
     * \param skillId The skill ID.
     * \return void
     */
-    static void ClearSkillModifier(unsigned short pid, unsigned short skillId) noexcept;
+    extern "C" void ClearSkillModifier(unsigned short pid, unsigned short skillId) noexcept;
 
     /**
     * \brief Set the progress the player has made towards increasing a certain skill by 1.
@@ -509,7 +507,7 @@ public:
     * \param value The progress value.
     * \return void
     */
-    static void SetSkillProgress(unsigned short pid, unsigned short skillId, double value) noexcept;
+    extern "C" void SetSkillProgress(unsigned short pid, unsigned short skillId, double value) noexcept;
 
     /**
     * \brief Set the bonus applied to a certain attribute at the next level up as a result
@@ -522,7 +520,7 @@ public:
     * \param value The increase in the attribute caused by skills.
     * \return void
     */
-    static void SetSkillIncrease(unsigned short pid, unsigned int attributeId, int value) noexcept;
+    extern "C" void SetSkillIncrease(unsigned short pid, unsigned int attributeId, int value) noexcept;
 
     /**
     * \brief Set the bounty of a player.
@@ -531,7 +529,7 @@ public:
     * \param value The new bounty.
     * \return void
     */
-    static void SetBounty(unsigned short pid, int value) noexcept;
+    extern "C" void SetBounty(unsigned short pid, int value) noexcept;
 
     /**
     * \brief Set the current and ending stages of character generation for a player.
@@ -543,7 +541,7 @@ public:
     * \param endStage The new ending stage.
     * \return void
     */
-    static void SetCharGenStage(unsigned short pid, int currentStage, int endStage) noexcept;
+    extern "C" void SetCharGenStage(unsigned short pid, int currentStage, int endStage) noexcept;
 
     /**
     * \brief Send a PlayerBaseInfo packet with a player's name, race, head mesh,
@@ -554,7 +552,7 @@ public:
     * \param pid The player ID.
     * \return void
     */
-    static void SendBaseInfo(unsigned short pid) noexcept;
+    extern "C" void SendBaseInfo(unsigned short pid) noexcept;
 
     /**
     * \brief Send a PlayerStatsDynamic packet with a player's dynamic stats (health,
@@ -565,7 +563,7 @@ public:
     * \param pid The player ID.
     * \return void
     */
-    static void SendStatsDynamic(unsigned short pid) noexcept;
+    extern "C" void SendStatsDynamic(unsigned short pid) noexcept;
 
     /**
     * \brief Send a PlayerAttribute packet with a player's attributes and bonuses
@@ -577,7 +575,7 @@ public:
     * \param pid The player ID.
     * \return void
     */
-    static void SendAttributes(unsigned short pid) noexcept;
+    extern "C" void SendAttributes(unsigned short pid) noexcept;
 
     /**
     * \brief Send a PlayerSkill packet with a player's skills.
@@ -587,7 +585,7 @@ public:
     * \param pid The player ID.
     * \return void
     */
-    static void SendSkills(unsigned short pid) noexcept;
+    extern "C" void SendSkills(unsigned short pid) noexcept;
 
     /**
     * \brief Send a PlayerLevel packet with a player's character level and
@@ -598,7 +596,7 @@ public:
     * \param pid The player ID.
     * \return void
     */
-    static void SendLevel(unsigned short pid) noexcept;
+    extern "C" void SendLevel(unsigned short pid) noexcept;
 
     /**
     * \brief Send a PlayerBounty packet with a player's bounty.
@@ -608,7 +606,7 @@ public:
     * \param pid The player ID.
     * \return void
     */
-    static void SendBounty(unsigned short pid) noexcept;
-};
+    extern "C" void SendBounty(unsigned short pid) noexcept;
+}
 
 #endif //OPENMW_STATAPI_HPP

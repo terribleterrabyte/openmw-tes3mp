@@ -19,19 +19,19 @@ const BaseObject emptyObject = {};
 ContainerItem tempContainerItem;
 const ContainerItem emptyContainerItem = {};
 
-void ObjectFunctions::ReadReceivedObjectList() noexcept
+extern "C" void ObjectFunctions::ReadReceivedObjectList() noexcept
 {
     readObjectList = mwmp::Networking::getPtr()->getReceivedObjectList();
 }
 
-void ObjectFunctions::ClearObjectList() noexcept
+extern "C" void ObjectFunctions::ClearObjectList() noexcept
 {
     writeObjectList.cell.blank();
     writeObjectList.baseObjects.clear();
     writeObjectList.packetOrigin = mwmp::PACKET_ORIGIN::SERVER_SCRIPT;
 }
 
-void ObjectFunctions::SetObjectListPid(unsigned short pid) noexcept
+extern "C" void ObjectFunctions::SetObjectListPid(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -39,42 +39,42 @@ void ObjectFunctions::SetObjectListPid(unsigned short pid) noexcept
     writeObjectList.guid = player->guid;
 }
 
-void ObjectFunctions::CopyReceivedObjectListToStore() noexcept
+extern "C" void ObjectFunctions::CopyReceivedObjectListToStore() noexcept
 {
     writeObjectList = *readObjectList;
 }
 
-unsigned int ObjectFunctions::GetObjectListSize() noexcept
+extern "C" unsigned int ObjectFunctions::GetObjectListSize() noexcept
 {
     return readObjectList->baseObjectCount;
 }
 
-unsigned char ObjectFunctions::GetObjectListOrigin() noexcept
+extern "C" unsigned char ObjectFunctions::GetObjectListOrigin() noexcept
 {
     return readObjectList->packetOrigin;
 }
 
-const char *ObjectFunctions::GetObjectListClientScript() noexcept
+extern "C" const char *ObjectFunctions::GetObjectListClientScript() noexcept
 {
     return readObjectList->originClientScript.c_str();
 }
 
-unsigned char ObjectFunctions::GetObjectListAction() noexcept
+extern "C" unsigned char ObjectFunctions::GetObjectListAction() noexcept
 {
     return readObjectList->action;
 }
 
-unsigned char ObjectFunctions::GetObjectListContainerSubAction() noexcept
+extern "C" unsigned char ObjectFunctions::GetObjectListContainerSubAction() noexcept
 {
     return readObjectList->containerSubAction;
 }
 
-bool ObjectFunctions::IsObjectPlayer(unsigned int index) noexcept
+extern "C" bool ObjectFunctions::IsObjectPlayer(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).isPlayer;
 }
 
-int ObjectFunctions::GetObjectPid(unsigned int index) noexcept
+extern "C" int ObjectFunctions::GetObjectPid(unsigned int index) noexcept
 {
     Player *player = Players::getPlayer(readObjectList->baseObjects.at(index).guid);
 
@@ -84,72 +84,72 @@ int ObjectFunctions::GetObjectPid(unsigned int index) noexcept
     return -1;
 }
 
-const char *ObjectFunctions::GetObjectRefId(unsigned int index) noexcept
+extern "C" const char *ObjectFunctions::GetObjectRefId(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).refId.c_str();
 }
 
-unsigned int ObjectFunctions::GetObjectRefNum(unsigned int index) noexcept
+extern "C" unsigned int ObjectFunctions::GetObjectRefNum(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).refNum;
 }
 
-unsigned int ObjectFunctions::GetObjectMpNum(unsigned int index) noexcept
+extern "C" unsigned int ObjectFunctions::GetObjectMpNum(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).mpNum;
 }
 
-int ObjectFunctions::GetObjectCount(unsigned int index) noexcept
+extern "C" int ObjectFunctions::GetObjectCount(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).count;
 }
 
-int ObjectFunctions::GetObjectCharge(unsigned int index) noexcept
+extern "C" int ObjectFunctions::GetObjectCharge(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).charge;
 }
 
-double ObjectFunctions::GetObjectEnchantmentCharge(unsigned int index) noexcept
+extern "C" double ObjectFunctions::GetObjectEnchantmentCharge(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).enchantmentCharge;
 }
 
-const char *ObjectFunctions::GetObjectSoul(unsigned int index) noexcept
+extern "C" const char *ObjectFunctions::GetObjectSoul(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).soul.c_str();
 }
 
-int ObjectFunctions::GetObjectGoldValue(unsigned int index) noexcept
+extern "C" int ObjectFunctions::GetObjectGoldValue(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).goldValue;
 }
 
-double ObjectFunctions::GetObjectScale(unsigned int index) noexcept
+extern "C" double ObjectFunctions::GetObjectScale(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).scale;
 }
 
-bool ObjectFunctions::GetObjectState(unsigned int index) noexcept
+extern "C" bool ObjectFunctions::GetObjectState(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).objectState;
 }
 
-int ObjectFunctions::GetObjectDoorState(unsigned int index) noexcept
+extern "C" int ObjectFunctions::GetObjectDoorState(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).doorState;
 }
 
-int ObjectFunctions::GetObjectLockLevel(unsigned int index) noexcept
+extern "C" int ObjectFunctions::GetObjectLockLevel(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).lockLevel;
 }
 
-bool ObjectFunctions::DoesObjectHavePlayerActivating(unsigned int index) noexcept
+extern "C" bool ObjectFunctions::DoesObjectHavePlayerActivating(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).activatingActor.isPlayer;
 }
 
-int ObjectFunctions::GetObjectActivatingPid(unsigned int index) noexcept
+extern "C" int ObjectFunctions::GetObjectActivatingPid(unsigned int index) noexcept
 {
     Player *player = Players::getPlayer(readObjectList->baseObjects.at(index).activatingActor.guid);
 
@@ -159,42 +159,42 @@ int ObjectFunctions::GetObjectActivatingPid(unsigned int index) noexcept
     return -1;
 }
 
-const char *ObjectFunctions::GetObjectActivatingRefId(unsigned int index) noexcept
+extern "C" const char *ObjectFunctions::GetObjectActivatingRefId(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).activatingActor.refId.c_str();
 }
 
-unsigned int ObjectFunctions::GetObjectActivatingRefNum(unsigned int index) noexcept
+extern "C" unsigned int ObjectFunctions::GetObjectActivatingRefNum(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).activatingActor.refNum;
 }
 
-unsigned int ObjectFunctions::GetObjectActivatingMpNum(unsigned int index) noexcept
+extern "C" unsigned int ObjectFunctions::GetObjectActivatingMpNum(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).activatingActor.mpNum;
 }
 
-const char *ObjectFunctions::GetObjectActivatingName(unsigned int index) noexcept
+extern "C" const char *ObjectFunctions::GetObjectActivatingName(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).activatingActor.name.c_str();
 }
 
-bool ObjectFunctions::GetObjectSummonState(unsigned int index) noexcept
+extern "C" bool ObjectFunctions::GetObjectSummonState(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).isSummon;
 }
 
-double ObjectFunctions::GetObjectSummonDuration(unsigned int index) noexcept
+extern "C" double ObjectFunctions::GetObjectSummonDuration(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).summonDuration;
 }
 
-bool ObjectFunctions::DoesObjectHavePlayerSummoner(unsigned int index) noexcept
+extern "C" bool ObjectFunctions::DoesObjectHavePlayerSummoner(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).master.isPlayer;
 }
 
-int ObjectFunctions::GetObjectSummonerPid(unsigned int index) noexcept
+extern "C" int ObjectFunctions::GetObjectSummonerPid(unsigned int index) noexcept
 {
     Player *player = Players::getPlayer(readObjectList->baseObjects.at(index).master.guid);
     
@@ -204,202 +204,202 @@ int ObjectFunctions::GetObjectSummonerPid(unsigned int index) noexcept
     return -1;
 }
 
-const char *ObjectFunctions::GetObjectSummonerRefId(unsigned int index) noexcept
+extern "C" const char *ObjectFunctions::GetObjectSummonerRefId(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).master.refId.c_str();
 }
 
-unsigned int ObjectFunctions::GetObjectSummonerRefNum(unsigned int index) noexcept
+extern "C" unsigned int ObjectFunctions::GetObjectSummonerRefNum(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).master.refNum;
 }
 
-unsigned int ObjectFunctions::GetObjectSummonerMpNum(unsigned int index) noexcept
+extern "C" unsigned int ObjectFunctions::GetObjectSummonerMpNum(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).master.mpNum;
 }
 
-double ObjectFunctions::GetObjectPosX(unsigned int index) noexcept
+extern "C" double ObjectFunctions::GetObjectPosX(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).position.pos[0];
 }
 
-double ObjectFunctions::GetObjectPosY(unsigned int index) noexcept
+extern "C" double ObjectFunctions::GetObjectPosY(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).position.pos[1];
 }
 
-double ObjectFunctions::GetObjectPosZ(unsigned int index) noexcept
+extern "C" double ObjectFunctions::GetObjectPosZ(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).position.pos[2];
 }
 
-double ObjectFunctions::GetObjectRotX(unsigned int index) noexcept
+extern "C" double ObjectFunctions::GetObjectRotX(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).position.rot[0];
 }
 
-double ObjectFunctions::GetObjectRotY(unsigned int index) noexcept
+extern "C" double ObjectFunctions::GetObjectRotY(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).position.rot[1];
 }
 
-double ObjectFunctions::GetObjectRotZ(unsigned int index) noexcept
+extern "C" double ObjectFunctions::GetObjectRotZ(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).position.rot[2];
 }
 
-const char *ObjectFunctions::GetVideoFilename(unsigned int index) noexcept
+extern "C" const char *ObjectFunctions::GetVideoFilename(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).videoFilename.c_str();
 }
 
-unsigned int ObjectFunctions::GetContainerChangesSize(unsigned int objectIndex) noexcept
+extern "C" unsigned int ObjectFunctions::GetContainerChangesSize(unsigned int objectIndex) noexcept
 {
     return readObjectList->baseObjects.at(objectIndex).containerItemCount;
 }
 
-const char *ObjectFunctions::GetContainerItemRefId(unsigned int objectIndex, unsigned int itemIndex) noexcept
+extern "C" const char *ObjectFunctions::GetContainerItemRefId(unsigned int objectIndex, unsigned int itemIndex) noexcept
 {
     return readObjectList->baseObjects.at(objectIndex)
         .containerItems.at(itemIndex).refId.c_str();
 }
 
-int ObjectFunctions::GetContainerItemCount(unsigned int objectIndex, unsigned int itemIndex) noexcept
+extern "C" int ObjectFunctions::GetContainerItemCount(unsigned int objectIndex, unsigned int itemIndex) noexcept
 {
     return readObjectList->baseObjects.at(objectIndex)
         .containerItems.at(itemIndex).count;
 }
 
-int ObjectFunctions::GetContainerItemCharge(unsigned int objectIndex, unsigned int itemIndex) noexcept
+extern "C" int ObjectFunctions::GetContainerItemCharge(unsigned int objectIndex, unsigned int itemIndex) noexcept
 {
     return readObjectList->baseObjects.at(objectIndex)
         .containerItems.at(itemIndex).charge;
 }
 
-double ObjectFunctions::GetContainerItemEnchantmentCharge(unsigned int objectIndex, unsigned int itemIndex) noexcept
+extern "C" double ObjectFunctions::GetContainerItemEnchantmentCharge(unsigned int objectIndex, unsigned int itemIndex) noexcept
 {
     return readObjectList->baseObjects.at(objectIndex)
         .containerItems.at(itemIndex).enchantmentCharge;
 }
 
-const char *ObjectFunctions::GetContainerItemSoul(unsigned int objectIndex, unsigned int itemIndex) noexcept
+extern "C" const char *ObjectFunctions::GetContainerItemSoul(unsigned int objectIndex, unsigned int itemIndex) noexcept
 {
     return readObjectList->baseObjects.at(objectIndex)
         .containerItems.at(itemIndex).soul.c_str();
 }
 
-int ObjectFunctions::GetContainerItemActionCount(unsigned int objectIndex, unsigned int itemIndex) noexcept
+extern "C" int ObjectFunctions::GetContainerItemActionCount(unsigned int objectIndex, unsigned int itemIndex) noexcept
 {
     return readObjectList->baseObjects.at(objectIndex)
         .containerItems.at(itemIndex).actionCount;
 }
 
-bool ObjectFunctions::DoesObjectHaveContainer(unsigned int index) noexcept
+extern "C" bool ObjectFunctions::DoesObjectHaveContainer(unsigned int index) noexcept
 {
     return readObjectList->baseObjects.at(index).hasContainer;
 }
 
-void ObjectFunctions::SetObjectListCell(const char* cellDescription) noexcept
+extern "C" void ObjectFunctions::SetObjectListCell(const char* cellDescription) noexcept
 {
     writeObjectList.cell = Utils::getCellFromDescription(cellDescription);
 }
 
-void ObjectFunctions::SetObjectListAction(unsigned char action) noexcept
+extern "C" void ObjectFunctions::SetObjectListAction(unsigned char action) noexcept
 {
     writeObjectList.action = action;
 }
 
-void ObjectFunctions::SetObjectListConsoleCommand(const char* consoleCommand) noexcept
+extern "C" void ObjectFunctions::SetObjectListConsoleCommand(const char* consoleCommand) noexcept
 {
     writeObjectList.consoleCommand = consoleCommand;
 }
 
-void ObjectFunctions::SetObjectRefId(const char* refId) noexcept
+extern "C" void ObjectFunctions::SetObjectRefId(const char* refId) noexcept
 {
     tempObject.refId = refId;
 }
 
-void ObjectFunctions::SetObjectRefNum(int refNum) noexcept
+extern "C" void ObjectFunctions::SetObjectRefNum(int refNum) noexcept
 {
     tempObject.refNum = refNum;
 }
 
-void ObjectFunctions::SetObjectMpNum(int mpNum) noexcept
+extern "C" void ObjectFunctions::SetObjectMpNum(int mpNum) noexcept
 {
     tempObject.mpNum = mpNum;
 }
 
-void ObjectFunctions::SetObjectCount(int count) noexcept
+extern "C" void ObjectFunctions::SetObjectCount(int count) noexcept
 {
     tempObject.count = count;
 }
 
-void ObjectFunctions::SetObjectCharge(int charge) noexcept
+extern "C" void ObjectFunctions::SetObjectCharge(int charge) noexcept
 {
     tempObject.charge = charge;
 }
 
-void ObjectFunctions::SetObjectEnchantmentCharge(double enchantmentCharge) noexcept
+extern "C" void ObjectFunctions::SetObjectEnchantmentCharge(double enchantmentCharge) noexcept
 {
     tempObject.enchantmentCharge = enchantmentCharge;
 }
 
-void ObjectFunctions::SetObjectSoul(const char* soul) noexcept
+extern "C" void ObjectFunctions::SetObjectSoul(const char* soul) noexcept
 {
     tempObject.soul = soul;
 }
 
-void ObjectFunctions::SetObjectGoldValue(int goldValue) noexcept
+extern "C" void ObjectFunctions::SetObjectGoldValue(int goldValue) noexcept
 {
     tempObject.goldValue = goldValue;
 }
 
-void ObjectFunctions::SetObjectScale(double scale) noexcept
+extern "C" void ObjectFunctions::SetObjectScale(double scale) noexcept
 {
     tempObject.scale = scale;
 }
 
-void ObjectFunctions::SetObjectState(bool objectState) noexcept
+extern "C" void ObjectFunctions::SetObjectState(bool objectState) noexcept
 {
     tempObject.objectState = objectState;
 }
 
-void ObjectFunctions::SetObjectLockLevel(int lockLevel) noexcept
+extern "C" void ObjectFunctions::SetObjectLockLevel(int lockLevel) noexcept
 {
     tempObject.lockLevel = lockLevel;
 }
 
-void ObjectFunctions::SetObjectSummonDuration(float summonDuration) noexcept
+extern "C" void ObjectFunctions::SetObjectSummonDuration(float summonDuration) noexcept
 {
     tempObject.summonDuration = summonDuration;
 }
 
-void ObjectFunctions::SetObjectDisarmState(bool disarmState) noexcept
+extern "C" void ObjectFunctions::SetObjectDisarmState(bool disarmState) noexcept
 {
     tempObject.isDisarmed = disarmState;
 }
 
-void ObjectFunctions::SetObjectSummonState(bool summonState) noexcept
+extern "C" void ObjectFunctions::SetObjectSummonState(bool summonState) noexcept
 {
     tempObject.isSummon = summonState;
 }
 
-void ObjectFunctions::SetObjectPosition(double x, double y, double z) noexcept
+extern "C" void ObjectFunctions::SetObjectPosition(double x, double y, double z) noexcept
 {
     tempObject.position.pos[0] = x;
     tempObject.position.pos[1] = y;
     tempObject.position.pos[2] = z;
 }
 
-void ObjectFunctions::SetObjectRotation(double x, double y, double z) noexcept
+extern "C" void ObjectFunctions::SetObjectRotation(double x, double y, double z) noexcept
 {
     tempObject.position.rot[0] = x;
     tempObject.position.rot[1] = y;
     tempObject.position.rot[2] = z;
 }
 
-void ObjectFunctions::SetObjectActivatingPid(unsigned short pid) noexcept
+extern "C" void ObjectFunctions::SetObjectActivatingPid(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -408,35 +408,35 @@ void ObjectFunctions::SetObjectActivatingPid(unsigned short pid) noexcept
     tempObject.activatingActor.isPlayer = true;
 }
 
-void ObjectFunctions::SetObjectDoorState(int doorState) noexcept
+extern "C" void ObjectFunctions::SetObjectDoorState(int doorState) noexcept
 {
     tempObject.doorState = doorState;
 }
 
-void ObjectFunctions::SetObjectDoorTeleportState(bool teleportState) noexcept
+extern "C" void ObjectFunctions::SetObjectDoorTeleportState(bool teleportState) noexcept
 {
     tempObject.teleportState = teleportState;
 }
 
-void ObjectFunctions::SetObjectDoorDestinationCell(const char* cellDescription) noexcept
+extern "C" void ObjectFunctions::SetObjectDoorDestinationCell(const char* cellDescription) noexcept
 {
     tempObject.destinationCell = Utils::getCellFromDescription(cellDescription);
 }
 
-void ObjectFunctions::SetObjectDoorDestinationPosition(double x, double y, double z) noexcept
+extern "C" void ObjectFunctions::SetObjectDoorDestinationPosition(double x, double y, double z) noexcept
 {
     tempObject.destinationPosition.pos[0] = x;
     tempObject.destinationPosition.pos[1] = y;
     tempObject.destinationPosition.pos[2] = z;
 }
 
-void ObjectFunctions::SetObjectDoorDestinationRotation(double x, double z) noexcept
+extern "C" void ObjectFunctions::SetObjectDoorDestinationRotation(double x, double z) noexcept
 {
     tempObject.destinationPosition.rot[0] = x;
     tempObject.destinationPosition.rot[2] = z;
 }
 
-void ObjectFunctions::SetPlayerAsObject(unsigned short pid) noexcept
+extern "C" void ObjectFunctions::SetPlayerAsObject(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -445,37 +445,37 @@ void ObjectFunctions::SetPlayerAsObject(unsigned short pid) noexcept
     tempObject.isPlayer = true;
 }
 
-void ObjectFunctions::SetContainerItemRefId(const char* refId) noexcept
+extern "C" void ObjectFunctions::SetContainerItemRefId(const char* refId) noexcept
 {
     tempContainerItem.refId = refId;
 }
 
-void ObjectFunctions::SetContainerItemCount(int count) noexcept
+extern "C" void ObjectFunctions::SetContainerItemCount(int count) noexcept
 {
     tempContainerItem.count = count;
 }
 
-void ObjectFunctions::SetContainerItemCharge(int charge) noexcept
+extern "C" void ObjectFunctions::SetContainerItemCharge(int charge) noexcept
 {
     tempContainerItem.charge = charge;
 }
 
-void ObjectFunctions::SetContainerItemEnchantmentCharge(double enchantmentCharge) noexcept
+extern "C" void ObjectFunctions::SetContainerItemEnchantmentCharge(double enchantmentCharge) noexcept
 {
     tempContainerItem.enchantmentCharge = enchantmentCharge;
 }
 
-void ObjectFunctions::SetContainerItemSoul(const char* soul) noexcept
+extern "C" void ObjectFunctions::SetContainerItemSoul(const char* soul) noexcept
 {
     tempContainerItem.soul = soul;
 }
 
-void ObjectFunctions::SetContainerItemActionCountByIndex(unsigned int objectIndex, unsigned int itemIndex, int actionCount) noexcept
+extern "C" void ObjectFunctions::SetContainerItemActionCountByIndex(unsigned int objectIndex, unsigned int itemIndex, int actionCount) noexcept
 {
     writeObjectList.baseObjects.at(objectIndex).containerItems.at(itemIndex).actionCount = actionCount;
 }
 
-void ObjectFunctions::AddObject() noexcept
+extern "C" void ObjectFunctions::AddObject() noexcept
 {
     tempObject.droppedByPlayer = false;
     writeObjectList.baseObjects.push_back(tempObject);
@@ -483,14 +483,14 @@ void ObjectFunctions::AddObject() noexcept
     tempObject = emptyObject;
 }
 
-void ObjectFunctions::AddContainerItem() noexcept
+extern "C" void ObjectFunctions::AddContainerItem() noexcept
 {
     tempObject.containerItems.push_back(tempContainerItem);
 
     tempContainerItem = emptyContainerItem;
 }
 
-void ObjectFunctions::SendObjectActivate(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ObjectFunctions::SendObjectActivate(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     mwmp::ObjectPacket *packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_OBJECT_ACTIVATE);
     packet->setObjectList(&writeObjectList);
@@ -501,7 +501,7 @@ void ObjectFunctions::SendObjectActivate(bool sendToOtherPlayers, bool skipAttac
         packet->Send(true);
 }
 
-void ObjectFunctions::SendObjectPlace(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ObjectFunctions::SendObjectPlace(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     mwmp::ObjectPacket *packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_OBJECT_PLACE);
     packet->setObjectList(&writeObjectList);
@@ -512,7 +512,7 @@ void ObjectFunctions::SendObjectPlace(bool sendToOtherPlayers, bool skipAttached
         packet->Send(true);
 }
 
-void ObjectFunctions::SendObjectSpawn(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ObjectFunctions::SendObjectSpawn(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     mwmp::ObjectPacket *packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_OBJECT_SPAWN);
     packet->setObjectList(&writeObjectList);
@@ -523,7 +523,7 @@ void ObjectFunctions::SendObjectSpawn(bool sendToOtherPlayers, bool skipAttached
         packet->Send(true);
 }
 
-void ObjectFunctions::SendObjectDelete(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ObjectFunctions::SendObjectDelete(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     mwmp::ObjectPacket *packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_OBJECT_DELETE);
     packet->setObjectList(&writeObjectList);
@@ -534,7 +534,7 @@ void ObjectFunctions::SendObjectDelete(bool sendToOtherPlayers, bool skipAttache
         packet->Send(true);
 }
 
-void ObjectFunctions::SendObjectLock(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ObjectFunctions::SendObjectLock(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     mwmp::ObjectPacket *packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_OBJECT_LOCK);
     packet->setObjectList(&writeObjectList);
@@ -545,7 +545,7 @@ void ObjectFunctions::SendObjectLock(bool sendToOtherPlayers, bool skipAttachedP
         packet->Send(true);
 }
 
-void ObjectFunctions::SendObjectTrap(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ObjectFunctions::SendObjectTrap(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     mwmp::ObjectPacket *packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_OBJECT_TRAP);
     packet->setObjectList(&writeObjectList);
@@ -556,7 +556,7 @@ void ObjectFunctions::SendObjectTrap(bool sendToOtherPlayers, bool skipAttachedP
         packet->Send(true);
 }
 
-void ObjectFunctions::SendObjectScale(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ObjectFunctions::SendObjectScale(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     mwmp::ObjectPacket *packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_OBJECT_SCALE);
     packet->setObjectList(&writeObjectList);
@@ -567,7 +567,7 @@ void ObjectFunctions::SendObjectScale(bool sendToOtherPlayers, bool skipAttached
         packet->Send(true);
 }
 
-void ObjectFunctions::SendObjectState(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ObjectFunctions::SendObjectState(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     mwmp::ObjectPacket *packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_OBJECT_STATE);
     packet->setObjectList(&writeObjectList);
@@ -578,7 +578,7 @@ void ObjectFunctions::SendObjectState(bool sendToOtherPlayers, bool skipAttached
         packet->Send(true);
 }
 
-void ObjectFunctions::SendDoorState(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ObjectFunctions::SendDoorState(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     mwmp::ObjectPacket *packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_DOOR_STATE);
     packet->setObjectList(&writeObjectList);
@@ -589,7 +589,7 @@ void ObjectFunctions::SendDoorState(bool sendToOtherPlayers, bool skipAttachedPl
         packet->Send(true);
 }
 
-void ObjectFunctions::SendDoorDestination(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ObjectFunctions::SendDoorDestination(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     mwmp::ObjectPacket *packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_DOOR_DESTINATION);
     packet->setObjectList(&writeObjectList);
@@ -600,7 +600,7 @@ void ObjectFunctions::SendDoorDestination(bool sendToOtherPlayers, bool skipAtta
         packet->Send(true);
 }
 
-void ObjectFunctions::SendContainer(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ObjectFunctions::SendContainer(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     mwmp::ObjectPacket *packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_CONTAINER);
     packet->setObjectList(&writeObjectList);
@@ -611,7 +611,7 @@ void ObjectFunctions::SendContainer(bool sendToOtherPlayers, bool skipAttachedPl
         packet->Send(true);
 }
 
-void ObjectFunctions::SendVideoPlay(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ObjectFunctions::SendVideoPlay(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     mwmp::ObjectPacket *packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_VIDEO_PLAY);
     packet->setObjectList(&writeObjectList);
@@ -622,7 +622,7 @@ void ObjectFunctions::SendVideoPlay(bool sendToOtherPlayers, bool skipAttachedPl
         packet->Send(true);
 }
 
-void ObjectFunctions::SendConsoleCommand(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void ObjectFunctions::SendConsoleCommand(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     mwmp::ObjectPacket *packet = mwmp::Networking::get().getObjectPacketController()->GetPacket(ID_CONSOLE_COMMAND);
     packet->setObjectList(&writeObjectList);
@@ -633,7 +633,7 @@ void ObjectFunctions::SendConsoleCommand(bool sendToOtherPlayers, bool skipAttac
         packet->Send(true);
 }
 
-
+extern "C" 
 // All methods below are deprecated versions of methods from above
 
 void ObjectFunctions::ReadLastObjectList() noexcept
@@ -641,73 +641,73 @@ void ObjectFunctions::ReadLastObjectList() noexcept
     ReadReceivedObjectList();
 }
 
-void ObjectFunctions::ReadLastEvent() noexcept
+extern "C" void ObjectFunctions::ReadLastEvent() noexcept
 {
     ReadReceivedObjectList();
 }
 
-void ObjectFunctions::InitializeObjectList(unsigned short pid) noexcept
+extern "C" void ObjectFunctions::InitializeObjectList(unsigned short pid) noexcept
 {
     ClearObjectList();
     SetObjectListPid(pid);
 }
 
-void ObjectFunctions::InitializeEvent(unsigned short pid) noexcept
+extern "C" void ObjectFunctions::InitializeEvent(unsigned short pid) noexcept
 {
     InitializeObjectList(pid);
 }
 
-void ObjectFunctions::CopyLastObjectListToStore() noexcept
+extern "C" void ObjectFunctions::CopyLastObjectListToStore() noexcept
 {
     CopyReceivedObjectListToStore();
 }
 
-unsigned int ObjectFunctions::GetObjectChangesSize() noexcept
+extern "C" unsigned int ObjectFunctions::GetObjectChangesSize() noexcept
 {
     return GetObjectListSize();
 }
 
-unsigned char ObjectFunctions::GetEventAction() noexcept
+extern "C" unsigned char ObjectFunctions::GetEventAction() noexcept
 {
     return GetObjectListAction();
 }
 
-unsigned char ObjectFunctions::GetEventContainerSubAction() noexcept
+extern "C" unsigned char ObjectFunctions::GetEventContainerSubAction() noexcept
 {
     return GetObjectListContainerSubAction();
 }
 
-unsigned int ObjectFunctions::GetObjectRefNumIndex(unsigned int index) noexcept
+extern "C" unsigned int ObjectFunctions::GetObjectRefNumIndex(unsigned int index) noexcept
 {
     return GetObjectRefNum(index);
 }
 
-unsigned int ObjectFunctions::GetObjectSummonerRefNumIndex(unsigned int index) noexcept
+extern "C" unsigned int ObjectFunctions::GetObjectSummonerRefNumIndex(unsigned int index) noexcept
 {
     return GetObjectSummonerRefNum(index);
 }
 
-void ObjectFunctions::SetEventCell(const char* cellDescription) noexcept
+extern "C" void ObjectFunctions::SetEventCell(const char* cellDescription) noexcept
 {
     SetObjectListCell(cellDescription);
 }
 
-void ObjectFunctions::SetEventAction(unsigned char action) noexcept
+extern "C" void ObjectFunctions::SetEventAction(unsigned char action) noexcept
 {
     SetObjectListAction(action);
 }
 
-void ObjectFunctions::SetEventConsoleCommand(const char* consoleCommand) noexcept
+extern "C" void ObjectFunctions::SetEventConsoleCommand(const char* consoleCommand) noexcept
 {
     SetObjectListConsoleCommand(consoleCommand);
 }
 
-void ObjectFunctions::SetObjectRefNumIndex(int refNum) noexcept
+extern "C" void ObjectFunctions::SetObjectRefNumIndex(int refNum) noexcept
 {
     SetObjectRefNum(refNum);
 }
 
-void ObjectFunctions::AddWorldObject() noexcept
+extern "C" void ObjectFunctions::AddWorldObject() noexcept
 {
     AddObject();
 }

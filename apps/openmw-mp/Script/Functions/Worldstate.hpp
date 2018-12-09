@@ -58,19 +58,17 @@
     {"ReadLastWorldstate",                WorldstateFunctions::ReadLastWorldstate},\
     {"CopyLastWorldstateToStore",         WorldstateFunctions::CopyLastWorldstateToStore}
 
-class WorldstateFunctions
+namespace WorldstateFunctions
 {
-public:
-
-    static mwmp::BaseWorldstate *readWorldstate;
-    static mwmp::BaseWorldstate writeWorldstate;
+    extern "C" mwmp::BaseWorldstate *readWorldstate;
+    extern "C" mwmp::BaseWorldstate writeWorldstate;
 
     /**
     * \brief Use the last worldstate received by the server as the one being read.
     *
     * \return void
     */
-    static void ReadReceivedWorldstate() noexcept;
+    extern "C" void ReadReceivedWorldstate() noexcept;
 
     /**
     * \brief Take the contents of the read-only worldstate last received by the
@@ -79,7 +77,7 @@ public:
     *
     * \return void
     */
-    static void CopyReceivedWorldstateToStore() noexcept;
+    extern "C" void CopyReceivedWorldstateToStore() noexcept;
 
     /**
     * \brief Clear the map changes for the write-only worldstate.
@@ -88,49 +86,49 @@ public:
     *
     * \return void
     */
-    static void ClearMapChanges() noexcept;
+    extern "C" void ClearMapChanges() noexcept;
 
     /**
     * \brief Get the number of indexes in the read worldstate's map changes.
     *
     * \return The number of indexes.
     */
-    static unsigned int GetMapChangesSize() noexcept;
+    extern "C" unsigned int GetMapChangesSize() noexcept;
 
     /**
     * \brief Get the weather region in the read worldstate.
     *
     * \return The weather region.
     */
-    static const char *GetWeatherRegion() noexcept;
+    extern "C" const char *GetWeatherRegion() noexcept;
 
     /**
     * \brief Get the current weather in the read worldstate.
     *
     * \return The current weather.
     */
-    static int GetWeatherCurrent() noexcept;
+    extern "C" int GetWeatherCurrent() noexcept;
 
     /**
     * \brief Get the next weather in the read worldstate.
     *
     * \return The next weather.
     */
-    static int GetWeatherNext() noexcept;
+    extern "C" int GetWeatherNext() noexcept;
 
     /**
     * \brief Get the queued weather in the read worldstate.
     *
     * \return The queued weather.
     */
-    static int GetWeatherQueued() noexcept;
+    extern "C" int GetWeatherQueued() noexcept;
 
     /**
     * \brief Get the transition factor of the weather in the read worldstate.
     *
     * \return The transition factor of the weather.
     */
-    static double GetWeatherTransitionFactor() noexcept;
+    extern "C" double GetWeatherTransitionFactor() noexcept;
 
     /**
     * \brief Get the X coordinate of the cell corresponding to the map tile at a certain index in
@@ -139,7 +137,7 @@ public:
     * \param index The index of the map tile.
     * \return The X coordinate of the cell.
     */
-    static int GetMapTileCellX(unsigned int index) noexcept;
+    extern "C" int GetMapTileCellX(unsigned int index) noexcept;
 
     /**
     * \brief Get the Y coordinate of the cell corresponding to the map tile at a certain index in
@@ -148,7 +146,7 @@ public:
     * \param index The index of the map tile.
     * \return The Y coordinate of the cell.
     */
-    static int GetMapTileCellY(unsigned int index) noexcept;
+    extern "C" int GetMapTileCellY(unsigned int index) noexcept;
 
     /**
     * \brief Set the region affected by the next WorldRegionAuthority packet sent.
@@ -156,7 +154,7 @@ public:
     * \param region The region.
     * \return void
     */
-    static void SetAuthorityRegion(const char* authorityRegion) noexcept;
+    extern "C" void SetAuthorityRegion(const char* authorityRegion) noexcept;
 
     /**
     * \brief Set the weather region in the write-only worldstate stored on the server.
@@ -164,7 +162,7 @@ public:
     * \param region The region.
     * \return void
     */
-    static void SetWeatherRegion(const char* region) noexcept;
+    extern "C" void SetWeatherRegion(const char* region) noexcept;
 
     /**
     * \brief Set the weather forcing state in the write-only worldstate stored on the server.
@@ -174,7 +172,7 @@ public:
     * \param forceState The weather forcing state.
     * \return void
     */
-    static void SetWeatherForceState(bool forceState) noexcept;
+    extern "C" void SetWeatherForceState(bool forceState) noexcept;
 
     /**
     * \brief Set the current weather in the write-only worldstate stored on the server.
@@ -182,7 +180,7 @@ public:
     * \param currentWeather The current weather.
     * \return void
     */
-    static void SetWeatherCurrent(int currentWeather) noexcept;
+    extern "C" void SetWeatherCurrent(int currentWeather) noexcept;
 
     /**
     * \brief Set the next weather in the write-only worldstate stored on the server.
@@ -190,7 +188,7 @@ public:
     * \param nextWeather The next weather.
     * \return void
     */
-    static void SetWeatherNext(int nextWeather) noexcept;
+    extern "C" void SetWeatherNext(int nextWeather) noexcept;
 
     /**
     * \brief Set the queued weather in the write-only worldstate stored on the server.
@@ -198,7 +196,7 @@ public:
     * \param queuedWeather The queued weather.
     * \return void
     */
-    static void SetWeatherQueued(int queuedWeather) noexcept;
+    extern "C" void SetWeatherQueued(int queuedWeather) noexcept;
 
     /**
     * \brief Set the transition factor for the weather in the write-only worldstate stored on the server.
@@ -206,7 +204,7 @@ public:
     * \param transitionFactor The transition factor.
     * \return void
     */
-    static void SetWeatherTransitionFactor(double transitionFactor) noexcept;
+    extern "C" void SetWeatherTransitionFactor(double transitionFactor) noexcept;
 
     /**
     * \brief Set the world's hour in the write-only worldstate stored on the server.
@@ -214,7 +212,7 @@ public:
     * \param hour The hour.
     * \return void
     */
-    static void SetHour(double hour) noexcept;
+    extern "C" void SetHour(double hour) noexcept;
 
     /**
     * \brief Set the world's day in the write-only worldstate stored on the server.
@@ -222,7 +220,7 @@ public:
     * \param day The day.
     * \return void
     */
-    static void SetDay(int day) noexcept;
+    extern "C" void SetDay(int day) noexcept;
 
     /**
     * \brief Set the world's month in the write-only worldstate stored on the server.
@@ -230,7 +228,7 @@ public:
     * \param month The month.
     * \return void
     */
-    static void SetMonth(int month) noexcept;
+    extern "C" void SetMonth(int month) noexcept;
 
     /**
     * \brief Set the world's year in the write-only worldstate stored on the server.
@@ -238,7 +236,7 @@ public:
     * \param year The year.
     * \return void
     */
-    static void SetYear(int year) noexcept;
+    extern "C" void SetYear(int year) noexcept;
 
     /**
     * \brief Set the world's days passed in the write-only worldstate stored on the server.
@@ -246,7 +244,7 @@ public:
     * \param daysPassed The days passed.
     * \return void
     */
-    static void SetDaysPassed(int daysPassed) noexcept;
+    extern "C" void SetDaysPassed(int daysPassed) noexcept;
 
     /**
     * \brief Set the world's time scale in the write-only worldstate stored on the server.
@@ -255,7 +253,7 @@ public:
     * \param timeScale The time scale.
     * \return void
     */
-    static void SetTimeScale(double timeScale) noexcept;
+    extern "C" void SetTimeScale(double timeScale) noexcept;
 
     /**
     * \brief Set the collision state for other players in the write-only worldstate stored
@@ -264,7 +262,7 @@ public:
     * \param state The collision state.
     * \return void
     */
-    static void SetPlayerCollisionState(bool state) noexcept;
+    extern "C" void SetPlayerCollisionState(bool state) noexcept;
 
     /**
     * \brief Set the collision state for actors in the write-only worldstate stored on the
@@ -273,7 +271,7 @@ public:
     * \param state The collision state.
     * \return void
     */
-    static void SetActorCollisionState(bool state) noexcept;
+    extern "C" void SetActorCollisionState(bool state) noexcept;
 
     /**
     * \brief Set the collision state for placed objects in the write-only worldstate stored
@@ -282,7 +280,7 @@ public:
     * \param state The collision state.
     * \return void
     */
-    static void SetPlacedObjectCollisionState(bool state) noexcept;
+    extern "C" void SetPlacedObjectCollisionState(bool state) noexcept;
 
     /**
     * \brief Whether placed objects with collision turned on should use actor collision, i.e.
@@ -291,7 +289,7 @@ public:
     * \param useActorCollision Whether to use actor collision.
     * \return void
     */
-    static void UseActorCollisionForPlacedObjects(bool useActorCollision) noexcept;
+    extern "C" void UseActorCollisionForPlacedObjects(bool useActorCollision) noexcept;
 
     /**
     * \brief Add a refId to the list of refIds for which collision should be enforced
@@ -300,7 +298,7 @@ public:
     * \param refId The refId.
     * \return void
     */
-    static void AddEnforcedCollisionRefId(const char* refId) noexcept;
+    extern "C" void AddEnforcedCollisionRefId(const char* refId) noexcept;
 
     /**
     * \brief Clear the list of refIdsd for which collision should be enforced irrespective
@@ -308,7 +306,7 @@ public:
     *
     * \return void
     */
-    static void ClearEnforcedCollisionRefIds() noexcept;
+    extern "C" void ClearEnforcedCollisionRefIds() noexcept;
 
     /**
     * \brief Save the .png image data of the map tile at a certain index in the read worldstate's
@@ -318,7 +316,7 @@ public:
     * \param filePath The file path of the resulting file.
     * \return void
     */
-    static void SaveMapTileImageFile(unsigned int index, const char *filePath) noexcept;
+    extern "C" void SaveMapTileImageFile(unsigned int index, const char *filePath) noexcept;
 
     /**
     * \brief Load a .png file as the image data for a map tile and add it to the write-only worldstate
@@ -329,7 +327,7 @@ public:
     * \param filePath The file path of the loaded file.
     * \return void
     */
-    static void LoadMapTileImageFile(int cellX, int cellY, const char* filePath) noexcept;
+    extern "C" void LoadMapTileImageFile(int cellX, int cellY, const char* filePath) noexcept;
 
     /**
     * \brief Send a WorldRegionAuthority packet establishing a certain player as the only one who
@@ -340,7 +338,7 @@ public:
     * \param pid The player ID attached to the packet.
     * \return void
     */
-    static void SendWorldRegionAuthority(unsigned short pid) noexcept;
+    extern "C" void SendWorldRegionAuthority(unsigned short pid) noexcept;
 
     /**
     * \brief Send a WorldMap packet with the current set of map changes in the write-only
@@ -351,7 +349,7 @@ public:
     *                  or to all players on the server.
     * \return void
     */
-    static void SendWorldMap(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendWorldMap(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send a WorldTime packet with the current time and time scale in the write-only
@@ -364,7 +362,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendWorldTime(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendWorldTime(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send a WorldWeather packet with the current weather in the write-only worldstate.
@@ -376,7 +374,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendWorldWeather(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendWorldWeather(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send a WorldCollisionOverride packet with the current collision overrides in
@@ -389,14 +387,13 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendWorldCollisionOverride(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendWorldCollisionOverride(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
 
     // All methods below are deprecated versions of methods from above
 
-    static void ReadLastWorldstate() noexcept;
-    static void CopyLastWorldstateToStore() noexcept;
-
-};
+    extern "C" void ReadLastWorldstate() noexcept;
+    extern "C" void CopyLastWorldstateToStore() noexcept;
+}
 
 #endif //OPENMW_WORLDSTATEAPI_HPP

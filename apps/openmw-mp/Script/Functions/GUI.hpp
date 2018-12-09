@@ -25,10 +25,8 @@
     \
     {"InitializeQuickKeyChanges",  GUIFunctions::InitializeQuickKeyChanges}
 
-class GUIFunctions
+namespace GUIFunctions
 {
-public:
-
     /**
     * \brief Display a simple messagebox at the bottom of the screen that vanishes
     *        after a few seconds.
@@ -41,7 +39,7 @@ public:
     * \param label The text in the messagebox.
     * \return void
     */
-    static void _MessageBox(unsigned short pid, int id, const char *label) noexcept;
+    extern "C" void _MessageBox(unsigned short pid, int id, const char *label) noexcept;
 
     /**
     * \brief Display an interactive messagebox at the center of the screen that
@@ -53,7 +51,7 @@ public:
     * \parm buttons The captions of the buttons, separated by semicolons (e.g. "Yes;No;Maybe").
     * \return void
     */
-    static void CustomMessageBox(unsigned short pid, int id, const char *label, const char *buttons) noexcept;
+    extern "C" void CustomMessageBox(unsigned short pid, int id, const char *label, const char *buttons) noexcept;
 
     /**
     * \brief Display an input dialog at the center of the screen.
@@ -64,7 +62,7 @@ public:
     * \parm note The text at the bottom of the input dialog.
     * \return void
     */
-    static void InputDialog(unsigned short pid, int id, const char *label, const char *note) noexcept;
+    extern "C" void InputDialog(unsigned short pid, int id, const char *label, const char *note) noexcept;
 
     /**
     * \brief Display a password dialog at the center of the screen.
@@ -78,7 +76,7 @@ public:
     * \parm note The text at the bottom of the password dialog.
     * \return void
     */
-    static void PasswordDialog(unsigned short pid, int id, const char *label, const char *note) noexcept;
+    extern "C" void PasswordDialog(unsigned short pid, int id, const char *label, const char *note) noexcept;
 
     /**
     * \brief Display a listbox at the center of the screen where each item takes up
@@ -91,7 +89,7 @@ public:
     * \parm items The items in the listbox, separated by newlines (e.g. "Item 1\nItem 2").
     * \return void
     */
-    static void ListBox(unsigned short pid, int id, const char *label, const char *items);
+    extern "C" void ListBox(unsigned short pid, int id, const char *label, const char *items);
 
     /**
     * \brief Clear the last recorded quick key changes for a player.
@@ -101,7 +99,7 @@ public:
     * \param pid The player ID whose quick key changes should be used.
     * \return void
     */
-    static void ClearQuickKeyChanges(unsigned short pid) noexcept;
+    extern "C" void ClearQuickKeyChanges(unsigned short pid) noexcept;
 
     /**
     * \brief Get the number of indexes in a player's latest quick key changes.
@@ -109,7 +107,7 @@ public:
     * \param pid The player ID whose quick key changes should be used.
     * \return The number of indexes.
     */
-    static unsigned int GetQuickKeyChangesSize(unsigned short pid) noexcept;
+    extern "C" unsigned int GetQuickKeyChangesSize(unsigned short pid) noexcept;
 
     /**
     * \brief Add a new quick key to the quick key changes for a player.
@@ -120,7 +118,7 @@ public:
     * \param itemId The itemId of the item.
     * \return void
     */
-    static void AddQuickKey(unsigned short pid, unsigned short slot, int type, const char* itemId = "") noexcept;
+    extern "C" void AddQuickKey(unsigned short pid, unsigned short slot, int type, const char* itemId = "") noexcept;
 
     /**
     * \brief Get the slot of the quick key at a certain index in a player's latest quick key changes.
@@ -129,7 +127,7 @@ public:
     * \param index The index of the quick key in the quick key changes vector.
     * \return The slot.
     */
-    static int GetQuickKeySlot(unsigned short pid, unsigned int index) noexcept;
+    extern "C" int GetQuickKeySlot(unsigned short pid, unsigned int index) noexcept;
 
     /**
     * \brief Get the type of the quick key at a certain index in a player's latest quick key changes.
@@ -138,7 +136,7 @@ public:
     * \param index The index of the quick key in the quick key changes vector.
     * \return The quick key type.
     */
-    static int GetQuickKeyType(unsigned short pid, unsigned int index) noexcept;
+    extern "C" int GetQuickKeyType(unsigned short pid, unsigned int index) noexcept;
 
     /**
     * \brief Get the itemId at a certain index in a player's latest quick key changes.
@@ -147,7 +145,7 @@ public:
     * \param index The index of the quick key in the quick key changes vector.
     * \return The itemId.
     */
-    static const char *GetQuickKeyItemId(unsigned short pid, unsigned int index) noexcept;
+    extern "C" const char *GetQuickKeyItemId(unsigned short pid, unsigned int index) noexcept;
 
     /**
     * \brief Send a PlayerQuickKeys packet with a player's recorded quick key changes.
@@ -155,7 +153,7 @@ public:
     * \param pid The player ID whose quick key changes should be used.
     * \return void
     */
-    static void SendQuickKeyChanges(unsigned short pid) noexcept;
+    extern "C" void SendQuickKeyChanges(unsigned short pid) noexcept;
 
     //state 0 - disallow, 1 - allow
 
@@ -169,7 +167,7 @@ public:
     * \param state The state of the map marker (false to hide, true to reveal).
     * \return void
     */
-    static void SetMapVisibility(unsigned short targetPid, unsigned short affectedPid, unsigned short state) noexcept;
+    extern "C" void SetMapVisibility(unsigned short targetPid, unsigned short affectedPid, unsigned short state) noexcept;
 
     /**
     * \brief Determine whether a player's map marker can be seen by all other players.
@@ -180,12 +178,11 @@ public:
     * \param state The state of the map marker (false to hide, true to reveal).
     * \return void
     */
-    static void SetMapVisibilityAll(unsigned short targetPid, unsigned short state) noexcept;
+    extern "C" void SetMapVisibilityAll(unsigned short targetPid, unsigned short state) noexcept;
 
     // All methods below are deprecated versions of methods from above
 
-    static void InitializeQuickKeyChanges(unsigned short pid) noexcept;
-
-};
+    extern "C" void InitializeQuickKeyChanges(unsigned short pid) noexcept;
+}
 
 #endif //OPENMW_GUIAPI_HPP

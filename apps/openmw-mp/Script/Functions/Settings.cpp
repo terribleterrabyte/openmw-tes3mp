@@ -9,7 +9,7 @@
 #include <iostream>
 using namespace std;
 
-void SettingFunctions::SetDifficulty(unsigned short pid, int difficulty)
+extern "C" void SettingFunctions::SetDifficulty(unsigned short pid, int difficulty)
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -17,7 +17,7 @@ void SettingFunctions::SetDifficulty(unsigned short pid, int difficulty)
     player->difficulty = difficulty;
 }
 
-void SettingFunctions::SetEnforcedLogLevel(unsigned short pid, int enforcedLogLevel)
+extern "C" void SettingFunctions::SetEnforcedLogLevel(unsigned short pid, int enforcedLogLevel)
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -25,7 +25,7 @@ void SettingFunctions::SetEnforcedLogLevel(unsigned short pid, int enforcedLogLe
     player->enforcedLogLevel = enforcedLogLevel;
 }
 
-void SettingFunctions::SetPhysicsFramerate(unsigned short pid, double physicsFramerate)
+extern "C" void SettingFunctions::SetPhysicsFramerate(unsigned short pid, double physicsFramerate)
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -33,7 +33,7 @@ void SettingFunctions::SetPhysicsFramerate(unsigned short pid, double physicsFra
     player->physicsFramerate = physicsFramerate;
 }
 
-void SettingFunctions::SetConsoleAllowed(unsigned short pid, bool state)
+extern "C" void SettingFunctions::SetConsoleAllowed(unsigned short pid, bool state)
 {
     Player *player;
     GET_PLAYER(pid, player,);
@@ -41,7 +41,7 @@ void SettingFunctions::SetConsoleAllowed(unsigned short pid, bool state)
     player->consoleAllowed = state;
 }
 
-void SettingFunctions::SetBedRestAllowed(unsigned short pid, bool state)
+extern "C" void SettingFunctions::SetBedRestAllowed(unsigned short pid, bool state)
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -49,7 +49,7 @@ void SettingFunctions::SetBedRestAllowed(unsigned short pid, bool state)
     player->bedRestAllowed = state;
 }
 
-void SettingFunctions::SetWildernessRestAllowed(unsigned short pid, bool state)
+extern "C" void SettingFunctions::SetWildernessRestAllowed(unsigned short pid, bool state)
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -57,7 +57,7 @@ void SettingFunctions::SetWildernessRestAllowed(unsigned short pid, bool state)
     player->wildernessRestAllowed = state;
 }
 
-void SettingFunctions::SetWaitAllowed(unsigned short pid, bool state)
+extern "C" void SettingFunctions::SetWaitAllowed(unsigned short pid, bool state)
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -65,7 +65,7 @@ void SettingFunctions::SetWaitAllowed(unsigned short pid, bool state)
     player->waitAllowed = state;
 }
 
-void SettingFunctions::SendSettings(unsigned short pid) noexcept
+extern "C" void SettingFunctions::SendSettings(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player,);

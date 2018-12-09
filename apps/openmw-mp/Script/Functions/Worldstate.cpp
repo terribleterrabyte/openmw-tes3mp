@@ -13,157 +13,157 @@ using namespace mwmp;
 BaseWorldstate *WorldstateFunctions::readWorldstate;
 BaseWorldstate WorldstateFunctions::writeWorldstate;
 
-void WorldstateFunctions::ReadReceivedWorldstate() noexcept
+extern "C" void WorldstateFunctions::ReadReceivedWorldstate() noexcept
 {
     readWorldstate = mwmp::Networking::getPtr()->getReceivedWorldstate();
 }
 
-void WorldstateFunctions::CopyReceivedWorldstateToStore() noexcept
+extern "C" void WorldstateFunctions::CopyReceivedWorldstateToStore() noexcept
 {
     writeWorldstate = *readWorldstate;
 }
 
-void WorldstateFunctions::ClearMapChanges() noexcept
+extern "C" void WorldstateFunctions::ClearMapChanges() noexcept
 {
     writeWorldstate.mapTiles.clear();
 }
 
-unsigned int WorldstateFunctions::GetMapChangesSize() noexcept
+extern "C" unsigned int WorldstateFunctions::GetMapChangesSize() noexcept
 {
     return readWorldstate->mapTiles.size();
 }
 
-const char *WorldstateFunctions::GetWeatherRegion() noexcept
+extern "C" const char *WorldstateFunctions::GetWeatherRegion() noexcept
 {
     return readWorldstate->weather.region.c_str();
 }
 
-int WorldstateFunctions::GetWeatherCurrent() noexcept
+extern "C" int WorldstateFunctions::GetWeatherCurrent() noexcept
 {
     return readWorldstate->weather.currentWeather;
 }
 
-int WorldstateFunctions::GetWeatherNext() noexcept
+extern "C" int WorldstateFunctions::GetWeatherNext() noexcept
 {
     return readWorldstate->weather.nextWeather;
 }
 
-int WorldstateFunctions::GetWeatherQueued() noexcept
+extern "C" int WorldstateFunctions::GetWeatherQueued() noexcept
 {
     return readWorldstate->weather.queuedWeather;
 }
 
-double WorldstateFunctions::GetWeatherTransitionFactor() noexcept
+extern "C" double WorldstateFunctions::GetWeatherTransitionFactor() noexcept
 {
     return readWorldstate->weather.transitionFactor;
 }
 
-int WorldstateFunctions::GetMapTileCellX(unsigned int index) noexcept
+extern "C" int WorldstateFunctions::GetMapTileCellX(unsigned int index) noexcept
 {
     return readWorldstate->mapTiles.at(index).x;
 }
 
-int WorldstateFunctions::GetMapTileCellY(unsigned int index) noexcept
+extern "C" int WorldstateFunctions::GetMapTileCellY(unsigned int index) noexcept
 {
     return readWorldstate->mapTiles.at(index).y;
 }
 
-void WorldstateFunctions::SetAuthorityRegion(const char* authorityRegion) noexcept
+extern "C" void WorldstateFunctions::SetAuthorityRegion(const char* authorityRegion) noexcept
 {
     writeWorldstate.authorityRegion = authorityRegion;
 }
 
-void WorldstateFunctions::SetWeatherRegion(const char* region) noexcept
+extern "C" void WorldstateFunctions::SetWeatherRegion(const char* region) noexcept
 {
     writeWorldstate.weather.region = region;
 }
 
-void WorldstateFunctions::SetWeatherForceState(bool forceState) noexcept
+extern "C" void WorldstateFunctions::SetWeatherForceState(bool forceState) noexcept
 {
     writeWorldstate.forceWeather = forceState;
 }
 
-void WorldstateFunctions::SetWeatherCurrent(int currentWeather) noexcept
+extern "C" void WorldstateFunctions::SetWeatherCurrent(int currentWeather) noexcept
 {
     writeWorldstate.weather.currentWeather = currentWeather;
 }
 
-void WorldstateFunctions::SetWeatherNext(int nextWeather) noexcept
+extern "C" void WorldstateFunctions::SetWeatherNext(int nextWeather) noexcept
 {
     writeWorldstate.weather.nextWeather = nextWeather;
 }
 
-void WorldstateFunctions::SetWeatherQueued(int queuedWeather) noexcept
+extern "C" void WorldstateFunctions::SetWeatherQueued(int queuedWeather) noexcept
 {
     writeWorldstate.weather.queuedWeather = queuedWeather;
 }
 
-void WorldstateFunctions::SetWeatherTransitionFactor(double transitionFactor) noexcept
+extern "C" void WorldstateFunctions::SetWeatherTransitionFactor(double transitionFactor) noexcept
 {
     writeWorldstate.weather.transitionFactor = transitionFactor;
 }
 
-void WorldstateFunctions::SetHour(double hour) noexcept
+extern "C" void WorldstateFunctions::SetHour(double hour) noexcept
 {
     writeWorldstate.time.hour = hour;
 }
 
-void WorldstateFunctions::SetDay(int day) noexcept
+extern "C" void WorldstateFunctions::SetDay(int day) noexcept
 {
     writeWorldstate.time.day = day;
 }
 
-void WorldstateFunctions::SetMonth(int month) noexcept
+extern "C" void WorldstateFunctions::SetMonth(int month) noexcept
 {
     writeWorldstate.time.month = month;
 }
 
-void WorldstateFunctions::SetYear(int year) noexcept
+extern "C" void WorldstateFunctions::SetYear(int year) noexcept
 {
     writeWorldstate.time.year = year;
 }
 
-void WorldstateFunctions::SetDaysPassed(int daysPassed) noexcept
+extern "C" void WorldstateFunctions::SetDaysPassed(int daysPassed) noexcept
 {
     writeWorldstate.time.daysPassed = daysPassed;
 }
 
-void WorldstateFunctions::SetTimeScale(double timeScale) noexcept
+extern "C" void WorldstateFunctions::SetTimeScale(double timeScale) noexcept
 {
     writeWorldstate.time.timeScale = timeScale;
 }
 
-void WorldstateFunctions::SetPlayerCollisionState(bool state) noexcept
+extern "C" void WorldstateFunctions::SetPlayerCollisionState(bool state) noexcept
 {
     writeWorldstate.hasPlayerCollision = state;
 }
 
-void WorldstateFunctions::SetActorCollisionState(bool state) noexcept
+extern "C" void WorldstateFunctions::SetActorCollisionState(bool state) noexcept
 {
     writeWorldstate.hasActorCollision = state;
 }
 
-void WorldstateFunctions::SetPlacedObjectCollisionState(bool state) noexcept
+extern "C" void WorldstateFunctions::SetPlacedObjectCollisionState(bool state) noexcept
 {
     writeWorldstate.hasPlacedObjectCollision = state;
 }
 
-void WorldstateFunctions::UseActorCollisionForPlacedObjects(bool useActorCollision) noexcept
+extern "C" void WorldstateFunctions::UseActorCollisionForPlacedObjects(bool useActorCollision) noexcept
 {
     writeWorldstate.useActorCollisionForPlacedObjects = useActorCollision;
 }
 
-void WorldstateFunctions::AddEnforcedCollisionRefId(const char *refId) noexcept
+extern "C" void WorldstateFunctions::AddEnforcedCollisionRefId(const char *refId) noexcept
 {
     writeWorldstate.enforcedCollisionRefIds.push_back(refId);
 }
 
-void WorldstateFunctions::ClearEnforcedCollisionRefIds() noexcept
+extern "C" void WorldstateFunctions::ClearEnforcedCollisionRefIds() noexcept
 {
     writeWorldstate.enforcedCollisionRefIds.clear();
 }
 
-void WorldstateFunctions::SaveMapTileImageFile(unsigned int index, const char *filePath) noexcept
+extern "C" void WorldstateFunctions::SaveMapTileImageFile(unsigned int index, const char *filePath) noexcept
 {
     if (index >= readWorldstate->mapTiles.size())
         return;
@@ -175,7 +175,7 @@ void WorldstateFunctions::SaveMapTileImageFile(unsigned int index, const char *f
     std::copy(imageData.begin(), imageData.end(), outputIterator);
 }
 
-void WorldstateFunctions::LoadMapTileImageFile(int cellX, int cellY, const char* filePath) noexcept
+extern "C" void WorldstateFunctions::LoadMapTileImageFile(int cellX, int cellY, const char* filePath) noexcept
 {
     mwmp::MapTile mapTile;
     mapTile.x = cellX;
@@ -196,7 +196,7 @@ void WorldstateFunctions::LoadMapTileImageFile(int cellX, int cellY, const char*
     }
 }
 
-void WorldstateFunctions::SendWorldMap(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void WorldstateFunctions::SendWorldMap(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -212,7 +212,7 @@ void WorldstateFunctions::SendWorldMap(unsigned short pid, bool sendToOtherPlaye
         packet->Send(true);
 }
 
-void WorldstateFunctions::SendWorldTime(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void WorldstateFunctions::SendWorldTime(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -228,7 +228,7 @@ void WorldstateFunctions::SendWorldTime(unsigned short pid, bool sendToOtherPlay
         packet->Send(true);
 }
 
-void WorldstateFunctions::SendWorldWeather(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void WorldstateFunctions::SendWorldWeather(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -244,7 +244,7 @@ void WorldstateFunctions::SendWorldWeather(unsigned short pid, bool sendToOtherP
         packet->Send(true);
 }
 
-void WorldstateFunctions::SendWorldCollisionOverride(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void WorldstateFunctions::SendWorldCollisionOverride(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -260,7 +260,7 @@ void WorldstateFunctions::SendWorldCollisionOverride(unsigned short pid, bool se
         packet->Send(true);
 }
 
-void WorldstateFunctions::SendWorldRegionAuthority(unsigned short pid) noexcept
+extern "C" void WorldstateFunctions::SendWorldRegionAuthority(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -276,7 +276,7 @@ void WorldstateFunctions::SendWorldRegionAuthority(unsigned short pid) noexcept
     packet->Send(true);
 }
 
-
+extern "C" 
 // All methods below are deprecated versions of methods from above
 
 void WorldstateFunctions::ReadLastWorldstate() noexcept
@@ -284,7 +284,7 @@ void WorldstateFunctions::ReadLastWorldstate() noexcept
     ReadReceivedWorldstate();
 }
 
-void WorldstateFunctions::CopyLastWorldstateToStore() noexcept
+extern "C" void WorldstateFunctions::CopyLastWorldstateToStore() noexcept
 {
     CopyReceivedWorldstateToStore();
 }

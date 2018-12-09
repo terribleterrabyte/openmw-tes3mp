@@ -17,10 +17,8 @@
     \
     {"InitializeTopicChanges",  DialogueFunctions::InitializeTopicChanges}
 
-class DialogueFunctions
+namespace DialogueFunctions
 {
-public:
-
     /**
     * \brief Clear the last recorded topic changes for a player.
     *
@@ -29,7 +27,7 @@ public:
     * \param pid The player ID whose topic changes should be used.
     * \return void
     */
-    static void ClearTopicChanges(unsigned short pid) noexcept;
+    extern "C" void ClearTopicChanges(unsigned short pid) noexcept;
 
     /**
     * \brief Get the number of indexes in a player's latest topic changes.
@@ -37,7 +35,7 @@ public:
     * \param pid The player ID whose topic changes should be used.
     * \return The number of indexes.
     */
-    static unsigned int GetTopicChangesSize(unsigned short pid) noexcept;
+    extern "C" unsigned int GetTopicChangesSize(unsigned short pid) noexcept;
 
     /**
     * \brief Add a new topic to the topic changes for a player.
@@ -46,7 +44,7 @@ public:
     * \param topicId The topicId of the topic.
     * \return void
     */
-    static void AddTopic(unsigned short pid, const char* topicId) noexcept;
+    extern "C" void AddTopic(unsigned short pid, const char* topicId) noexcept;
 
     /**
     * \brief Get the topicId at a certain index in a player's latest topic changes.
@@ -55,7 +53,7 @@ public:
     * \param index The index of the topic.
     * \return The topicId.
     */
-    static const char *GetTopicId(unsigned short pid, unsigned int index) noexcept;
+    extern "C" const char *GetTopicId(unsigned short pid, unsigned int index) noexcept;
 
     /**
     * \brief Send a PlayerTopic packet with a player's recorded topic changes.
@@ -67,7 +65,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendTopicChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendTopicChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Play a certain animation on a player's character by sending a PlayerAnimation
@@ -80,7 +78,7 @@ public:
     * \param bool Whether the animation should persist or not.
     * \return void
     */
-    static void PlayAnimation(unsigned short pid, const char* groupname, int mode, int count, bool persist) noexcept;
+    extern "C" void PlayAnimation(unsigned short pid, const char* groupname, int mode, int count, bool persist) noexcept;
 
     /**
     * \brief Play a certain sound for a player as spoken by their character by sending
@@ -90,12 +88,11 @@ public:
     * \param sound The path of the sound file.
     * \return void
     */
-    static void PlaySpeech(unsigned short pid, const char* sound) noexcept;
+    extern "C" void PlaySpeech(unsigned short pid, const char* sound) noexcept;
 
     // All methods below are deprecated versions of methods from above
 
-    static void InitializeTopicChanges(unsigned short pid) noexcept;
-
-};
+    extern "C" void InitializeTopicChanges(unsigned short pid) noexcept;
+}
 
 #endif //OPENMW_DIALOGUEAPI_HPP

@@ -136,23 +136,21 @@
     {"SetObjectRefNumIndex",                  ObjectFunctions::SetObjectRefNumIndex},\
     {"AddWorldObject",                        ObjectFunctions::AddWorldObject}
 
-class ObjectFunctions
+namespace ObjectFunctions
 {
-public:
-
     /**
     * \brief Use the last object list received by the server as the one being read.
     *
     * \return void
     */
-    static void ReadReceivedObjectList() noexcept;
+    extern "C" void ReadReceivedObjectList() noexcept;
 
     /**
     * \brief Clear the data from the object list stored on the server.
     *
     * \return void
     */
-    static void ClearObjectList() noexcept;
+    extern "C" void ClearObjectList() noexcept;
 
     /**
     * \brief Set the pid attached to the ObjectList.
@@ -160,7 +158,7 @@ public:
     * \param pid The player ID to whom the object list should be attached.
     * \return void
     */
-    static void SetObjectListPid(unsigned short pid) noexcept;
+    extern "C" void SetObjectListPid(unsigned short pid) noexcept;
 
     /**
     * \brief Take the contents of the read-only object list last received by the
@@ -169,14 +167,14 @@ public:
     *
     * \return void
     */
-    static void CopyReceivedObjectListToStore() noexcept;
+    extern "C" void CopyReceivedObjectListToStore() noexcept;
 
     /**
     * \brief Get the number of indexes in the read object list.
     *
     * \return The number of indexes.
     */
-    static unsigned int GetObjectListSize() noexcept;
+    extern "C" unsigned int GetObjectListSize() noexcept;
 
     /**
     * \brief Get the origin of the read object list.
@@ -185,7 +183,7 @@ public:
     * CLIENT_DIALOGUE, 3 for CLIENT_SCRIPT_LOCAL, 4 for CLIENT_SCRIPT_GLOBAL,
     * 5 for SERVER_SCRIPT).
     */
-    static unsigned char GetObjectListOrigin() noexcept;
+    extern "C" unsigned char GetObjectListOrigin() noexcept;
 
     /**
     * \brief Get the client script that the read object list originated from.
@@ -194,21 +192,21 @@ public:
     *
     * \return The ID of the client script.
     */
-    static const char *GetObjectListClientScript() noexcept;
+    extern "C" const char *GetObjectListClientScript() noexcept;
 
     /**
     * \brief Get the action type used in the read object list.
     *
     * \return The action type (0 for SET, 1 for ADD, 2 for REMOVE, 3 for REQUEST).
     */
-    static unsigned char GetObjectListAction() noexcept;
+    extern "C" unsigned char GetObjectListAction() noexcept;
 
     /**
     * \brief Get the container subaction type used in the read object list.
     *
     * \return The action type (0 for NONE, 1 for DRAG, 2 for DROP, 3 for TAKE_ALL).
     */
-    static unsigned char GetObjectListContainerSubAction() noexcept;
+    extern "C" unsigned char GetObjectListContainerSubAction() noexcept;
 
     /**
     * \brief Check whether the object at a certain index in the read object list is a
@@ -221,7 +219,7 @@ public:
     * \param index The index of the object.
     * \return Whether the object is a player.
     */
-    static bool IsObjectPlayer(unsigned int index) noexcept;
+    extern "C" bool IsObjectPlayer(unsigned int index) noexcept;
 
     /**
     * \brief Get the player ID of the object at a certain index in the read object list,
@@ -233,7 +231,7 @@ public:
     * \param index The index of the object.
     * \return The player ID of the object.
     */
-    static int GetObjectPid(unsigned int index) noexcept;
+    extern "C" int GetObjectPid(unsigned int index) noexcept;
 
     /**
     * \brief Get the refId of the object at a certain index in the read object list.
@@ -241,7 +239,7 @@ public:
     * \param index The index of the object.
     * \return The refId.
     */
-    static const char *GetObjectRefId(unsigned int index) noexcept;
+    extern "C" const char *GetObjectRefId(unsigned int index) noexcept;
 
     /**
     * \brief Get the refNum of the object at a certain index in the read object list.
@@ -249,7 +247,7 @@ public:
     * \param index The index of the object.
     * \return The refNum.
     */
-    static unsigned int GetObjectRefNum(unsigned int index) noexcept;
+    extern "C" unsigned int GetObjectRefNum(unsigned int index) noexcept;
 
     /**
     * \brief Get the mpNum of the object at a certain index in the read object list.
@@ -257,7 +255,7 @@ public:
     * \param index The index of the object.
     * \return The mpNum.
     */
-    static unsigned int GetObjectMpNum(unsigned int index) noexcept;
+    extern "C" unsigned int GetObjectMpNum(unsigned int index) noexcept;
 
     /**
     * \brief Get the count of the object at a certain index in the read object list.
@@ -265,7 +263,7 @@ public:
     * \param index The index of the object.
     * \return The object count.
     */
-    static int GetObjectCount(unsigned int index) noexcept;
+    extern "C" int GetObjectCount(unsigned int index) noexcept;
 
     /**
     * \brief Get the charge of the object at a certain index in the read object list.
@@ -273,7 +271,7 @@ public:
     * \param index The index of the object.
     * \return The charge.
     */
-    static int GetObjectCharge(unsigned int index) noexcept;
+    extern "C" int GetObjectCharge(unsigned int index) noexcept;
 
     /**
     * \brief Get the enchantment charge of the object at a certain index in the read object list.
@@ -281,7 +279,7 @@ public:
     * \param index The index of the object.
     * \return The enchantment charge.
     */
-    static double GetObjectEnchantmentCharge(unsigned int index) noexcept;
+    extern "C" double GetObjectEnchantmentCharge(unsigned int index) noexcept;
 
     /**
     * \brief Get the soul of the object at a certain index in the read object list.
@@ -289,7 +287,7 @@ public:
     * \param index The index of the object.
     * \return The soul.
     */
-    static const char *GetObjectSoul(unsigned int index) noexcept;
+    extern "C" const char *GetObjectSoul(unsigned int index) noexcept;
 
     /**
     * \brief Get the gold value of the object at a certain index in the read object list.
@@ -299,7 +297,7 @@ public:
     * \param index The index of the object.
     * \return The gold value.
     */
-    static int GetObjectGoldValue(unsigned int index) noexcept;
+    extern "C" int GetObjectGoldValue(unsigned int index) noexcept;
 
     /**
     * \brief Get the object scale of the object at a certain index in the read object list.
@@ -307,7 +305,7 @@ public:
     * \param index The index of the object.
     * \return The object scale.
     */
-    static double GetObjectScale(unsigned int index) noexcept;
+    extern "C" double GetObjectScale(unsigned int index) noexcept;
 
     /**
     * \brief Get the object state of the object at a certain index in the read object list.
@@ -315,7 +313,7 @@ public:
     * \param index The index of the object.
     * \return The object state.
     */
-    static bool GetObjectState(unsigned int index) noexcept;
+    extern "C" bool GetObjectState(unsigned int index) noexcept;
 
     /**
     * \brief Get the door state of the object at a certain index in the read object list.
@@ -323,7 +321,7 @@ public:
     * \param index The index of the object.
     * \return The door state.
     */
-    static int GetObjectDoorState(unsigned int index) noexcept;
+    extern "C" int GetObjectDoorState(unsigned int index) noexcept;
 
     /**
     * \brief Get the lock level of the object at a certain index in the read object list.
@@ -331,7 +329,7 @@ public:
     * \param index The index of the object.
     * \return The lock level.
     */
-    static int GetObjectLockLevel(unsigned int index) noexcept;
+    extern "C" int GetObjectLockLevel(unsigned int index) noexcept;
 
     /**
     * \brief Check whether the object at a certain index in the read object list has been
@@ -340,7 +338,7 @@ public:
     * \param index The index of the object.
     * \return Whether the object has been activated by a player.
     */
-    static bool DoesObjectHavePlayerActivating(unsigned int index) noexcept;
+    extern "C" bool DoesObjectHavePlayerActivating(unsigned int index) noexcept;
 
     /**
     * \brief Get the player ID of the player activating the object at a certain index in the
@@ -349,7 +347,7 @@ public:
     * \param index The index of the object.
     * \return The player ID of the activating player.
     */
-    static int GetObjectActivatingPid(unsigned int index) noexcept;
+    extern "C" int GetObjectActivatingPid(unsigned int index) noexcept;
 
     /**
     * \brief Get the refId of the actor activating the object at a certain index in the read
@@ -358,7 +356,7 @@ public:
     * \param index The index of the object.
     * \return The refId of the activating actor.
     */
-    static const char *GetObjectActivatingRefId(unsigned int index) noexcept;
+    extern "C" const char *GetObjectActivatingRefId(unsigned int index) noexcept;
 
     /**
     * \brief Get the refNum of the actor activating the object at a certain index in the read
@@ -367,7 +365,7 @@ public:
     * \param index The index of the object.
     * \return The refNum of the activating actor.
     */
-    static unsigned int GetObjectActivatingRefNum(unsigned int index) noexcept;
+    extern "C" unsigned int GetObjectActivatingRefNum(unsigned int index) noexcept;
 
     /**
     * \brief Get the mpNum of the actor activating the object at a certain index in the read
@@ -376,7 +374,7 @@ public:
     * \param index The index of the object.
     * \return The mpNum of the activating actor.
     */
-    static unsigned int GetObjectActivatingMpNum(unsigned int index) noexcept;
+    extern "C" unsigned int GetObjectActivatingMpNum(unsigned int index) noexcept;
 
     /**
     * \brief Get the name of the actor activating the object at a certain index in the read
@@ -385,7 +383,7 @@ public:
     * \param index The index of the object.
     * \return The name of the activating actor.
     */
-    static const char *GetObjectActivatingName(unsigned int index) noexcept;
+    extern "C" const char *GetObjectActivatingName(unsigned int index) noexcept;
 
     /**
     * \brief Check whether the object at a certain index in the read object list is a
@@ -395,7 +393,7 @@ public:
     *
     * \return The summon state.
     */
-    static bool GetObjectSummonState(unsigned int index) noexcept;
+    extern "C" bool GetObjectSummonState(unsigned int index) noexcept;
 
     /**
     * \brief Get the summon duration of the object at a certain index in the read object list.
@@ -405,7 +403,7 @@ public:
     * \param index The index of the object.
     * \return The summon duration.
     */
-    static double GetObjectSummonDuration(unsigned int index) noexcept;
+    extern "C" double GetObjectSummonDuration(unsigned int index) noexcept;
 
     /**
     * \brief Check whether the object at a certain index in the read object list has a player
@@ -416,7 +414,7 @@ public:
     * \param index The index of the object.
     * \return Whether a player is the summoner of the object.
     */
-    static bool DoesObjectHavePlayerSummoner(unsigned int index) noexcept;
+    extern "C" bool DoesObjectHavePlayerSummoner(unsigned int index) noexcept;
 
     /**
     * \brief Get the player ID of the summoner of the object at a certain index in the read object
@@ -425,7 +423,7 @@ public:
     * \param index The index of the object.
     * \return The player ID of the summoner.
     */
-    static int GetObjectSummonerPid(unsigned int index) noexcept;
+    extern "C" int GetObjectSummonerPid(unsigned int index) noexcept;
 
     /**
     * \brief Get the refId of the actor summoner of the object at a certain index in the read object
@@ -434,7 +432,7 @@ public:
     * \param index The index of the object.
     * \return The refId of the summoner.
     */
-    static const char *GetObjectSummonerRefId(unsigned int index) noexcept;
+    extern "C" const char *GetObjectSummonerRefId(unsigned int index) noexcept;
 
     /**
     * \brief Get the refNum of the actor summoner of the object at a certain index in the read object
@@ -443,7 +441,7 @@ public:
     * \param index The index of the object.
     * \return The refNum of the summoner.
     */
-    static unsigned int GetObjectSummonerRefNum(unsigned int index) noexcept;
+    extern "C" unsigned int GetObjectSummonerRefNum(unsigned int index) noexcept;
 
     /**
     * \brief Get the mpNum of the actor summoner of the object at a certain index in the read object list.
@@ -451,7 +449,7 @@ public:
     * \param index The index of the object.
     * \return The mpNum of the summoner.
     */
-    static unsigned int GetObjectSummonerMpNum(unsigned int index) noexcept;
+    extern "C" unsigned int GetObjectSummonerMpNum(unsigned int index) noexcept;
 
     /**
     * \brief Get the X position of the object at a certain index in the read object list.
@@ -459,7 +457,7 @@ public:
     * \param index The index of the object.
     * \return The X position.
     */
-    static double GetObjectPosX(unsigned int index) noexcept;
+    extern "C" double GetObjectPosX(unsigned int index) noexcept;
 
     /**
     * \brief Get the Y position of the object at a certain index in the read object list.
@@ -467,7 +465,7 @@ public:
     * \param index The index of the object.
     * \return The Y position.
     */
-    static double GetObjectPosY(unsigned int index) noexcept;
+    extern "C" double GetObjectPosY(unsigned int index) noexcept;
 
     /**
     * \brief Get the Z position at a certain index in the read object list.
@@ -475,7 +473,7 @@ public:
     * \param index The index of the object.
     * \return The Z position.
     */
-    static double GetObjectPosZ(unsigned int index) noexcept;
+    extern "C" double GetObjectPosZ(unsigned int index) noexcept;
 
     /**
     * \brief Get the X rotation of the object at a certain index in the read object list.
@@ -483,7 +481,7 @@ public:
     * \param index The index of the object.
     * \return The X rotation.
     */
-    static double GetObjectRotX(unsigned int index) noexcept;
+    extern "C" double GetObjectRotX(unsigned int index) noexcept;
 
     /**
     * \brief Get the Y rotation of the object at a certain index in the read object list.
@@ -491,7 +489,7 @@ public:
     * \param index The index of the object.
     * \return The Y rotation.
     */
-    static double GetObjectRotY(unsigned int index) noexcept;
+    extern "C" double GetObjectRotY(unsigned int index) noexcept;
 
     /**
     * \brief Get the Z rotation of the object at a certain index in the read object list.
@@ -499,14 +497,14 @@ public:
     * \param index The index of the object.
     * \return The Z rotation.
     */
-    static double GetObjectRotZ(unsigned int index) noexcept;
+    extern "C" double GetObjectRotZ(unsigned int index) noexcept;
 
     /**
     * \brief Get the videoFilename of the object at a certain index in the read object list.
     *
     * \return The videoFilename.
     */
-    static const char *GetVideoFilename(unsigned int index) noexcept;
+    extern "C" const char *GetVideoFilename(unsigned int index) noexcept;
 
     /**
     * \brief Get the number of container item indexes of the object at a certain index in the
@@ -515,7 +513,7 @@ public:
     * \param index The index of the object.
     * \return The number of container item indexes.
     */
-    static unsigned int GetContainerChangesSize(unsigned int objectIndex) noexcept;
+    extern "C" unsigned int GetContainerChangesSize(unsigned int objectIndex) noexcept;
 
     /**
     * \brief Get the refId of the container item at a certain itemIndex in the container changes
@@ -525,7 +523,7 @@ public:
     * \param itemIndex The index of the container item.
     * \return The refId.
     */
-    static const char *GetContainerItemRefId(unsigned int objectIndex, unsigned int itemIndex) noexcept;
+    extern "C" const char *GetContainerItemRefId(unsigned int objectIndex, unsigned int itemIndex) noexcept;
 
     /**
     * \brief Get the item count of the container item at a certain itemIndex in the container
@@ -535,7 +533,7 @@ public:
     * \param itemIndex The index of the container item.
     * \return The item count.
     */
-    static int GetContainerItemCount(unsigned int objectIndex, unsigned int itemIndex) noexcept;
+    extern "C" int GetContainerItemCount(unsigned int objectIndex, unsigned int itemIndex) noexcept;
 
     /**
     * \brief Get the charge of the container item at a certain itemIndex in the container changes
@@ -545,7 +543,7 @@ public:
     * \param itemIndex The index of the container item.
     * \return The charge.
     */
-    static int GetContainerItemCharge(unsigned int objectIndex, unsigned int itemIndex) noexcept;
+    extern "C" int GetContainerItemCharge(unsigned int objectIndex, unsigned int itemIndex) noexcept;
 
     /**
     * \brief Get the enchantment charge of the container item at a certain itemIndex in the container changes
@@ -555,7 +553,7 @@ public:
     * \param itemIndex The index of the container item.
     * \return The enchantment charge.
     */
-    static double GetContainerItemEnchantmentCharge(unsigned int objectIndex, unsigned int itemIndex) noexcept;
+    extern "C" double GetContainerItemEnchantmentCharge(unsigned int objectIndex, unsigned int itemIndex) noexcept;
 
     /**
     * \brief Get the soul of the container item at a certain itemIndex in the container changes
@@ -565,7 +563,7 @@ public:
     * \param itemIndex The index of the container item.
     * \return The soul.
     */
-    static const char *GetContainerItemSoul(unsigned int objectIndex, unsigned int itemIndex) noexcept;
+    extern "C" const char *GetContainerItemSoul(unsigned int objectIndex, unsigned int itemIndex) noexcept;
 
     /**
     * \brief Get the action count of the container item at a certain itemIndex in the container
@@ -575,7 +573,7 @@ public:
     * \param itemIndex The index of the container item.
     * \return The action count.
     */
-    static int GetContainerItemActionCount(unsigned int objectIndex, unsigned int itemIndex) noexcept;
+    extern "C" int GetContainerItemActionCount(unsigned int objectIndex, unsigned int itemIndex) noexcept;
 
     /**
     * \brief Check whether the object at a certain index in the read object list has a container.
@@ -586,7 +584,7 @@ public:
     * \param index The index of the object.
     * \return Whether the object has a container.
     */
-    static bool DoesObjectHaveContainer(unsigned int index) noexcept;
+    extern "C" bool DoesObjectHaveContainer(unsigned int index) noexcept;
 
     /**
     * \brief Set the cell of the temporary object list stored on the server.
@@ -597,7 +595,7 @@ public:
     * \param cellDescription The description of the cell.
     * \return void
     */
-    static void SetObjectListCell(const char* cellDescription) noexcept;
+    extern "C" void SetObjectListCell(const char* cellDescription) noexcept;
 
     /**
     * \brief Set the action type of the temporary object list stored on the server.
@@ -605,7 +603,7 @@ public:
     * \param action The action type (0 for SET, 1 for ADD, 2 for REMOVE, 3 for REQUEST).
     * \return void
     */
-    static void SetObjectListAction(unsigned char action) noexcept;
+    extern "C" void SetObjectListAction(unsigned char action) noexcept;
 
     /**
     * \brief Set the console command of the temporary object list stored on the server.
@@ -616,7 +614,7 @@ public:
     * \param consoleCommand The console command.
     * \return void
     */
-    static void SetObjectListConsoleCommand(const char* consoleCommand) noexcept;
+    extern "C" void SetObjectListConsoleCommand(const char* consoleCommand) noexcept;
 
     /**
     * \brief Set the refId of the temporary object stored on the server.
@@ -624,7 +622,7 @@ public:
     * \param refId The refId.
     * \return void
     */
-    static void SetObjectRefId(const char* refId) noexcept;
+    extern "C" void SetObjectRefId(const char* refId) noexcept;
 
     /**
     * \brief Set the refNum of the temporary object stored on the server.
@@ -638,7 +636,7 @@ public:
     * \param refNum The refNum.
     * \return void
     */
-    static void SetObjectRefNum(int refNum) noexcept;
+    extern "C" void SetObjectRefNum(int refNum) noexcept;
 
     /**
     * \brief Set the mpNum of the temporary object stored on the server.
@@ -653,7 +651,7 @@ public:
     * \param mpNum The mpNum.
     * \return void
     */
-    static void SetObjectMpNum(int mpNum) noexcept;
+    extern "C" void SetObjectMpNum(int mpNum) noexcept;
 
     /**
     * \brief Set the object count of the temporary object stored on the server.
@@ -663,7 +661,7 @@ public:
     * \param count The object count.
     * \return void
     */
-    static void SetObjectCount(int count) noexcept;
+    extern "C" void SetObjectCount(int count) noexcept;
 
     /**
     * \brief Set the charge of the temporary object stored on the server.
@@ -673,7 +671,7 @@ public:
     * \param charge The charge.
     * \return void
     */
-    static void SetObjectCharge(int charge) noexcept;
+    extern "C" void SetObjectCharge(int charge) noexcept;
 
     /**
     * \brief Set the enchantment charge of the temporary object stored on the server.
@@ -683,7 +681,7 @@ public:
     * \param charge The enchantment charge.
     * \return void
     */
-    static void SetObjectEnchantmentCharge(double enchantmentCharge) noexcept;
+    extern "C" void SetObjectEnchantmentCharge(double enchantmentCharge) noexcept;
 
     /**
     * \brief Set the soul of the temporary object stored on the server.
@@ -691,7 +689,7 @@ public:
     * \param refId The soul.
     * \return void
     */
-    static void SetObjectSoul(const char* soul) noexcept;
+    extern "C" void SetObjectSoul(const char* soul) noexcept;
 
     /**
     * \brief Set the gold value of the temporary object stored on the server.
@@ -701,7 +699,7 @@ public:
     * \param goldValue The gold value.
     * \return void
     */
-    static void SetObjectGoldValue(int goldValue) noexcept;
+    extern "C" void SetObjectGoldValue(int goldValue) noexcept;
 
     /**
     * \brief Set the scale of the temporary object stored on the server.
@@ -711,7 +709,7 @@ public:
     * \param scale The scale.
     * \return void
     */
-    static void SetObjectScale(double scale) noexcept;
+    extern "C" void SetObjectScale(double scale) noexcept;
 
     /**
     * \brief Set the object state of the temporary object stored on the server.
@@ -721,7 +719,7 @@ public:
     * \param objectState The object state.
     * \return void
     */
-    static void SetObjectState(bool objectState) noexcept;
+    extern "C" void SetObjectState(bool objectState) noexcept;
 
     /**
     * \brief Set the lock level of the temporary object stored on the server.
@@ -729,7 +727,7 @@ public:
     * \param lockLevel The lock level.
     * \return void
     */
-    static void SetObjectLockLevel(int lockLevel) noexcept;
+    extern "C" void SetObjectLockLevel(int lockLevel) noexcept;
 
     /**
     * \brief Set the summon duration of the temporary object stored on the server.
@@ -737,7 +735,7 @@ public:
     * \param summonDuration The summon duration.
     * \return void
     */
-    static void SetObjectSummonDuration(float summonDuration) noexcept;
+    extern "C" void SetObjectSummonDuration(float summonDuration) noexcept;
 
     /**
     * \brief Set the disarm state of the temporary object stored on the server.
@@ -745,7 +743,7 @@ public:
     * \param disarmState The disarmState.
     * \return void
     */
-    static void SetObjectDisarmState(bool disarmState) noexcept;
+    extern "C" void SetObjectDisarmState(bool disarmState) noexcept;
 
     /**
     * \brief Set the summon state of the temporary object stored on the server.
@@ -756,7 +754,7 @@ public:
     * \param summonState The summon state.
     * \return void
     */
-    static void SetObjectSummonState(bool summonState) noexcept;
+    extern "C" void SetObjectSummonState(bool summonState) noexcept;
 
     /**
     * \brief Set the position of the temporary object stored on the server.
@@ -766,7 +764,7 @@ public:
     * \param z The Z position.
     * \return void
     */
-    static void SetObjectPosition(double x, double y, double z) noexcept;
+    extern "C" void SetObjectPosition(double x, double y, double z) noexcept;
 
     /**
     * \brief Set the rotation of the temporary object stored on the server.
@@ -776,7 +774,7 @@ public:
     * \param z The Z rotation.
     * \return void
     */
-    static void SetObjectRotation(double x, double y, double z) noexcept;
+    extern "C" void SetObjectRotation(double x, double y, double z) noexcept;
 
     /**
     * \brief Set the player ID of the player activating the temporary object stored on the
@@ -785,7 +783,7 @@ public:
     * \param pid The pid of the player.
     * \return void
     */
-    static void SetObjectActivatingPid(unsigned short pid) noexcept;
+    extern "C" void SetObjectActivatingPid(unsigned short pid) noexcept;
 
     /**
     * \brief Set the door state of the temporary object stored on the server.
@@ -795,7 +793,7 @@ public:
     * \param doorState The door state.
     * \return void
     */
-    static void SetObjectDoorState(int doorState) noexcept;
+    extern "C" void SetObjectDoorState(int doorState) noexcept;
 
     /**
     * \brief Set the teleport state of the temporary object stored on the server.
@@ -806,7 +804,7 @@ public:
     * \param teleportState The teleport state.
     * \return void
     */
-    static void SetObjectDoorTeleportState(bool teleportState) noexcept;
+    extern "C" void SetObjectDoorTeleportState(bool teleportState) noexcept;
 
     /**
     * \brief Set the door destination cell of the temporary object stored on the server.
@@ -817,7 +815,7 @@ public:
     * \param cellDescription The description of the cell.
     * \return void
     */
-    static void SetObjectDoorDestinationCell(const char* cellDescription) noexcept;
+    extern "C" void SetObjectDoorDestinationCell(const char* cellDescription) noexcept;
 
     /**
     * \brief Set the door destination position of the temporary object stored on the server.
@@ -827,7 +825,7 @@ public:
     * \param z The Z position.
     * \return void
     */
-    static void SetObjectDoorDestinationPosition(double x, double y, double z) noexcept;
+    extern "C" void SetObjectDoorDestinationPosition(double x, double y, double z) noexcept;
 
     /**
     * \brief Set the door destination rotation of the temporary object stored on the server.
@@ -839,7 +837,7 @@ public:
     * \param z The Z rotation.
     * \return void
     */
-    static void SetObjectDoorDestinationRotation(double x, double z) noexcept;
+    extern "C" void SetObjectDoorDestinationRotation(double x, double z) noexcept;
 
     /**
     * \brief Set a player as the object in the temporary object stored on the server.
@@ -848,7 +846,7 @@ public:
     * \param pid The pid of the player.
     * \return void
     */
-    static void SetPlayerAsObject(unsigned short pid) noexcept;
+    extern "C" void SetPlayerAsObject(unsigned short pid) noexcept;
 
     /**
     * \brief Set the refId of the temporary container item stored on the server.
@@ -856,7 +854,7 @@ public:
     * \param refId The refId.
     * \return void
     */
-    static void SetContainerItemRefId(const char* refId) noexcept;
+    extern "C" void SetContainerItemRefId(const char* refId) noexcept;
 
     /**
     * \brief Set the item count of the temporary container item stored on the server.
@@ -864,7 +862,7 @@ public:
     * \param count The item count.
     * \return void
     */
-    static void SetContainerItemCount(int count) noexcept;
+    extern "C" void SetContainerItemCount(int count) noexcept;
 
     /**
     * \brief Set the charge of the temporary container item stored on the server.
@@ -872,7 +870,7 @@ public:
     * \param charge The charge.
     * \return void
     */
-    static void SetContainerItemCharge(int charge) noexcept;
+    extern "C" void SetContainerItemCharge(int charge) noexcept;
 
     /**
     * \brief Set the enchantment charge of the temporary container item stored on the server.
@@ -880,7 +878,7 @@ public:
     * \param charge The enchantment charge.
     * \return void
     */
-    static void SetContainerItemEnchantmentCharge(double enchantmentCharge) noexcept;
+    extern "C" void SetContainerItemEnchantmentCharge(double enchantmentCharge) noexcept;
 
     /**
     * \brief Set the soul of the temporary container item stored on the server.
@@ -888,7 +886,7 @@ public:
     * \param refId The soul.
     * \return void
     */
-    static void SetContainerItemSoul(const char* soul) noexcept;
+    extern "C" void SetContainerItemSoul(const char* soul) noexcept;
 
     /**
     * \brief Set the action count of the container item at a certain itemIndex in the container
@@ -903,7 +901,7 @@ public:
     * \param actionCount The action count.
     * \return void
     */
-    static void SetContainerItemActionCountByIndex(unsigned int objectIndex, unsigned int itemIndex, int actionCount) noexcept;
+    extern "C" void SetContainerItemActionCountByIndex(unsigned int objectIndex, unsigned int itemIndex, int actionCount) noexcept;
 
     /**
     * \brief Add a copy of the server's temporary object to the server's currently stored object
@@ -914,7 +912,7 @@ public:
     *
     * \return void
     */
-    static void AddObject() noexcept;
+    extern "C" void AddObject() noexcept;
 
     /**
     * \brief Add a copy of the server's temporary container item to the container changes of the
@@ -925,7 +923,7 @@ public:
     *
     * \return void
     */
-    static void AddContainerItem() noexcept;
+    extern "C" void AddContainerItem() noexcept;
 
     /**
     * \brief Send an ObjectActivate packet.
@@ -936,7 +934,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendObjectActivate(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendObjectActivate(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send an ObjectPlace packet.
@@ -947,7 +945,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendObjectPlace(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendObjectPlace(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send an ObjectSpawn packet.
@@ -958,7 +956,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendObjectSpawn(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendObjectSpawn(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send an ObjectDelete packet.
@@ -968,7 +966,7 @@ public:
     *
     * \return void
     */
-    static void SendObjectDelete(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendObjectDelete(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send an ObjectLock packet.
@@ -979,7 +977,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendObjectLock(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendObjectLock(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send an ObjectTrap packet.
@@ -989,7 +987,7 @@ public:
     *
     * \return void
     */
-    static void SendObjectTrap(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendObjectTrap(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send an ObjectScale packet.
@@ -1000,7 +998,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendObjectScale(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendObjectScale(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send an ObjectState packet.
@@ -1011,7 +1009,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendObjectState(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendObjectState(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send a DoorState packet.
@@ -1022,7 +1020,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendDoorState(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendDoorState(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send a DoorDestination packet.
@@ -1033,7 +1031,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendDoorDestination(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendDoorDestination(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send a Container packet.
@@ -1044,7 +1042,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendContainer(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendContainer(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send a VideoPlay packet.
@@ -1055,7 +1053,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendVideoPlay(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendVideoPlay(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send a ConsoleCommand packet.
@@ -1066,28 +1064,27 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendConsoleCommand(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendConsoleCommand(bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
 
 
     // All methods below are deprecated versions of methods from above
 
-    static void ReadLastObjectList() noexcept;
-    static void ReadLastEvent() noexcept;
-    static void InitializeObjectList(unsigned short pid) noexcept;
-    static void InitializeEvent(unsigned short pid) noexcept;
-    static void CopyLastObjectListToStore() noexcept;
-    static unsigned int GetObjectChangesSize() noexcept;
-    static unsigned char GetEventAction() noexcept;
-    static unsigned char GetEventContainerSubAction() noexcept;
-    static unsigned int GetObjectRefNumIndex(unsigned int index) noexcept;
-    static unsigned int GetObjectSummonerRefNumIndex(unsigned int index) noexcept;
-    static void SetEventCell(const char* cellDescription) noexcept;
-    static void SetEventAction(unsigned char action) noexcept;
-    static void SetEventConsoleCommand(const char* consoleCommand) noexcept;
-    static void SetObjectRefNumIndex(int refNum) noexcept;
-    static void AddWorldObject() noexcept;
-
-};
+    extern "C" void ReadLastObjectList() noexcept;
+    extern "C" void ReadLastEvent() noexcept;
+    extern "C" void InitializeObjectList(unsigned short pid) noexcept;
+    extern "C" void InitializeEvent(unsigned short pid) noexcept;
+    extern "C" void CopyLastObjectListToStore() noexcept;
+    extern "C" unsigned int GetObjectChangesSize() noexcept;
+    extern "C" unsigned char GetEventAction() noexcept;
+    extern "C" unsigned char GetEventContainerSubAction() noexcept;
+    extern "C" unsigned int GetObjectRefNumIndex(unsigned int index) noexcept;
+    extern "C" unsigned int GetObjectSummonerRefNumIndex(unsigned int index) noexcept;
+    extern "C" void SetEventCell(const char* cellDescription) noexcept;
+    extern "C" void SetEventAction(unsigned char action) noexcept;
+    extern "C" void SetEventConsoleCommand(const char* consoleCommand) noexcept;
+    extern "C" void SetObjectRefNumIndex(int refNum) noexcept;
+    extern "C" void AddWorldObject() noexcept;
+}
 
 
 #endif //OPENMW_OBJECTAPI_HPP

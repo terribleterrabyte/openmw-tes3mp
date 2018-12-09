@@ -15,10 +15,8 @@
     \
     {"SendSettings",                SettingFunctions::SendSettings}
 
-class SettingFunctions
+namespace SettingFunctions
 {
-public:
-
     /**
     * \brief Set the difficulty for a player.
     *
@@ -29,7 +27,7 @@ public:
     * \param difficulty The difficulty.
     * \return void
     */
-    static void SetDifficulty(unsigned short pid, int difficulty);
+    extern "C" void SetDifficulty(unsigned short pid, int difficulty);
 
     /**
     * \brief Set the client log level enforced for a player.
@@ -47,7 +45,7 @@ public:
     * \param enforcedLogLevel The enforced log level.
     * \return void
     */
-    static void SetEnforcedLogLevel(unsigned short pid, int enforcedLogLevel);
+    extern "C" void SetEnforcedLogLevel(unsigned short pid, int enforcedLogLevel);
 
     /**
     * \brief Set the physics framerate for a player.
@@ -59,7 +57,7 @@ public:
     * \param physicsFramerate The physics framerate.
     * \return void
     */
-    static void SetPhysicsFramerate(unsigned short pid, double physicsFramerate);
+    extern "C" void SetPhysicsFramerate(unsigned short pid, double physicsFramerate);
 
     /**
     * \brief Set whether the console is allowed for a player.
@@ -71,7 +69,7 @@ public:
     * \param state The console permission state.
     * \return void
     */
-    static void SetConsoleAllowed(unsigned short pid, bool state);
+    extern "C" void SetConsoleAllowed(unsigned short pid, bool state);
 
     /**
     * \brief Set whether resting in beds is allowed for a player.
@@ -83,7 +81,7 @@ public:
     * \param state The resting permission state.
     * \return void
     */
-    static void SetBedRestAllowed(unsigned short pid, bool state);
+    extern "C" void SetBedRestAllowed(unsigned short pid, bool state);
 
     /**
     * \brief Set whether resting in the wilderness is allowed for a player.
@@ -95,7 +93,7 @@ public:
     * \param state The resting permission state.
     * \return void
     */
-    static void SetWildernessRestAllowed(unsigned short pid, bool state);
+    extern "C" void SetWildernessRestAllowed(unsigned short pid, bool state);
 
     /**
     * \brief Set whether waiting is allowed for a player.
@@ -107,7 +105,7 @@ public:
     * \param state The waiting permission state.
     * \return void
     */
-    static void SetWaitAllowed(unsigned short pid, bool state);
+    extern "C" void SetWaitAllowed(unsigned short pid, bool state);
 
     /**
     * \brief Send a PlayerSettings packet to the player affected by it.
@@ -115,7 +113,7 @@ public:
     * \param pid The player ID to send it to.
     * \return void
     */
-    static void SendSettings(unsigned short pid) noexcept;
-};
+    extern "C" void SendSettings(unsigned short pid) noexcept;
+}
 
 #endif //OPENMW_SETTINGSAPI_HPP

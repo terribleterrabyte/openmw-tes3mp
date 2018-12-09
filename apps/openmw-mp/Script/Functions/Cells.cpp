@@ -12,7 +12,7 @@ using namespace std;
 
 static std::string tempCellDescription;
 
-unsigned int CellFunctions::GetCellStateChangesSize(unsigned short pid) noexcept
+extern "C" unsigned int CellFunctions::GetCellStateChangesSize(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -20,7 +20,7 @@ unsigned int CellFunctions::GetCellStateChangesSize(unsigned short pid) noexcept
     return player->cellStateChanges.count;
 }
 
-unsigned int CellFunctions::GetCellStateType(unsigned short pid, unsigned int index) noexcept
+extern "C" unsigned int CellFunctions::GetCellStateType(unsigned short pid, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -28,7 +28,7 @@ unsigned int CellFunctions::GetCellStateType(unsigned short pid, unsigned int in
     return player->cellStateChanges.cellStates.at(index).type;
 }
 
-const char *CellFunctions::GetCellStateDescription(unsigned short pid, unsigned int index) noexcept
+extern "C" const char *CellFunctions::GetCellStateDescription(unsigned short pid, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, "");
@@ -40,7 +40,7 @@ const char *CellFunctions::GetCellStateDescription(unsigned short pid, unsigned 
     return tempCellDescription.c_str();
 }
 
-const char *CellFunctions::GetCell(unsigned short pid) noexcept
+extern "C" const char *CellFunctions::GetCell(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -49,21 +49,21 @@ const char *CellFunctions::GetCell(unsigned short pid) noexcept
     return tempCellDescription.c_str();
 }
 
-int CellFunctions::GetExteriorX(unsigned short pid) noexcept
+extern "C" int CellFunctions::GetExteriorX(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
     return player->cell.mData.mX;
 }
 
-int CellFunctions::GetExteriorY(unsigned short pid) noexcept
+extern "C" int CellFunctions::GetExteriorY(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
     return player->cell.mData.mY;
 }
 
-bool CellFunctions::IsInExterior(unsigned short pid) noexcept
+extern "C" bool CellFunctions::IsInExterior(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, false);
@@ -71,7 +71,7 @@ bool CellFunctions::IsInExterior(unsigned short pid) noexcept
     return player->cell.isExterior();
 }
 
-const char *CellFunctions::GetRegion(unsigned short pid) noexcept
+extern "C" const char *CellFunctions::GetRegion(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -79,7 +79,7 @@ const char *CellFunctions::GetRegion(unsigned short pid) noexcept
     return player->cell.mRegion.c_str();
 }
 
-bool CellFunctions::IsChangingRegion(unsigned short pid) noexcept
+extern "C" bool CellFunctions::IsChangingRegion(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, false);
@@ -87,7 +87,7 @@ bool CellFunctions::IsChangingRegion(unsigned short pid) noexcept
     return player->isChangingRegion;
 }
 
-void CellFunctions::SetCell(unsigned short pid, const char *cellDescription) noexcept
+extern "C" void CellFunctions::SetCell(unsigned short pid, const char *cellDescription) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player,);
@@ -98,7 +98,7 @@ void CellFunctions::SetCell(unsigned short pid, const char *cellDescription) noe
     player->cell = Utils::getCellFromDescription(cellDescription);
 }
 
-void CellFunctions::SetExteriorCell(unsigned short pid, int x, int y) noexcept
+extern "C" void CellFunctions::SetExteriorCell(unsigned short pid, int x, int y) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player,);
@@ -115,7 +115,7 @@ void CellFunctions::SetExteriorCell(unsigned short pid, int x, int y) noexcept
     player->cell.mData.mY = y;
 }
 
-void CellFunctions::SendCell(unsigned short pid) noexcept
+extern "C" void CellFunctions::SendCell(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );

@@ -11,7 +11,7 @@ using namespace mwmp;
 Faction tempFaction;
 const Faction emptyFaction = {};
 
-void FactionFunctions::ClearFactionChanges(unsigned short pid) noexcept
+extern "C" void FactionFunctions::ClearFactionChanges(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -19,7 +19,7 @@ void FactionFunctions::ClearFactionChanges(unsigned short pid) noexcept
     player->factionChanges.factions.clear();
 }
 
-unsigned int FactionFunctions::GetFactionChangesSize(unsigned short pid) noexcept
+extern "C" unsigned int FactionFunctions::GetFactionChangesSize(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -27,7 +27,7 @@ unsigned int FactionFunctions::GetFactionChangesSize(unsigned short pid) noexcep
     return player->factionChanges.count;
 }
 
-unsigned char FactionFunctions::GetFactionChangesAction(unsigned short pid) noexcept
+extern "C" unsigned char FactionFunctions::GetFactionChangesAction(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -35,7 +35,7 @@ unsigned char FactionFunctions::GetFactionChangesAction(unsigned short pid) noex
     return player->factionChanges.action;
 }
 
-const char *FactionFunctions::GetFactionId(unsigned short pid, unsigned int index) noexcept
+extern "C" const char *FactionFunctions::GetFactionId(unsigned short pid, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, "");
@@ -46,7 +46,7 @@ const char *FactionFunctions::GetFactionId(unsigned short pid, unsigned int inde
     return player->factionChanges.factions.at(index).factionId.c_str();
 }
 
-int FactionFunctions::GetFactionRank(unsigned short pid, unsigned int index) noexcept
+extern "C" int FactionFunctions::GetFactionRank(unsigned short pid, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -54,7 +54,7 @@ int FactionFunctions::GetFactionRank(unsigned short pid, unsigned int index) noe
     return player->factionChanges.factions.at(index).rank;
 }
 
-bool FactionFunctions::GetFactionExpulsionState(unsigned short pid, unsigned int index) noexcept
+extern "C" bool FactionFunctions::GetFactionExpulsionState(unsigned short pid, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, false);
@@ -62,7 +62,7 @@ bool FactionFunctions::GetFactionExpulsionState(unsigned short pid, unsigned int
     return player->factionChanges.factions.at(index).isExpelled;
 }
 
-int FactionFunctions::GetFactionReputation(unsigned short pid, unsigned int index) noexcept
+extern "C" int FactionFunctions::GetFactionReputation(unsigned short pid, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -70,7 +70,7 @@ int FactionFunctions::GetFactionReputation(unsigned short pid, unsigned int inde
     return player->factionChanges.factions.at(index).reputation;
 }
 
-void FactionFunctions::SetFactionChangesAction(unsigned short pid, unsigned char action) noexcept
+extern "C" void FactionFunctions::SetFactionChangesAction(unsigned short pid, unsigned char action) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -78,27 +78,27 @@ void FactionFunctions::SetFactionChangesAction(unsigned short pid, unsigned char
     player->factionChanges.action = action;
 }
 
-void FactionFunctions::SetFactionId(const char* factionId) noexcept
+extern "C" void FactionFunctions::SetFactionId(const char* factionId) noexcept
 {
     tempFaction.factionId = factionId;
 }
 
-void FactionFunctions::SetFactionRank(unsigned int rank) noexcept
+extern "C" void FactionFunctions::SetFactionRank(unsigned int rank) noexcept
 {
     tempFaction.rank = rank;
 }
 
-void FactionFunctions::SetFactionExpulsionState(bool expulsionState) noexcept
+extern "C" void FactionFunctions::SetFactionExpulsionState(bool expulsionState) noexcept
 {
     tempFaction.isExpelled = expulsionState;
 }
 
-void FactionFunctions::SetFactionReputation(int reputation) noexcept
+extern "C" void FactionFunctions::SetFactionReputation(int reputation) noexcept
 {
     tempFaction.reputation = reputation;
 }
 
-void FactionFunctions::AddFaction(unsigned short pid) noexcept
+extern "C" void FactionFunctions::AddFaction(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -108,7 +108,7 @@ void FactionFunctions::AddFaction(unsigned short pid) noexcept
     tempFaction = emptyFaction;
 }
 
-void FactionFunctions::SendFactionChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void FactionFunctions::SendFactionChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -122,7 +122,7 @@ void FactionFunctions::SendFactionChanges(unsigned short pid, bool sendToOtherPl
         packet->Send(true);
 }
 
-// All methods below are deprecated versions of methods from above
+extern "C" // All methods below are deprecated versions of methods from above
 
 void FactionFunctions::InitializeFactionChanges(unsigned short pid) noexcept
 {

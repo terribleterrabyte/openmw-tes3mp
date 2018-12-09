@@ -7,7 +7,7 @@
 
 using namespace mwmp;
 
-void BookFunctions::ClearBookChanges(unsigned short pid) noexcept
+extern "C" void BookFunctions::ClearBookChanges(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -15,7 +15,7 @@ void BookFunctions::ClearBookChanges(unsigned short pid) noexcept
     player->bookChanges.books.clear();
 }
 
-unsigned int BookFunctions::GetBookChangesSize(unsigned short pid) noexcept
+extern "C" unsigned int BookFunctions::GetBookChangesSize(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, 0);
@@ -23,7 +23,7 @@ unsigned int BookFunctions::GetBookChangesSize(unsigned short pid) noexcept
     return player->bookChanges.count;
 }
 
-void BookFunctions::AddBook(unsigned short pid, const char* bookId) noexcept
+extern "C" void BookFunctions::AddBook(unsigned short pid, const char* bookId) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -34,7 +34,7 @@ void BookFunctions::AddBook(unsigned short pid, const char* bookId) noexcept
     player->bookChanges.books.push_back(book);
 }
 
-const char *BookFunctions::GetBookId(unsigned short pid, unsigned int index) noexcept
+extern "C" const char *BookFunctions::GetBookId(unsigned short pid, unsigned int index) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, "");
@@ -45,7 +45,7 @@ const char *BookFunctions::GetBookId(unsigned short pid, unsigned int index) noe
     return player->bookChanges.books.at(index).bookId.c_str();
 }
 
-void BookFunctions::SendBookChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
+extern "C" void BookFunctions::SendBookChanges(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, );
@@ -62,7 +62,7 @@ void BookFunctions::SendBookChanges(unsigned short pid, bool sendToOtherPlayers,
 
 // All methods below are deprecated versions of methods from above
 
-void BookFunctions::InitializeBookChanges(unsigned short pid) noexcept
+extern "C" void BookFunctions::InitializeBookChanges(unsigned short pid) noexcept
 {
     ClearBookChanges(pid);
 }

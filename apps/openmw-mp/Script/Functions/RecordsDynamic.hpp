@@ -110,16 +110,14 @@
     \
     {"SendRecordDynamic",                       RecordsDynamicFunctions::SendRecordDynamic}
 
-class RecordsDynamicFunctions
+namespace RecordsDynamicFunctions
 {
-public:
-
     /**
     * \brief Clear the data from the records stored on the server.
     *
     * \return void
     */
-    static void ClearRecords() noexcept;
+    extern "C" void ClearRecords() noexcept;
 
     /**
     * \brief Get the type of records in the read worldstate's dynamic records.
@@ -127,14 +125,14 @@ public:
     * \return The type of records (0 for SPELL, 1 for POTION, 2 for ENCHANTMENT,
     *         3 for NPC).
     */
-    static unsigned short GetRecordType() noexcept;
+    extern "C" unsigned short GetRecordType() noexcept;
 
     /**
     * \brief Get the number of records in the read worldstate's dynamic records.
     *
     * \return The number of records.
     */
-    static unsigned int GetRecordCount() noexcept;
+    extern "C" unsigned int GetRecordCount() noexcept;
 
     /**
     * \brief Get the number of effects for the record at a certain index in the read
@@ -143,7 +141,7 @@ public:
     * \param recordIndex The index of the record.
     * \return The number of effects.
     */
-    static unsigned int GetRecordEffectCount(unsigned int recordIndex) noexcept;
+    extern "C" unsigned int GetRecordEffectCount(unsigned int recordIndex) noexcept;
 
     /**
     * \brief Get the id of the record at a certain index in the read worldstate's
@@ -152,7 +150,7 @@ public:
     * \param index The index of the record.
     * \return The id of the record.
     */
-    static const char *GetRecordId(unsigned int index) noexcept;
+    extern "C" const char *GetRecordId(unsigned int index) noexcept;
 
     /**
     * \brief Get the base id (i.e. the id this record should inherit default
@@ -162,7 +160,7 @@ public:
     * \param index The index of the record.
     * \return The base id of the record.
     */
-    static const char *GetRecordBaseId(unsigned int index) noexcept;
+    extern "C" const char *GetRecordBaseId(unsigned int index) noexcept;
 
     /**
     * \brief Get the subtype of the record at a certain index in the read worldstate's
@@ -171,7 +169,7 @@ public:
     * \param index The index of the record.
     * \return The type of the record.
     */
-    static int GetRecordSubtype(unsigned int index) noexcept;
+    extern "C" int GetRecordSubtype(unsigned int index) noexcept;
 
     /**
     * \brief Get the name of the record at a certain index in the read worldstate's
@@ -180,7 +178,7 @@ public:
     * \param index The index of the record.
     * \return The name of the record.
     */
-    static const char *GetRecordName(unsigned int index) noexcept;
+    extern "C" const char *GetRecordName(unsigned int index) noexcept;
 
     /**
     * \brief Get the model of the record at a certain index in the read worldstate's
@@ -189,7 +187,7 @@ public:
     * \param index The index of the record.
     * \return The model of the record.
     */
-    static const char *GetRecordModel(unsigned int index) noexcept;
+    extern "C" const char *GetRecordModel(unsigned int index) noexcept;
 
     /**
     * \brief Get the icon of the record at a certain index in the read worldstate's
@@ -198,7 +196,7 @@ public:
     * \param index The index of the record.
     * \return The icon of the record.
     */
-    static const char *GetRecordIcon(unsigned int index) noexcept;
+    extern "C" const char *GetRecordIcon(unsigned int index) noexcept;
 
     /**
     * \brief Get the script of the record at a certain index in the read worldstate's
@@ -207,7 +205,7 @@ public:
     * \param index The index of the record.
     * \return The script of the record.
     */
-    static const char *GetRecordScript(unsigned int index) noexcept;
+    extern "C" const char *GetRecordScript(unsigned int index) noexcept;
 
     /**
     * \brief Get the enchantment id of the record at a certain index in the read
@@ -216,7 +214,7 @@ public:
     * \param index The index of the record.
     * \return The enchantment id of the record.
     */
-    static const char *GetRecordEnchantmentId(unsigned int index) noexcept;
+    extern "C" const char *GetRecordEnchantmentId(unsigned int index) noexcept;
 
     /**
     * \brief Get the enchantment charge of the record at a certain index in
@@ -225,7 +223,7 @@ public:
     * \param index The index of the record.
     * \return The enchantment charge of the record.
     */
-    static int GetRecordEnchantmentCharge(unsigned int index) noexcept;
+    extern "C" int GetRecordEnchantmentCharge(unsigned int index) noexcept;
 
     /**
     * \brief Get the auto-calculation flag value of the record at a certain index in
@@ -234,7 +232,7 @@ public:
     * \param index The index of the record.
     * \return The auto-calculation flag value of the record.
     */
-    static int GetRecordAutoCalc(unsigned int index) noexcept;
+    extern "C" int GetRecordAutoCalc(unsigned int index) noexcept;
 
     /**
     * \brief Get the charge of the record at a certain index in the read worldstate's
@@ -243,7 +241,7 @@ public:
     * \param index The index of the record.
     * \return The charge of the record.
     */
-    static int GetRecordCharge(unsigned int index) noexcept;
+    extern "C" int GetRecordCharge(unsigned int index) noexcept;
 
     /**
     * \brief Get the cost of the record at a certain index in the read worldstate's
@@ -252,7 +250,7 @@ public:
     * \param index The index of the record.
     * \return The cost of the record.
     */
-    static int GetRecordCost(unsigned int index) noexcept;
+    extern "C" int GetRecordCost(unsigned int index) noexcept;
 
     /**
     * \brief Get the flags of the record at a certain index in the read worldstate's
@@ -261,7 +259,7 @@ public:
     * \param index The index of the record.
     * \return The flags of the spell as an integer.
     */
-    static int GetRecordFlags(unsigned int index) noexcept;
+    extern "C" int GetRecordFlags(unsigned int index) noexcept;
 
     /**
     * \brief Get the value of the record at a certain index in the read worldstate's
@@ -270,7 +268,7 @@ public:
     * \param index The index of the record.
     * \return The value of the record.
     */
-    static int GetRecordValue(unsigned int index) noexcept;
+    extern "C" int GetRecordValue(unsigned int index) noexcept;
 
     /**
     * \brief Get the weight of the record at a certain index in the read worldstate's
@@ -279,7 +277,7 @@ public:
     * \param index The index of the record.
     * \return The weight of the record.
     */
-    static double GetRecordWeight(unsigned int index) noexcept;
+    extern "C" double GetRecordWeight(unsigned int index) noexcept;
 
     /**
     * \brief Get the ID of the effect at a certain index in the read worldstate's
@@ -289,7 +287,7 @@ public:
     * \param effectIndex The index of the effect.
     * \return The ID of the effect.
     */
-    static unsigned int GetRecordEffectId(unsigned int recordIndex, unsigned int effectIndex) noexcept;
+    extern "C" unsigned int GetRecordEffectId(unsigned int recordIndex, unsigned int effectIndex) noexcept;
 
     /**
     * \brief Get the ID of the attribute modified by the effect at a certain index in the
@@ -299,7 +297,7 @@ public:
     * \param effectIndex The index of the effect.
     * \return The attribute ID for the effect.
     */
-    static int GetRecordEffectAttribute(unsigned int recordIndex, unsigned int effectIndex) noexcept;
+    extern "C" int GetRecordEffectAttribute(unsigned int recordIndex, unsigned int effectIndex) noexcept;
 
     /**
     * \brief Get the ID of the skill modified by the effect at a certain index in the
@@ -309,7 +307,7 @@ public:
     * \param effectIndex The index of the effect.
     * \return The skill ID for the effect.
     */
-    static int GetRecordEffectSkill(unsigned int recordIndex, unsigned int effectIndex) noexcept;
+    extern "C" int GetRecordEffectSkill(unsigned int recordIndex, unsigned int effectIndex) noexcept;
 
     /**
     * \brief Get the range type of the effect at a certain index in the read worldstate's
@@ -319,7 +317,7 @@ public:
     * \param effectIndex The index of the effect.
     * \return The range of the effect.
     */
-    static unsigned int GetRecordEffectRangeType(unsigned int recordIndex, unsigned int effectIndex) noexcept;
+    extern "C" unsigned int GetRecordEffectRangeType(unsigned int recordIndex, unsigned int effectIndex) noexcept;
 
     /**
     * \brief Get the area of the effect at a certain index in the read worldstate's current
@@ -329,7 +327,7 @@ public:
     * \param effectIndex The index of the effect.
     * \return The area of the effect.
     */
-    static int GetRecordEffectArea(unsigned int recordIndex, unsigned int effectIndex) noexcept;
+    extern "C" int GetRecordEffectArea(unsigned int recordIndex, unsigned int effectIndex) noexcept;
 
     /**
     * \brief Get the duration of the effect at a certain index in the read worldstate's current
@@ -339,7 +337,7 @@ public:
     * \param effectIndex The index of the effect.
     * \return The duration of the effect.
     */
-    static int GetRecordEffectDuration(unsigned int recordIndex, unsigned int effectIndex) noexcept;
+    extern "C" int GetRecordEffectDuration(unsigned int recordIndex, unsigned int effectIndex) noexcept;
 
     /**
     * \brief Get the maximum magnitude of the effect at a certain index in the read
@@ -349,7 +347,7 @@ public:
     * \param effectIndex The index of the effect.
     * \return The maximum magnitude of the effect.
     */
-    static int GetRecordEffectMagnitudeMax(unsigned int recordIndex, unsigned int effectIndex) noexcept;
+    extern "C" int GetRecordEffectMagnitudeMax(unsigned int recordIndex, unsigned int effectIndex) noexcept;
 
     /**
     * \brief Get the minimum magnitude of the effect at a certain index in the read
@@ -359,7 +357,7 @@ public:
     * \param effectIndex The index of the effect.
     * \return The minimum magnitude of the effect.
     */
-    static int GetRecordEffectMagnitudeMin(unsigned int recordIndex, unsigned int effectIndex) noexcept;
+    extern "C" int GetRecordEffectMagnitudeMin(unsigned int recordIndex, unsigned int effectIndex) noexcept;
 
     /**
     * \brief Set which type of temporary records stored on the server should have
@@ -368,7 +366,7 @@ public:
     * \param type The type of records.
     * \return void
     */
-    static void SetRecordType(unsigned int type) noexcept;
+    extern "C" void SetRecordType(unsigned int type) noexcept;
 
     /**
     * \brief Set the id of the temporary record stored on the server for the
@@ -377,7 +375,7 @@ public:
     * \param id The id of the record.
     * \return void
     */
-    static void SetRecordId(const char* id) noexcept;
+    extern "C" void SetRecordId(const char* id) noexcept;
 
     /**
     * \brief Set the base id (i.e. the id this record should inherit default
@@ -387,7 +385,7 @@ public:
     * \param baseId The baseId of the record.
     * \return void
     */
-    static void SetRecordBaseId(const char* baseId) noexcept;
+    extern "C" void SetRecordBaseId(const char* baseId) noexcept;
 
     /**
     * \brief Set the inventory base id (i.e. the id this record should inherit
@@ -397,7 +395,7 @@ public:
     * \param inventoryBaseId The inventoryBaseId of the record.
     * \return void
     */
-    static void SetRecordInventoryBaseId(const char* inventoryBaseId) noexcept;
+    extern "C" void SetRecordInventoryBaseId(const char* inventoryBaseId) noexcept;
 
     /**
     * \brief Set the subtype of the temporary record stored on the server for
@@ -406,7 +404,7 @@ public:
     * \param type The spell type.
     * \return void
     */
-    static void SetRecordSubtype(unsigned int subtype) noexcept;
+    extern "C" void SetRecordSubtype(unsigned int subtype) noexcept;
 
     /**
     * \brief Set the name of the temporary record stored on the server for the
@@ -415,7 +413,7 @@ public:
     * \param name The name of the record.
     * \return void
     */
-    static void SetRecordName(const char* name) noexcept;
+    extern "C" void SetRecordName(const char* name) noexcept;
 
     /**
     * \brief Set the model of the temporary record stored on the server for the
@@ -424,7 +422,7 @@ public:
     * \param model The model of the record.
     * \return void
     */
-    static void SetRecordModel(const char* model) noexcept;
+    extern "C" void SetRecordModel(const char* model) noexcept;
 
     /**
     * \brief Set the icon of the temporary record stored on the server for the
@@ -433,7 +431,7 @@ public:
     * \param icon The icon of the record.
     * \return void
     */
-    static void SetRecordIcon(const char* icon) noexcept;
+    extern "C" void SetRecordIcon(const char* icon) noexcept;
 
     /**
     * \brief Set the script of the temporary record stored on the server for the
@@ -442,7 +440,7 @@ public:
     * \param script The script of the record.
     * \return void
     */
-    static void SetRecordScript(const char* script) noexcept;
+    extern "C" void SetRecordScript(const char* script) noexcept;
 
     /**
     * \brief Set the enchantment id of the temporary record stored on the server
@@ -451,7 +449,7 @@ public:
     * \param enchantmentId The enchantment id of the record.
     * \return void
     */
-    static void SetRecordEnchantmentId(const char* enchantmentId) noexcept;
+    extern "C" void SetRecordEnchantmentId(const char* enchantmentId) noexcept;
 
     /**
     * \brief Set the enchantment charge of the temporary record stored on the server
@@ -460,7 +458,7 @@ public:
     * \param enchantmentCharge The enchantmentCharge of the record.
     * \return void
     */
-    static void SetRecordEnchantmentCharge(int enchantmentCharge) noexcept;
+    extern "C" void SetRecordEnchantmentCharge(int enchantmentCharge) noexcept;
 
     /**
     * \brief Set the auto-calculation flag value of the temporary record stored
@@ -469,7 +467,7 @@ public:
     * \param autoCalc The auto-calculation flag value of the record.
     * \return void
     */
-    static void SetRecordAutoCalc(int autoCalc) noexcept;
+    extern "C" void SetRecordAutoCalc(int autoCalc) noexcept;
 
     /**
     * \brief Set the charge of the temporary record stored on the server for the
@@ -478,7 +476,7 @@ public:
     * \param charge The charge of the record.
     * \return void
     */
-    static void SetRecordCharge(int charge) noexcept;
+    extern "C" void SetRecordCharge(int charge) noexcept;
 
     /**
     * \brief Set the cost of the temporary record stored on the server for the
@@ -487,7 +485,7 @@ public:
     * \param cost The cost of the record.
     * \return void
     */
-    static void SetRecordCost(int cost) noexcept;
+    extern "C" void SetRecordCost(int cost) noexcept;
 
     /**
     * \brief Set the flags of the temporary record stored on the server for the
@@ -496,7 +494,7 @@ public:
     * \param flags The flags of the record.
     * \return void
     */
-    static void SetRecordFlags(int flags) noexcept;
+    extern "C" void SetRecordFlags(int flags) noexcept;
 
     /**
     * \brief Set the value of the temporary record stored on the server for the
@@ -505,7 +503,7 @@ public:
     * \param value The value of the record.
     * \return void
     */
-    static void SetRecordValue(int value) noexcept;
+    extern "C" void SetRecordValue(int value) noexcept;
 
     /**
     * \brief Set the weight of the temporary record stored on the server for the
@@ -514,7 +512,7 @@ public:
     * \param weight The weight of the record.
     * \return void
     */
-    static void SetRecordWeight(double weight) noexcept;
+    extern "C" void SetRecordWeight(double weight) noexcept;
 
     /**
     * \brief Set the armor rating of the temporary record stored on the server
@@ -523,7 +521,7 @@ public:
     * \param armorRating The armor rating of the record.
     * \return void
     */
-    static void SetRecordArmorRating(int armorRating) noexcept;
+    extern "C" void SetRecordArmorRating(int armorRating) noexcept;
 
     /**
     * \brief Set the health of the temporary record stored on the server for the
@@ -532,7 +530,7 @@ public:
     * \param health The health of the record.
     * \return void
     */
-    static void SetRecordHealth(int health) noexcept;
+    extern "C" void SetRecordHealth(int health) noexcept;
 
     /**
     * \brief Set the chop damage of the temporary record stored on the server for the
@@ -542,7 +540,7 @@ public:
     * \param maxDamage The maximum damage of the record.
     * \return void
     */
-    static void SetRecordDamageChop(unsigned int minDamage, unsigned int maxDamage) noexcept;
+    extern "C" void SetRecordDamageChop(unsigned int minDamage, unsigned int maxDamage) noexcept;
 
     /**
     * \brief Set the slash damage of the temporary record stored on the server for the
@@ -552,7 +550,7 @@ public:
     * \param maxDamage The maximum damage of the record.
     * \return void
     */
-    static void SetRecordDamageSlash(unsigned int minDamage, unsigned int maxDamage) noexcept;
+    extern "C" void SetRecordDamageSlash(unsigned int minDamage, unsigned int maxDamage) noexcept;
 
     /**
     * \brief Set the thrust damage of the temporary record stored on the server for the
@@ -562,7 +560,7 @@ public:
     * \param maxDamage The maximum damage of the record.
     * \return void
     */
-    static void SetRecordDamageThrust(unsigned int minDamage, unsigned int maxDamage) noexcept;
+    extern "C" void SetRecordDamageThrust(unsigned int minDamage, unsigned int maxDamage) noexcept;
 
     /**
     * \brief Set the reach of the temporary record stored on the server for the
@@ -571,7 +569,7 @@ public:
     * \param reach The reach of the record.
     * \return void
     */
-    static void SetRecordReach(double reach) noexcept;
+    extern "C" void SetRecordReach(double reach) noexcept;
 
     /**
     * \brief Set the speed of the temporary record stored on the server for the
@@ -580,7 +578,7 @@ public:
     * \param speed The speed of the record.
     * \return void
     */
-    static void SetRecordSpeed(double speed) noexcept;
+    extern "C" void SetRecordSpeed(double speed) noexcept;
 
     /**
     * \brief Set whether the temporary record stored on the server for the
@@ -591,7 +589,7 @@ public:
     * \param keyState Whether the record is a key.
     * \return void
     */
-    static void SetRecordKeyState(bool keyState) noexcept;
+    extern "C" void SetRecordKeyState(bool keyState) noexcept;
 
     /**
     * \brief Set whether the temporary record stored on the server for the
@@ -602,7 +600,7 @@ public:
     * \param scrollState Whether the record is a scroll.
     * \return void
     */
-    static void SetRecordScrollState(bool scrollState) noexcept;
+    extern "C" void SetRecordScrollState(bool scrollState) noexcept;
 
     /**
     * \brief Set the skill ID of the temporary record stored on the server for the
@@ -611,7 +609,7 @@ public:
     * \param skillId The skill ID of the record.
     * \return void
     */
-    static void SetRecordSkillId(int skillId) noexcept;
+    extern "C" void SetRecordSkillId(int skillId) noexcept;
 
     /**
     * \brief Set the text of the temporary record stored on the server for the
@@ -620,7 +618,7 @@ public:
     * \param text The text of the record.
     * \return void
     */
-    static void SetRecordText(const char* text) noexcept;
+    extern "C" void SetRecordText(const char* text) noexcept;
 
     /**
     * \brief Set the hair of the temporary record stored on the server for the
@@ -629,7 +627,7 @@ public:
     * \param hair The hair of the record.
     * \return void
     */
-    static void SetRecordHair(const char* hair) noexcept;
+    extern "C" void SetRecordHair(const char* hair) noexcept;
 
     /**
     * \brief Set the head of the temporary record stored on the server for the
@@ -638,7 +636,7 @@ public:
     * \param hair The head of the record.
     * \return void
     */
-    static void SetRecordHead(const char* head) noexcept;
+    extern "C" void SetRecordHead(const char* head) noexcept;
 
     /**
     * \brief Set the gender of the temporary record stored on the server for the
@@ -647,7 +645,7 @@ public:
     * \param hair The race of the record.
     * \return void
     */
-    static void SetRecordGender(unsigned int gender) noexcept;
+    extern "C" void SetRecordGender(unsigned int gender) noexcept;
 
     /**
     * \brief Set the race of the temporary record stored on the server for the
@@ -656,7 +654,7 @@ public:
     * \param hair The race of the record.
     * \return void
     */
-    static void SetRecordRace(const char* race) noexcept;
+    extern "C" void SetRecordRace(const char* race) noexcept;
 
     /**
     * \brief Set the character class of the temporary record stored on the server
@@ -665,7 +663,7 @@ public:
     * \param hair The character class of the record.
     * \return void
     */
-    static void SetRecordClass(const char* charClass) noexcept;
+    extern "C" void SetRecordClass(const char* charClass) noexcept;
 
     /**
     * \brief Set the faction of the temporary record stored on the server for the
@@ -674,7 +672,7 @@ public:
     * \param faction The faction of the record.
     * \return void
     */
-    static void SetRecordFaction(const char* faction) noexcept;
+    extern "C" void SetRecordFaction(const char* faction) noexcept;
 
     /**
     * \brief Set the level of the temporary record stored on the server for the
@@ -683,7 +681,7 @@ public:
     * \param level The level of the record.
     * \return void
     */
-    static void SetRecordLevel(int level) noexcept;
+    extern "C" void SetRecordLevel(int level) noexcept;
 
     /**
     * \brief Set the magicka of the temporary record stored on the server for the
@@ -692,7 +690,7 @@ public:
     * \param magicka The magicka of the record.
     * \return void
     */
-    static void SetRecordMagicka(int magicka) noexcept;
+    extern "C" void SetRecordMagicka(int magicka) noexcept;
 
     /**
     * \brief Set the fatigue of the temporary record stored on the server for the
@@ -701,7 +699,7 @@ public:
     * \param fatigue The fatigue of the record.
     * \return void
     */
-    static void SetRecordFatigue(int fatigue) noexcept;
+    extern "C" void SetRecordFatigue(int fatigue) noexcept;
 
     /**
     * \brief Set the AI fight value of the temporary record stored on the server for the
@@ -710,7 +708,7 @@ public:
     * \param aiFight The AI fight value of the record.
     * \return void
     */
-    static void SetRecordAIFight(int aiFight) noexcept;
+    extern "C" void SetRecordAIFight(int aiFight) noexcept;
 
     /**
     * \brief Set the id of the record at a certain index in the records stored on the server.
@@ -722,7 +720,7 @@ public:
     * \param id The id of the record.
     * \return void
     */
-    static void SetRecordIdByIndex(unsigned int index, const char* id) noexcept;
+    extern "C" void SetRecordIdByIndex(unsigned int index, const char* id) noexcept;
 
     /**
     * \brief Set the enchantment id of the record at a certain index in the records stored on
@@ -735,7 +733,7 @@ public:
     * \param enchantmentId The enchantment id of the record.
     * \return void
     */
-    static void SetRecordEnchantmentIdByIndex(unsigned int index, const char* enchantmentId) noexcept;
+    extern "C" void SetRecordEnchantmentIdByIndex(unsigned int index, const char* enchantmentId) noexcept;
 
     /**
     * \brief Set the ID of the temporary effect stored on the server.
@@ -743,7 +741,7 @@ public:
     * \param effectId The ID of the effect.
     * \return void
     */
-    static void SetRecordEffectId(unsigned int effectId) noexcept;
+    extern "C" void SetRecordEffectId(unsigned int effectId) noexcept;
 
     /**
     * \brief Set the ID of the attribute modified by the temporary effect stored on
@@ -752,7 +750,7 @@ public:
     * \param attributeId The ID of the attribute.
     * \return void
     */
-    static void SetRecordEffectAttribute(int attributeId) noexcept;
+    extern "C" void SetRecordEffectAttribute(int attributeId) noexcept;
 
     /**
     * \brief Set the ID of the skill modified by the temporary effect stored on the
@@ -761,7 +759,7 @@ public:
     * \param skillId The ID of the skill.
     * \return void
     */
-    static void SetRecordEffectSkill(int skillId) noexcept;
+    extern "C" void SetRecordEffectSkill(int skillId) noexcept;
 
     /**
     * \brief Set the range type of the temporary effect stored on the server (0 for
@@ -770,7 +768,7 @@ public:
     * \param rangeType The range type of the effect.
     * \return void
     */
-    static void SetRecordEffectRangeType(unsigned int rangeType) noexcept;
+    extern "C" void SetRecordEffectRangeType(unsigned int rangeType) noexcept;
 
     /**
     * \brief Set the area of the temporary effect stored on the server.
@@ -778,7 +776,7 @@ public:
     * \param area The area of the effect.
     * \return void
     */
-    static void SetRecordEffectArea(int area) noexcept;
+    extern "C" void SetRecordEffectArea(int area) noexcept;
 
     /**
     * \brief Set the duration of the temporary effect stored on the server.
@@ -786,7 +784,7 @@ public:
     * \param duration The duration of the effect.
     * \return void
     */
-    static void SetRecordEffectDuration(int duration) noexcept;
+    extern "C" void SetRecordEffectDuration(int duration) noexcept;
 
     /**
     * \brief Set the maximum magnitude of the temporary effect stored on the server.
@@ -794,7 +792,7 @@ public:
     * \param magnitudeMax The maximum magnitude of the effect.
     * \return void
     */
-    static void SetRecordEffectMagnitudeMax(int magnitudeMax) noexcept;
+    extern "C" void SetRecordEffectMagnitudeMax(int magnitudeMax) noexcept;
 
     /**
     * \brief Set the minimum magnitude of the temporary effect stored on the server.
@@ -802,7 +800,7 @@ public:
     * \param magnitudeMin The minimum magnitude of the effect.
     * \return void
     */
-    static void SetRecordEffectMagnitudeMin(int magnitudeMin) noexcept;
+    extern "C" void SetRecordEffectMagnitudeMin(int magnitudeMin) noexcept;
 
     /**
     * \brief Set the type of the temporary body part stored on the server.
@@ -810,7 +808,7 @@ public:
     * \param partType The type of the body part.
     * \return void
     */
-    static void SetRecordBodyPartType(unsigned int partType) noexcept;
+    extern "C" void SetRecordBodyPartType(unsigned int partType) noexcept;
 
     /**
     * \brief Set the id of the male version of the temporary body part stored on the
@@ -819,7 +817,7 @@ public:
     * \param partId The id of the body part.
     * \return void
     */
-    static void SetRecordBodyPartIdForMale(const char* partId) noexcept;
+    extern "C" void SetRecordBodyPartIdForMale(const char* partId) noexcept;
 
     /**
     * \brief Set the id of the female version of the temporary body part stored on the
@@ -828,7 +826,7 @@ public:
     * \param partId The id of the body part.
     * \return void
     */
-    static void SetRecordBodyPartIdForFemale(const char* partId) noexcept;
+    extern "C" void SetRecordBodyPartIdForFemale(const char* partId) noexcept;
 
     /**
     * \brief Set the id of the of the temporary inventory item stored on the server.
@@ -836,7 +834,7 @@ public:
     * \param partId The id of the inventory item.
     * \return void
     */
-    static void SetRecordInventoryItemId(const char* itemId) noexcept;
+    extern "C" void SetRecordInventoryItemId(const char* itemId) noexcept;
 
     /**
     * \brief Set the count of the of the temporary inventory item stored on the server.
@@ -844,7 +842,7 @@ public:
     * \param count The count of the inventory item.
     * \return void
     */
-    static void SetRecordInventoryItemCount(unsigned int count) noexcept;
+    extern "C" void SetRecordInventoryItemCount(unsigned int count) noexcept;
 
     /**
     * \brief Add a copy of the server's temporary record of the current specified
@@ -855,7 +853,7 @@ public:
     *
     * \return void
     */
-    static void AddRecord() noexcept;
+    extern "C" void AddRecord() noexcept;
 
     /**
     * \brief Add a copy of the server's temporary effect to the temporary record
@@ -866,7 +864,7 @@ public:
     *
     * \return void
     */
-    static void AddRecordEffect() noexcept;
+    extern "C" void AddRecordEffect() noexcept;
 
     /**
     * \brief Add a copy of the server's temporary body part to the temporary record
@@ -877,7 +875,7 @@ public:
     *
     * \return void
     */
-    static void AddRecordBodyPart() noexcept;
+    extern "C" void AddRecordBodyPart() noexcept;
 
     /**
     * \brief Add a copy of the server's temporary inventory item to the temporary record
@@ -891,7 +889,7 @@ public:
     *
     * \return void
     */
-    static void AddRecordInventoryItem() noexcept;
+    extern "C" void AddRecordInventoryItem() noexcept;
 
     /**
     * \brief Send a RecordDynamic packet with the current specified record type.
@@ -903,8 +901,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendRecordDynamic(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
-
-};
+    extern "C" void SendRecordDynamic(unsigned short pid, bool sendToOtherPlayers, bool skipAttachedPlayer) noexcept;
+}
 
 #endif //OPENMW_RECORDSDYNAMICAPI_HPP

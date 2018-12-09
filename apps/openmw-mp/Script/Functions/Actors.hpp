@@ -102,16 +102,14 @@
     {"GetActorKillerRefNumIndex",              ActorFunctions::GetActorKillerRefNumIndex},\
     {"SetActorRefNumIndex",                    ActorFunctions::SetActorRefNumIndex}
 
-class ActorFunctions
+namespace ActorFunctions
 {
-public:
-
     /**
     * \brief Use the last actor list received by the server as the one being read.
     *
     * \return void
     */
-    static void ReadReceivedActorList() noexcept;
+    extern "C" void ReadReceivedActorList() noexcept;
 
     /**
     * \brief Use the temporary actor list stored for a cell as the one being read.
@@ -122,14 +120,14 @@ public:
     * \param cellDescription The description of the cell whose actor list should be read.
     * \return void
     */
-    static void ReadCellActorList(const char* cellDescription) noexcept;
+    extern "C" void ReadCellActorList(const char* cellDescription) noexcept;
 
     /**
     * \brief Clear the data from the actor list stored on the server.
     *
     * \return void
     */
-    static void ClearActorList() noexcept;
+    extern "C" void ClearActorList() noexcept;
 
     /**
     * \brief Set the pid attached to the ActorList.
@@ -137,7 +135,7 @@ public:
     * \param pid The player ID to whom the actor list should be attached.
     * \return void
     */
-    static void SetActorListPid(unsigned short pid) noexcept;
+    extern "C" void SetActorListPid(unsigned short pid) noexcept;
 
     /**
     * \brief Take the contents of the read-only actor list last received by the
@@ -146,21 +144,21 @@ public:
     *
     * \return void
     */
-    static void CopyReceivedActorListToStore() noexcept;
+    extern "C" void CopyReceivedActorListToStore() noexcept;
 
     /**
     * \brief Get the number of indexes in the read actor list.
     *
     * \return The number of indexes.
     */
-    static unsigned int GetActorListSize() noexcept;
+    extern "C" unsigned int GetActorListSize() noexcept;
 
     /**
     * \brief Get the action type used in the read actor list.
     *
     * \return The action type (0 for SET, 1 for ADD, 2 for REMOVE, 3 for REQUEST).
     */
-    static unsigned char GetActorListAction() noexcept;
+    extern "C" unsigned char GetActorListAction() noexcept;
 
     /**
     * \brief Get the cell description of the actor at a certain index in the read actor list.
@@ -168,7 +166,7 @@ public:
     * \param index The index of the actor.
     * \return The cell description.
     */
-    static const char *GetActorCell(unsigned int index) noexcept;
+    extern "C" const char *GetActorCell(unsigned int index) noexcept;
     
     /**
     * \brief Get the refId of the actor at a certain index in the read actor list.
@@ -176,7 +174,7 @@ public:
     * \param index The index of the actor.
     * \return The refId.
     */
-    static const char *GetActorRefId(unsigned int index) noexcept;
+    extern "C" const char *GetActorRefId(unsigned int index) noexcept;
 
     /**
     * \brief Get the refNum of the actor at a certain index in the read actor list.
@@ -184,7 +182,7 @@ public:
     * \param index The index of the actor.
     * \return The refNum.
     */
-    static unsigned int GetActorRefNum(unsigned int index) noexcept;
+    extern "C" unsigned int GetActorRefNum(unsigned int index) noexcept;
 
     /**
     * \brief Get the mpNum of the actor at a certain index in the read actor list.
@@ -192,7 +190,7 @@ public:
     * \param index The index of the actor.
     * \return The mpNum.
     */
-    static unsigned int GetActorMpNum(unsigned int index) noexcept;
+    extern "C" unsigned int GetActorMpNum(unsigned int index) noexcept;
 
     /**
     * \brief Get the X position of the actor at a certain index in the read actor list.
@@ -200,7 +198,7 @@ public:
     * \param index The index of the actor.
     * \return The X position.
     */
-    static double GetActorPosX(unsigned int index) noexcept;
+    extern "C" double GetActorPosX(unsigned int index) noexcept;
 
     /**
     * \brief Get the Y position of the actor at a certain index in the read actor list.
@@ -208,7 +206,7 @@ public:
     * \param index The index of the actor.
     * \return The Y position.
     */
-    static double GetActorPosY(unsigned int index) noexcept;
+    extern "C" double GetActorPosY(unsigned int index) noexcept;
 
     /**
     * \brief Get the Z position of the actor at a certain index in the read actor list.
@@ -216,7 +214,7 @@ public:
     * \param index The index of the actor.
     * \return The Z position.
     */
-    static double GetActorPosZ(unsigned int index) noexcept;
+    extern "C" double GetActorPosZ(unsigned int index) noexcept;
 
     /**
     * \brief Get the X rotation of the actor at a certain index in the read actor list.
@@ -224,7 +222,7 @@ public:
     * \param index The index of the actor.
     * \return The X rotation.
     */
-    static double GetActorRotX(unsigned int index) noexcept;
+    extern "C" double GetActorRotX(unsigned int index) noexcept;
 
     /**
     * \brief Get the Y rotation of the actor at a certain index in the read actor list.
@@ -232,7 +230,7 @@ public:
     * \param index The index of the actor.
     * \return The Y rotation.
     */
-    static double GetActorRotY(unsigned int index) noexcept;
+    extern "C" double GetActorRotY(unsigned int index) noexcept;
 
     /**
     * \brief Get the Z rotation of the actor at a certain index in the read actor list.
@@ -240,7 +238,7 @@ public:
     * \param index The index of the actor.
     * \return The Z rotation.
     */
-    static double GetActorRotZ(unsigned int index) noexcept;
+    extern "C" double GetActorRotZ(unsigned int index) noexcept;
 
     /**
     * \brief Get the base health of the actor at a certain index in the read actor list.
@@ -248,7 +246,7 @@ public:
     * \param index The index of the actor.
     * \return The base health.
     */
-    static double GetActorHealthBase(unsigned int index) noexcept;
+    extern "C" double GetActorHealthBase(unsigned int index) noexcept;
 
     /**
     * \brief Get the current health of the actor at a certain index in the read actor list.
@@ -256,7 +254,7 @@ public:
     * \param index The index of the actor.
     * \return The current health.
     */
-    static double GetActorHealthCurrent(unsigned int index) noexcept;
+    extern "C" double GetActorHealthCurrent(unsigned int index) noexcept;
 
     /**
     * \brief Get the modified health of the actor at a certain index in the read actor list.
@@ -264,7 +262,7 @@ public:
     * \param index The index of the actor.
     * \return The modified health.
     */
-    static double GetActorHealthModified(unsigned int index) noexcept;
+    extern "C" double GetActorHealthModified(unsigned int index) noexcept;
 
     /**
     * \brief Get the base magicka of the actor at a certain index in the read actor list.
@@ -272,7 +270,7 @@ public:
     * \param index The index of the actor.
     * \return The base magicka.
     */
-    static double GetActorMagickaBase(unsigned int index) noexcept;
+    extern "C" double GetActorMagickaBase(unsigned int index) noexcept;
 
     /**
     * \brief Get the current magicka of the actor at a certain index in the read actor list.
@@ -280,7 +278,7 @@ public:
     * \param index The index of the actor.
     * \return The current magicka.
     */
-    static double GetActorMagickaCurrent(unsigned int index) noexcept;
+    extern "C" double GetActorMagickaCurrent(unsigned int index) noexcept;
 
     /**
     * \brief Get the modified magicka of the actor at a certain index in the read actor list.
@@ -288,7 +286,7 @@ public:
     * \param index The index of the actor.
     * \return The modified magicka.
     */
-    static double GetActorMagickaModified(unsigned int index) noexcept;
+    extern "C" double GetActorMagickaModified(unsigned int index) noexcept;
 
     /**
     * \brief Get the base fatigue of the actor at a certain index in the read actor list.
@@ -296,7 +294,7 @@ public:
     * \param index The index of the actor.
     * \return The base fatigue.
     */
-    static double GetActorFatigueBase(unsigned int index) noexcept;
+    extern "C" double GetActorFatigueBase(unsigned int index) noexcept;
 
     /**
     * \brief Get the current fatigue of the actor at a certain index in the read actor list.
@@ -304,7 +302,7 @@ public:
     * \param index The index of the actor.
     * \return The current fatigue.
     */
-    static double GetActorFatigueCurrent(unsigned int index) noexcept;
+    extern "C" double GetActorFatigueCurrent(unsigned int index) noexcept;
 
     /**
     * \brief Get the modified fatigue of the actor at a certain index in the read actor list.
@@ -312,7 +310,7 @@ public:
     * \param index The index of the actor.
     * \return The modified fatigue.
     */
-    static double GetActorFatigueModified(unsigned int index) noexcept;
+    extern "C" double GetActorFatigueModified(unsigned int index) noexcept;
 
     /**
     * \brief Get the refId of the item in a certain slot of the equipment of the actor at a
@@ -322,7 +320,7 @@ public:
     * \param slot The slot of the equipment item.
     * \return The refId.
     */
-    static const char *GetActorEquipmentItemRefId(unsigned int index, unsigned short slot) noexcept;
+    extern "C" const char *GetActorEquipmentItemRefId(unsigned int index, unsigned short slot) noexcept;
 
     /**
     * \brief Get the count of the item in a certain slot of the equipment of the actor at a
@@ -332,7 +330,7 @@ public:
     * \param slot The slot of the equipment item.
     * \return The item count.
     */
-    static int GetActorEquipmentItemCount(unsigned int index, unsigned short slot) noexcept;
+    extern "C" int GetActorEquipmentItemCount(unsigned int index, unsigned short slot) noexcept;
 
     /**
     * \brief Get the charge of the item in a certain slot of the equipment of the actor at a
@@ -342,7 +340,7 @@ public:
     * \param slot The slot of the equipment item.
     * \return The charge.
     */
-    static int GetActorEquipmentItemCharge(unsigned int index, unsigned short slot) noexcept;
+    extern "C" int GetActorEquipmentItemCharge(unsigned int index, unsigned short slot) noexcept;
 
     /**
     * \brief Get the enchantment charge of the item in a certain slot of the equipment of the actor at a
@@ -352,7 +350,7 @@ public:
     * \param slot The slot of the equipment item.
     * \return The enchantment charge.
     */
-    static double GetActorEquipmentItemEnchantmentCharge(unsigned int index, unsigned short slot) noexcept;
+    extern "C" double GetActorEquipmentItemEnchantmentCharge(unsigned int index, unsigned short slot) noexcept;
 
     /**
     * \brief Check whether the killer of the actor at a certain index in the read actor list is a player.
@@ -360,7 +358,7 @@ public:
     * \param index The index of the actor.
     * \return Whether the actor was killed by a player.
     */
-    static bool DoesActorHavePlayerKiller(unsigned int index) noexcept;
+    extern "C" bool DoesActorHavePlayerKiller(unsigned int index) noexcept;
 
     /**
     * \brief Get the player ID of the killer of the actor at a certain index in the read actor list.
@@ -368,7 +366,7 @@ public:
     * \param index The index of the actor.
     * \return The player ID of the killer.
     */
-    static int GetActorKillerPid(unsigned int index) noexcept;
+    extern "C" int GetActorKillerPid(unsigned int index) noexcept;
 
     /**
     * \brief Get the refId of the actor killer of the actor at a certain index in the read actor list.
@@ -376,7 +374,7 @@ public:
     * \param index The index of the actor.
     * \return The refId of the killer.
     */
-    static const char *GetActorKillerRefId(unsigned int index) noexcept;
+    extern "C" const char *GetActorKillerRefId(unsigned int index) noexcept;
 
     /**
     * \brief Get the refNum of the actor killer of the actor at a certain index in the read actor list.
@@ -384,7 +382,7 @@ public:
     * \param index The index of the actor.
     * \return The refNum of the killer.
     */
-    static unsigned int GetActorKillerRefNum(unsigned int index) noexcept;
+    extern "C" unsigned int GetActorKillerRefNum(unsigned int index) noexcept;
 
     /**
     * \brief Get the mpNum of the actor killer of the actor at a certain index in the read actor list.
@@ -392,7 +390,7 @@ public:
     * \param index The index of the actor.
     * \return The mpNum of the killer.
     */
-    static unsigned int GetActorKillerMpNum(unsigned int index) noexcept;
+    extern "C" unsigned int GetActorKillerMpNum(unsigned int index) noexcept;
 
     /**
     * \brief Get the name of the actor killer of the actor at a certain index in the read actor list.
@@ -400,7 +398,7 @@ public:
     * \param index The index of the actor.
     * \return The name of the killer.
     */
-    static const char *GetActorKillerName(unsigned int index) noexcept;
+    extern "C" const char *GetActorKillerName(unsigned int index) noexcept;
 
     /**
     * \brief Check whether there is any positional data for the actor at a certain index in
@@ -411,7 +409,7 @@ public:
     * \param index The index of the actor.
     * \return Whether the read actor list contains positional data.
     */
-    static bool DoesActorHavePosition(unsigned int index) noexcept;
+    extern "C" bool DoesActorHavePosition(unsigned int index) noexcept;
 
     /**
     * \brief Check whether there is any dynamic stats data for the actor at a certain index in
@@ -422,7 +420,7 @@ public:
     * \param index The index of the actor.
     * \return Whether the read actor list contains dynamic stats data.
     */
-    static bool DoesActorHaveStatsDynamic(unsigned int index) noexcept;
+    extern "C" bool DoesActorHaveStatsDynamic(unsigned int index) noexcept;
 
     /**
     * \brief Set the cell of the temporary actor list stored on the server.
@@ -433,7 +431,7 @@ public:
     * \param cellDescription The description of the cell.
     * \return void
     */
-    static void SetActorListCell(const char* cellDescription) noexcept;
+    extern "C" void SetActorListCell(const char* cellDescription) noexcept;
 
     /**
     * \brief Set the action type of the temporary actor list stored on the server.
@@ -441,7 +439,7 @@ public:
     * \param action The action type (0 for SET, 1 for ADD, 2 for REMOVE, 3 for REQUEST).
     * \return void
     */
-    static void SetActorListAction(unsigned char action) noexcept;
+    extern "C" void SetActorListAction(unsigned char action) noexcept;
 
     /**
     * \brief Set the cell of the temporary actor stored on the server.
@@ -455,7 +453,7 @@ public:
     * \param cellDescription The description of the cell.
     * \return void
     */
-    static void SetActorCell(const char* cellDescription) noexcept;
+    extern "C" void SetActorCell(const char* cellDescription) noexcept;
 
     /**
     * \brief Set the refId of the temporary actor stored on the server.
@@ -463,7 +461,7 @@ public:
     * \param refId The refId.
     * \return void
     */
-    static void SetActorRefId(const char* refId) noexcept;
+    extern "C" void SetActorRefId(const char* refId) noexcept;
 
     /**
     * \brief Set the refNum of the temporary actor stored on the server.
@@ -471,7 +469,7 @@ public:
     * \param refNum The refNum.
     * \return void
     */
-    static void SetActorRefNum(int refNum) noexcept;
+    extern "C" void SetActorRefNum(int refNum) noexcept;
 
     /**
     * \brief Set the mpNum of the temporary actor stored on the server.
@@ -479,7 +477,7 @@ public:
     * \param mpNum The mpNum.
     * \return void
     */
-    static void SetActorMpNum(int mpNum) noexcept;
+    extern "C" void SetActorMpNum(int mpNum) noexcept;
 
     /**
     * \brief Set the position of the temporary actor stored on the server.
@@ -489,7 +487,7 @@ public:
     * \param z The Z position.
     * \return void
     */
-    static void SetActorPosition(double x, double y, double z) noexcept;
+    extern "C" void SetActorPosition(double x, double y, double z) noexcept;
 
     /**
     * \brief Set the rotation of the temporary actor stored on the server.
@@ -499,7 +497,7 @@ public:
     * \param z The Z rotation.
     * \return void
     */
-    static void SetActorRotation(double x, double y, double z) noexcept;
+    extern "C" void SetActorRotation(double x, double y, double z) noexcept;
 
     /**
     * \brief Set the base health of the temporary actor stored on the server.
@@ -507,7 +505,7 @@ public:
     * \param value The new value.
     * \return void
     */
-    static void SetActorHealthBase(double value) noexcept;
+    extern "C" void SetActorHealthBase(double value) noexcept;
 
     /**
     * \brief Set the current health of the temporary actor stored on the server.
@@ -515,7 +513,7 @@ public:
     * \param value The new value.
     * \return void
     */
-    static void SetActorHealthCurrent(double value) noexcept;
+    extern "C" void SetActorHealthCurrent(double value) noexcept;
 
     /**
     * \brief Set the modified health of the temporary actor stored on the server.
@@ -523,7 +521,7 @@ public:
     * \param value The new value.
     * \return void
     */
-    static void SetActorHealthModified(double value) noexcept;
+    extern "C" void SetActorHealthModified(double value) noexcept;
 
     /**
     * \brief Set the base magicka of the temporary actor stored on the server.
@@ -531,7 +529,7 @@ public:
     * \param value The new value.
     * \return void
     */
-    static void SetActorMagickaBase(double value) noexcept;
+    extern "C" void SetActorMagickaBase(double value) noexcept;
 
     /**
     * \brief Set the current magicka of the temporary actor stored on the server.
@@ -539,7 +537,7 @@ public:
     * \param value The new value.
     * \return void
     */
-    static void SetActorMagickaCurrent(double value) noexcept;
+    extern "C" void SetActorMagickaCurrent(double value) noexcept;
 
     /**
     * \brief Set the modified magicka of the temporary actor stored on the server.
@@ -547,7 +545,7 @@ public:
     * \param value The new value.
     * \return void
     */
-    static void SetActorMagickaModified(double value) noexcept;
+    extern "C" void SetActorMagickaModified(double value) noexcept;
 
     /**
     * \brief Set the base fatigue of the temporary actor stored on the server.
@@ -555,7 +553,7 @@ public:
     * \param value The new value.
     * \return void
     */
-    static void SetActorFatigueBase(double value) noexcept;
+    extern "C" void SetActorFatigueBase(double value) noexcept;
 
     /**
     * \brief Set the current fatigue of the temporary actor stored on the server.
@@ -563,7 +561,7 @@ public:
     * \param value The new value.
     * \return void
     */
-    static void SetActorFatigueCurrent(double value) noexcept;
+    extern "C" void SetActorFatigueCurrent(double value) noexcept;
 
     /**
     * \brief Set the modified fatigue of the temporary actor stored on the server.
@@ -571,7 +569,7 @@ public:
     * \param value The new value.
     * \return void
     */
-    static void SetActorFatigueModified(double value) noexcept;
+    extern "C" void SetActorFatigueModified(double value) noexcept;
 
     /**
     * \brief Set the sound of the temporary actor stored on the server.
@@ -579,7 +577,7 @@ public:
     * \param sound The sound.
     * \return void
     */
-    static void SetActorSound(const char* sound) noexcept;
+    extern "C" void SetActorSound(const char* sound) noexcept;
 
     /**
     * \brief Set the AI action of the temporary actor stored on the server.
@@ -587,7 +585,7 @@ public:
     * \param action The new action.
     * \return void
     */
-    static void SetActorAIAction(unsigned int action) noexcept;
+    extern "C" void SetActorAIAction(unsigned int action) noexcept;
 
     /**
     * \brief Set a player as the AI target of the temporary actor stored on the server.
@@ -595,7 +593,7 @@ public:
     * \param pid The player ID.
     * \return void
     */
-    static void SetActorAITargetToPlayer(unsigned short pid) noexcept;
+    extern "C" void SetActorAITargetToPlayer(unsigned short pid) noexcept;
 
     /**
     * \brief Set another object as the AI target of the temporary actor stored on the server.
@@ -604,7 +602,7 @@ public:
     * \param mpNum The mpNum of the target object.
     * \return void
     */
-    static void SetActorAITargetToObject(int refNum, int mpNum) noexcept;
+    extern "C" void SetActorAITargetToObject(int refNum, int mpNum) noexcept;
 
     /**
     * \brief Set the coordinates for the AI package associated with the current AI action.
@@ -614,7 +612,7 @@ public:
     * \param z The Z coordinate.
     * \return void
     */
-    static void SetActorAICoordinates(double x, double y, double z) noexcept;
+    extern "C" void SetActorAICoordinates(double x, double y, double z) noexcept;
 
     /**
     * \brief Set the distance of the AI package associated with the current AI action.
@@ -622,7 +620,7 @@ public:
     * \param duration The distance of the package.
     * \return void
     */
-    static void SetActorAIDistance(unsigned int distance) noexcept;
+    extern "C" void SetActorAIDistance(unsigned int distance) noexcept;
 
     /**
     * \brief Set the duration of the AI package associated with the current AI action.
@@ -630,7 +628,7 @@ public:
     * \param duration The duration of the package.
     * \return void
     */
-    static void SetActorAIDuration(unsigned int duration) noexcept;
+    extern "C" void SetActorAIDuration(unsigned int duration) noexcept;
 
     /**
     * \brief Set whether the current AI package should be repeated.
@@ -640,7 +638,7 @@ public:
     * \param shouldRepeat Whether the package should be repeated.
     * \return void
     */
-    static void SetActorAIRepetition(bool shouldRepeat) noexcept;
+    extern "C" void SetActorAIRepetition(bool shouldRepeat) noexcept;
 
     /**
     * \brief Equip an item in a certain slot of the equipment of the temporary actor stored
@@ -653,7 +651,7 @@ public:
     * \param enchantmentCharge The enchantment charge of the item.
     * \return void
     */
-    static void EquipActorItem(unsigned short slot, const char* refId, unsigned int count, int charge, double enchantmentCharge = -1) noexcept;
+    extern "C" void EquipActorItem(unsigned short slot, const char* refId, unsigned int count, int charge, double enchantmentCharge = -1) noexcept;
 
     /**
     * \brief Unequip the item in a certain slot of the equipment of the temporary actor stored
@@ -662,7 +660,7 @@ public:
     * \param slot The equipment slot.
     * \return void
     */
-    static void UnequipActorItem(unsigned short slot) noexcept;
+    extern "C" void UnequipActorItem(unsigned short slot) noexcept;
 
     /**
     * \brief Add a copy of the server's temporary actor to the server's temporary actor list.
@@ -672,7 +670,7 @@ public:
     *
     * \return void
     */
-    static void AddActor() noexcept;
+    extern "C" void AddActor() noexcept;
 
     /**
     * \brief Send an ActorList packet.
@@ -681,7 +679,7 @@ public:
     *
     * \return void
     */
-    static void SendActorList() noexcept;
+    extern "C" void SendActorList() noexcept;
 
     /**
     * \brief Send an ActorAuthority packet.
@@ -693,7 +691,7 @@ public:
     *
     * \return void
     */
-    static void SendActorAuthority() noexcept;
+    extern "C" void SendActorAuthority() noexcept;
 
     /**
     * \brief Send an ActorPosition packet.
@@ -705,7 +703,7 @@ public:
     *
     * \return void
     */
-    static void SendActorPosition(bool sendToOtherVisitors, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendActorPosition(bool sendToOtherVisitors, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send an ActorStatsDynamic packet.
@@ -717,7 +715,7 @@ public:
     *
     * \return void
     */
-    static void SendActorStatsDynamic(bool sendToOtherVisitors, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendActorStatsDynamic(bool sendToOtherVisitors, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send an ActorEquipment packet.
@@ -729,7 +727,7 @@ public:
     *
     * \return void
     */
-    static void SendActorEquipment(bool sendToOtherVisitors, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendActorEquipment(bool sendToOtherVisitors, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send an ActorSpeech packet.
@@ -740,7 +738,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendActorSpeech(bool sendToOtherVisitors, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendActorSpeech(bool sendToOtherVisitors, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send an ActorAI packet.
@@ -751,7 +749,7 @@ public:
     *                           to the packet (false by default).
     * \return void
     */
-    static void SendActorAI(bool sendToOtherVisitors, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendActorAI(bool sendToOtherVisitors, bool skipAttachedPlayer) noexcept;
 
     /**
     * \brief Send an ActorCellChange packet.
@@ -763,18 +761,18 @@ public:
     *
     * \return void
     */
-    static void SendActorCellChange(bool sendToOtherVisitors, bool skipAttachedPlayer) noexcept;
+    extern "C" void SendActorCellChange(bool sendToOtherVisitors, bool skipAttachedPlayer) noexcept;
 
 
     // All methods below are deprecated versions of methods from above
 
-    static void ReadLastActorList() noexcept;
-    static void InitializeActorList(unsigned short pid) noexcept;
-    static void CopyLastActorListToStore() noexcept;
-    static unsigned int GetActorRefNumIndex(unsigned int index) noexcept;
-    static unsigned int GetActorKillerRefNumIndex(unsigned int index) noexcept;
-    static void SetActorRefNumIndex(int refNum) noexcept;
-};
+    extern "C" void ReadLastActorList() noexcept;
+    extern "C" void InitializeActorList(unsigned short pid) noexcept;
+    extern "C" void CopyLastActorListToStore() noexcept;
+    extern "C" unsigned int GetActorRefNumIndex(unsigned int index) noexcept;
+    extern "C" unsigned int GetActorKillerRefNumIndex(unsigned int index) noexcept;
+    extern "C" void SetActorRefNumIndex(int refNum) noexcept;
+}
 
 
 #endif //OPENMW_ACTORAPI_HPP

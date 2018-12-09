@@ -14,6 +14,7 @@
 #include <Script/Functions/Miscellaneous.hpp>
 #include <Script/Functions/Objects.hpp>
 #include <Script/Functions/Positions.hpp>
+#include <Script/Functions/Public.hpp>
 #include <Script/Functions/Quests.hpp>
 #include <Script/Functions/RecordsDynamic.hpp>
 #include <Script/Functions/Shapeshift.hpp>
@@ -21,6 +22,7 @@
 #include <Script/Functions/Settings.hpp>
 #include <Script/Functions/Spells.hpp>
 #include <Script/Functions/Stats.hpp>
+#include <Script/Functions/Timer.hpp>
 #include <Script/Functions/Worldstate.hpp>
 #include <RakNetTypes.h>
 #include <tuple>
@@ -42,89 +44,19 @@
 class ScriptFunctions
 {
 public:
-
     static void GetArguments(std::vector<boost::any> &params, va_list args, const std::string &def);
-    static void MakePublic(ScriptFunc _public, const char *name, char ret_type, const char *def) noexcept;
-    static boost::any CallPublic(const char *name, va_list args) noexcept;
-
-     /**
-     * \brief Create a timer that will run a script function after a certain interval.
-     *
-     * \param callback The Lua script function.
-     * \param msec The interval in miliseconds.
-     * \return The ID of the timer thus created.
-     */
-    static int CreateTimer(ScriptFunc callback, int msec) noexcept;
-
-    /**
-    * \brief Create a timer that will run a script function after a certain interval and pass
-    *        certain arguments to it.
-    *
-    * Example usage:
-    * - tes3mp.CreateTimerEx("OnTimerTest1", 250, "i", 90)
-    * - tes3mp.CreateTimerEx("OnTimerTest2", 500, "sif", "Test string", 60, 77.321)
-    *
-    * \param callback The Lua script function.
-    * \param msec The interval in miliseconds.
-    * \param types The argument types.
-    * \param args The arguments.
-    * \return The ID of the timer thus created.
-    */
-    static int CreateTimerEx(ScriptFunc callback, int msec, const char *types, va_list args) noexcept;
-
-    /**
-    * \brief Start the timer with a certain ID.
-    *
-    * \param timerId The timer ID.
-    * \return void
-    */
-    static void StartTimer(int timerId) noexcept;
-
-    /**
-    * \brief Stop the timer with a certain ID.
-    *
-    * \param timerId The timer ID.
-    * \return void
-    */
-    static void StopTimer(int timerId) noexcept;
-
-    /**
-    * \brief Restart the timer with a certain ID for a certain interval.
-    *
-    * \param timerId The timer ID.
-    * \param msec The interval in miliseconds.
-    * \return void
-    */
-    static void RestartTimer(int timerId, int msec) noexcept;
-
-    /**
-    * \brief Free the timer with a certain ID.
-    *
-    * \param timerId The timer ID.
-    * \return void
-    */
-    static void FreeTimer(int timerId) noexcept;
-
-    /**
-    * \brief Check whether a timer is elapsed.
-    *
-    * \param timerId The timer ID.
-    * \return Whether the timer is elapsed.
-    */
-    static bool IsTimerElapsed(int timerId) noexcept;
-
 
     static constexpr ScriptFunctionData functions[]{
-            {"CreateTimer",         ScriptFunctions::CreateTimer},
-            {"CreateTimerEx",       reinterpret_cast<Function<void>>(ScriptFunctions::CreateTimerEx)},
-            {"MakePublic",          ScriptFunctions::MakePublic},
-            {"CallPublic",          reinterpret_cast<Function<void>>(ScriptFunctions::CallPublic)},
+            {"CreateTimer",         TimerFunctions::CreateTimer},
+            {"CreateTimerEx",       reinterpret_cast<Function<void>>(TimerFunctions::CreateTimerEx)},
+            {"MakePublic",          PublicFunctions::MakePublic},
+            {"CallPublic",          reinterpret_cast<Function<void>>(PublicFunctions::CallPublic)},
 
-            {"StartTimer",          ScriptFunctions::StartTimer},
-            {"StopTimer",           ScriptFunctions::StopTimer},
-            {"RestartTimer",        ScriptFunctions::RestartTimer},
-            {"FreeTimer",           ScriptFunctions::FreeTimer},
-            {"IsTimerElapsed",      ScriptFunctions::IsTimerElapsed},
+            {"StartTimer",          TimerFunctions::StartTimer},
+            {"StopTimer",           TimerFunctions::StopTimer},
+            {"RestartTimer",        TimerFunctions::RestartTimer},
+            {"FreeTimer",           TimerFunctions::FreeTimer},
+            {"IsTimerElapsed",      TimerFunctions::IsTimerElapsed},
 
             ACTORAPI,
             BOOKAPI,
