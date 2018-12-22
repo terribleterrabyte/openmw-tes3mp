@@ -24,7 +24,12 @@ ScriptFunction::ScriptFunction(const ScriptFuncLua &fLua, lua_State *lua, char r
 
 }
 #endif
-
+#if defined (ENABLE_MONO)
+ScriptFunction::ScriptFunction(MonoObject *delegate, char ret_type, const std::string &def) :
+        fMono({delegate}), ret_type(ret_type), def(def), script_type(SCRIPT_MONO)
+{
+}
+#endif
 
 ScriptFunction::~ScriptFunction()
 {
@@ -36,7 +41,7 @@ ScriptFunction::~ScriptFunction()
 
 boost::any ScriptFunction::Call(const vector<boost::any> &args)
 {
-    boost::any result;
+    boost::any result = boost::any();
 
     if (def.length() != args.size())
         throw runtime_error("Script call: Number of arguments does not match definition");
@@ -61,11 +66,82 @@ boost::any ScriptFunction::Call(const vector<boost::any> &args)
                 result = boost::any_cast<luabridge::LuaRef>(any).cast<const char*>();
                 break;
             case 'v':
-                result = boost::any();
                 break;
             default:
                 throw runtime_error("Lua call: Unknown return type" + ret_type);
         }
+    }
+#endif
+#if defined (ENABLE_MONO)
+    else if (script_type == SCRIPT_MONO)
+    {
+        std::vector<void*> argList;
+        argList.resize(args.size());
+
+        for (int index = 0; index < args.size(); index++)
+        {
+            switch (def[index])
+            {
+                case 'i':
+                {
+                    auto val = boost::any_cast<unsigned int>(args.at(index));
+                    argList[index] = ((void *) &val);
+                    break;
+                }
+                case 'q':
+                {
+                    auto val = boost::any_cast<signed int>(args.at(index));
+                    argList[index] = ((void *) &val);
+                    break;
+                }
+                case 'l':
+                {
+                    auto val = boost::any_cast<unsigned long long>(args.at(index));
+                    argList[index] = ((void *) &val);
+                    break;
+                }
+                case 'w':
+                {
+                    auto val = boost::any_cast<signed long long>(args.at(index));
+                    argList[index] = ((void *) &val);
+                    break;
+                }
+                case 'f':
+                {
+                    auto val = boost::any_cast<double>(args.at(index));
+                    argList[index] = ((void *) &val);
+                    break;
+                }
+                case 'p':
+                {
+                    auto val = boost::any_cast<void *>(args.at(index));
+                    argList[index] = ((void *) &val);
+                    break;
+                }
+                case 's':
+                {
+                    if (args.at(index).type() == typeid(std::string)) // mono to mono call
+                        argList[index] = mono_string_new(mono_domain_get(), boost::any_cast<std::string>(args.at(index)).c_str());
+                    else // lua to mono
+                        argList[index] = mono_string_new(mono_domain_get(), boost::any_cast<const char *>(args.at(index)));
+                    break;
+                }
+                case 'b':
+                {
+                    auto val = boost::any_cast<int>(args.at(index));
+                    argList[index] = ((void *) &val);
+                    break;
+                }
+
+                default:
+                    throw std::runtime_error("Call: Unknown argument identifier " + def[index]);
+            }
+        }
+
+        MonoObject *monoRet = mono_runtime_delegate_invoke(fMono.delegate, argList.data(), NULL);
+        if (monoRet != nullptr)
+            result = mono_object_unbox(monoRet); // todo cast
+
     }
 #endif
 

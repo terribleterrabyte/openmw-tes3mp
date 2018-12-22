@@ -10,6 +10,10 @@
 #include <Script/Script.hpp>
 #include <Script/ScriptFunction.hpp>
 
+#ifdef ENABLE_MONO
+#include <mono/metadata/object.h>
+#endif
+
 namespace mwmp
 {
 
@@ -24,6 +28,9 @@ namespace mwmp
         Timer(ScriptFunc callback, long msec, const std::string& def, std::vector<boost::any> args);
 #if defined(ENABLE_LUA)
         Timer(lua_State *lua, ScriptFuncLua callback, long msec, const std::string& def, std::vector<boost::any> args);
+#endif
+#ifdef ENABLE_MONO
+        Timer(MonoObject *callback, long msec, const std::string& def, std::vector<boost::any> args);
 #endif
         void Tick();
 
@@ -44,6 +51,9 @@ namespace mwmp
     public:
 #if defined(ENABLE_LUA)
         static int CreateTimerLua(lua_State *lua, ScriptFuncLua callback, long msec, const std::string& def, std::vector<boost::any> args);
+#endif
+#if defined(ENABLE_MONO)
+        static int CreateTimerMono(MonoObject *callback, long msec, const std::string& def, std::vector<boost::any> args);
 #endif
         static int CreateTimer(ScriptFunc callback, long msec, const std::string& def, std::vector<boost::any> args);
         static void FreeTimer(int timerid);

@@ -26,6 +26,15 @@ Timer::Timer(lua_State *lua, ScriptFuncLua callback, long msec, const std::strin
 }
 #endif
 
+#ifdef ENABLE_MONO
+Timer::Timer(MonoObject *callback, long msec, const std::string &def, std::vector<boost::any> args) : ScriptFunction(callback, 'v', def)
+{
+    targetMsec = msec;
+    this->args = args;
+    end = true;
+}
+#endif
+
 void Timer::Tick()
 {
     if (end)
@@ -93,6 +102,28 @@ int TimerAPI::CreateTimerLua(lua_State *lua, ScriptFuncLua callback, long msec, 
 }
 #endif
 
+#if defined(ENABLE_MONO)
+int TimerAPI::CreateTimerMono(MonoObject *callback, long msec, const std::string& def, std::vector<boost::any> args)
+{
+    int id = -1;
+
+    for (auto timer : timers)
+    {
+        if (timer.second != nullptr)
+            continue;
+        timer.second = new Timer(callback, msec, def, args);
+        id = timer.first;
+    }
+
+    if (id == -1)
+    {
+        timers[pointer] = new Timer(callback, msec, def, args);
+        id = pointer;
+        pointer++;
+    }
+    return id;
+}
+#endif
 
 int TimerAPI::CreateTimer(ScriptFunc callback, long msec, const std::string &def, std::vector<boost::any> args)
 {
