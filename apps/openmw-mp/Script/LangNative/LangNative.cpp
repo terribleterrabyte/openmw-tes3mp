@@ -100,3 +100,13 @@ LangNative::~LangNative()
 {
 
 }
+
+void LangNative::Init()
+{
+
+}
+
+void LangNative::Free()
+{
+
+}

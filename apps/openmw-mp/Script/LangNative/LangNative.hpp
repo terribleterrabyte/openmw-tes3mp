@@ -22,6 +22,8 @@ public:
     virtual boost::any Call(const char *name, const char *argl, int buf, ...) override;
     virtual boost::any Call(const char *name, const char *argl, const std::vector<boost::any> &args) override;
 
+    static void Init();
+    static void Free();
 };
 
 

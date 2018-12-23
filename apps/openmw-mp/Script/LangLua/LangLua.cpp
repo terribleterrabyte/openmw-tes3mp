@@ -234,3 +234,13 @@ boost::any LangLua::Call(const char *name, const char *argl, const std::vector<b
     luabridge::LuaException::pcall(lua, n_args, 1);
     return boost::any(luabridge::LuaRef::fromStack(lua, -1));
 }
+
+void LangLua::Init()
+{
+
+}
+
+void LangLua::Free()
+{
+
+}

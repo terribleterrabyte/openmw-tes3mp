@@ -16,6 +16,7 @@
 using namespace std;
 
 Script::ScriptList Script::scripts;
+bool Script::debugMode = false;
 
 inline bool Load(Language *lang, const std::string &path)
 {
@@ -120,4 +121,37 @@ void Script::LoadScript(const char *script, const char *base)
     char path[4096];
     snprintf(path, sizeof(path), Utils::convertPath("%s/%s/%s").c_str(), base, "scripts", script);
     Script::scripts.emplace_back(new Script(path));
+}
+
+
+bool Script::IsDebugMode()
+{
+    return debugMode;
+}
+
+void Script::EnableDebugMode()
+{
+    debugMode = true;
+}
+
+void Script::Init()
+{
+#ifdef ENABLE_MONO
+    LangMono::Init();
+#endif
+#ifdef ENABLE_LUA
+    LangLua::Init();
+#endif
+    LangNative::Init();
+}
+
+void Script::Free()
+{
+#ifdef ENABLE_MONO
+    LangMono::Free();
+#endif
+#ifdef ENABLE_LUA
+    LangLua::Free();
+#endif
+    LangNative::Free();
 }

@@ -8,8 +8,9 @@
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/mono-config.h>
-#include <apps/openmw-mp/Script/ScriptFunctions.hpp>
-#include <apps/openmw-mp/Script/API/TimerAPI.hpp>
+#include <mono/metadata/mono-debug.h>
+#include <Script/ScriptFunctions.hpp>
+#include <Script/API/TimerAPI.hpp>
 #include "LangMono.hpp"
 
 static MonoDomain *domain = nullptr; // shared domain
@@ -114,13 +115,10 @@ lib_t LangMono::GetInterface()
 LangMono::LangMono()
 {
     instance = new MonoInstance;
-
-    Init();
 }
 
 LangMono::LangMono(MonoInstance *instance) : instance(instance)
 {
-    Init();
 }
 
 LangMono::~LangMono()
@@ -133,10 +131,35 @@ void LangMono::Init()
     if (domain != nullptr)
         return;
 
-    domain = mono_jit_init("TES3MP Mono VM"); // will leak :P
+    if (Script::IsDebugMode())
+    {
+        std::string debugServerAddress = "127.0.0.1:10000";
+        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Waiting for debugger on %s...", debugServerAddress.c_str());
+        std::string connectionString = "--debugger-agent=transport=dt_socket,server=y,address=" + debugServerAddress;
+        std::vector<const char*> options {
+                "--soft-breakpoints",
+                connectionString.c_str()
+        };
+        mono_jit_parse_options(options.size(), (char**) options.data());
+
+        mono_debug_init(MONO_DEBUG_FORMAT_MONO);
+    }
+
+    domain = mono_jit_init("TES3MP Mono VM");
+
+    if (Script::IsDebugMode())
+    {
+        mono_debug_domain_create(domain);
+    }
+
     mono_add_internal_call("TES3MPSharp.TES3MP::CreateTimerEx", (void*) &LangMono::CreateTimerEx);
     mono_add_internal_call("TES3MPSharp.TES3MP::MakePublic", (void*) &LangMono::MakePublic);
     mono_add_internal_call("TES3MPSharp.TES3MP::CallPublic", (void*) &LangMono::CallPublic);
+}
+
+void LangMono::Free()
+{
+    mono_domain_free(domain, 0);
 }
 
 std::vector<MonoClass *> getInstanceClassList(MonoImage *image, const std::string &parentName)

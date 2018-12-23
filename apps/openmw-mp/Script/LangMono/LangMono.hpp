@@ -66,7 +66,7 @@ public:
     static int CreateTimerEx(MonoObject *delegate, long msec, MonoString *monoStr, MonoArray *args);
     static void MakePublic(MonoObject *delegate, const char *name) noexcept;
     static MonoObject *CallPublic(const char *name, MonoArray *args);
-
-private:
-    void Init();
+    
+    static void Init();
+    static void Free();
 };
