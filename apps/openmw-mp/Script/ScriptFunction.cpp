@@ -9,6 +9,9 @@
 #if defined (ENABLE_LUA)
 #include "LangLua/LangLua.hpp"
 #endif
+#if defined(ENABLE_MONO)
+#include "LangMono/LangMono.hpp"
+#endif
 
 using namespace std;
 
@@ -75,7 +78,7 @@ boost::any ScriptFunction::Call(const vector<boost::any> &args)
 #if defined (ENABLE_MONO)
     else if (script_type == SCRIPT_MONO)
     {
-        std::vector<void*> argList;
+        std::vector<void *> argList;
         argList.resize(args.size());
 
         for (int index = 0; index < args.size(); index++)
@@ -121,9 +124,11 @@ boost::any ScriptFunction::Call(const vector<boost::any> &args)
                 case 's':
                 {
                     if (args.at(index).type() == typeid(std::string)) // mono to mono call
-                        argList[index] = mono_string_new(mono_domain_get(), boost::any_cast<std::string>(args.at(index)).c_str());
+                        argList[index] = mono_string_new(mono_domain_get(),
+                                                         boost::any_cast<std::string>(args.at(index)).c_str());
                     else // lua to mono
-                        argList[index] = mono_string_new(mono_domain_get(), boost::any_cast<const char *>(args.at(index)));
+                        argList[index] = mono_string_new(mono_domain_get(),
+                                                         boost::any_cast<const char *>(args.at(index)));
                     break;
                 }
                 case 'b':
@@ -140,8 +145,7 @@ boost::any ScriptFunction::Call(const vector<boost::any> &args)
 
         MonoObject *monoRet = mono_runtime_delegate_invoke(fMono.delegate, argList.data(), NULL);
         if (monoRet != nullptr)
-            result = mono_object_unbox(monoRet); // todo cast
-
+            result = LangMono::ObjectToAny(monoRet);
     }
 #endif
 

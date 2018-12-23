@@ -11,6 +11,7 @@
 #include <mono/metadata/mono-debug.h>
 #include <Script/ScriptFunctions.hpp>
 #include <Script/API/TimerAPI.hpp>
+#include <Script/API/PublicFnAPI.hpp>
 #include "LangMono.hpp"
 
 static MonoDomain *domain = nullptr; // shared domain
@@ -23,15 +24,8 @@ std::string monoStringToStdString(MonoString *monoString)
     return str;
 }
 
-template<typename T>
-T unbox(MonoObject *obj)
+boost::any LangMono::ObjectToAny(MonoObject *obj)
 {
-    return *(T *) mono_object_unbox(obj);
-}
-
-boost::any monoObjectToAny(MonoObject *obj)
-{
-
     MonoClass *klass = mono_object_get_class(obj);
     MonoType *rawType = mono_class_get_type(klass);
 
@@ -41,29 +35,29 @@ boost::any monoObjectToAny(MonoObject *obj)
         case MONO_TYPE_VOID:
             break;
         case MONO_TYPE_BOOLEAN:
-            return (bool) unbox<MonoBoolean>(obj);
+            return (bool) Unbox<MonoBoolean>(obj);
         case MONO_TYPE_CHAR:
-            return unbox<uint16_t>(obj);
+            return Unbox<uint16_t>(obj);
         case MONO_TYPE_I1:
-            return unbox<int8_t>(obj);
+            return Unbox<int8_t>(obj);
         case MONO_TYPE_U1:
-            return unbox<uint8_t>(obj);
+            return Unbox<uint8_t>(obj);
         case MONO_TYPE_I2:
-            return unbox<int16_t>(obj);
+            return Unbox<int16_t>(obj);
         case MONO_TYPE_U2:
-            return unbox<uint16_t>(obj);
+            return Unbox<uint16_t>(obj);
         case MONO_TYPE_I4:
-            return unbox<int32_t>(obj);
+            return Unbox<int32_t>(obj);
         case MONO_TYPE_U4:
-            return unbox<uint32_t>(obj);
+            return Unbox<uint32_t>(obj);
         case MONO_TYPE_I8:
-            return unbox<int64_t>(obj);
+            return Unbox<int64_t>(obj);
         case MONO_TYPE_U8:
-            return unbox<uint64_t>(obj);
+            return Unbox<uint64_t>(obj);
         case MONO_TYPE_R4:
-            return unbox<float>(obj);
+            return Unbox<float>(obj);
         case MONO_TYPE_R8:
-            return unbox<double>(obj);
+            return Unbox<double>(obj);
         case MONO_TYPE_STRING:
             return monoStringToStdString((MonoString *) obj);
         case MONO_TYPE_ARRAY:
@@ -83,8 +77,8 @@ int LangMono::CreateTimerEx(MonoObject *delegate, long msec, MonoString *monoStr
     std::vector<boost::any> params (argsLength);
     try
     {
-        for(size_t i = 0; i < argsLength; ++i)
-            params[i] = monoObjectToAny(mono_array_get(monoArgs, MonoObject*, i));
+        for (size_t i = 0; i < argsLength; ++i)
+            params[i] = ObjectToAny(mono_array_get(monoArgs, MonoObject*, i));
 
         char *types = mono_string_to_utf8(monoStr);
         int id = mwmp::TimerAPI::CreateTimerMono(delegate, msec, types, params);
@@ -97,14 +91,152 @@ int LangMono::CreateTimerEx(MonoObject *delegate, long msec, MonoString *monoStr
     }
 }
 
-void LangMono::MakePublic(MonoObject *delegate, const char *name) noexcept
+char GetTes3mpType(MonoType *type)
 {
-
+    int typeId = mono_type_get_type(type);
+    switch (typeId)
+    {
+        case MONO_TYPE_VOID:
+            return 'v';
+        case MONO_TYPE_BOOLEAN:
+            return 'b';
+        case MONO_TYPE_CHAR:
+            return 'q';
+        case MONO_TYPE_I1:
+            return 'q';
+        case MONO_TYPE_U1:
+            return 'i';
+        case MONO_TYPE_I2:
+            return 'q';
+        case MONO_TYPE_U2:
+            return 'i';
+        case MONO_TYPE_I4:
+            return 'q';
+        case MONO_TYPE_U4:
+            return 'i';
+        case MONO_TYPE_I8:
+            return 'w';
+        case MONO_TYPE_U8:
+            return 'l';
+        case MONO_TYPE_R4:
+            return 'f';
+        case MONO_TYPE_R8:
+            return 'f';
+        case MONO_TYPE_STRING:
+            return 's';
+    }
+    throw std::invalid_argument("Mono: invalid type of argument");
 }
 
-MonoObject *LangMono::CallPublic(const char *name, MonoArray *args)
+MonoObject *LangMono::AnyToObject(boost::any any, char ret_type)
 {
-    return nullptr;
+    MonoObject *object;
+    switch (ret_type)
+    {
+        case 'i':
+        {
+            auto val = boost::any_cast<unsigned int>(any);
+            object = mono_object_new(mono_get_root_domain(), mono_get_uint32_class());
+            ObjectSetValue(object, val);
+            break;
+        }
+        case 'q':
+        {
+            auto val = boost::any_cast<signed int>(any);
+            object = mono_object_new(mono_get_root_domain(), mono_get_int32_class());
+            ObjectSetValue(object, val);
+            break;
+        }
+        case 'l':
+        {
+            auto val = boost::any_cast<unsigned long long>(any);
+            object = mono_object_new(mono_get_root_domain(), mono_get_uint64_class());
+            ObjectSetValue(object, val);
+            break;
+        }
+        case 'w':
+        {
+            auto val = boost::any_cast<signed long long>(any);
+            object = mono_object_new(mono_get_root_domain(), mono_get_int64_class());
+            ObjectSetValue(object, val);
+            break;
+        }
+        case 'f':
+        {
+            auto val = boost::any_cast<double>(any);
+            object = mono_object_new(mono_get_root_domain(), mono_get_double_class());
+            ObjectSetValue(object, val);
+            break;
+        }
+        case 'p':
+        {
+            auto val = boost::any_cast<void *>(any);
+            object = mono_object_new(mono_get_root_domain(), mono_get_intptr_class());
+            ObjectSetValue(object, (intptr_t) val);
+            break;
+        }
+        case 's':
+        {
+            auto val = mono_string_new(mono_domain_get(), boost::any_cast<const char *>(any));
+            object = (MonoObject*) val;
+            break;
+        }
+        case 'b':
+        {
+            auto val = boost::any_cast<int>(any);
+            object = mono_object_new(mono_get_root_domain(), mono_get_boolean_class());
+            ObjectSetValue(object, (bool) val);
+            break;
+        }
+
+        default:
+            throw std::runtime_error("Mono call: Unknown argument identifier " + ret_type);
+    }
+    return object;
+}
+
+
+
+void LangMono::MakePublic(MonoObject *delegate, MonoString *monoName) noexcept
+{
+    MonoClass *klass = mono_object_get_class(delegate);
+    MonoMethod *method = mono_get_delegate_invoke(klass);
+    MonoMethodSignature *signature = mono_method_signature(method);
+
+    MonoType *retType = mono_signature_get_return_type(signature);
+    size_t argsCnt = mono_signature_get_param_count(signature);
+
+    void *iter = nullptr;
+    std::vector<char> def(argsCnt + 1);
+
+    for (size_t i = 0; i < argsCnt; ++i)
+        def[i] = GetTes3mpType(mono_signature_get_params(signature, &iter));
+
+    char ret_type = GetTes3mpType(retType);
+    char *name = mono_string_to_utf8(monoName);
+    Public::MakePublic(delegate, name, ret_type, def.data());
+    mono_free(name);
+}
+
+MonoObject *LangMono::CallPublic(MonoString *monoFnName, MonoArray *monoArgs)
+{
+    size_t argsLength = mono_array_length(monoArgs);
+    char *fnName = mono_string_to_utf8(monoFnName);
+
+    auto pPublic = Public::GetPublic(fnName);
+    mono_free(fnName);
+
+    if (argsLength != pPublic->def.size())
+        throw std::invalid_argument("Mono call: Number of arguments does not match definition");
+
+    std::vector<boost::any> params(argsLength);
+
+    for (size_t i = 0; i < argsLength; ++i)
+        params[i] = ObjectToAny(mono_array_get(monoArgs, MonoObject*, i));
+
+    boost::any ret = pPublic->ScriptFunction::Call(params);
+
+    return AnyToObject(ret, pPublic->ret_type);
 }
 
 lib_t LangMono::GetInterface()

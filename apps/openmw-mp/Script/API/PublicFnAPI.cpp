@@ -19,11 +19,21 @@ Public::Public(ScriptFunc _public, const std::string &name, char ret_type, const
     publics.emplace(name, this);
 }
 
+#ifdef ENABLE_LUA
 Public::Public(ScriptFuncLua _public, lua_State *lua, const std::string &name, char ret_type, const std::string &def) : ScriptFunction(
         _public, lua, ret_type, def)
 {
     publics.emplace(name, this);
 }
+#endif
+
+#ifdef ENABLE_MONO
+Public::Public(MonoObject *delegate, const std::string &name, char ret_type, const std::string &def) :
+    ScriptFunction(delegate, ret_type, def)
+{
+    publics.emplace(name, this);
+}
+#endif
 
 boost::any Public::Call(const std::string &name, const std::vector<boost::any> &args)
 {
@@ -43,6 +53,15 @@ const std::string &Public::GetDefinition(const std::string &name)
         throw runtime_error("Public with name \"" + name + "\" does not exist");
 
     return it->second->def;
+}
+
+Public *Public::GetPublic(const std::string &name)
+{
+    auto it = publics.find(name);
+
+    if (it == publics.end())
+        throw runtime_error("Public with name \"" + name + "\" does not exist");
+    return it->second;
 }
 
 

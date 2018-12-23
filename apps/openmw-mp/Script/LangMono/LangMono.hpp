@@ -64,9 +64,24 @@ public:
     virtual boost::any Call(const char *name, const char *argl, const std::vector<boost::any> &args) override;
 
     static int CreateTimerEx(MonoObject *delegate, long msec, MonoString *monoStr, MonoArray *args);
-    static void MakePublic(MonoObject *delegate, const char *name) noexcept;
-    static MonoObject *CallPublic(const char *name, MonoArray *args);
-    
+    static void MakePublic(MonoObject *delegate, MonoString *name) noexcept;
+    static MonoObject *CallPublic(MonoString *name, MonoArray *args);
+
     static void Init();
     static void Free();
+
+    template<typename T>
+    static T Unbox(MonoObject *obj)
+    {
+        return *(T *) mono_object_unbox(obj);
+    }
+
+    template<typename T>
+    static  void ObjectSetValue(MonoObject *obj, T value)
+    {
+        *(T*) mono_object_unbox(obj) = value;
+    }
+
+    static boost::any ObjectToAny(MonoObject *obj);
+    static MonoObject *AnyToObject(boost::any any, char ret_type);
 };

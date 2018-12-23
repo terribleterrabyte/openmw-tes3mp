@@ -43,7 +43,7 @@ protected:
 #endif
     };
 
-protected:
+public:
     char ret_type;
     std::string def;
     int script_type;
@@ -54,6 +54,9 @@ protected:
         SCRIPT_MONO
     };
 
+    boost::any Call(const std::vector<boost::any> &args);
+protected:
+
     ScriptFunction(ScriptFunc fCpp, char ret_type, const std::string &def);
 #if defined (ENABLE_LUA)
     ScriptFunction(const ScriptFuncLua &fPawn, lua_State *lua, char ret_type, const std::string &def);
@@ -62,8 +65,6 @@ protected:
     ScriptFunction(MonoObject *delegate, char ret_type, const std::string &def);
 #endif
     virtual ~ScriptFunction();
-
-    boost::any Call(const std::vector<boost::any> &args);
 };
 
 #endif //SCRIPTFUNCTION_HPP
