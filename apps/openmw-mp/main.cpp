@@ -210,10 +210,7 @@ int main(int argc, char *argv[])
     std::string creditsPath = folderPath.string() + "/tes3mp-credits";
 
     unsigned int expectedChecksumInt = Utils::hexStrToInt(TES3MP_CREDITS_CHECKSUM);
-    bool hasValidCredits = Utils::doesFileHaveChecksum(creditsPath + ".md", expectedChecksumInt);
-
-    if (!hasValidCredits)
-        hasValidCredits = Utils::doesFileHaveChecksum(creditsPath + ".txt", expectedChecksumInt);
+    bool hasValidCredits = Utils::doesFileHaveChecksum(creditsPath + ".md", expectedChecksumInt) || Utils::doesFileHaveChecksum(creditsPath + ".txt", expectedChecksumInt);
 
     if (!hasValidCredits)
     {
